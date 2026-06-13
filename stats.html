@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PUBG Stats — D282 &amp; S821</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── Design tokens (exact match to pubg.html) ─────────────────────────────── */
+:root {
+  --bg:     #14130f;
+  --panel:  #1e1c17;
+  --line:   #38342c;
+  --text:   #e8e3d8;
+  --muted:  #9a9385;
+  --accent: #f4a300;   /* D282 / amber */
+  --blue:   #4a9edd;   /* S821 */
+  --ok:     #8fae5d;
+  --danger: #d7443e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 24px 16px;
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; }
+
+/* ── Typography ───────────────────────────────────────────────────────────── */
+h1 {
+  font-family: Oswald, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-size: 28px;
+  margin-bottom: 2px;
+}
+.subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+
+/* ── Panels ───────────────────────────────────────────────────────────────── */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.panel-title {
+  font-family: Oswald, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.panel-note {
+  font-family: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── Filters ──────────────────────────────────────────────────────────────── */
+.filter-row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.filter-group { display: flex; flex-direction: column; gap: 6px; }
+.filter-label {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  background: #2a2720;
+  color: var(--text);
+  border: 1px solid var(--line);
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color .1s;
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.active {
+  background: var(--accent);
+  color: #14130f;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Summary cards ────────────────────────────────────────────────────────── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 12px;
+}
+/* Inside compare-split the card background would double-panel; flatten it */
+.compare-col .card { background: #171510; }
+
+.card-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 5px;
+}
+.card-value {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+.card-value.amber { color: var(--accent); }
+.card-value.blue  { color: var(--blue);   }
+.card-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* ── Compare split ────────────────────────────────────────────────────────── */
+.compare-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.compare-col { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.compare-col h3 {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.compare-col.d282 h3 { color: var(--accent); border-bottom: 1px solid var(--accent); padding-bottom: 6px; }
+.compare-col.s821 h3 { color: var(--blue);   border-bottom: 1px solid var(--blue);   padding-bottom: 6px; }
+.compare-col .cards-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+
+/* ── Chart ────────────────────────────────────────────────────────────────── */
+.chart-wrap { position: relative; height: 230px; }
+
+/* ── Tables ───────────────────────────────────────────────────────────────── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+th {
+  font-family: Oswald, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+th:hover { color: var(--text); }
+th.sorted { color: var(--accent); }
+th.no-sort { cursor: default; }
+
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(56,52,44,0.45);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr.match-row { cursor: pointer; }
+tr.match-row:hover td { background: rgba(244,163,0,0.04); }
+tr.detail-row td { background: #131210; padding: 0; }
+.detail-inner { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 13px; }
+.detail-inner .detail-player { margin-bottom: 5px; }
+
+/* ── Category badge ───────────────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #2a2720;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+/* ── Bar rows (heals / throwables) ───────────────────────────────────────── */
+.bar-section-label {
+  font-family: Oswald, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 14px 0 8px;
+}
+.bar-section-label:first-child { margin-top: 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.bar-label { width: 140px; font-size: 12px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; height: 16px; background: #100f0c; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 3px; transition: width .3s ease; }
+.bar-fill.amber { background: var(--accent); }
+.bar-fill.blue  { background: var(--blue);   }
+.bar-val { width: 40px; text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+
+/* ── Compare legend ───────────────────────────────────────────────────────── */
+.cmp-legend { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.cmp-legend span { font-size: 14px; }
+
+/* ── Placement colours ────────────────────────────────────────────────────── */
+.p1    { color: var(--accent); font-weight: 600; }
+.ptop  { color: var(--ok); }
+
+/* ── Misc ─────────────────────────────────────────────────────────────────── */
+.empty   { color: var(--muted); font-size: 13px; font-style: italic; padding: 8px 0; }
+.loading { color: var(--muted); font-style: italic; padding: 20px 0; font-size: 13px; }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .compare-split { grid-template-columns: 1fr; }
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .compare-col .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <h1>PUBG Stats</h1>
+  <p class="subtitle">D282 &amp; S821 — duo-fpp, 50 shared matches</p>
+
+  <!-- ── FILTERS ──────────────────────────────────────────────────────────── -->
+  <div class="panel">
+    <div class="filter-row">
+
+      <div class="filter-group">
+        <span class="filter-label">Player</span>
+        <div class="btn-group">
+          <button class="btn" data-f="player:D282"    onclick="setFilter('player','D282')">D282</button>
+          <button class="btn" data-f="player:S821"    onclick="setFilter('player','S821')">S821</button>
+          <button class="btn" data-f="player:compare" onclick="setFilter('player','compare')">Compare</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Map</span>
+        <div class="btn-group" id="mapBtns"><!-- built after load --></div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Date Range</span>
+        <div class="btn-group">
+          <button class="btn" data-f="dateRange:all" onclick="setFilter('dateRange','all')">All</button>
+          <button class="btn" data-f="dateRange:7d"  onclick="setFilter('dateRange','7d')">Last 7 days</button>
+          <button class="btn" data-f="dateRange:14d" onclick="setFilter('dateRange','14d')">Last 14 days</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUMMARY CARDS ────────────────────────────────────────────────────── -->
+  <div id="summarySection"><p class="loading">Loading…</p></div>
+
+  <!-- ── PERFORMANCE OVER TIME ─────────────────────────────────────────────── -->
+  <div class="panel">
+    <div class="panel-title">Performance Over Time</div>
+    <div class="chart-wrap"><canvas id="timelineChart"></canvas></div>
+  </div>
+
+  <!-- ── WEAPONS ──────────────────────────────────────────────────────────── -->
+  <div class="panel">
+    <div class="panel-title">Weapons <span class="panel-note">— career totals · click headers to sort</span></div>
+    <div class="tbl-wrap" id="weaponsWrap"><p class="loading">Loading…</p></div>
+  </div>
+
+  <!-- ── HEALING & BOOSTS ──────────────────────────────────────────────────── -->
+  <div class="panel">
+    <div class="panel-title">Healing &amp; Boosts <span class="panel-note">— career totals</span></div>
+    <div id="healingPanel"><p class="loading">Loading…</p></div>
+  </div>
+
+  <!-- ── THROWABLES ────────────────────────────────────────────────────────── -->
+  <div class="panel">
+    <div class="panel-title">Throwables <span class="panel-note">— career totals · lobby items excluded</span></div>
+    <div id="throwablesPanel"><p class="loading">Loading…</p></div>
+  </div>
+
+  <!-- ── MATCH HISTORY ─────────────────────────────────────────────────────── -->
+  <div class="panel">
+    <div class="panel-title">Match History <span class="panel-note">— click a row to expand</span></div>
+    <div class="tbl-wrap"><table id="matchTable"><tbody><tr><td class="loading">Loading…</td></tr></tbody></table></div>
+  </div>
+
+</div><!-- .wrap -->
+
+<!-- Chart.js from cdnjs (no npm, no build tools) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script>
+/* ============================================================================
+   CONFIG — change names / colors here if players change
+============================================================================ */
+const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
+// Snowball and Rock are pre-game lobby items — skip in the throwables panel
+const LOBBY_ITEMS  = new Set(['Snowball', 'Rock']);
+
+/* ============================================================================
+   STATE
+============================================================================ */
+const state = {
+  player:    'D282',   // 'D282' | 'S821' | 'compare'
+  map:       'all',
+  dateRange: 'all',
+  weapCol:   'kills',  // which column the weapons table is sorted by
+  weapDir:   'desc',   // 'asc' | 'desc'
+};
+
+/* ============================================================================
+   DATA  (filled on boot)
+============================================================================ */
+const DATA = { summary: null, matches: null, weapons: null, items: null, timeline: null };
+
+// Chart instances kept so we can destroy before re-creating
+const CHARTS = {};
+
+/* ============================================================================
+   BOOT — fetch all 5 JSON files in parallel, then render
+============================================================================ */
+async function boot() {
+  try {
+    const [summary, matches, weapons, items, timeline] = await Promise.all([
+      fetch('stats-data/summary.json').then(r => r.json()),
+      fetch('stats-data/matches.json').then(r => r.json()),
+      fetch('stats-data/weapons.json').then(r => r.json()),
+      fetch('stats-data/items.json').then(r => r.json()),
+      fetch('stats-data/timeline.json').then(r => r.json()),
+    ]);
+    Object.assign(DATA, { summary, matches, weapons, items, timeline });
+    buildMapButtons();
+    renderAll();
+  } catch (err) {
+    document.getElementById('summarySection').innerHTML =
+      `<p style="color:var(--danger);padding:20px 0">
+         Could not load data files. Make sure <strong>stats-data/</strong> is
+         in the same folder as this page.<br><small>${err.message}</small>
+       </p>`;
+  }
+}
+
+/* ============================================================================
+   FILTER LOGIC
+============================================================================ */
+function setFilter(key, val) {
+  state[key] = val;
+  renderAll();
+}
+
+// Returns the match list (newest-first) after applying map + date-range filters
+function filtered() {
+  let list = DATA.matches;
+
+  if (state.map !== 'all')
+    list = list.filter(m => m.map === state.map);
+
+  if (state.dateRange !== 'all') {
+    const days   = state.dateRange === '7d' ? 7 : 14;
+    const latest = new Date(DATA.matches[0].created_at);
+    const cutoff = new Date(+latest - days * 86400e3);
+    list = list.filter(m => new Date(m.created_at) >= cutoff);
+  }
+
+  return list;
+}
+
+// Compute summary stats for one player from a (filtered) match list
+function statsFrom(matches, player) {
+  let n = 0, kills = 0, hsK = 0, dmg = 0, placement = 0,
+      top10 = 0, wins = 0, deaths = 0, knocks = 0;
+
+  for (const m of matches) {
+    const p = m.players[player];
+    if (!p || p.placement == null) continue;
+    n++;
+    kills  += p.kills      || 0;
+    hsK    += p.hs_kills   || 0;
+    dmg    += p.damage     || 0;
+    knocks += p.knockdowns || 0;
+    placement += p.placement;
+    if (p.placement <= 10) top10++;
+    if (p.placement === 1) wins++; else deaths++;
+  }
+
+  return {
+    n, kills, hsK, dmg, knocks, wins, deaths,
+    kd:       deaths > 0 ? kills / deaths : kills,
+    avgDmg:   n > 0 ? dmg / n : 0,
+    avgPlace: n > 0 ? placement / n : 0,
+    top10r:   n > 0 ? top10 / n : 0,
+    winr:     n > 0 ? wins  / n : 0,
+    hsPct:    kills > 0 ? hsK / kills : 0,
+    // Revives not stored per-match in the JSON — show career total from summary.json
+    revives:  DATA.summary[player]?.revives_given ?? 0,
+  };
+}
+
+/* ============================================================================
+   FORMAT HELPERS
+============================================================================ */
+const f0  = n => Math.round(n).toLocaleString();
+const f1  = n => (+n).toFixed(1);
+const f2  = n => (+n).toFixed(2);
+const pct = n => (n * 100).toFixed(1) + '%';
+
+function mmss(s) {
+  return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2,'0')}s`;
+}
+
+function placeHTML(p) {
+  if (p === 1)      return `<span class="p1">#1 ✦</span>`;
+  if (p != null && p <= 10) return `<span class="ptop">#${p}</span>`;
+  return p != null ? `#${p}` : '—';
+}
+
+/* ============================================================================
+   MAP FILTER BUTTONS  (built once after data loads)
+============================================================================ */
+function buildMapButtons() {
+  // Collect unique map names, sort alphabetically, prepend "All"
+  const maps = [...new Set(DATA.matches.map(m => m.map).filter(Boolean))].sort();
+  const all  = ['all', ...maps];
+
+  document.getElementById('mapBtns').innerHTML = all.map(m => `
+    <button class="btn" data-f="map:${m}" onclick="setFilter('map','${m}')">
+      ${m === 'all' ? 'All' : m}
+    </button>
+  `).join('');
+}
+
+/* ============================================================================
+   UPDATE ACTIVE STATES ON ALL FILTER BUTTONS
+============================================================================ */
+function syncButtons() {
+  document.querySelectorAll('[data-f]').forEach(el => {
+    const [key, val] = el.dataset.f.split(':');
+    el.classList.toggle('active', state[key] === val);
+  });
+}
+
+/* ============================================================================
+   RENDER — SUMMARY CARDS
+============================================================================ */
+function renderSummary(matches) {
+  // 10 card definitions: [label, value-fn, sub-fn]
+  const CARDS = [
+    ['Matches',         s => s.n,                       s => `${s.wins} win${s.wins!==1?'s':''}`],
+    ['Kills',           s => s.kills,                   s => `${s.deaths} deaths`],
+    ['K/D',             s => f2(s.kd),                  s => `${s.kills}K / ${s.deaths}D`],
+    ['Avg Damage',      s => f0(s.avgDmg),              ()=> 'per match'],
+    ['Avg Placement',   s => '#' + f1(s.avgPlace),      ()=> 'lower is better'],
+    ['Top 10 %',        s => pct(s.top10r),             s => `${s.wins} win${s.wins!==1?'s':''}`],
+    ['Win Rate',        s => pct(s.winr),               s => `${s.wins} / ${s.n}`],
+    ['Knockdowns',      s => s.knocks,                  s => f2(s.knocks / (s.n||1)) + ' / match'],
+    ['Revives Given',   s => s.revives,                 ()=> 'career total'],
+    ['Headshot Kill %', s => pct(s.hsPct),              s => `${s.hsK} / ${s.kills} kills`],
+  ];
+
+  const grid = (player, stats) => {
+    const cls = player === 'D282' ? 'amber' : 'blue';
+    return `<div class="cards-grid">${
+      CARDS.map(([lbl, vFn, sFn]) => `
+        <div class="card">
+          <div class="card-label">${lbl}</div>
+          <div class="card-value ${cls}">${vFn(stats)}</div>
+          <div class="card-sub">${sFn(stats)}</div>
+        </div>
+      `).join('')
+    }</div>`;
+  };
+
+  const section = document.getElementById('summarySection');
+
+  if (state.player === 'compare') {
+    const sA = statsFrom(matches, 'D282');
+    const sB = statsFrom(matches, 'S821');
+    section.innerHTML = `
+      <div class="compare-split">
+        <div class="compare-col d282"><h3>D282</h3>${grid('D282', sA)}</div>
+        <div class="compare-col s821"><h3>S821</h3>${grid('S821', sB)}</div>
+      </div>`;
+  } else {
+    const s = statsFrom(matches, state.player);
+    section.innerHTML = grid(state.player, s);
+  }
+}
+
+/* ============================================================================
+   RENDER — TIMELINE CHART
+============================================================================ */
+function renderTimeline(matches) {
+  // Chart needs chronological order (oldest → newest)
+  const chron   = [...matches].reverse();
+  const labels  = chron.map(m => m.created_at.slice(0,10));
+  const players = state.player === 'compare' ? ['D282','S821'] : [state.player];
+
+  // Each player gets a solid line for damage and a dashed line for kills
+  const datasets = players.flatMap(p => {
+    const col = PLAYER_COLOR[p];
+    return [
+      {
+        label:           `${p} Damage`,
+        data:            chron.map(m => m.players[p]?.damage ?? 0),
+        borderColor:     col,
+        backgroundColor: col + '18',
+        fill:            false,
+        tension:         0.3,
+        borderWidth:     2,
+        pointRadius:     3,
+        pointHoverRadius:5,
+        yAxisID:         'yDmg',
+      },
+      {
+        label:           `${p} Kills`,
+        data:            chron.map(m => m.players[p]?.kills ?? 0),
+        borderColor:     col,
+        backgroundColor: 'transparent',
+        borderDash:      [5, 3],
+        fill:            false,
+        tension:         0.3,
+        borderWidth:     1.5,
+        pointRadius:     2,
+        pointHoverRadius:4,
+        yAxisID:         'yKills',
+      },
+    ];
+  });
+
+  if (CHARTS.timeline) CHARTS.timeline.destroy();
+
+  CHARTS.timeline = new Chart(
+    document.getElementById('timelineChart').getContext('2d'),
+    {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive:          true,
+        maintainAspectRatio: false,
+        interaction:         { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
+          tooltip: {
+            backgroundColor: '#1e1c17',
+            borderColor:     '#38342c',
+            borderWidth:     1,
+            titleColor:      '#e8e3d8',
+            bodyColor:       '#9a9385',
+          },
+        },
+        scales: {
+          x: {
+            ticks: { color: '#9a9385', maxRotation: 45, font: { size: 11 } },
+            grid:  { color: 'rgba(56,52,44,0.5)' },
+          },
+          yDmg: {
+            type:     'linear',
+            position: 'left',
+            min:      0,
+            title:    { display: true, text: 'Damage', color: '#9a9385', font: { size: 11 } },
+            ticks:    { color: '#9a9385', font: { size: 11 } },
+            grid:     { color: 'rgba(56,52,44,0.4)' },
+          },
+          yKills: {
+            type:     'linear',
+            position: 'right',
+            min:      0,
+            title:    { display: true, text: 'Kills', color: '#9a9385', font: { size: 11 } },
+            ticks:    { color: '#9a9385', stepSize: 1, font: { size: 11 } },
+            grid:     { drawOnChartArea: false },
+          },
+        },
+      },
+    }
+  );
+}
+
+/* ============================================================================
+   RENDER — WEAPONS TABLE
+============================================================================ */
+function renderWeapons() {
+  const wrap = document.getElementById('weaponsWrap');
+
+  // Sortable column header helper
+  const th = (col, label, cls='') => {
+    const sorted  = state.weapCol === col;
+    const arrow   = sorted ? (state.weapDir === 'desc' ? ' ↓' : ' ↑') : '';
+    return `<th class="${sorted?'sorted':''} ${cls}" onclick="sortWeap('${col}')">${label}${arrow}</th>`;
+  };
+
+  if (state.player !== 'compare') {
+    // ── Single player ──────────────────────────────────────────────────────
+    const p    = state.player;
+    const rows = [...(DATA.weapons[p] || [])].sort((a, b) => {
+      const v = r => r[state.weapCol] ?? 0;
+      return state.weapDir === 'desc' ? v(b) - v(a) : v(a) - v(b);
+    });
+
+    wrap.innerHTML = `
+      <table>
+        <thead><tr>
+          ${th('weapon','Weapon')}
+          <th class="no-sort">Type</th>
+          ${th('kills','Kills')}
+          ${th('total_damage','Damage')}
+          ${th('hits','Hits')}
+          ${th('headshot_kill_pct','HS Kill %')}
+          ${th('avg_damage_per_hit','Dmg / Hit')}
+        </tr></thead>
+        <tbody>
+          ${rows.length === 0 ? `<tr><td colspan="7" class="empty">No weapon data</td></tr>` :
+            rows.map(r => `
+              <tr>
+                <td><strong>${r.weapon}</strong></td>
+                <td><span class="badge">${r.category}</span></td>
+                <td>${r.kills}</td>
+                <td>${f0(r.total_damage)}</td>
+                <td>${r.hits}</td>
+                <td>${pct(r.headshot_kill_pct)}</td>
+                <td>${f1(r.avg_damage_per_hit)}</td>
+              </tr>`
+            ).join('')}
+        </tbody>
+      </table>`;
+
+  } else {
+    // ── Compare mode: merged table ─────────────────────────────────────────
+    const allNames = new Set([
+      ...(DATA.weapons.D282||[]).map(r=>r.weapon),
+      ...(DATA.weapons.S821||[]).map(r=>r.weapon),
+    ]);
+    const byName = (p, w) => DATA.weapons[p]?.find(r=>r.weapon===w) || { kills:0, total_damage:0, hits:0 };
+
+    const rows = [...allNames].map(w => ({
+      weapon: w,
+      cat:    DATA.weapons.D282?.find(r=>r.weapon===w)?.category || DATA.weapons.S821?.find(r=>r.weapon===w)?.category || '',
+      D282:   byName('D282', w),
+      S821:   byName('S821', w),
+    })).sort((a,b) => (b.D282.kills + b.S821.kills) - (a.D282.kills + a.S821.kills));
+
+    wrap.innerHTML = `
+      <table>
+        <thead><tr>
+          <th class="no-sort">Weapon</th>
+          <th class="no-sort">Type</th>
+          <th class="no-sort" style="color:var(--accent)">D282 Kills</th>
+          <th class="no-sort" style="color:var(--accent)">D282 Dmg</th>
+          <th class="no-sort" style="color:var(--accent)">D282 HS%</th>
+          <th class="no-sort" style="color:var(--blue)">S821 Kills</th>
+          <th class="no-sort" style="color:var(--blue)">S821 Dmg</th>
+          <th class="no-sort" style="color:var(--blue)">S821 HS%</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td><strong>${r.weapon}</strong></td>
+              <td><span class="badge">${r.cat}</span></td>
+              <td>${r.D282.kills}</td>
+              <td>${f0(r.D282.total_damage)}</td>
+              <td>${pct(r.D282.headshot_kill_pct||0)}</td>
+              <td>${r.S821.kills}</td>
+              <td>${f0(r.S821.total_damage)}</td>
+              <td>${pct(r.S821.headshot_kill_pct||0)}</td>
+            </tr>`
+          ).join('')}
+        </tbody>
+      </table>`;
+  }
+}
+
+function sortWeap(col) {
+  if (state.weapCol === col) state.weapDir = state.weapDir === 'desc' ? 'asc' : 'desc';
+  else { state.weapCol = col; state.weapDir = 'desc'; }
+  renderWeapons();
+}
+
+/* ============================================================================
+   RENDER — BAR PANEL HELPER  (used for both healing and throwables)
+============================================================================ */
+function buildBarSection(label, items, players, getVal) {
+  if (items.length === 0) return '';
+
+  const maxVal = Math.max(...players.flatMap(p => items.map(i => getVal(p, i).total)), 1);
+
+  const rows = items.map(item => {
+    const pCells = players.map(p => {
+      const v   = getVal(p, item);
+      const w   = ((v.total / maxVal) * 100).toFixed(1);
+      const cls = p === 'D282' ? 'amber' : 'blue';
+      const tip = `${p}: ${v.total} total · ${v.per_match}/match`;
+      return `<div class="bar-track" title="${tip}"><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
+              <div class="bar-val">${v.total}</div>`;
+    }).join('');
+    return `<div class="bar-row"><div class="bar-label">${item}</div>${pCells}</div>`;
+  }).join('');
+
+  return (label ? `<div class="bar-section-label">${label}</div>` : '') + rows;
+}
+
+/* ============================================================================
+   RENDER — HEALING & BOOSTS
+============================================================================ */
+function renderHealing() {
+  const panel   = document.getElementById('healingPanel');
+  const players = state.player === 'compare' ? ['D282','S821'] : [state.player];
+
+  // Collect all item names and their categories across both players
+  const catMap = {};
+  ['D282','S821'].forEach(p => (DATA.items[p]?.heals || []).forEach(h => { catMap[h.item] = h.category; }));
+
+  const seen = new Set(), items = [];
+  players.forEach(p => (DATA.items[p]?.heals || []).forEach(h => { if (!seen.has(h.item)) { seen.add(h.item); items.push(h.item); } }));
+
+  const heals  = items.filter(i => catMap[i] === 'Heal');
+  const boosts = items.filter(i => catMap[i] === 'Boost');
+
+  const getVal = (p, item) =>
+    DATA.items[p]?.heals.find(h => h.item === item) || { total: 0, per_match: 0 };
+
+  const legend = players.length > 1
+    ? `<div class="cmp-legend"><span style="color:var(--accent)">■</span> D282 &nbsp; <span style="color:var(--blue)">■</span> S821</div>`
+    : '';
+
+  const body = buildBarSection('Heals', heals, players, getVal) +
+               buildBarSection('Boosts', boosts, players, getVal);
+
+  panel.innerHTML = body ? legend + body : '<p class="empty">No healing data</p>';
+}
+
+/* ============================================================================
+   RENDER — THROWABLES
+============================================================================ */
+function renderThrowables() {
+  const panel   = document.getElementById('throwablesPanel');
+  const players = state.player === 'compare' ? ['D282','S821'] : [state.player];
+
+  const seen = new Set(), items = [];
+  players.forEach(p =>
+    (DATA.items[p]?.throwables || [])
+      .filter(t => !LOBBY_ITEMS.has(t.item))
+      .forEach(t => { if (!seen.has(t.item)) { seen.add(t.item); items.push(t.item); } })
+  );
+
+  const getVal = (p, item) =>
+    DATA.items[p]?.throwables.find(t => t.item === item) || { total: 0, per_match: 0 };
+
+  const legend = players.length > 1
+    ? `<div class="cmp-legend"><span style="color:var(--accent)">■</span> D282 &nbsp; <span style="color:var(--blue)">■</span> S821</div>`
+    : '';
+  const body = buildBarSection('', items, players, getVal);
+  panel.innerHTML = body ? legend + body : '<p class="empty">No throwable data</p>';
+}
+
+/* ============================================================================
+   RENDER — MATCH HISTORY TABLE
+============================================================================ */
+function renderMatchHistory(matches) {
+  const table   = document.getElementById('matchTable');
+  const compare = state.player === 'compare';
+  const p0      = state.player === 'compare' ? 'D282' : state.player;
+
+  if (matches.length === 0) {
+    table.innerHTML = '<tbody><tr><td class="empty" colspan="10">No matches for these filters.</td></tr></tbody>';
+    return;
+  }
+
+  const playerHeaders = compare
+    ? `<th class="no-sort" style="color:var(--accent)">D282 K</th>
+       <th class="no-sort" style="color:var(--accent)">D282 Dmg</th>
+       <th class="no-sort" style="color:var(--blue)">S821 K</th>
+       <th class="no-sort" style="color:var(--blue)">S821 Dmg</th>
+       <th class="no-sort">Duration</th>`
+    : `<th class="no-sort">Kills</th>
+       <th class="no-sort">Damage</th>
+       <th class="no-sort">Placement</th>
+       <th class="no-sort">Duration</th>`;
+
+  const body = matches.map((m, i) => {
+    const id = 'dr_' + i;
+    const pD = m.players['D282'] || {};
+    const pS = m.players['S821'] || {};
+    const px = m.players[p0]    || {};
+
+    const playerCells = compare
+      ? `<td>${pD.kills ?? '—'}</td><td>${f0(pD.damage||0)}</td>
+         <td>${pS.kills ?? '—'}</td><td>${f0(pS.damage||0)}</td>`
+      : `<td>${px.kills ?? '—'}</td><td>${f0(px.damage||0)}</td>
+         <td>${placeHTML(px.placement)}</td>`;
+
+    return `
+      <tr class="match-row" onclick="toggleRow('${id}',this)">
+        <td>${m.created_at.slice(0,10)}</td>
+        <td>${m.map||'—'}</td>
+        <td>${m.game_mode||'—'}</td>
+        ${playerCells}
+        <td>${m.duration_s ? mmss(m.duration_s) : '—'}</td>
+      </tr>
+      <tr id="${id}" class="detail-row" style="display:none">
+        <td colspan="10"><div class="detail-inner">${detailHTML(m)}</div></td>
+      </tr>`;
+  }).join('');
+
+  table.innerHTML = `
+    <thead><tr>
+      <th class="no-sort">Date</th>
+      <th class="no-sort">Map</th>
+      <th class="no-sort">Mode</th>
+      ${playerHeaders}
+    </tr></thead>
+    <tbody>${body}</tbody>`;
+}
+
+function toggleRow(id, row) {
+  const el = document.getElementById(id);
+  const open = el.style.display !== 'none';
+  el.style.display  = open ? 'none' : 'table-row';
+  row.style.background = open ? '' : 'rgba(244,163,0,0.05)';
+}
+
+function detailHTML(m) {
+  const playerLines = ['D282','S821'].map(p => {
+    const s = m.players[p];
+    if (!s) return '';
+    return `<div class="detail-player">
+      <span style="color:${PLAYER_COLOR[p]};font-weight:600">${p}</span> &nbsp;
+      ${placeHTML(s.placement)} &nbsp;·&nbsp;
+      ${s.kills} kill${s.kills!==1?'s':''} &nbsp;·&nbsp;
+      ${f0(s.damage)} dmg &nbsp;·&nbsp;
+      ${s.knockdowns} knock${s.knockdowns!==1?'s':''} &nbsp;·&nbsp;
+      ${s.assists} assist${s.assists!==1?'s':''} &nbsp;·&nbsp;
+      ${s.hs_kills} headshot${s.hs_kills!==1?'s':''}
+    </div>`;
+  }).join('');
+
+  return `
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
+      <strong style="color:var(--text)">${m.map}</strong> &nbsp;·&nbsp;
+      ${m.game_mode} &nbsp;·&nbsp; ${mmss(m.duration_s)} &nbsp;·&nbsp; ${m.created_at.slice(0,10)}
+    </div>
+    ${playerLines}`;
+}
+
+/* ============================================================================
+   RENDER ALL
+============================================================================ */
+function renderAll() {
+  syncButtons();
+  const matches = filtered();
+  renderSummary(matches);
+  renderTimeline(matches);
+  renderWeapons();
+  renderHealing();
+  renderThrowables();
+  renderMatchHistory(matches);
+}
+
+/* ============================================================================
+   GO
+============================================================================ */
+boot();
+</script>
+</body>
+</html>

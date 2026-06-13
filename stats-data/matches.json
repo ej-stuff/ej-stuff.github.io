@@ -1,0 +1,1252 @@
+[
+  {
+    "match_id": "d5593f5e-a5c8-4f5c-94d5-a7a6ad9bb76c",
+    "created_at": "2026-06-05T20:58:46Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1576,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 16
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 16
+      }
+    }
+  },
+  {
+    "match_id": "535371ac-7c64-4c81-82b6-a3473c5613c0",
+    "created_at": "2026-06-05T20:50:29Z",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "duration_s": 950,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 10
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 10
+      }
+    }
+  },
+  {
+    "match_id": "aa6ea0e0-275c-4861-9a84-0d73d589d904",
+    "created_at": "2026-06-05T20:41:51Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1485,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 160.5,
+        "placement": 32
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 32
+      }
+    }
+  },
+  {
+    "match_id": "bb50c696-ba8a-4d90-b2ee-bfeddb48fb41",
+    "created_at": "2026-06-05T20:18:05Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1673,
+    "players": {
+      "D282": {
+        "kills": 4,
+        "hs_kills": 0,
+        "knockdowns": 2,
+        "assists": 0,
+        "damage": 459.1,
+        "placement": 7
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 18.0,
+        "placement": 7
+      }
+    }
+  },
+  {
+    "match_id": "711d265e-4a0e-4c9d-9860-de7a40d43a04",
+    "created_at": "2026-06-05T19:51:40Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1653,
+    "players": {
+      "D282": {
+        "kills": 2,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 460.2,
+        "placement": 3
+      },
+      "S821": {
+        "kills": 3,
+        "hs_kills": 0,
+        "knockdowns": 3,
+        "assists": 1,
+        "damage": 439.5,
+        "placement": 3
+      }
+    }
+  },
+  {
+    "match_id": "b1a3ff35-9fb6-470a-bfba-a7a60113c067",
+    "created_at": "2026-06-05T19:46:53Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1534,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 47.4,
+        "placement": 45
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 24.5,
+        "placement": 45
+      }
+    }
+  },
+  {
+    "match_id": "c58ff976-8d61-4cd1-bb24-54a35b1150c1",
+    "created_at": "2026-06-05T19:41:36Z",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "duration_s": 1431,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 79.0,
+        "placement": 40
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 40
+      }
+    }
+  },
+  {
+    "match_id": "b653627e-fd55-491c-bfa3-7bace74c3ea6",
+    "created_at": "2026-06-05T19:37:56Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1392,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 48
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 48
+      }
+    }
+  },
+  {
+    "match_id": "e8c420c4-ab57-48e6-9867-b87ab166273e",
+    "created_at": "2026-06-05T19:12:40Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1732,
+    "players": {
+      "D282": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 90.1,
+        "placement": 5
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 1,
+        "knockdowns": 1,
+        "assists": 1,
+        "damage": 371.3,
+        "placement": 5
+      }
+    }
+  },
+  {
+    "match_id": "c716eb16-bc14-470c-bcf1-60f7b83965be",
+    "created_at": "2026-06-05T18:45:21Z",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "duration_s": 1728,
+    "players": {
+      "D282": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 2,
+        "damage": 298.2,
+        "placement": 4
+      },
+      "S821": {
+        "kills": 3,
+        "hs_kills": 0,
+        "knockdowns": 2,
+        "assists": 0,
+        "damage": 282.8,
+        "placement": 4
+      }
+    }
+  },
+  {
+    "match_id": "3db161f1-8f5e-433f-b075-291d63a5cf80",
+    "created_at": "2026-06-05T18:38:10Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1517,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 64.7,
+        "placement": 38
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 157.1,
+        "placement": 38
+      }
+    }
+  },
+  {
+    "match_id": "6f961bc3-5f17-4a20-ae91-1b2a53f22a93",
+    "created_at": "2026-06-05T18:30:39Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1553,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 38
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 38
+      }
+    }
+  },
+  {
+    "match_id": "17e7a554-8ad8-46ea-a322-1b2734feb280",
+    "created_at": "2026-06-05T18:10:36Z",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "duration_s": 1565,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 21.9,
+        "placement": 13
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 1,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 91.6,
+        "placement": 13
+      }
+    }
+  },
+  {
+    "match_id": "01a72f4b-afd2-40e4-800f-d1f7f3ee3ff5",
+    "created_at": "2026-06-03T21:05:54Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1580,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 42.6,
+        "placement": 14
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 152.8,
+        "placement": 14
+      }
+    }
+  },
+  {
+    "match_id": "41d51786-8dd0-42db-bd84-82b3103d6e4f",
+    "created_at": "2026-06-03T20:48:11Z",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "duration_s": 938,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 72.5,
+        "placement": 3
+      },
+      "S821": {
+        "kills": 2,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 257.1,
+        "placement": 3
+      }
+    }
+  },
+  {
+    "match_id": "f2ac0d33-914f-42f6-9cbd-e5b0bc8d5be2",
+    "created_at": "2026-06-03T20:43:42Z",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "duration_s": 1073,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 23
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 23
+      }
+    }
+  },
+  {
+    "match_id": "b1b93629-b375-4f9f-8ccd-71c859b657a0",
+    "created_at": "2026-06-03T20:34:00Z",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "duration_s": 1110,
+    "players": {
+      "D282": {
+        "kills": 2,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 103.0,
+        "placement": 13
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 1,
+        "damage": 152.8,
+        "placement": 13
+      }
+    }
+  },
+  {
+    "match_id": "dcbf027b-9f66-4af0-931a-b41d5c737467",
+    "created_at": "2026-06-03T20:19:16Z",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "duration_s": 1104,
+    "players": {
+      "D282": {
+        "kills": 4,
+        "hs_kills": 3,
+        "knockdowns": 2,
+        "assists": 0,
+        "damage": 318.2,
+        "placement": 7
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 2,
+        "damage": 253.0,
+        "placement": 7
+      }
+    }
+  },
+  {
+    "match_id": "254d7aee-4f2b-4824-8284-bffcc7079b52",
+    "created_at": "2026-06-03T20:07:46Z",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "duration_s": 1554,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 26
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 26
+      }
+    }
+  },
+  {
+    "match_id": "113c2e23-44d1-4554-aa2b-daea4ff5de3d",
+    "created_at": "2026-06-03T20:00:58Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1637,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 37
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 108.7,
+        "placement": 37
+      }
+    }
+  },
+  {
+    "match_id": "31c38efc-a214-4f0b-96d5-e9b37d2beba8",
+    "created_at": "2026-06-03T19:52:37Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1547,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 58.7,
+        "placement": 34
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 44.3,
+        "placement": 34
+      }
+    }
+  },
+  {
+    "match_id": "f729195a-475e-4da6-86eb-c475249a950d",
+    "created_at": "2026-06-03T19:49:28Z",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "duration_s": 1554,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 50
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 48.2,
+        "placement": 50
+      }
+    }
+  },
+  {
+    "match_id": "8bc2ea8c-7f0f-4ad6-abc0-d5bc791255dc",
+    "created_at": "2026-06-03T19:44:52Z",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "duration_s": 1557,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 43
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 23.2,
+        "placement": 43
+      }
+    }
+  },
+  {
+    "match_id": "31323ee6-2b72-4704-9a45-5587bd0eab50",
+    "created_at": "2026-06-03T19:21:51Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1641,
+    "players": {
+      "D282": {
+        "kills": 4,
+        "hs_kills": 0,
+        "knockdowns": 2,
+        "assists": 0,
+        "damage": 386.6,
+        "placement": 8
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 23.2,
+        "placement": 8
+      }
+    }
+  },
+  {
+    "match_id": "84d2787a-e66f-4c45-8fe8-26e0660df98a",
+    "created_at": "2026-06-03T18:55:50Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1612,
+    "players": {
+      "D282": {
+        "kills": 2,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 1,
+        "damage": 342.1,
+        "placement": 4
+      },
+      "S821": {
+        "kills": 2,
+        "hs_kills": 1,
+        "knockdowns": 1,
+        "assists": 1,
+        "damage": 241.5,
+        "placement": 4
+      }
+    }
+  },
+  {
+    "match_id": "592e92d7-be99-4749-97fc-0547abbf4c11",
+    "created_at": "2026-06-03T18:28:09Z",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "duration_s": 1578,
+    "players": {
+      "D282": {
+        "kills": 2,
+        "hs_kills": 1,
+        "knockdowns": 1,
+        "assists": 2,
+        "damage": 325.2,
+        "placement": 3
+      },
+      "S821": {
+        "kills": 3,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 2,
+        "damage": 462.1,
+        "placement": 3
+      }
+    }
+  },
+  {
+    "match_id": "19a2af9a-6520-4bc9-b7e1-33ac1695e857",
+    "created_at": "2026-06-03T18:21:30Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1645,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 125.9,
+        "placement": 41
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 131.7,
+        "placement": 41
+      }
+    }
+  },
+  {
+    "match_id": "600a706a-9a66-45b9-a569-3482a8a1ab68",
+    "created_at": "2026-06-03T18:06:44Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1624,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 21
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 21
+      }
+    }
+  },
+  {
+    "match_id": "891a19b2-7354-4c3f-b83e-11b7b94083d4",
+    "created_at": "2026-06-03T18:02:52Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1521,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 85.1,
+        "placement": 48
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 76.8,
+        "placement": 48
+      }
+    }
+  },
+  {
+    "match_id": "0857c39b-9aa7-4837-97fb-bc42bb34239f",
+    "created_at": "2026-06-03T17:58:56Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1496,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 70.1,
+        "placement": 47
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 47
+      }
+    }
+  },
+  {
+    "match_id": "249d20b5-acbe-4256-992c-470e357b668b",
+    "created_at": "2026-06-03T17:53:15Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1598,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 39
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 66.8,
+        "placement": 39
+      }
+    }
+  },
+  {
+    "match_id": "8dea32b1-8549-4395-bb50-709b89210287",
+    "created_at": "2026-06-02T20:49:10Z",
+    "map": "Rondo",
+    "game_mode": "duo-fpp",
+    "duration_s": 1599,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 43.2,
+        "placement": 34
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 48.0,
+        "placement": 34
+      }
+    }
+  },
+  {
+    "match_id": "c36fdd58-e897-4320-a70d-74054d6e1bf8",
+    "created_at": "2026-06-02T20:44:34Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1592,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 41
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 2,
+        "assists": 0,
+        "damage": 245.9,
+        "placement": 41
+      }
+    }
+  },
+  {
+    "match_id": "f0dc4b9d-a476-4438-8e41-21763c421a9d",
+    "created_at": "2026-06-02T20:38:47Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1537,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 115.2,
+        "placement": 37
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 125.1,
+        "placement": 37
+      }
+    }
+  },
+  {
+    "match_id": "e017d252-4805-43c7-bb7d-3c7a521e4f89",
+    "created_at": "2026-06-02T20:18:36Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1581,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 15
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 15
+      }
+    }
+  },
+  {
+    "match_id": "790f97a6-9457-4403-998d-2d7463aaf1de",
+    "created_at": "2026-06-02T20:05:52Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1373,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 20
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 20
+      }
+    }
+  },
+  {
+    "match_id": "76e34576-ddc3-4cf7-ba50-f5b814d202a1",
+    "created_at": "2026-06-02T19:53:10Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1610,
+    "players": {
+      "D282": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 81.2,
+        "placement": 24
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 1,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 195.4,
+        "placement": 24
+      }
+    }
+  },
+  {
+    "match_id": "f5937ab8-438a-40ae-965b-63e0212f0f65",
+    "created_at": "2026-06-02T19:46:34Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1567,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 33
+      },
+      "S821": {
+        "kills": 1,
+        "hs_kills": 1,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 77.0,
+        "placement": 33
+      }
+    }
+  },
+  {
+    "match_id": "de82cf6f-d4c5-46f4-9362-5cb1ee0253d5",
+    "created_at": "2026-06-02T19:40:51Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1504,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 38
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 38
+      }
+    }
+  },
+  {
+    "match_id": "b1729036-9dd4-48ad-9b58-3b131ff9faab",
+    "created_at": "2026-06-02T19:27:23Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1518,
+    "players": {
+      "D282": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 128.5,
+        "placement": 20
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 93.7,
+        "placement": 20
+      }
+    }
+  },
+  {
+    "match_id": "6c6b1098-d800-498f-b132-436e4861e9c0",
+    "created_at": "2026-06-02T19:22:06Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1643,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 38
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 12.3,
+        "placement": 38
+      }
+    }
+  },
+  {
+    "match_id": "a37d5543-4505-4db7-abe7-26e94c621542",
+    "created_at": "2026-06-02T19:15:34Z",
+    "map": "Rondo",
+    "game_mode": "duo-fpp",
+    "duration_s": 1535,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 31
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 134.2,
+        "placement": 31
+      }
+    }
+  },
+  {
+    "match_id": "d7b16f51-52e2-4282-a12b-fa3a80b33aa5",
+    "created_at": "2026-06-02T19:10:43Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1609,
+    "players": {
+      "D282": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 25.5,
+        "placement": 41
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 21.6,
+        "placement": 41
+      }
+    }
+  },
+  {
+    "match_id": "b0fad5c8-7763-4de8-bfcd-92088f0ee8a5",
+    "created_at": "2026-06-02T19:03:03Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1629,
+    "players": {
+      "D282": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 29
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 29
+      }
+    }
+  },
+  {
+    "match_id": "8e0ad90a-67c3-40ba-a10c-076153379a17",
+    "created_at": "2026-06-02T18:57:41Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1499,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 124.6,
+        "placement": 40
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 28.6,
+        "placement": 40
+      }
+    }
+  },
+  {
+    "match_id": "72e2808e-1054-4dfb-9a61-3a064ee61800",
+    "created_at": "2026-06-02T18:52:32Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1487,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 142.0,
+        "placement": 39
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 2,
+        "assists": 0,
+        "damage": 175.0,
+        "placement": 39
+      }
+    }
+  },
+  {
+    "match_id": "c51318b4-ddda-4b7a-a7d3-179d427d25cc",
+    "created_at": "2026-06-02T18:35:46Z",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "duration_s": 1537,
+    "players": {
+      "D282": {
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 11.1,
+        "placement": 19
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 1,
+        "damage": 253.5,
+        "placement": 19
+      }
+    }
+  },
+  {
+    "match_id": "82551878-88c6-4bb3-8a00-63f67560ec17",
+    "created_at": "2026-06-02T18:29:54Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1578,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 35
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 242.9,
+        "placement": 35
+      }
+    }
+  },
+  {
+    "match_id": "a29f46ac-13ad-48fe-b3c0-46a6aea4476f",
+    "created_at": "2026-06-02T18:25:42Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1519,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 51.5,
+        "placement": 45
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 0,
+        "placement": 45
+      }
+    }
+  },
+  {
+    "match_id": "e3c99ec8-c647-4867-9874-976a3d496d1c",
+    "created_at": "2026-06-02T18:08:30Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1641,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 161.5,
+        "placement": 19
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 354.6,
+        "placement": 19
+      }
+    }
+  }
+]
