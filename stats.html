@@ -403,20 +403,22 @@ const state = {
 };
 
 /* ============================================================================
-   DATA — filled on boot from the 8 JSON files
+   DATA — filled on boot from the 9 JSON files
 ============================================================================ */
 const DATA = {
-  summary:        null,
-  matches:        null,
-  weapons:        null,
-  items:          null,
-  timeline:       null,
+  summary:         null,
+  matches:         null,
+  weapons:         null,
+  items:           null,
+  timeline:        null,
   throwable_stats: null,
-  ammo_stats:     null,
-  dimensions:     null,
+  ammo_stats:      null,
+  heal_stats:      null,
+  dimensions:      null,
   // Lookup objects built after load (match_id → row)
-  throwIdx:       null,
-  ammoIdx:        null,
+  throwIdx: null,
+  ammoIdx:  null,
+  healIdx:  null,
 };
 
 // Chart.js instances — stored so we can destroy before recreating
@@ -431,7 +433,7 @@ let lastMatches = [];
 async function boot() {
   try {
     const [summary, matches, weapons, items, timeline,
-           throwable_stats, ammo_stats, dimensions] = await Promise.all([
+           throwable_stats, ammo_stats, heal_stats, dimensions] = await Promise.all([
       fetch('stats-data/summary.json').then(r => r.json()),
       fetch('stats-data/matches.json').then(r => r.json()),
       fetch('stats-data/weapons.json').then(r => r.json()),
@@ -439,15 +441,17 @@ async function boot() {
       fetch('stats-data/timeline.json').then(r => r.json()),
       fetch('stats-data/throwable_stats.json').then(r => r.json()),
       fetch('stats-data/ammo_stats.json').then(r => r.json()),
+      fetch('stats-data/heal_stats.json').then(r => r.json()),
       fetch('stats-data/dimensions.json').then(r => r.json()),
     ]);
 
     Object.assign(DATA, { summary, matches, weapons, items, timeline,
-                          throwable_stats, ammo_stats, dimensions });
+                          throwable_stats, ammo_stats, heal_stats, dimensions });
 
     // Pre-index per-match data for O(1) lookups in chart rendering
     DATA.throwIdx = Object.fromEntries(throwable_stats.map(r => [r.match_id, r]));
     DATA.ammoIdx  = Object.fromEntries(ammo_stats.map(r => [r.match_id, r]));
+    DATA.healIdx  = Object.fromEntries(heal_stats.map(r => [r.match_id, r]));
 
     buildMapButtons();
     buildChartDropdowns();
@@ -619,7 +623,12 @@ function getMatchValue(dim, match, player) {
   }
   if (dim.type === 'ammo') {
     const row = DATA.ammoIdx[match.match_id];
-    return row?.players[player]?.[dim.ammo_name] ?? 0;
+    // ammo_stats now stores {reloads, picked_up} per caliber
+    return row?.players[player]?.[dim.ammo_name]?.[dim.ammo_field] ?? 0;
+  }
+  if (dim.type === 'heal') {
+    const row = DATA.healIdx[match.match_id];
+    return row?.players[player]?.[dim.heal_name]?.[dim.heal_field] ?? 0;
   }
   return 0;
 }
@@ -627,15 +636,65 @@ function getMatchValue(dim, match, player) {
 /* ============================================================================
    RENDER — CHART EXPLORER
 ============================================================================ */
+
+// Build frequency bins from an array of numeric values.
+// For small integer ranges (≤20 distinct integers) uses exact values.
+// Otherwise auto-bins into ~10 buckets.
+function buildBins(allValues) {
+  if (!allValues.length) return { labels: [], map: () => 0 };
+
+  const max    = Math.max(...allValues);
+  const min    = Math.min(...allValues);
+  const isInt  = allValues.every(v => Number.isInteger(v));
+  const range  = max - min;
+
+  if (isInt && range <= 20) {
+    // Exact value per bucket
+    const buckets = Array.from({ length: range + 1 }, (_, i) => min + i);
+    return {
+      labels: buckets.map(String),
+      map:    v => v - min,
+    };
+  }
+
+  // Auto-bin into ~10 buckets
+  const nBins  = Math.min(12, Math.ceil(range) || 1);
+  const step   = range / nBins;
+  const edges  = Array.from({ length: nBins + 1 }, (_, i) => min + i * step);
+  const labels = edges.slice(0, nBins).map((lo, i) => {
+    const hi = edges[i + 1];
+    if (dim_key_is_survival) return `${Math.round(lo / 60)}–${Math.round(hi / 60)}m`;
+    return `${Math.round(lo)}–${Math.round(hi - 1)}`;
+  });
+  return {
+    labels,
+    map: v => {
+      const i = Math.min(nBins - 1,
+        Math.floor((v - min) / step));
+      return i < 0 ? 0 : i;
+    },
+  };
+}
+
+// Hoisted so buildBins() can reference it
+let dim_key_is_survival = false;
+
 function renderChart(matches) {
   const dim = DATA.dimensions.find(d => d.key === state.chartMetric);
   if (!dim) return;
 
-  // Chronological order: oldest → newest
-  const chron   = [...matches].reverse();
-  const labels  = chron.map(m => m.created_at.slice(0, 10));
   const players = state.player === 'compare' ? ['D282', 'S821'] : [state.player];
   const isHisto = state.chartType === 'histogram';
+
+  // Chronological order: oldest → newest (used for timeline)
+  const chron = [...matches].reverse();
+
+  // Format a value for display
+  dim_key_is_survival = dim.key === 'survival_s';
+  const fmtVal = v => {
+    if (dim_key_is_survival) return mmss(Math.round(v));
+    return dim.unit === 'damage' ? f1(v) : f0(v);
+  };
 
   // Build value series per player
   const series = players.map(p => ({
@@ -643,43 +702,35 @@ function renderChart(matches) {
     values: chron.map(m => getMatchValue(dim, m, p)),
   }));
 
-  // Format a value for tooltips (survival_s gets mm:ss, others get 1dp or 0dp)
-  const fmtVal = v => {
-    if (dim.key === 'survival_s') return mmss(v);
-    return dim.unit === 'damage' ? f1(v) : f0(v);
-  };
-
-  let datasets;
+  let chartType, chartLabels, datasets;
 
   if (isHisto) {
-    // Bars for per-match values + dashed flat line for average
-    datasets = series.flatMap(({ player, values }) => {
-      const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+    // ── True histogram: count of games per value bucket ──────────────────────
+    const allVals = series.flatMap(s => s.values);
+    const bins    = buildBins(allVals);
+    chartType   = 'bar';
+    chartLabels = bins.labels;
+
+    datasets = series.map(({ player, values }) => {
+      const counts = new Array(bins.labels.length).fill(0);
+      values.forEach(v => counts[bins.map(v)]++);
       const col = PLAYER_COLOR[player];
-      return [
-        {
-          type:            'bar',
-          label:           player,
-          data:            values,
-          backgroundColor: col + 'aa',
-          borderColor:     col,
-          borderWidth:     1,
-          borderRadius:    2,
-        },
-        {
-          type:        'line',
-          label:       `${player} avg (${fmtVal(avg)})`,
-          data:        values.map(() => avg),
-          borderColor: col,
-          borderDash:  [6, 3],
-          borderWidth: 1.5,
-          pointRadius: 0,
-          tension:     0,
-        },
-      ];
+      const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+      return {
+        label:           `${player} (avg ${fmtVal(avg)})`,
+        data:            counts,
+        backgroundColor: col + 'aa',
+        borderColor:     col,
+        borderWidth:     1,
+        borderRadius:    2,
+      };
     });
+
   } else {
-    // Standard line chart
+    // ── Timeline: value per match in chronological order ─────────────────────
+    chartType   = 'line';
+    chartLabels = chron.map(m => m.created_at.slice(0, 10));
+
     datasets = series.map(({ player, values }) => ({
       label:            player,
       data:             values,
@@ -695,11 +746,14 @@ function renderChart(matches) {
 
   if (CHARTS.main) CHARTS.main.destroy();
 
+  const xLabel = isHisto ? dim.label : 'Match date';
+  const yLabel = isHisto ? 'Games'   : dim.unit;
+
   CHARTS.main = new Chart(
     document.getElementById('mainChart').getContext('2d'),
     {
-      type: isHisto ? 'bar' : 'line',
-      data: { labels, datasets },
+      type: chartType,
+      data: { labels: chartLabels, datasets },
       options: {
         responsive:          true,
         maintainAspectRatio: false,
@@ -715,8 +769,12 @@ function renderChart(matches) {
             titleColor:      '#e8e3d8',
             bodyColor:       '#9a9385',
             callbacks: {
+              title: ([ctx]) => isHisto
+                ? `${dim.label}: ${ctx.label}`
+                : ctx.label,
               label: ctx => {
                 const v = ctx.parsed.y;
+                if (isHisto) return `${ctx.dataset.label}: ${v} game${v !== 1 ? 's' : ''}`;
                 return `${ctx.dataset.label}: ${fmtVal(v)} ${dim.unit}`;
               },
             },
@@ -724,13 +782,22 @@ function renderChart(matches) {
         },
         scales: {
           x: {
-            ticks: { color: '#9a9385', maxRotation: 45, font: { size: 11 } },
+            ticks: {
+              color: '#9a9385',
+              maxRotation: isHisto ? 0 : 45,
+              font: { size: 11 },
+            },
+            title: { display: isHisto, text: xLabel, color: '#9a9385', font: { size: 11 } },
             grid:  { color: 'rgba(56,52,44,0.5)' },
           },
           y: {
             min:   0,
-            title: { display: true, text: dim.unit, color: '#9a9385', font: { size: 11 } },
-            ticks: { color: '#9a9385', font: { size: 11 } },
+            ticks: {
+              color: '#9a9385',
+              font:  { size: 11 },
+              stepSize: isHisto ? 1 : undefined,
+            },
+            title: { display: true, text: yLabel, color: '#9a9385', font: { size: 11 } },
             grid:  { color: 'rgba(56,52,44,0.4)' },
           },
         },

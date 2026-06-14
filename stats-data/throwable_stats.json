@@ -8,31 +8,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -40,31 +45,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       }
     }
@@ -78,31 +88,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -110,31 +125,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -148,31 +168,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -180,31 +205,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -218,31 +248,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 3
         }
       },
       "S821": {
@@ -250,31 +285,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 5
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       }
     }
@@ -288,31 +328,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -320,31 +365,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 3
         }
       }
     }
@@ -358,31 +408,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -390,31 +445,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -428,31 +488,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -460,31 +525,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -498,31 +568,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -530,31 +605,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -568,31 +648,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -600,31 +685,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -638,31 +728,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       },
       "S821": {
@@ -670,31 +765,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -708,31 +808,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -740,31 +845,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       }
     }
@@ -778,31 +888,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -810,31 +925,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -848,31 +968,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -880,31 +1005,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       }
     }
@@ -918,31 +1048,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 3
         }
       },
       "S821": {
@@ -950,31 +1085,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       }
     }
@@ -988,31 +1128,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       },
       "S821": {
@@ -1020,31 +1165,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 3,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       }
     }
@@ -1058,31 +1208,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -1090,31 +1245,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       }
     }
@@ -1128,31 +1288,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -1160,31 +1325,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -1198,31 +1368,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -1230,31 +1405,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -1268,31 +1448,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -1300,31 +1485,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -1338,31 +1528,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -1370,31 +1565,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -1408,31 +1608,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -1440,31 +1645,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -1478,31 +1688,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -1510,31 +1725,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -1548,31 +1768,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -1580,31 +1805,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       }
     }
@@ -1618,31 +1848,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -1650,31 +1885,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -1688,31 +1928,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -1720,31 +1965,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 2,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       }
     }
@@ -1758,31 +2008,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       },
       "S821": {
@@ -1790,31 +2045,36 @@
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 21.8,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 4,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 7,
           "kills": 0,
           "damage": 21.8,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 7
         }
       }
     }
@@ -1828,31 +2088,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 3,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 5,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       },
       "S821": {
@@ -1860,31 +2125,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 29.0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 2,
           "kills": 0,
           "damage": 29.0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 6
         }
       }
     }
@@ -1898,31 +2168,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -1930,31 +2205,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -1968,31 +2248,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -2000,31 +2285,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -2038,31 +2328,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -2070,31 +2365,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -2108,31 +2408,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       },
       "S821": {
@@ -2140,31 +2445,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -2178,31 +2488,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 2,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       },
       "S821": {
@@ -2210,31 +2525,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -2248,31 +2568,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -2280,31 +2605,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -2318,31 +2648,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 4
         }
       },
       "S821": {
@@ -2350,31 +2685,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -2388,31 +2728,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -2420,31 +2765,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -2458,31 +2808,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 7
         }
       },
       "S821": {
@@ -2490,31 +2845,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -2528,31 +2888,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       },
       "S821": {
@@ -2560,31 +2925,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       }
     }
@@ -2598,31 +2968,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       },
       "S821": {
@@ -2630,31 +3005,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 5
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 2,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       }
     }
@@ -2668,31 +3048,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       },
       "S821": {
@@ -2700,31 +3085,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -2738,31 +3128,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -2770,31 +3165,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       }
     }
@@ -2808,31 +3208,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 3,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 4,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       },
       "S821": {
@@ -2840,31 +3245,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 5.5,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 7
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 2,
           "kills": 0,
           "damage": 5.5,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 8
         }
       }
     }
@@ -2878,31 +3288,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 43.6,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Smoke Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 3,
           "kills": 0,
           "damage": 43.6,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 5
         }
       },
       "S821": {
@@ -2910,31 +3325,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 3,
           "kills": 0,
           "damage": 100.0,
-          "knockdowns": 1
+          "knockdowns": 1,
+          "picked_up": 3
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 4,
           "kills": 0,
           "damage": 100.0,
-          "knockdowns": 1
+          "knockdowns": 1,
+          "picked_up": 5
         }
       }
     }
@@ -2948,31 +3368,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 2
         }
       },
       "S821": {
@@ -2980,31 +3405,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -3018,31 +3448,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       },
       "S821": {
@@ -3050,31 +3485,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 1
         }
       }
     }
@@ -3088,31 +3528,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       },
       "S821": {
@@ -3120,31 +3565,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 0
         }
       }
     }
@@ -3158,31 +3608,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 5
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 2,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       },
       "S821": {
@@ -3190,31 +3645,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 6
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 2,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 7
         }
       }
     }
@@ -3228,31 +3688,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 3,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 6
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 3,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 7
         }
       },
       "S821": {
@@ -3260,31 +3725,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 8
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 10
         }
       }
     }
@@ -3298,31 +3768,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 3
         }
       },
       "S821": {
@@ -3330,31 +3805,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 3
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       }
     }
@@ -3368,31 +3848,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "Sticky Grenade": {
           "count": 2,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "__total__": {
           "count": 2,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       },
       "S821": {
@@ -3400,31 +3885,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 2
         },
         "__total__": {
           "count": 0,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 3
         }
       }
     }
@@ -3438,31 +3928,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 1
         },
         "Smoke Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 4
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
         }
       },
       "S821": {
@@ -3470,31 +3965,36 @@
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "Smoke Grenade": {
           "count": 1,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 6
         },
         "Sticky Grenade": {
           "count": 0,
           "kills": 0,
           "damage": 0,
-          "knockdowns": 0
+          "knockdowns": 0,
+          "picked_up": 0
         },
         "__total__": {
           "count": 1,
           "kills": 0,
-          "damage": 0,
-          "knockdowns": 0
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 6
         }
       }
     }
