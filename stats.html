@@ -297,7 +297,7 @@ tr.detail-row td { background: #131210; padding: 0; }
 <div class="wrap">
 
   <h1>PUBG Stats</h1>
-  <p class="subtitle">D282 &amp; S821 — duo-fpp, 50 shared matches</p>
+  <p class="subtitle" id="mainSubtitle">D282 &amp; S821 — duo-fpp</p>
 
   <!-- ── FILTERS ──────────────────────────────────────────────────────────── -->
   <div class="panel">
@@ -446,6 +446,9 @@ async function boot() {
 
     Object.assign(DATA, { summary, matches, weapons, items, timeline,
                           throwable_stats, ammo_stats, heal_stats, dimensions });
+
+    document.getElementById('mainSubtitle').textContent =
+      `D282 & S821 — duo-fpp, ${matches.length} shared matches`;
 
     // Pre-index per-match data for O(1) lookups in chart rendering
     DATA.throwIdx = Object.fromEntries(throwable_stats.map(r => [r.match_id, r]));

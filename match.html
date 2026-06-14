@@ -56,9 +56,7 @@ body {
 .bc-cur { color: var(--muted); }
 
 /* ── Header ─────────────────────────────────────────────────────────────── */
-.hd {
-  margin-bottom: 16px;
-}
+.hd { margin-bottom: 16px; }
 h1 {
   font-family: Oswald, system-ui, sans-serif;
   font-weight: 700;
@@ -118,7 +116,6 @@ h1 {
   cursor: crosshair;
 }
 
-/* Reset view button */
 .map-controls {
   position: absolute;
   top: 10px;
@@ -186,6 +183,13 @@ h1 {
 }
 .tl-btn:hover { color: var(--accent); border-color: var(--accent); }
 
+#tlCanvas {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  cursor: crosshair;
+}
+
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */
 .sidebar { display: flex; flex-direction: column; gap: 12px; }
 
@@ -196,7 +200,7 @@ h1 {
   padding: 10px 12px;
   border: 1px solid var(--line);
 }
-.pcard.amber { border-color: rgba(244,163,0,0.4); background: rgba(244,163,0,0.04); }
+.pcard.amber { border-color: rgba(244,163,0,0.4);  background: rgba(244,163,0,0.04); }
 .pcard.blue  { border-color: rgba(74,158,221,0.4); background: rgba(74,158,221,0.04); }
 .pcard-name {
   font-family: Oswald, sans-serif;
@@ -205,7 +209,7 @@ h1 {
   margin-bottom: 7px;
 }
 .pcard.amber .pcard-name { color: var(--accent); }
-.pcard.blue  .pcard-name { color: var(--blue);   }
+.pcard.blue  .pcard-name { color: var(--blue); }
 .pcard-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -270,23 +274,19 @@ h1 {
 <body>
 <div class="wrap">
 
-  <!-- Breadcrumb navigation -->
   <nav class="breadcrumb">
     <a href="stats.html" class="bc-home">PUBG Stats</a>
     <span class="bc-sep">▸</span>
     <span class="bc-cur" id="bcCur">Match Analysis</span>
   </nav>
 
-  <!-- Header -->
   <div class="hd">
     <h1 id="pageTitle">Match Analysis</h1>
     <div class="subtitle" id="matchMeta">Loading…</div>
   </div>
 
-  <!-- Main -->
   <div class="main-layout">
 
-    <!-- Left: map + timeline -->
     <div class="map-col">
       <div class="map-wrap" id="mapWrap">
         <canvas id="mapCanvas"></canvas>
@@ -303,10 +303,13 @@ h1 {
           <span class="tl-val" id="timeDisplay">Full match</span>
           <button class="tl-btn" onclick="resetTime()">All</button>
         </div>
+        <!-- Events timeline: all events as colored dots, clickable/hoverable -->
+        <div id="tlWrap" style="margin-top:8px">
+          <canvas id="tlCanvas"></canvas>
+        </div>
       </div>
     </div>
 
-    <!-- Right: sidebar -->
     <div class="sidebar">
 
       <div class="panel">
@@ -331,10 +334,9 @@ h1 {
     </div>
   </div>
 
-  <!-- Event detail -->
   <div class="panel">
     <div class="panel-title">Hovered Event</div>
-    <div class="event-detail" id="eventDetail">Hover over a marker on the map to see details.</div>
+    <div class="event-detail" id="eventDetail">Hover over a marker on the map or timeline to see details.</div>
   </div>
 
 </div>
@@ -347,19 +349,21 @@ const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
 
 // Layer ids MUST match event.type strings from the match JSON exactly
 const LAYER_DEFS = [
-  { id: 'paths',     label: 'Movement Paths', color: null,      default: true  },
-  { id: 'circles',   label: 'Blue Zone',      color: '#4a9edd', default: true  },
-  { id: 'kill',      label: 'Kills',          color: '#f4a300', default: true  },
-  { id: 'knockdown', label: 'Knocks Out',     color: '#f4a300', default: true  },
-  { id: 'knocked',   label: 'Knocked Down',   color: '#d7443e', default: true  },
-  { id: 'death',     label: 'Deaths',         color: '#d7443e', default: true  },
-  { id: 'revive',    label: 'Revives',        color: '#c080ff', default: true  },
-  { id: 'dmg_dealt', label: 'Damage Dealt',   color: '#f4a300', default: false },
-  { id: 'dmg_taken', label: 'Damage Taken',   color: '#d7443e', default: false },
-  { id: 'heal',      label: 'Heals',          color: '#8fae5d', default: false },
-  { id: 'boost',     label: 'Boosts',         color: '#56c1a5', default: false },
-  { id: 'throwable', label: 'Throwables',     color: '#ff9944', default: false },
-  { id: 'carepack',  label: 'Care Package',   color: '#ffe44d', default: false },
+  { id: 'paths',            label: 'Movement Paths',    color: null,      default: true  },
+  { id: 'circles',          label: 'Blue Zone',         color: '#4a9edd', default: true  },
+  { id: 'kill',             label: 'Kills',             color: '#f4a300', default: true  },
+  { id: 'knockdown',        label: 'Knocks Out',        color: '#f4a300', default: true  },
+  { id: 'knocked',          label: 'Knocked Down',      color: '#d7443e', default: true  },
+  { id: 'death',            label: 'Deaths',            color: '#d7443e', default: true  },
+  { id: 'revive',           label: 'Revives',           color: '#c080ff', default: true  },
+  { id: 'blue_chip_revive', label: 'Blue Chip Revives', color: '#ff66ff', default: true  },
+  { id: 'dmg_dealt',        label: 'Damage Dealt',      color: '#f4a300', default: false },
+  { id: 'dmg_taken',        label: 'Damage Taken',      color: '#d7443e', default: false },
+  { id: 'heal',             label: 'Heals',             color: '#8fae5d', default: false },
+  { id: 'boost',            label: 'Boosts',            color: '#56c1a5', default: false },
+  { id: 'throwable',        label: 'Throwables',        color: '#ff9944', default: false },
+  { id: 'carepack',         label: 'Care Package',      color: '#ffe44d', default: false },
+  { id: 'transport',        label: 'Transport Mode',    color: null,      default: false },
 ];
 
 /* ============================================================================
@@ -371,7 +375,6 @@ const state = {
   layers: Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.default])),
 };
 
-/* View — pan/zoom */
 const view = { scale: 1, offsetX: 0, offsetY: 0 };
 let isDragging = false, dragStart = null;
 
@@ -384,12 +387,171 @@ let MAP = null;
 const canvas = document.getElementById('mapCanvas');
 const ctx    = canvas.getContext('2d');
 const mapImg = new Image();
-// No crossOrigin: we only draw the image, never read pixel data from canvas.
-// Avoids CORS taint failures while still rendering the image correctly.
+// No crossOrigin: we only draw the image, never read pixel data.
 mapImg.onload  = () => draw();
-mapImg.onerror = () => { console.warn('Map image failed to load'); draw(); };
+mapImg.onerror = () => {
+  // Try CDN fallback if local file failed (local map-images/ not present)
+  if (MAP && MAP.cdn_url && mapImg.src !== MAP.cdn_url) {
+    mapImg.src = MAP.cdn_url;
+  } else {
+    draw();
+  }
+};
 
 let markers = [];
+
+/* ============================================================================
+   EVENTS TIMELINE
+============================================================================ */
+const TL_H       = 72;
+const TL_PAD_L   = 28;
+const TL_D282_Y  = 21;
+const TL_S821_Y  = 51;
+const TL_DOT_R   = 4;
+const TL_DOT_SEP = TL_DOT_R * 2 + 2;
+
+let tlCanvas = null, tlCtx = null, tlMarkers = [];
+
+function initTimeline() {
+  tlCanvas = document.getElementById('tlCanvas');
+  tlCtx    = tlCanvas.getContext('2d');
+  tlCanvas.addEventListener('click',      onTlClick);
+  tlCanvas.addEventListener('mousemove',  onTlMouseMove);
+  tlCanvas.addEventListener('mouseleave', () => {
+    document.getElementById('tooltip').style.display = 'none';
+  });
+  resizeTimeline();
+  drawTimeline();
+}
+
+function resizeTimeline() {
+  if (!tlCanvas) return;
+  const wrap = document.getElementById('tlWrap');
+  const w    = wrap.clientWidth;
+  if (tlCanvas.width !== w || tlCanvas.height !== TL_H) {
+    tlCanvas.width  = w;
+    tlCanvas.height = TL_H;
+  }
+}
+
+function tlX(t) {
+  const dur = MD ? (MD.duration_s || 1800) : 1800;
+  return TL_PAD_L + (Math.max(0, t) / dur) * (tlCanvas.width - TL_PAD_L - 4);
+}
+
+function tlXToTime(px) {
+  const dur = MD ? (MD.duration_s || 1800) : 1800;
+  return Math.max(0, (px - TL_PAD_L) / (tlCanvas.width - TL_PAD_L - 4) * dur);
+}
+
+function tlEventColor(type) {
+  const ld = LAYER_DEFS.find(l => l.id === type);
+  return (ld && ld.color) ? ld.color : null;
+}
+
+function drawTimeline() {
+  if (!tlCanvas || !MD) return;
+  const w = tlCanvas.width, h = tlCanvas.height;
+  tlCtx.clearRect(0, 0, w, h);
+
+  // Alternating row tints
+  tlCtx.fillStyle = 'rgba(244,163,0,0.04)';
+  tlCtx.fillRect(TL_PAD_L, 0, w - TL_PAD_L, h / 2);
+  tlCtx.fillStyle = 'rgba(74,158,221,0.04)';
+  tlCtx.fillRect(TL_PAD_L, h / 2, w - TL_PAD_L, h / 2);
+
+  // Row divider
+  tlCtx.beginPath();
+  tlCtx.moveTo(TL_PAD_L, h / 2); tlCtx.lineTo(w, h / 2);
+  tlCtx.strokeStyle = 'rgba(56,52,44,0.7)';
+  tlCtx.lineWidth = 1;
+  tlCtx.stroke();
+
+  // Player labels
+  tlCtx.font = 'bold 10px system-ui, sans-serif';
+  tlCtx.textBaseline = 'middle';
+  tlCtx.textAlign = 'left';
+  tlCtx.fillStyle = '#f4a300'; tlCtx.fillText('D282', 1, TL_D282_Y);
+  tlCtx.fillStyle = '#4a9edd'; tlCtx.fillText('S821', 1, TL_S821_Y);
+
+  // Event dots — bucket by pixel position to stack overlapping events
+  tlMarkers = [];
+  const BUCKET = TL_DOT_SEP;
+
+  for (const [player, rowY, stackDir] of [['D282', TL_D282_Y, -1], ['S821', TL_S821_Y, 1]]) {
+    const buckets = {};
+    for (const ev of MD.events) {
+      if (ev.player !== player || ev.t < 0) continue;
+      const bx = Math.round(tlX(ev.t) / BUCKET);
+      if (!buckets[bx]) buckets[bx] = [];
+      buckets[bx].push(ev);
+    }
+    for (const [bxStr, evs] of Object.entries(buckets)) {
+      const cx = parseInt(bxStr) * BUCKET + BUCKET / 2;
+      if (cx < TL_PAD_L || cx > w - 2) continue;
+      for (let i = 0; i < Math.min(evs.length, 3); i++) {
+        const ev = evs[i];
+        const cy = rowY + stackDir * i * TL_DOT_SEP;
+        if (cy < TL_DOT_R + 1 || cy > h - TL_DOT_R - 1) break;
+        const col = tlEventColor(ev.type) || PLAYER_COLOR[player];
+        tlCtx.beginPath();
+        tlCtx.arc(cx, cy, TL_DOT_R, 0, Math.PI * 2);
+        tlCtx.fillStyle = col;
+        tlCtx.globalAlpha = 0.8;
+        tlCtx.fill();
+        tlCtx.globalAlpha = 1;
+        tlMarkers.push({ cx, cy, ev });
+      }
+    }
+  }
+
+  // Current-time indicator line
+  if (state.time !== Infinity) {
+    const x = tlX(state.time);
+    tlCtx.beginPath();
+    tlCtx.moveTo(x, 0); tlCtx.lineTo(x, h);
+    tlCtx.strokeStyle = 'rgba(244,163,0,0.85)';
+    tlCtx.lineWidth = 1.5;
+    tlCtx.stroke();
+  }
+}
+
+function onTlClick(e) {
+  const rect    = tlCanvas.getBoundingClientRect();
+  const x       = (e.clientX - rect.left) * (tlCanvas.width / rect.width);
+  const t       = Math.round(tlXToTime(x));
+  const sl      = document.getElementById('timeSlider');
+  const max     = parseInt(sl.max, 10);
+  const clamped = Math.max(0, Math.min(t, max));
+  sl.value      = clamped;
+  state.time    = clamped >= max ? Infinity : clamped;
+  document.getElementById('timeDisplay').textContent =
+    state.time === Infinity ? 'Full match' : mmss(clamped);
+  draw();
+  drawTimeline();
+}
+
+function onTlMouseMove(e) {
+  const rect = tlCanvas.getBoundingClientRect();
+  const mx   = (e.clientX - rect.left) * (tlCanvas.width  / rect.width);
+  const my   = (e.clientY - rect.top)  * (tlCanvas.height / rect.height);
+  const tip  = document.getElementById('tooltip');
+  let found  = null;
+  for (const m of tlMarkers) {
+    const dx = mx - m.cx, dy = my - m.cy;
+    if (dx * dx + dy * dy <= (TL_DOT_R + 5) * (TL_DOT_R + 5)) { found = m; break; }
+  }
+  if (found) {
+    const txt = fmtEvent(found.ev);
+    tip.textContent   = txt;
+    tip.style.left    = (e.clientX + 14) + 'px';
+    tip.style.top     = (e.clientY - 12) + 'px';
+    tip.style.display = 'block';
+    document.getElementById('eventDetail').textContent = txt;
+  } else {
+    tip.style.display = 'none';
+  }
+}
 
 /* ============================================================================
    BOOT
@@ -433,7 +595,12 @@ async function boot() {
 
   if (MAP) mapImg.src = MAP.image_url;
 
-  window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    resizeTimeline();
+    draw();
+    drawTimeline();
+  });
   canvas.addEventListener('wheel',      onWheel,     { passive: false });
   canvas.addEventListener('mousedown',  onMouseDown);
   canvas.addEventListener('mousemove',  onMouseMove);
@@ -445,6 +612,7 @@ async function boot() {
 
   resizeCanvas();
   draw();
+  initTimeline();
 }
 
 /* ============================================================================
@@ -462,14 +630,12 @@ function resizeCanvas() {
 /* ============================================================================
    COORDINATE TRANSFORMS
 ============================================================================ */
-// World cm → canvas world-pixel (pre-transform)
 function w2c(x, y) {
   const sz = canvas.width;
   const ws = MAP ? MAP.world_size : 816000;
   return { cx: (x / ws) * sz, cy: (y / ws) * sz };
 }
 
-// Client position → canvas pixel coords (accounts for CSS scaling)
 function screenToCanvasPx(clientX, clientY) {
   const rect = canvas.getBoundingClientRect();
   return {
@@ -478,7 +644,6 @@ function screenToCanvasPx(clientX, clientY) {
   };
 }
 
-// Canvas pixel coords → world-pixel coords (inverts the pan/zoom transform)
 function canvasToWorldPx(canvasPxX, canvasPxY) {
   return {
     cx: (canvasPxX - view.offsetX) / view.scale,
@@ -493,14 +658,10 @@ function draw() {
   if (!MD) return;
   const sz = canvas.width;
 
-  // Reset transform before clearing
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, sz, sz);
-
-  // Apply pan/zoom — all drawing below is in world-pixel space
   ctx.setTransform(view.scale, 0, 0, view.scale, view.offsetX, view.offsetY);
 
-  // Map image or solid fallback
   if (mapImg.complete && mapImg.naturalWidth > 0) {
     ctx.drawImage(mapImg, 0, 0, sz, sz);
     ctx.fillStyle = 'rgba(0,0,0,0.28)';
@@ -516,49 +677,92 @@ function draw() {
 
   markers = [];
   for (const ev of MD.events) {
-    if (ev.t > maxT)           continue;
-    if (!playerVis(ev.player)) continue;
+    if (ev.t > maxT)            continue;
+    if (!playerVis(ev.player))  continue;
     if (!state.layers[ev.type]) continue;
     const { cx, cy } = w2c(ev.x, ev.y);
     drawMarker(ev, cx, cy);
     markers.push({ cx, cy, ev });
   }
 
-  // Restore identity transform so browser compositing works correctly
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 /* ── Movement paths ─────────────────────────────────────────────────────── */
 function drawPaths(maxT) {
+  const showTransport = state.layers.transport;
+
   for (const [player, pts] of Object.entries(MD.positions)) {
     if (!playerVis(player)) continue;
-    const vis = pts.filter(p => p.t <= maxT);
+    const vis = pts.filter(p => p.t >= 0 && p.t <= maxT);
     if (vis.length < 2) continue;
 
-    const f = w2c(vis[0].x, vis[0].y);
-    ctx.beginPath();
-    ctx.moveTo(f.cx, f.cy);
+    // Group into life-segments — never connect across a blue-chip revive
+    const segments = [];
+    let seg = [vis[0]];
     for (let i = 1; i < vis.length; i++) {
-      const { cx, cy } = w2c(vis[i].x, vis[i].y);
-      ctx.lineTo(cx, cy);
+      const life     = vis[i].life     != null ? vis[i].life     : 0;
+      const prevLife = vis[i - 1].life != null ? vis[i - 1].life : 0;
+      if (life !== prevLife) { segments.push(seg); seg = [vis[i]]; }
+      else seg.push(vis[i]);
     }
-    ctx.strokeStyle = PLAYER_COLOR[player];
-    ctx.lineWidth   = 2 / view.scale;  // constant 2px screen width at any zoom
-    ctx.globalAlpha = 0.55;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
+    segments.push(seg);
 
-    // Current position dot — constant 5px on screen
-    const last      = vis[vis.length - 1];
-    const { cx, cy } = w2c(last.x, last.y);
+    for (const s of segments) {
+      if (s.length < 2) continue;
+      if (!showTransport) {
+        _strokePath(player, s, 2, 0.55, false);
+      } else {
+        // Sub-segment by transport type for distinct styling
+        let sub = [s[0]];
+        for (let i = 1; i < s.length; i++) {
+          const tr = s[i].tr || 'foot', prevTr = s[i - 1].tr || 'foot';
+          if (tr !== prevTr) { _drawTrSeg(player, sub); sub = [s[i]]; }
+          else sub.push(s[i]);
+        }
+        _drawTrSeg(player, sub);
+      }
+    }
+
+    // Current-position dot
+    const last        = vis[vis.length - 1];
+    const { cx, cy }  = w2c(last.x, last.y);
     ctx.beginPath();
     ctx.arc(cx, cy, 5 / view.scale, 0, Math.PI * 2);
-    ctx.fillStyle   = PLAYER_COLOR[player];
+    ctx.fillStyle = PLAYER_COLOR[player];
     ctx.fill();
     ctx.strokeStyle = '#fff';
     ctx.lineWidth   = 1 / view.scale;
     ctx.stroke();
   }
+}
+
+// Draw one transport-type sub-segment with the appropriate style
+function _drawTrSeg(player, pts) {
+  if (!pts.length) return;
+  const tr        = pts[0].tr || 'foot';
+  if (tr === 'plane') return;   // in-flight — hidden in transport mode
+  const isVehicle = ['WheeledVehicle', 'BikesVehicle', 'FloatingVehicle', 'FlyingVehicle'].includes(tr);
+  _strokePath(player, pts, isVehicle ? 4 : 2, isVehicle ? 0.75 : 0.55, tr === 'chute');
+}
+
+// Low-level: stroke a list of positions as a path
+function _strokePath(player, pts, lw, alpha, dashed) {
+  if (pts.length < 2) return;
+  const f = w2c(pts[0].x, pts[0].y);
+  ctx.beginPath();
+  ctx.moveTo(f.cx, f.cy);
+  for (let i = 1; i < pts.length; i++) {
+    const { cx, cy } = w2c(pts[i].x, pts[i].y);
+    ctx.lineTo(cx, cy);
+  }
+  ctx.strokeStyle = PLAYER_COLOR[player];
+  ctx.lineWidth   = lw / view.scale;
+  ctx.globalAlpha = alpha;
+  if (dashed) ctx.setLineDash([6 / view.scale, 4 / view.scale]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
 }
 
 /* ── Blue zone circles ──────────────────────────────────────────────────── */
@@ -600,7 +804,7 @@ function markerColor(ev) {
 
 function drawMarker(ev, cx, cy) {
   const col = markerColor(ev);
-  const r   = 7 / view.scale;   // constant 7px on screen at any zoom
+  const r   = 7 / view.scale;
   ctx.strokeStyle = col;
   ctx.fillStyle   = col;
   ctx.lineWidth   = 2 / view.scale;
@@ -648,8 +852,13 @@ function drawMarker(ev, cx, cy) {
       ctx.stroke();
       break;
     }
+    case 'blue_chip_revive': {
+      // Double-circle (outer ring + filled centre) — beacon/respawn icon
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, r * 0.42, 0, Math.PI * 2); ctx.fill();
+      break;
+    }
     case 'dmg_dealt': {
-      // > chevron — outgoing damage
       const s = r * 0.8;
       ctx.beginPath();
       ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s * 0.5, cy); ctx.lineTo(cx - s, cy + s);
@@ -657,7 +866,6 @@ function drawMarker(ev, cx, cy) {
       break;
     }
     case 'dmg_taken': {
-      // < chevron — incoming damage
       const s = r * 0.8;
       ctx.beginPath();
       ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s * 0.5, cy); ctx.lineTo(cx + s, cy + s);
@@ -704,7 +912,6 @@ function onWheel(e) {
   const { cx, cy } = screenToCanvasPx(e.clientX, e.clientY);
   const factor   = e.deltaY < 0 ? 1.15 : 1 / 1.15;
   const newScale = Math.max(0.8, Math.min(view.scale * factor, 24));
-  // Adjust offset so the point under the cursor stays fixed
   view.offsetX   = cx - (cx - view.offsetX) * (newScale / view.scale);
   view.offsetY   = cy - (cy - view.offsetY) * (newScale / view.scale);
   view.scale     = newScale;
@@ -728,7 +935,6 @@ function onMouseMove(e) {
     return;
   }
 
-  // Hover tooltip — convert mouse to world-pixel space for hit detection
   const { cx: scx, cy: scy } = screenToCanvasPx(e.clientX, e.clientY);
   const wp  = canvasToWorldPx(scx, scy);
   const tip = document.getElementById('tooltip');
@@ -736,7 +942,7 @@ function onMouseMove(e) {
 
   for (const m of markers) {
     const dx = wp.cx - m.cx, dy = wp.cy - m.cy;
-    const hitR = 12 / view.scale;  // 12 screen-pixel hit radius regardless of zoom
+    const hitR = 12 / view.scale;
     if (dx * dx + dy * dy <= hitR * hitR) { found = m; break; }
   }
 
@@ -767,14 +973,16 @@ function onTimeInput(e) {
   document.getElementById('timeDisplay').textContent =
     state.time === Infinity ? 'Full match' : mmss(val);
   draw();
+  drawTimeline();
 }
 
 function resetTime() {
-  const sl  = document.getElementById('timeSlider');
-  sl.value  = sl.max;
+  const sl   = document.getElementById('timeSlider');
+  sl.value   = sl.max;
   state.time = Infinity;
   document.getElementById('timeDisplay').textContent = 'Full match';
   draw();
+  drawTimeline();
 }
 
 function setPlayerFilter(p) {
@@ -802,7 +1010,6 @@ function buildPlayerCards() {
     const cls = p === 'D282' ? 'amber' : 'blue';
     const pl  = s.placement === 1 ? '#1 Winner' : (s.placement ? `#${s.placement}` : '—');
 
-    // Count event types from the events array for this player
     const ec = {};
     (MD.events || []).filter(ev => ev.player === p).forEach(ev => {
       ec[ev.type] = (ec[ev.type] || 0) + 1;
@@ -815,8 +1022,8 @@ function buildPlayerCards() {
       ['Survived',     s.survival_s ? mmss(s.survival_s) : '—'],
       ['Knocks out',   ec['knockdown'] || 0],
       ['Got knocked',  ec['knocked']   || 0],
-      ['Revives',      ec['revive']    || 0],
-      ['Heals/boosts', (ec['heal'] || 0) + (ec['boost'] || 0)],
+      ['Revives',      (ec['revive'] || 0) + (ec['blue_chip_revive'] || 0)],
+      ['Heals/boosts', (ec['heal']   || 0) + (ec['boost']           || 0)],
     ];
 
     return `<div class="pcard ${cls}">
@@ -858,18 +1065,19 @@ function fmtEvent(ev) {
   const p = ev.player || '?';
   const t = mmss(ev.t);
   switch (ev.type) {
-    case 'kill':      return `${p} killed ${ev.victim} · ${ev.weapon}${ev.reason === 'HeadShot' ? ' (HS)' : ''} · ${t}`;
-    case 'knockdown': return `${p} knocked ${ev.victim} · ${ev.weapon} · ${t}`;
-    case 'knocked':   return `${p} knocked down by ${ev.attacker} · ${t}`;
-    case 'death':     return `${p} died · killed by ${ev.killer} (${ev.weapon}) · ${t}`;
-    case 'revive':    return `${p} revived ${ev.target} · ${t}`;
-    case 'heal':      return `${p} +${ev.amount}hp · ${ev.item} · ${t}`;
-    case 'boost':     return `${p} boosted · ${ev.item} · ${t}`;
-    case 'dmg_dealt': return `${p} ▶ ${ev.target} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · '+ev.reason : ''} · ${t}`;
-    case 'dmg_taken': return `${p} ◀ ${ev.attacker} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · '+ev.reason : ''} · ${t}`;
-    case 'throwable': return `${p} threw ${ev.weapon} · ${t}`;
-    case 'carepack':  return `${p} looted care pack: ${ev.item} · ${t}`;
-    default:          return `${p} ${ev.type} · ${t}`;
+    case 'kill':             return `${p} killed ${ev.victim} · ${ev.weapon}${ev.reason === 'HeadShot' ? ' (HS)' : ''} · ${t}`;
+    case 'knockdown':        return `${p} knocked ${ev.victim} · ${ev.weapon} · ${t}`;
+    case 'knocked':          return `${p} knocked down by ${ev.attacker} · ${t}`;
+    case 'death':            return `${p} died · killed by ${ev.killer} (${ev.weapon}) · ${t}`;
+    case 'revive':           return `${p} revived ${ev.target} · ${t}`;
+    case 'blue_chip_revive': return `${p} blue chip revived ${ev.target} · ${t}`;
+    case 'heal':             return `${p} +${ev.amount}hp · ${ev.item} · ${t}`;
+    case 'boost':            return `${p} boosted · ${ev.item} · ${t}`;
+    case 'dmg_dealt':        return `${p} ▶ ${ev.target} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
+    case 'dmg_taken':        return `${p} ◀ ${ev.attacker} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
+    case 'throwable':        return `${p} threw ${ev.weapon} · ${t}`;
+    case 'carepack':         return `${p} looted care pack: ${ev.item} · ${t}`;
+    default:                 return `${p} ${ev.type} · ${t}`;
   }
 }
 
