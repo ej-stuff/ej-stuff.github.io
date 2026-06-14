@@ -1,0 +1,56 @@
+{
+  "Baltic_Main": {
+    "name": "Erangel",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Erangel_Main_Low_Res.png",
+    "world_size": 816000,
+    "image_px": 1024
+  },
+  "Desert_Main": {
+    "name": "Miramar",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Miramar_Main_Low_Res.png",
+    "world_size": 816000,
+    "image_px": 1024
+  },
+  "Savage_Main": {
+    "name": "Sanhok",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Sanhok_Main_Low_Res.png",
+    "world_size": 408000,
+    "image_px": 1024
+  },
+  "Summerland_Main": {
+    "name": "Karakin",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Karakin_Main_Low_Res.png",
+    "world_size": 204000,
+    "image_px": 1024
+  },
+  "DihorOtok_Main": {
+    "name": "Vikendi",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Vikendi_Main_Low_Res.png",
+    "world_size": 816000,
+    "image_px": 1024
+  },
+  "Tiger_Main": {
+    "name": "Taego",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Taego_Main_Low_Res.png",
+    "world_size": 816000,
+    "image_px": 1024
+  },
+  "Kiki_Main": {
+    "name": "Deston",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Deston_Main_Low_Res.png",
+    "world_size": 816000,
+    "image_px": 1024
+  },
+  "Neon_Main": {
+    "name": "Rondo",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Rondo_Main_Low_Res.png",
+    "world_size": 816000,
+    "image_px": 1024
+  },
+  "Heaven_Main": {
+    "name": "Haven",
+    "image_url": "https://media.githubusercontent.com/media/pubg/api-assets/master/Assets/Maps/Haven_Main_Low_Res.png",
+    "world_size": 102000,
+    "image_px": 1024
+  }
+}

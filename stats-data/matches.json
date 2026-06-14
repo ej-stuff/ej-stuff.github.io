@@ -18,7 +18,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 88.0,
+        "times_knocked": 1,
+        "shots_fired": 10,
+        "parachute_dist": 420.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -31,7 +36,12 @@
         "revives": 0,
         "heals": 2,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 168.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 511.0,
+        "revive_response_s": null
       }
     }
   },
@@ -54,7 +64,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 384.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -67,7 +82,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 368.0,
+        "revive_response_s": null
       }
     }
   },
@@ -90,7 +110,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 101.0,
+        "times_knocked": 0,
+        "shots_fired": 60,
+        "parachute_dist": 287.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -103,7 +128,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 317.0,
+        "revive_response_s": null
       }
     }
   },
@@ -126,7 +156,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 3,
-        "blue_chips": 2
+        "blue_chips": 2,
+        "damage_taken": 185.9,
+        "times_knocked": 0,
+        "shots_fired": 2310,
+        "parachute_dist": 316.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -139,7 +174,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 291.0,
+        "times_knocked": 3,
+        "shots_fired": 150,
+        "parachute_dist": 388.0,
+        "revive_response_s": null
       }
     }
   },
@@ -162,7 +202,12 @@
         "revives": 0,
         "heals": 3,
         "boosts": 3,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 169.3,
+        "times_knocked": 0,
+        "shots_fired": 810,
+        "parachute_dist": 319.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 3,
@@ -175,7 +220,12 @@
         "revives": 0,
         "heals": 6,
         "boosts": 4,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 104.5,
+        "times_knocked": 1,
+        "shots_fired": 560,
+        "parachute_dist": 318.0,
+        "revive_response_s": null
       }
     }
   },
@@ -198,7 +248,12 @@
         "revives": 1,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 10,
+        "parachute_dist": 331.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -211,7 +266,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 125.0,
+        "times_knocked": 2,
+        "shots_fired": 10,
+        "parachute_dist": 314.0,
+        "revive_response_s": 11.1
       }
     }
   },
@@ -234,7 +294,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 10,
+        "parachute_dist": 371.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -247,7 +312,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 398.0,
+        "revive_response_s": null
       }
     }
   },
@@ -270,7 +340,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 331.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -283,7 +358,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 319.0,
+        "revive_response_s": null
       }
     }
   },
@@ -306,7 +386,12 @@
         "revives": 1,
         "heals": 5,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 147.9,
+        "times_knocked": 1,
+        "shots_fired": 320,
+        "parachute_dist": 315.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 1,
@@ -319,7 +404,12 @@
         "revives": 0,
         "heals": 3,
         "boosts": 3,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 233.0,
+        "times_knocked": 1,
+        "shots_fired": 40,
+        "parachute_dist": 307.0,
+        "revive_response_s": 21.7
       }
     }
   },
@@ -342,7 +432,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 206.7,
+        "times_knocked": 2,
+        "shots_fired": 180,
+        "parachute_dist": 430.0,
+        "revive_response_s": 34.6
       },
       "S821": {
         "kills": 3,
@@ -355,7 +450,12 @@
         "revives": 1,
         "heals": 1,
         "boosts": 5,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 195.5,
+        "times_knocked": 0,
+        "shots_fired": 870,
+        "parachute_dist": 370.0,
+        "revive_response_s": null
       }
     }
   },
@@ -378,7 +478,12 @@
         "revives": 1,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 210,
+        "parachute_dist": 314.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -391,7 +496,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 110.0,
+        "times_knocked": 1,
+        "shots_fired": 30,
+        "parachute_dist": 381.0,
+        "revive_response_s": 48.9
       }
     }
   },
@@ -414,7 +524,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 471.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -427,7 +542,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 395.0,
+        "revive_response_s": null
       }
     }
   },
@@ -450,7 +570,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 3,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 230.1,
+        "times_knocked": 2,
+        "shots_fired": 60,
+        "parachute_dist": 312.0,
+        "revive_response_s": 18.7
       },
       "S821": {
         "kills": 1,
@@ -463,7 +588,12 @@
         "revives": 1,
         "heals": 2,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 197.4,
+        "times_knocked": 0,
+        "shots_fired": 40,
+        "parachute_dist": 294.0,
+        "revive_response_s": null
       }
     }
   },
@@ -486,7 +616,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 40,
+        "parachute_dist": 306.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -499,7 +634,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 166.5,
+        "times_knocked": 1,
+        "shots_fired": 70,
+        "parachute_dist": 337.0,
+        "revive_response_s": null
       }
     }
   },
@@ -522,7 +662,12 @@
         "revives": 0,
         "heals": 6,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 261.5,
+        "times_knocked": 1,
+        "shots_fired": 70,
+        "parachute_dist": 349.0,
+        "revive_response_s": 18.7
       },
       "S821": {
         "kills": 2,
@@ -535,7 +680,12 @@
         "revives": 1,
         "heals": 5,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 171.3,
+        "times_knocked": 1,
+        "shots_fired": 580,
+        "parachute_dist": 341.0,
+        "revive_response_s": null
       }
     }
   },
@@ -558,7 +708,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 360.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 1,
@@ -571,7 +726,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 100,
+        "parachute_dist": 349.0,
+        "revive_response_s": null
       }
     }
   },
@@ -594,7 +754,12 @@
         "revives": 2,
         "heals": 5,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 173.0,
+        "times_knocked": 0,
+        "shots_fired": 30,
+        "parachute_dist": 445.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -607,7 +772,12 @@
         "revives": 0,
         "heals": 3,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 254.1,
+        "times_knocked": 3,
+        "shots_fired": 230,
+        "parachute_dist": 399.0,
+        "revive_response_s": 17.7
       }
     }
   },
@@ -630,7 +800,12 @@
         "revives": 1,
         "heals": 2,
         "boosts": 3,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 208.0,
+        "times_knocked": 1,
+        "shots_fired": 120,
+        "parachute_dist": 393.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 1,
@@ -643,7 +818,12 @@
         "revives": 0,
         "heals": 4,
         "boosts": 5,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 337.1,
+        "times_knocked": 1,
+        "shots_fired": 230,
+        "parachute_dist": 374.0,
+        "revive_response_s": 24.6
       }
     }
   },
@@ -666,7 +846,12 @@
         "revives": 1,
         "heals": 2,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 281.9,
+        "times_knocked": 1,
+        "shots_fired": 100,
+        "parachute_dist": 317.0,
+        "revive_response_s": 19.5
       },
       "S821": {
         "kills": 0,
@@ -679,7 +864,12 @@
         "revives": 1,
         "heals": 2,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 259.5,
+        "times_knocked": 2,
+        "shots_fired": 60,
+        "parachute_dist": 350.0,
+        "revive_response_s": 17.1
       }
     }
   },
@@ -702,7 +892,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 188.1,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 306.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -715,7 +910,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 102.0,
+        "times_knocked": 0,
+        "shots_fired": 340,
+        "parachute_dist": 292.0,
+        "revive_response_s": null
       }
     }
   },
@@ -738,7 +938,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 335.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -751,7 +956,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 10,
+        "parachute_dist": 386.0,
+        "revive_response_s": null
       }
     }
   },
@@ -774,7 +984,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 80.2,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 290.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -787,7 +1002,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 303.0,
+        "revive_response_s": null
       }
     }
   },
@@ -810,7 +1030,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 10,
+        "parachute_dist": 524.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -823,7 +1048,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 444.0,
+        "revive_response_s": null
       }
     }
   },
@@ -846,7 +1076,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 3,
-        "blue_chips": 1
+        "blue_chips": 1,
+        "damage_taken": 202.5,
+        "times_knocked": 0,
+        "shots_fired": 450,
+        "parachute_dist": 296.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -859,7 +1094,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 3,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 124.2,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 298.0,
+        "revive_response_s": null
       }
     }
   },
@@ -882,7 +1122,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 118.0,
+        "times_knocked": 1,
+        "shots_fired": 480,
+        "parachute_dist": 463.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 2,
@@ -895,7 +1140,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 118.0,
+        "times_knocked": 0,
+        "shots_fired": 560,
+        "parachute_dist": 424.0,
+        "revive_response_s": null
       }
     }
   },
@@ -918,7 +1168,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 0,
-        "blue_chips": 1
+        "blue_chips": 1,
+        "damage_taken": 162.4,
+        "times_knocked": 0,
+        "shots_fired": 910,
+        "parachute_dist": 304.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 3,
@@ -931,7 +1186,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 224.5,
+        "times_knocked": 2,
+        "shots_fired": 1630,
+        "parachute_dist": 334.0,
+        "revive_response_s": null
       }
     }
   },
@@ -954,7 +1214,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 40,
+        "parachute_dist": 331.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -967,7 +1232,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 124.6,
+        "times_knocked": 1,
+        "shots_fired": 60,
+        "parachute_dist": 327.0,
+        "revive_response_s": null
       }
     }
   },
@@ -990,7 +1260,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 97.4,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 333.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1003,7 +1278,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 352.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1026,7 +1306,12 @@
         "revives": 1,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 210,
+        "parachute_dist": 318.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1039,7 +1324,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 110.0,
+        "times_knocked": 2,
+        "shots_fired": 60,
+        "parachute_dist": 327.0,
+        "revive_response_s": 26.2
       }
     }
   },
@@ -1062,7 +1352,12 @@
         "revives": 1,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 30,
+        "parachute_dist": 335.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1075,7 +1370,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 110.0,
+        "times_knocked": 2,
+        "shots_fired": 10,
+        "parachute_dist": 343.0,
+        "revive_response_s": 20.7
       }
     }
   },
@@ -1098,7 +1398,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 10,
+        "parachute_dist": 335.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1111,7 +1416,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 129.6,
+        "times_knocked": 0,
+        "shots_fired": 30,
+        "parachute_dist": 322.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1134,7 +1444,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 30,
+        "parachute_dist": 318.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1147,7 +1462,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 30,
+        "parachute_dist": 316.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1170,7 +1490,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 326.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 1,
@@ -1183,7 +1508,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 87.0,
+        "times_knocked": 0,
+        "shots_fired": 200,
+        "parachute_dist": 308.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1206,7 +1536,12 @@
         "revives": 0,
         "heals": 6,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 158.0,
+        "times_knocked": 0,
+        "shots_fired": 100,
+        "parachute_dist": 330.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 1,
@@ -1219,7 +1554,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 110.4,
+        "times_knocked": 1,
+        "shots_fired": 60,
+        "parachute_dist": 311.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1242,7 +1582,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 3,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 10,
+        "parachute_dist": 343.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1255,7 +1600,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 521.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1278,7 +1628,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 124.2,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 326.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1291,7 +1646,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 3,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 124.4,
+        "times_knocked": 0,
+        "shots_fired": 10,
+        "parachute_dist": 355.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1314,7 +1674,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 125.3,
+        "times_knocked": 1,
+        "shots_fired": 20,
+        "parachute_dist": 309.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 1,
@@ -1327,7 +1692,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 80.0,
+        "times_knocked": 0,
+        "shots_fired": 660,
+        "parachute_dist": 310.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1350,7 +1720,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 346.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 1,
@@ -1363,7 +1738,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 60,
+        "parachute_dist": 333.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1386,7 +1766,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 324.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1399,7 +1784,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 346.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1422,7 +1812,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 40,
+        "parachute_dist": 333.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1435,7 +1830,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 133.5,
+        "times_knocked": 1,
+        "shots_fired": 10,
+        "parachute_dist": 351.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1458,7 +1858,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 10,
+        "parachute_dist": 321.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1471,7 +1876,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 60,
+        "parachute_dist": 298.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1494,7 +1904,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 152.0,
+        "times_knocked": 1,
+        "shots_fired": 10,
+        "parachute_dist": 302.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1507,7 +1922,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 144.4,
+        "times_knocked": 0,
+        "shots_fired": 40,
+        "parachute_dist": 305.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1530,7 +1950,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 30,
+        "parachute_dist": 297.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1543,7 +1968,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 311.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1566,7 +1996,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 0,
+        "parachute_dist": 321.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1579,7 +2014,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 99.7,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 334.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1602,7 +2042,12 @@
         "revives": 0,
         "heals": 3,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 75.0,
+        "times_knocked": 1,
+        "shots_fired": 60,
+        "parachute_dist": 305.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1615,7 +2060,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 60,
+        "parachute_dist": 331.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1638,7 +2088,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 30,
+        "parachute_dist": 333.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1651,7 +2106,12 @@
         "revives": 0,
         "heals": 1,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 148.5,
+        "times_knocked": 0,
+        "shots_fired": 100,
+        "parachute_dist": 311.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1674,7 +2134,12 @@
         "revives": 1,
         "heals": 1,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 200.0,
+        "times_knocked": 2,
+        "shots_fired": 160,
+        "parachute_dist": 320.0,
+        "revive_response_s": 23.7
       },
       "S821": {
         "kills": 0,
@@ -1687,7 +2152,12 @@
         "revives": 1,
         "heals": 3,
         "boosts": 2,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 297.0,
+        "times_knocked": 1,
+        "shots_fired": 150,
+        "parachute_dist": 354.0,
+        "revive_response_s": 51.2
       }
     }
   },
@@ -1710,7 +2180,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 30,
+        "parachute_dist": 315.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1723,7 +2198,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 10,
+        "parachute_dist": 318.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1746,7 +2226,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 10,
+        "parachute_dist": 311.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1759,7 +2244,12 @@
         "revives": 0,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 1,
+        "shots_fired": 0,
+        "parachute_dist": 332.0,
+        "revive_response_s": null
       }
     }
   },
@@ -1782,7 +2272,12 @@
         "revives": 1,
         "heals": 0,
         "boosts": 0,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 60,
+        "parachute_dist": 575.0,
+        "revive_response_s": null
       },
       "S821": {
         "kills": 0,
@@ -1795,7 +2290,12 @@
         "revives": 0,
         "heals": 2,
         "boosts": 1,
-        "blue_chips": 0
+        "blue_chips": 0,
+        "damage_taken": 251.1,
+        "times_knocked": 2,
+        "shots_fired": 40,
+        "parachute_dist": 553.0,
+        "revive_response_s": 22.4
       }
     }
   }

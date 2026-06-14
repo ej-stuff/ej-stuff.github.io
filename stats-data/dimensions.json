@@ -16,11 +16,27 @@
     "unit": "damage"
   },
   {
+    "key": "damage_taken",
+    "label": "Damage Taken",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "damage_taken",
+    "unit": "damage"
+  },
+  {
     "key": "knockdowns",
     "label": "Knockdowns Given",
     "category": "Player stats",
     "type": "player_stat",
     "field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "times_knocked",
+    "label": "Times Knocked",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "times_knocked",
     "unit": "knockdowns"
   },
   {
@@ -48,6 +64,14 @@
     "unit": "revives"
   },
   {
+    "key": "revive_response_s",
+    "label": "Revive Response Time",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "revive_response_s",
+    "unit": "seconds"
+  },
+  {
     "key": "heals",
     "label": "Heals Used",
     "category": "Player stats",
@@ -72,12 +96,28 @@
     "unit": "uses"
   },
   {
+    "key": "shots_fired",
+    "label": "Shots Fired",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "shots_fired",
+    "unit": "shots"
+  },
+  {
     "key": "survival_s",
     "label": "Survival Time",
     "category": "Player stats",
     "type": "player_stat",
     "field": "survival_s",
     "unit": "seconds"
+  },
+  {
+    "key": "parachute_dist",
+    "label": "Parachute Glide",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "parachute_dist",
+    "unit": "m"
   },
   {
     "key": "throwable_total_count",

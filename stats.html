@@ -271,6 +271,19 @@ tr.detail-row td { background: #131210; padding: 0; }
 .empty   { color: var(--muted); font-size: 13px; font-style: italic; padding: 8px 0; }
 .loading { color: var(--muted); font-style: italic; padding: 20px 0; font-size: 13px; }
 
+/* ── Match analysis link ──────────────────────────────────────────────────── */
+.match-link {
+  display: inline-block;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.match-link:hover { color: var(--accent); background: rgba(244,163,0,0.1); }
+
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .compare-split { grid-template-columns: 1fr; }
@@ -352,18 +365,6 @@ tr.detail-row td { background: #131210; padding: 0; }
     <div class="tbl-wrap" id="weaponsWrap"><p class="loading">Loading…</p></div>
   </div>
 
-  <!-- ── HEALING & BOOSTS ──────────────────────────────────────────────────── -->
-  <div class="panel">
-    <div class="panel-title">Healing &amp; Boosts <span class="panel-note">— career totals</span></div>
-    <div id="healingPanel"><p class="loading">Loading…</p></div>
-  </div>
-
-  <!-- ── THROWABLES ────────────────────────────────────────────────────────── -->
-  <div class="panel">
-    <div class="panel-title">Throwables <span class="panel-note">— career totals · lobby items excluded</span></div>
-    <div id="throwablesPanel"><p class="loading">Loading…</p></div>
-  </div>
-
   <!-- ── MATCH HISTORY ─────────────────────────────────────────────────────── -->
   <div class="panel">
     <div class="panel-title">Match History <span class="panel-note">— click a row to expand</span></div>
@@ -382,8 +383,6 @@ tr.detail-row td { background: #131210; padding: 0; }
    CONFIG
 ============================================================================ */
 const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
-// Pre-game lobby throwables excluded from career-totals panels
-const LOBBY_ITEMS  = new Set(['Snowball', 'Rock']);
 
 /* ============================================================================
    STATE — all user-controlled settings live here
@@ -955,93 +954,6 @@ function sortWeap(col) {
 }
 
 /* ============================================================================
-   RENDER — BAR PANEL HELPER  (healing and throwables career panels)
-============================================================================ */
-function buildBarSection(label, items, players, getVal) {
-  if (items.length === 0) return '';
-
-  const maxVal = Math.max(...players.flatMap(p => items.map(i => getVal(p, i).total)), 1);
-
-  const rows = items.map(item => {
-    const pCells = players.map(p => {
-      const v   = getVal(p, item);
-      const w   = ((v.total / maxVal) * 100).toFixed(1);
-      const cls = p === 'D282' ? 'amber' : 'blue';
-      const tip = `${p}: ${v.total} total · ${v.per_match}/match`;
-      return `<div class="bar-track" title="${tip}">
-                <div class="bar-fill ${cls}" style="width:${w}%"></div>
-              </div>
-              <div class="bar-val">${v.total}</div>`;
-    }).join('');
-    return `<div class="bar-row"><div class="bar-label">${item}</div>${pCells}</div>`;
-  }).join('');
-
-  return (label ? `<div class="bar-section-label">${label}</div>` : '') + rows;
-}
-
-/* ============================================================================
-   RENDER — HEALING & BOOSTS
-============================================================================ */
-function renderHealing() {
-  const panel   = document.getElementById('healingPanel');
-  const players = state.player === 'compare' ? ['D282', 'S821'] : [state.player];
-
-  // Map item names to their categories (from either player's data)
-  const catMap = {};
-  ['D282', 'S821'].forEach(p =>
-    (DATA.items[p]?.heals || []).forEach(h => { catMap[h.item] = h.category; })
-  );
-
-  // Collect item names in order of appearance across shown players
-  const seen = new Set(), items = [];
-  players.forEach(p =>
-    (DATA.items[p]?.heals || []).forEach(h => {
-      if (!seen.has(h.item)) { seen.add(h.item); items.push(h.item); }
-    })
-  );
-
-  const heals  = items.filter(i => catMap[i] === 'Heal');
-  const boosts = items.filter(i => catMap[i] === 'Boost');
-  const getVal = (p, item) =>
-    DATA.items[p]?.heals.find(h => h.item === item) || { total: 0, per_match: 0 };
-
-  const legend = players.length > 1
-    ? `<div class="cmp-legend"><span style="color:var(--accent)">■</span> D282 &nbsp; <span style="color:var(--blue)">■</span> S821</div>`
-    : '';
-
-  const body = buildBarSection('Heals',  heals,  players, getVal) +
-               buildBarSection('Boosts', boosts, players, getVal);
-
-  panel.innerHTML = body ? legend + body : '<p class="empty">No healing data</p>';
-}
-
-/* ============================================================================
-   RENDER — THROWABLES (career totals panel)
-============================================================================ */
-function renderThrowables() {
-  const panel   = document.getElementById('throwablesPanel');
-  const players = state.player === 'compare' ? ['D282', 'S821'] : [state.player];
-
-  const seen = new Set(), items = [];
-  players.forEach(p =>
-    (DATA.items[p]?.throwables || [])
-      .filter(t => !LOBBY_ITEMS.has(t.item))
-      .forEach(t => {
-        if (!seen.has(t.item)) { seen.add(t.item); items.push(t.item); }
-      })
-  );
-
-  const getVal = (p, item) =>
-    DATA.items[p]?.throwables.find(t => t.item === item) || { total: 0, per_match: 0 };
-
-  const legend = players.length > 1
-    ? `<div class="cmp-legend"><span style="color:var(--accent)">■</span> D282 &nbsp; <span style="color:var(--blue)">■</span> S821</div>`
-    : '';
-  const body = buildBarSection('', items, players, getVal);
-  panel.innerHTML = body ? legend + body : '<p class="empty">No throwable data</p>';
-}
-
-/* ============================================================================
    RENDER — MATCH HISTORY TABLE
    "Duration" column replaced with "Survival" (duo_survival_s)
 ============================================================================ */
@@ -1065,7 +977,7 @@ function renderMatchHistory(matches) {
        <th class="no-sort">Damage</th>
        <th class="no-sort">Placement</th>`;
 
-  const colspan = compare ? 8 : 7;
+  const colspan = compare ? 9 : 8;
 
   const body = matches.map((m, i) => {
     const id = 'dr_' + i;
@@ -1086,6 +998,7 @@ function renderMatchHistory(matches) {
         <td>${m.game_mode || '—'}</td>
         ${playerCells}
         <td>${m.duo_survival_s != null ? mmss(m.duo_survival_s) : '—'}</td>
+        <td><a href="match.html?id=${m.match_id}" onclick="event.stopPropagation()" class="match-link" title="Match Analysis">→</a></td>
       </tr>
       <tr id="${id}" class="detail-row" style="display:none">
         <td colspan="${colspan}">
@@ -1101,6 +1014,7 @@ function renderMatchHistory(matches) {
       <th class="no-sort">Mode</th>
       ${playerHeaders}
       <th class="no-sort">Survival</th>
+      <th class="no-sort"></th>
     </tr></thead>
     <tbody>${body}</tbody>`;
 }
@@ -1147,8 +1061,6 @@ function renderAll() {
   renderSummary(lastMatches);
   renderChart(lastMatches);
   renderWeapons();
-  renderHealing();
-  renderThrowables();
   renderMatchHistory(lastMatches);
 }
 
