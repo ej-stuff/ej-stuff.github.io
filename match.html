@@ -34,35 +34,40 @@ body {
 
 .wrap { max-width: 1300px; margin: 0 auto; }
 
+/* ── Breadcrumb nav ──────────────────────────────────────────────────────── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.bc-home {
+  font-family: Oswald, sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 16px;
+}
+.bc-home:hover { opacity: 0.8; }
+.bc-sep { color: var(--line); font-size: 11px; }
+.bc-cur { color: var(--muted); }
+
 /* ── Header ─────────────────────────────────────────────────────────────── */
 .hd {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 h1 {
   font-family: Oswald, system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--accent);
-  font-size: 24px;
+  color: var(--text);
+  font-size: 22px;
 }
 .subtitle { color: var(--muted); font-size: 13px; margin-top: 2px; }
-.back-link {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 13px;
-  padding: 6px 12px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  white-space: nowrap;
-  transition: color .15s, border-color .15s;
-}
-.back-link:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ── Panels ─────────────────────────────────────────────────────────────── */
 .panel {
@@ -78,7 +83,7 @@ h1 {
   letter-spacing: 1px;
   font-size: 12px;
   color: var(--muted);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 /* ── Main layout ─────────────────────────────────────────────────────────── */
@@ -92,7 +97,7 @@ h1 {
   .main-layout { grid-template-columns: 1fr; }
 }
 
-/* ── Map canvas wrapper ──────────────────────────────────────────────────── */
+/* ── Map canvas ──────────────────────────────────────────────────────────── */
 .map-col { display: flex; flex-direction: column; gap: 12px; }
 
 .map-wrap {
@@ -103,7 +108,8 @@ h1 {
   overflow: hidden;
   aspect-ratio: 1;
   width: 100%;
-  max-height: 75vh;
+  max-height: 78vh;
+  user-select: none;
 }
 .map-wrap canvas {
   display: block;
@@ -111,6 +117,33 @@ h1 {
   height: 100%;
   cursor: crosshair;
 }
+
+/* Reset view button */
+.map-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+.map-ctrl-btn {
+  background: rgba(30,28,23,0.88);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color .15s, border-color .15s;
+  line-height: 1;
+}
+.map-ctrl-btn:hover { color: var(--accent); border-color: var(--accent); }
 
 .tooltip {
   position: fixed;
@@ -122,13 +155,12 @@ h1 {
   font-size: 12px;
   pointer-events: none;
   z-index: 200;
-  max-width: 320px;
+  max-width: 340px;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
 /* ── Timeline ────────────────────────────────────────────────────────────── */
-.timeline-wrap { }
 .timeline-row {
   display: flex;
   align-items: center;
@@ -166,14 +198,25 @@ h1 {
 }
 .pcard.amber { border-color: rgba(244,163,0,0.4); background: rgba(244,163,0,0.04); }
 .pcard.blue  { border-color: rgba(74,158,221,0.4); background: rgba(74,158,221,0.04); }
-.pcard-name { font-family: Oswald, sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.pcard-name {
+  font-family: Oswald, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
 .pcard.amber .pcard-name { color: var(--accent); }
 .pcard.blue  .pcard-name { color: var(--blue);   }
-.pcard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 12px; color: var(--muted); }
-.pcard-stat strong { color: var(--text); }
+.pcard-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.pcard-stats strong { color: var(--text); margin-left: 2px; }
 
 /* ── Layer toggles ───────────────────────────────────────────────────────── */
-.layer-grid { display: flex; flex-direction: column; gap: 6px; }
+.layer-grid { display: flex; flex-direction: column; gap: 5px; }
 .layer-btn {
   display: flex;
   align-items: center;
@@ -181,7 +224,7 @@ h1 {
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 6px;
-  padding: 6px 10px;
+  padding: 5px 10px;
   color: var(--muted);
   font-size: 12px;
   cursor: pointer;
@@ -194,7 +237,7 @@ h1 {
   width: 10px; height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
-  opacity: 0.4;
+  opacity: 0.35;
   transition: opacity .15s;
 }
 .layer-btn.active .layer-dot { opacity: 1; }
@@ -227,13 +270,17 @@ h1 {
 <body>
 <div class="wrap">
 
+  <!-- Breadcrumb navigation -->
+  <nav class="breadcrumb">
+    <a href="stats.html" class="bc-home">PUBG Stats</a>
+    <span class="bc-sep">▸</span>
+    <span class="bc-cur" id="bcCur">Match Analysis</span>
+  </nav>
+
   <!-- Header -->
   <div class="hd">
-    <div>
-      <h1 id="pageTitle">Match Analysis</h1>
-      <div class="subtitle" id="matchMeta">Loading…</div>
-    </div>
-    <a href="stats.html" class="back-link">← Back to Stats</a>
+    <h1 id="pageTitle">Match Analysis</h1>
+    <div class="subtitle" id="matchMeta">Loading…</div>
   </div>
 
   <!-- Main -->
@@ -243,6 +290,9 @@ h1 {
     <div class="map-col">
       <div class="map-wrap" id="mapWrap">
         <canvas id="mapCanvas"></canvas>
+        <div class="map-controls">
+          <button class="map-ctrl-btn" onclick="resetView()" title="Fit map">⤢</button>
+        </div>
         <div id="tooltip" class="tooltip" style="display:none"></div>
       </div>
 
@@ -259,19 +309,16 @@ h1 {
     <!-- Right: sidebar -->
     <div class="sidebar">
 
-      <!-- Player summary -->
       <div class="panel">
         <div class="panel-title">Match Summary</div>
         <div class="player-cards" id="playerCards"><p class="loading">Loading…</p></div>
       </div>
 
-      <!-- Layer toggles -->
       <div class="panel">
         <div class="panel-title">Layers</div>
         <div class="layer-grid" id="layerGrid"></div>
       </div>
 
-      <!-- Player filter -->
       <div class="panel">
         <div class="panel-title">Show</div>
         <div class="btn-group" id="playerFilter">
@@ -281,16 +328,16 @@ h1 {
         </div>
       </div>
 
-    </div><!-- .sidebar -->
-  </div><!-- .main-layout -->
+    </div>
+  </div>
 
-  <!-- Event log -->
+  <!-- Event detail -->
   <div class="panel">
     <div class="panel-title">Hovered Event</div>
     <div class="event-detail" id="eventDetail">Hover over a marker on the map to see details.</div>
   </div>
 
-</div><!-- .wrap -->
+</div>
 
 <script>
 /* ============================================================================
@@ -298,41 +345,51 @@ h1 {
 ============================================================================ */
 const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
 
-// Layer definitions — single source of truth.  Adding a new layer = one entry here.
+// Layer ids MUST match event.type strings from the match JSON exactly
 const LAYER_DEFS = [
-  { id: 'paths',      label: 'Movement Paths', color: null,      default: true  },
-  { id: 'circles',    label: 'Blue Zone',      color: '#4a9edd', default: true  },
-  { id: 'kills',      label: 'Kills',          color: '#f4a300', default: true  },
-  { id: 'knockdowns', label: 'Knocks Out',     color: '#f4a300', default: true  },
-  { id: 'knocked',    label: 'Knocked Down',   color: '#d7443e', default: true  },
-  { id: 'deaths',     label: 'Deaths',         color: '#d7443e', default: true  },
-  { id: 'revives',    label: 'Revives',        color: '#c080ff', default: true  },
-  { id: 'heals',      label: 'Heals',          color: '#8fae5d', default: false },
-  { id: 'boosts',     label: 'Boosts',         color: '#56c1a5', default: false },
-  { id: 'throwables', label: 'Throwables',     color: '#ff9944', default: false },
-  { id: 'carepack',   label: 'Care Package',   color: '#ffe44d', default: false },
+  { id: 'paths',     label: 'Movement Paths', color: null,      default: true  },
+  { id: 'circles',   label: 'Blue Zone',      color: '#4a9edd', default: true  },
+  { id: 'kill',      label: 'Kills',          color: '#f4a300', default: true  },
+  { id: 'knockdown', label: 'Knocks Out',     color: '#f4a300', default: true  },
+  { id: 'knocked',   label: 'Knocked Down',   color: '#d7443e', default: true  },
+  { id: 'death',     label: 'Deaths',         color: '#d7443e', default: true  },
+  { id: 'revive',    label: 'Revives',        color: '#c080ff', default: true  },
+  { id: 'dmg_dealt', label: 'Damage Dealt',   color: '#f4a300', default: false },
+  { id: 'dmg_taken', label: 'Damage Taken',   color: '#d7443e', default: false },
+  { id: 'heal',      label: 'Heals',          color: '#8fae5d', default: false },
+  { id: 'boost',     label: 'Boosts',         color: '#56c1a5', default: false },
+  { id: 'throwable', label: 'Throwables',     color: '#ff9944', default: false },
+  { id: 'carepack',  label: 'Care Package',   color: '#ffe44d', default: false },
 ];
 
 /* ============================================================================
    STATE
 ============================================================================ */
 const state = {
-  time:    Infinity,
-  player:  'both',
-  layers:  Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.default])),
+  time:   Infinity,
+  player: 'both',
+  layers: Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.default])),
 };
+
+/* View — pan/zoom */
+const view = { scale: 1, offsetX: 0, offsetY: 0 };
+let isDragging = false, dragStart = null;
 
 /* ============================================================================
    DATA
 ============================================================================ */
-let MD   = null;  // match detail JSON
-let MAP  = null;  // maps.json entry for this match's map
+let MD  = null;
+let MAP = null;
 
 const canvas = document.getElementById('mapCanvas');
 const ctx    = canvas.getContext('2d');
 const mapImg = new Image();
+// No crossOrigin: we only draw the image, never read pixel data from canvas.
+// Avoids CORS taint failures while still rendering the image correctly.
+mapImg.onload  = () => draw();
+mapImg.onerror = () => { console.warn('Map image failed to load'); draw(); };
 
-let markers = [];  // [{cx, cy, r, ev}] rebuilt each draw — for hit detection
+let markers = [];
 
 /* ============================================================================
    BOOT
@@ -351,7 +408,7 @@ async function boot() {
       fetch(`stats-data/matches/${id}.json`).then(r => { if (!r.ok) throw r; return r.json(); }),
       fetch('stats-data/maps.json').then(r => r.json()),
     ]);
-  } catch (err) {
+  } catch {
     document.body.innerHTML =
       `<p style="padding:40px;color:#d7443e">Failed to load match data for <code>${id}</code>.</p>`;
     return;
@@ -359,33 +416,30 @@ async function boot() {
 
   MAP = mapsData[MD.map] || null;
 
-  // Page header
-  document.title = `Match Analysis — ${MD.map_name}`;
-  document.getElementById('pageTitle').textContent = `Match Analysis — ${MD.map_name}`;
+  document.title = `Match — ${MD.map_name}`;
+  document.getElementById('pageTitle').textContent = MD.map_name;
+  document.getElementById('bcCur').textContent =
+    `${MD.map_name} · ${MD.created_at.slice(0, 10)}`;
   document.getElementById('matchMeta').textContent =
     `${MD.created_at.slice(0, 10)} · ${mmss(MD.duration_s || 0)} match`;
 
   buildPlayerCards();
   buildLayerToggles();
 
-  // Timeline
-  const slider = document.getElementById('timeSlider');
-  slider.max   = MD.duration_s || 1800;
-  slider.value = slider.max;
-  slider.addEventListener('input', onTimeInput);
+  const sl = document.getElementById('timeSlider');
+  sl.max   = MD.duration_s || 1800;
+  sl.value = sl.max;
+  sl.addEventListener('input', onTimeInput);
 
-  // Map image
-  if (MAP) {
-    mapImg.crossOrigin = 'anonymous';
-    mapImg.src = MAP.image_url;
-    mapImg.onload  = () => { resizeCanvas(); draw(); };
-    mapImg.onerror = () => { resizeCanvas(); draw(); };
-  }
+  if (MAP) mapImg.src = MAP.image_url;
 
-  // Canvas events
   window.addEventListener('resize', () => { resizeCanvas(); draw(); });
-  canvas.addEventListener('mousemove', onMouseMove);
+  canvas.addEventListener('wheel',      onWheel,     { passive: false });
+  canvas.addEventListener('mousedown',  onMouseDown);
+  canvas.addEventListener('mousemove',  onMouseMove);
+  canvas.addEventListener('mouseup',    () => { isDragging = false; canvas.style.cursor = 'crosshair'; });
   canvas.addEventListener('mouseleave', () => {
+    isDragging = false;
     document.getElementById('tooltip').style.display = 'none';
   });
 
@@ -399,17 +453,37 @@ async function boot() {
 function resizeCanvas() {
   const wrap = document.getElementById('mapWrap');
   const sz   = wrap.clientWidth;
-  canvas.width  = sz;
-  canvas.height = sz;
+  if (canvas.width !== sz) {
+    canvas.width  = sz;
+    canvas.height = sz;
+  }
 }
 
 /* ============================================================================
-   COORDINATE TRANSFORM
+   COORDINATE TRANSFORMS
 ============================================================================ */
+// World cm → canvas world-pixel (pre-transform)
 function w2c(x, y) {
-  const sz  = canvas.width;
-  const ws  = MAP ? MAP.world_size : 816000;
+  const sz = canvas.width;
+  const ws = MAP ? MAP.world_size : 816000;
   return { cx: (x / ws) * sz, cy: (y / ws) * sz };
+}
+
+// Client position → canvas pixel coords (accounts for CSS scaling)
+function screenToCanvasPx(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    cx: (clientX - rect.left) * (canvas.width  / rect.width),
+    cy: (clientY - rect.top)  * (canvas.height / rect.height),
+  };
+}
+
+// Canvas pixel coords → world-pixel coords (inverts the pan/zoom transform)
+function canvasToWorldPx(canvasPxX, canvasPxY) {
+  return {
+    cx: (canvasPxX - view.offsetX) / view.scale,
+    cy: (canvasPxY - view.offsetY) / view.scale,
+  };
 }
 
 /* ============================================================================
@@ -418,9 +492,15 @@ function w2c(x, y) {
 function draw() {
   if (!MD) return;
   const sz = canvas.width;
+
+  // Reset transform before clearing
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, sz, sz);
 
-  // Background image (or solid fallback)
+  // Apply pan/zoom — all drawing below is in world-pixel space
+  ctx.setTransform(view.scale, 0, 0, view.scale, view.offsetX, view.offsetY);
+
+  // Map image or solid fallback
   if (mapImg.complete && mapImg.naturalWidth > 0) {
     ctx.drawImage(mapImg, 0, 0, sz, sz);
     ctx.fillStyle = 'rgba(0,0,0,0.28)';
@@ -431,51 +511,52 @@ function draw() {
   }
 
   const maxT = state.time;
-
   if (state.layers.circles) drawCircles(maxT);
   if (state.layers.paths)   drawPaths(maxT);
 
   markers = [];
   for (const ev of MD.events) {
-    if (ev.t > maxT) continue;
+    if (ev.t > maxT)           continue;
     if (!playerVis(ev.player)) continue;
     if (!state.layers[ev.type]) continue;
     const { cx, cy } = w2c(ev.x, ev.y);
     drawMarker(ev, cx, cy);
-    markers.push({ cx, cy, r: 8, ev });
+    markers.push({ cx, cy, ev });
   }
+
+  // Restore identity transform so browser compositing works correctly
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
-/* ── Paths ──────────────────────────────────────────────────────────────── */
+/* ── Movement paths ─────────────────────────────────────────────────────── */
 function drawPaths(maxT) {
   for (const [player, pts] of Object.entries(MD.positions)) {
     if (!playerVis(player)) continue;
-    const visible = pts.filter(p => p.t <= maxT);
-    if (visible.length < 2) continue;
+    const vis = pts.filter(p => p.t <= maxT);
+    if (vis.length < 2) continue;
 
+    const f = w2c(vis[0].x, vis[0].y);
     ctx.beginPath();
-    ctx.strokeStyle = PLAYER_COLOR[player];
-    ctx.lineWidth   = 2;
-    ctx.globalAlpha = 0.55;
-
-    const first = w2c(visible[0].x, visible[0].y);
-    ctx.moveTo(first.cx, first.cy);
-    for (let i = 1; i < visible.length; i++) {
-      const { cx, cy } = w2c(visible[i].x, visible[i].y);
+    ctx.moveTo(f.cx, f.cy);
+    for (let i = 1; i < vis.length; i++) {
+      const { cx, cy } = w2c(vis[i].x, vis[i].y);
       ctx.lineTo(cx, cy);
     }
+    ctx.strokeStyle = PLAYER_COLOR[player];
+    ctx.lineWidth   = 2 / view.scale;  // constant 2px screen width at any zoom
+    ctx.globalAlpha = 0.55;
     ctx.stroke();
     ctx.globalAlpha = 1;
 
-    // Current position dot
-    const last = visible[visible.length - 1];
+    // Current position dot — constant 5px on screen
+    const last      = vis[vis.length - 1];
     const { cx, cy } = w2c(last.x, last.y);
     ctx.beginPath();
-    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 5 / view.scale, 0, Math.PI * 2);
     ctx.fillStyle   = PLAYER_COLOR[player];
     ctx.fill();
     ctx.strokeStyle = '#fff';
-    ctx.lineWidth   = 1;
+    ctx.lineWidth   = 1 / view.scale;
     ctx.stroke();
   }
 }
@@ -488,37 +569,33 @@ function drawCircles(maxT) {
   const c  = cs[cs.length - 1];
   const sz = canvas.width;
   const ws = MAP.world_size;
+  const lw = 1.5 / view.scale;
 
-  // Safe zone (white dashed)
   if (c.safe_r > 500) {
     const { cx, cy } = w2c(c.safe_x, c.safe_y);
-    const r = (c.safe_r / ws) * sz;
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.arc(cx, cy, (c.safe_r / ws) * sz, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(255,255,255,0.55)';
-    ctx.lineWidth   = 1.5;
-    ctx.setLineDash([6, 5]);
+    ctx.lineWidth   = lw;
+    ctx.setLineDash([6 / view.scale, 5 / view.scale]);
     ctx.stroke();
     ctx.setLineDash([]);
   }
-
-  // Warning zone (blue)
   if (c.warn_r > 500) {
     const { cx, cy } = w2c(c.warn_x, c.warn_y);
-    const r = (c.warn_r / ws) * sz;
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.arc(cx, cy, (c.warn_r / ws) * sz, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(74,158,221,0.75)';
-    ctx.lineWidth   = 1.5;
+    ctx.lineWidth   = lw;
     ctx.stroke();
   }
 }
 
 /* ── Event markers ──────────────────────────────────────────────────────── */
+const LAYER_COLOR = Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.color]));
+
 function markerColor(ev) {
-  const def = LAYER_DEFS.find(l => l.id === ev.type);
-  if (def && def.color) return def.color;
-  return PLAYER_COLOR[ev.player] || '#e8e3d8';
+  return LAYER_COLOR[ev.type] || PLAYER_COLOR[ev.player] || '#e8e3d8';
 }
 
 function drawMarker(ev, cx, cy) {
@@ -531,7 +608,6 @@ function drawMarker(ev, cx, cy) {
 
   switch (ev.type) {
     case 'kill': {
-      // ✕
       const s = r * 0.8;
       ctx.beginPath();
       ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s, cy + s);
@@ -540,30 +616,23 @@ function drawMarker(ev, cx, cy) {
       break;
     }
     case 'knockdown': {
-      // ▲ filled
       ctx.beginPath();
       ctx.moveTo(cx, cy - r);
       ctx.lineTo(cx + r, cy + r * 0.7);
       ctx.lineTo(cx - r, cy + r * 0.7);
-      ctx.closePath();
-      ctx.fill();
+      ctx.closePath(); ctx.fill();
       break;
     }
     case 'knocked': {
-      // ▼ outline
       ctx.beginPath();
       ctx.moveTo(cx, cy + r);
       ctx.lineTo(cx + r, cy - r * 0.7);
       ctx.lineTo(cx - r, cy - r * 0.7);
-      ctx.closePath();
-      ctx.stroke();
+      ctx.closePath(); ctx.stroke();
       break;
     }
     case 'death': {
-      // ● with ✕
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
       const s = r * 0.55;
       ctx.beginPath();
       ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s, cy + s);
@@ -572,19 +641,30 @@ function drawMarker(ev, cx, cy) {
       break;
     }
     case 'revive': {
-      // ↑ arrow
       ctx.beginPath();
-      ctx.moveTo(cx, cy - r);
-      ctx.lineTo(cx - r * 0.55, cy - r * 0.1);
-      ctx.moveTo(cx, cy - r);
-      ctx.lineTo(cx + r * 0.55, cy - r * 0.1);
-      ctx.moveTo(cx, cy - r);
-      ctx.lineTo(cx, cy + r);
+      ctx.moveTo(cx, cy - r); ctx.lineTo(cx - r * 0.55, cy - r * 0.1);
+      ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r * 0.55, cy - r * 0.1);
+      ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r);
       ctx.stroke();
       break;
     }
+    case 'dmg_dealt': {
+      // > chevron — outgoing damage
+      const s = r * 0.8;
+      ctx.beginPath();
+      ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s * 0.5, cy); ctx.lineTo(cx - s, cy + s);
+      ctx.globalAlpha = 0.6; ctx.stroke();
+      break;
+    }
+    case 'dmg_taken': {
+      // < chevron — incoming damage
+      const s = r * 0.8;
+      ctx.beginPath();
+      ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s * 0.5, cy); ctx.lineTo(cx + s, cy + s);
+      ctx.globalAlpha = 0.55; ctx.stroke();
+      break;
+    }
     case 'heal': {
-      // + cross
       ctx.beginPath();
       ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r);
       ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy);
@@ -592,42 +672,89 @@ function drawMarker(ev, cx, cy) {
       break;
     }
     case 'boost': {
-      // ● filled small
-      ctx.beginPath();
-      ctx.arc(cx, cy, r * 0.7, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, r * 0.7, 0, Math.PI * 2); ctx.fill();
       break;
     }
     case 'throwable': {
-      // ● + tiny ring
-      ctx.beginPath();
-      ctx.arc(cx, cy, r * 0.45, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.globalAlpha = 0.4;
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, r * 0.45, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.globalAlpha = 0.4; ctx.stroke();
       ctx.globalAlpha = 0.9;
       break;
     }
     case 'carepack': {
-      // ◆ diamond
       ctx.beginPath();
-      ctx.moveTo(cx,     cy - r);
-      ctx.lineTo(cx + r, cy);
-      ctx.lineTo(cx,     cy + r);
-      ctx.lineTo(cx - r, cy);
-      ctx.closePath();
-      ctx.fill();
+      ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r, cy);
+      ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r, cy);
+      ctx.closePath(); ctx.fill();
       break;
     }
     default: {
-      ctx.beginPath();
-      ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.fill();
     }
   }
   ctx.globalAlpha = 1;
+}
+
+/* ============================================================================
+   ZOOM & PAN
+============================================================================ */
+function onWheel(e) {
+  e.preventDefault();
+  const { cx, cy } = screenToCanvasPx(e.clientX, e.clientY);
+  const factor   = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+  const newScale = Math.max(0.8, Math.min(view.scale * factor, 24));
+  // Adjust offset so the point under the cursor stays fixed
+  view.offsetX   = cx - (cx - view.offsetX) * (newScale / view.scale);
+  view.offsetY   = cy - (cy - view.offsetY) * (newScale / view.scale);
+  view.scale     = newScale;
+  draw();
+}
+
+function onMouseDown(e) {
+  if (e.button !== 0) return;
+  const { cx, cy } = screenToCanvasPx(e.clientX, e.clientY);
+  isDragging = true;
+  dragStart  = { cx, cy, ox: view.offsetX, oy: view.offsetY };
+  canvas.style.cursor = 'grabbing';
+}
+
+function onMouseMove(e) {
+  if (isDragging && dragStart) {
+    const { cx, cy } = screenToCanvasPx(e.clientX, e.clientY);
+    view.offsetX = dragStart.ox + (cx - dragStart.cx);
+    view.offsetY = dragStart.oy + (cy - dragStart.cy);
+    draw();
+    return;
+  }
+
+  // Hover tooltip — convert mouse to world-pixel space for hit detection
+  const { cx: scx, cy: scy } = screenToCanvasPx(e.clientX, e.clientY);
+  const wp  = canvasToWorldPx(scx, scy);
+  const tip = document.getElementById('tooltip');
+  let found = null;
+
+  for (const m of markers) {
+    const dx = wp.cx - m.cx, dy = wp.cy - m.cy;
+    const hitR = 12 / view.scale;  // 12 screen-pixel hit radius regardless of zoom
+    if (dx * dx + dy * dy <= hitR * hitR) { found = m; break; }
+  }
+
+  if (found) {
+    const txt = fmtEvent(found.ev);
+    tip.textContent = txt;
+    tip.style.left  = (e.clientX + 14) + 'px';
+    tip.style.top   = (e.clientY - 12) + 'px';
+    tip.style.display = 'block';
+    document.getElementById('eventDetail').textContent = txt;
+  } else {
+    tip.style.display = 'none';
+  }
+}
+
+function resetView() {
+  view.scale = 1; view.offsetX = 0; view.offsetY = 0;
+  draw();
 }
 
 /* ============================================================================
@@ -665,65 +792,52 @@ function toggleLayer(id) {
   draw();
 }
 
-function onMouseMove(e) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width  / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const mx = (e.clientX - rect.left) * scaleX;
-  const my = (e.clientY - rect.top)  * scaleY;
-
-  const tip  = document.getElementById('tooltip');
-  let found  = null;
-
-  for (const m of markers) {
-    const dx = mx - m.cx, dy = my - m.cy;
-    if (dx * dx + dy * dy <= (m.r + 5) * (m.r + 5)) { found = m; break; }
-  }
-
-  if (found) {
-    const txt = fmtEvent(found.ev);
-    tip.textContent = txt;
-    tip.style.left  = (e.clientX + 14) + 'px';
-    tip.style.top   = (e.clientY - 12) + 'px';
-    tip.style.display = 'block';
-    document.getElementById('eventDetail').textContent = txt;
-  } else {
-    tip.style.display = 'none';
-  }
-}
-
 /* ============================================================================
    UI BUILDERS
 ============================================================================ */
 function buildPlayerCards() {
   const stats = MD.match_stats || {};
-  const cards = ['D282', 'S821'].map(p => {
+  document.getElementById('playerCards').innerHTML = ['D282', 'S821'].map(p => {
     const s   = stats[p] || {};
     const cls = p === 'D282' ? 'amber' : 'blue';
-    const pl  = s.placement ? (s.placement === 1 ? '🥇 #1 Winner' : `#${s.placement}`) : '—';
-    return `
-      <div class="pcard ${cls}">
-        <div class="pcard-name">${p}</div>
-        <div class="pcard-stats">
-          <span>Place <strong>${pl}</strong></span>
-          <span>Kills <strong>${s.kills ?? '—'}</strong></span>
-          <span>Damage <strong>${s.damage != null ? Math.round(s.damage) : '—'}</strong></span>
-          <span>Survived <strong>${s.survival_s ? mmss(s.survival_s) : '—'}</strong></span>
-        </div>
-      </div>`;
+    const pl  = s.placement === 1 ? '#1 Winner' : (s.placement ? `#${s.placement}` : '—');
+
+    // Count event types from the events array for this player
+    const ec = {};
+    (MD.events || []).filter(ev => ev.player === p).forEach(ev => {
+      ec[ev.type] = (ec[ev.type] || 0) + 1;
+    });
+
+    const rows = [
+      ['Place',        pl],
+      ['Kills',        s.kills ?? '—'],
+      ['Damage',       s.damage != null ? Math.round(s.damage) : '—'],
+      ['Survived',     s.survival_s ? mmss(s.survival_s) : '—'],
+      ['Knocks out',   ec['knockdown'] || 0],
+      ['Got knocked',  ec['knocked']   || 0],
+      ['Revives',      ec['revive']    || 0],
+      ['Heals/boosts', (ec['heal'] || 0) + (ec['boost'] || 0)],
+    ];
+
+    return `<div class="pcard ${cls}">
+      <div class="pcard-name">${p}</div>
+      <div class="pcard-stats">
+        ${rows.map(([label, val]) =>
+          `<span>${label} <strong>${val}</strong></span>`
+        ).join('')}
+      </div>
+    </div>`;
   }).join('');
-  document.getElementById('playerCards').innerHTML = cards;
 }
 
 function buildLayerToggles() {
-  const grid = document.getElementById('layerGrid');
-  grid.innerHTML = LAYER_DEFS.map(l => {
-    const dotColor = l.color || '#9a9385';
-    const active   = state.layers[l.id] ? 'active' : '';
-    return `
-      <button class="layer-btn ${active}" data-layer="${l.id}" onclick="toggleLayer('${l.id}')">
-        <span class="layer-dot" style="background:${dotColor}"></span>
-        ${l.label}
+  document.getElementById('layerGrid').innerHTML = LAYER_DEFS.map(l => {
+    const dotStyle = l.color
+      ? `background:${l.color}`
+      : `background:linear-gradient(90deg,#f4a300 50%,#4a9edd 50%)`;
+    const active = state.layers[l.id] ? 'active' : '';
+    return `<button class="layer-btn ${active}" data-layer="${l.id}" onclick="toggleLayer('${l.id}')">
+        <span class="layer-dot" style="${dotStyle}"></span>${l.label}
       </button>`;
   }).join('');
 }
@@ -737,25 +851,25 @@ function playerVis(p) {
 
 function mmss(s) {
   if (s == null) return '—';
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return `${m}:${String(sec).padStart(2, '0')}`;
+  return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 }
 
 function fmtEvent(ev) {
   const p = ev.player || '?';
   const t = mmss(ev.t);
   switch (ev.type) {
-    case 'kill':       return `${p} killed ${ev.victim} with ${ev.weapon} at ${t}`;
-    case 'knockdown':  return `${p} knocked ${ev.victim} with ${ev.weapon} at ${t}`;
-    case 'knocked':    return `${p} knocked down by ${ev.attacker} at ${t}`;
-    case 'death':      return `${p} killed by ${ev.killer} (${ev.weapon}) at ${t}`;
-    case 'revive':     return `${p} revived ${ev.target} at ${t}`;
-    case 'heal':       return `${p} used ${ev.item} +${ev.amount}hp at ${t}`;
-    case 'boost':      return `${p} used ${ev.item} at ${t}`;
-    case 'throwable':  return `${p} threw ${ev.weapon} at ${t}`;
-    case 'carepack':   return `${p} looted care package: ${ev.item} at ${t}`;
-    default:           return `${p} ${ev.type} at ${t}`;
+    case 'kill':      return `${p} killed ${ev.victim} · ${ev.weapon}${ev.reason === 'HeadShot' ? ' (HS)' : ''} · ${t}`;
+    case 'knockdown': return `${p} knocked ${ev.victim} · ${ev.weapon} · ${t}`;
+    case 'knocked':   return `${p} knocked down by ${ev.attacker} · ${t}`;
+    case 'death':     return `${p} died · killed by ${ev.killer} (${ev.weapon}) · ${t}`;
+    case 'revive':    return `${p} revived ${ev.target} · ${t}`;
+    case 'heal':      return `${p} +${ev.amount}hp · ${ev.item} · ${t}`;
+    case 'boost':     return `${p} boosted · ${ev.item} · ${t}`;
+    case 'dmg_dealt': return `${p} ▶ ${ev.target} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · '+ev.reason : ''} · ${t}`;
+    case 'dmg_taken': return `${p} ◀ ${ev.attacker} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · '+ev.reason : ''} · ${t}`;
+    case 'throwable': return `${p} threw ${ev.weapon} · ${t}`;
+    case 'carepack':  return `${p} looted care pack: ${ev.item} · ${t}`;
+    default:          return `${p} ${ev.type} · ${t}`;
   }
 }
 
