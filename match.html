@@ -600,10 +600,10 @@ function markerColor(ev) {
 
 function drawMarker(ev, cx, cy) {
   const col = markerColor(ev);
-  const r   = 7;
+  const r   = 7 / view.scale;   // constant 7px on screen at any zoom
   ctx.strokeStyle = col;
   ctx.fillStyle   = col;
-  ctx.lineWidth   = 2;
+  ctx.lineWidth   = 2 / view.scale;
   ctx.globalAlpha = 0.9;
 
   switch (ev.type) {
