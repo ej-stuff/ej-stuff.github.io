@@ -1,0 +1,272 @@
+[
+  {
+    "key": "kills",
+    "label": "Kills",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "damage",
+    "label": "Damage Dealt",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "knockdowns",
+    "label": "Knockdowns Given",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "hs_kills",
+    "label": "Headshot Kills",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "hs_kills",
+    "unit": "hs kills"
+  },
+  {
+    "key": "assists",
+    "label": "Assists",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "assists",
+    "unit": "assists"
+  },
+  {
+    "key": "revives",
+    "label": "Revives Given",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "revives",
+    "unit": "revives"
+  },
+  {
+    "key": "heals",
+    "label": "Heals Used",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "heals",
+    "unit": "heals"
+  },
+  {
+    "key": "boosts",
+    "label": "Boosts Used",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "boosts",
+    "unit": "boosts"
+  },
+  {
+    "key": "blue_chips",
+    "label": "Blue Chips Used",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "blue_chips",
+    "unit": "blue chips"
+  },
+  {
+    "key": "survival_s",
+    "label": "Survival Time",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "survival_s",
+    "unit": "seconds"
+  },
+  {
+    "key": "throwable_total",
+    "label": "Total Throwables Used",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "__total__",
+    "throw_field": "count",
+    "unit": "thrown"
+  },
+  {
+    "key": "flare_gun_count",
+    "label": "Flare Gun — Count",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "count",
+    "unit": "used"
+  },
+  {
+    "key": "flare_gun_kills",
+    "label": "Flare Gun — Kills",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "flare_gun_damage",
+    "label": "Flare Gun — Damage",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "flare_gun_knockdowns",
+    "label": "Flare Gun — Knockdowns",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "grenade_count",
+    "label": "Grenade — Count",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "count",
+    "unit": "used"
+  },
+  {
+    "key": "grenade_kills",
+    "label": "Grenade — Kills",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "grenade_damage",
+    "label": "Grenade — Damage",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "grenade_knockdowns",
+    "label": "Grenade — Knockdowns",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "smoke_grenade_count",
+    "label": "Smoke Grenade — Count",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Smoke Grenade",
+    "throw_field": "count",
+    "unit": "used"
+  },
+  {
+    "key": "sticky_grenade_count",
+    "label": "Sticky Grenade — Count",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "count",
+    "unit": "used"
+  },
+  {
+    "key": "sticky_grenade_kills",
+    "label": "Sticky Grenade — Kills",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "sticky_grenade_damage",
+    "label": "Sticky Grenade — Damage",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "sticky_grenade_knockdowns",
+    "label": "Sticky Grenade — Knockdowns",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "ammo_all",
+    "label": "All Ammo Combined",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "__total__",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_300_magnum_ammo",
+    "label": ".300 Magnum Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": ".300 Magnum Ammo",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_45_acp_ammo",
+    "label": ".45 ACP Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": ".45 ACP Ammo",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_12_gauge_ammo",
+    "label": "12 Gauge Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "12 Gauge Ammo",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_40mm_grenade",
+    "label": "40mm Grenade",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "40mm Grenade",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_556mm_ammo",
+    "label": "5.56mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "5.56mm Ammo",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_762mm_ammo",
+    "label": "7.62mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "7.62mm Ammo",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_9mm_ammo",
+    "label": "9mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "9mm Ammo",
+    "unit": "rounds"
+  }
+]
