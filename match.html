@@ -237,14 +237,15 @@ h1 {
   width: 100%;
 }
 .layer-btn.active { color: var(--text); border-color: var(--muted); }
-.layer-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
+.layer-icon {
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
   opacity: 0.35;
   transition: opacity .15s;
+  display: block;
 }
-.layer-btn.active .layer-dot { opacity: 1; }
+.layer-btn.active .layer-icon { opacity: 1; }
 
 /* ── Player filter ───────────────────────────────────────────────────────── */
 .btn-group { display: flex; gap: 6px; }
@@ -303,7 +304,7 @@ h1 {
           <span class="tl-val" id="timeDisplay">Full match</span>
           <button class="tl-btn" onclick="resetTime()">All</button>
         </div>
-        <!-- Events timeline: all events as colored dots, clickable/hoverable -->
+        <!-- Events timeline: all events as icons per player lane, clickable/hoverable -->
         <div id="tlWrap" style="margin-top:8px">
           <canvas id="tlCanvas"></canvas>
         </div>
@@ -350,6 +351,7 @@ const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
 // Layer ids MUST match event.type strings from the match JSON exactly
 const LAYER_DEFS = [
   { id: 'paths',            label: 'Movement Paths',    color: null,      default: true  },
+  { id: 'enemies',          label: 'Enemy Positions',   color: '#ff4444', default: false },
   { id: 'circles',          label: 'Blue Zone',         color: '#4a9edd', default: true  },
   { id: 'kill',             label: 'Kills',             color: '#f4a300', default: true  },
   { id: 'knockdown',        label: 'Knocks Out',        color: '#f4a300', default: true  },
@@ -387,10 +389,8 @@ let MAP = null;
 const canvas = document.getElementById('mapCanvas');
 const ctx    = canvas.getContext('2d');
 const mapImg = new Image();
-// No crossOrigin: we only draw the image, never read pixel data.
 mapImg.onload  = () => draw();
 mapImg.onerror = () => {
-  // Try CDN fallback if local file failed (local map-images/ not present)
   if (MAP && MAP.cdn_url && mapImg.src !== MAP.cdn_url) {
     mapImg.src = MAP.cdn_url;
   } else {
@@ -398,17 +398,149 @@ mapImg.onerror = () => {
   }
 };
 
-let markers = [];
+let markers    = [];
+let highlightEv = null;   // event to highlight on the map (set from timeline hover)
+
+/* ============================================================================
+   UNIFIED ICON DRAW FUNCTION
+   Works on any canvas 2D context. r and lw are already in the target coordinate
+   space (scale-compensated for the map, fixed pixels for timeline/layer icons).
+============================================================================ */
+function drawEventIcon(c, cx, cy, r, lw, type, col) {
+  c.strokeStyle = col;
+  c.fillStyle   = col;
+  c.lineWidth   = lw;
+  c.globalAlpha = 0.9;
+
+  switch (type) {
+    case 'kill': {
+      const s = r * 0.82;
+      c.beginPath();
+      c.moveTo(cx-s, cy-s); c.lineTo(cx+s, cy+s);
+      c.moveTo(cx+s, cy-s); c.lineTo(cx-s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'knockdown': {
+      c.beginPath();
+      c.moveTo(cx, cy-r);
+      c.lineTo(cx+r, cy+r*0.7);
+      c.lineTo(cx-r, cy+r*0.7);
+      c.closePath(); c.fill();
+      break;
+    }
+    case 'knocked': {
+      c.beginPath();
+      c.moveTo(cx, cy+r);
+      c.lineTo(cx+r, cy-r*0.7);
+      c.lineTo(cx-r, cy-r*0.7);
+      c.closePath(); c.stroke();
+      break;
+    }
+    case 'death': {
+      c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
+      const s = r*0.55;
+      c.beginPath();
+      c.moveTo(cx-s, cy-s); c.lineTo(cx+s, cy+s);
+      c.moveTo(cx+s, cy-s); c.lineTo(cx-s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'revive': {
+      c.beginPath();
+      c.moveTo(cx, cy-r); c.lineTo(cx-r*0.55, cy-r*0.1);
+      c.moveTo(cx, cy-r); c.lineTo(cx+r*0.55, cy-r*0.1);
+      c.moveTo(cx, cy-r); c.lineTo(cx, cy+r);
+      c.stroke();
+      break;
+    }
+    case 'blue_chip_revive': {
+      c.beginPath(); c.arc(cx, cy, r,      0, Math.PI*2); c.stroke();
+      c.beginPath(); c.arc(cx, cy, r*0.42, 0, Math.PI*2); c.fill();
+      break;
+    }
+    case 'heal': {
+      const a = r*0.9;
+      c.beginPath();
+      c.moveTo(cx,  cy-a); c.lineTo(cx,  cy+a);
+      c.moveTo(cx-a, cy); c.lineTo(cx+a, cy);
+      c.stroke();
+      break;
+    }
+    case 'boost': {
+      c.beginPath(); c.arc(cx, cy, r*0.7, 0, Math.PI*2); c.fill();
+      break;
+    }
+    case 'dmg_dealt': {
+      const s = r*0.8;
+      c.globalAlpha = 0.6;
+      c.beginPath();
+      c.moveTo(cx-s, cy-s); c.lineTo(cx+s*0.5, cy); c.lineTo(cx-s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'dmg_taken': {
+      const s = r*0.8;
+      c.globalAlpha = 0.55;
+      c.beginPath();
+      c.moveTo(cx+s, cy-s); c.lineTo(cx-s*0.5, cy); c.lineTo(cx+s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'throwable': {
+      c.beginPath(); c.arc(cx, cy, r*0.45, 0, Math.PI*2); c.fill();
+      c.globalAlpha = 0.4;
+      c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
+      c.globalAlpha = 0.9;
+      break;
+    }
+    case 'carepack': {
+      c.beginPath();
+      c.moveTo(cx, cy-r); c.lineTo(cx+r, cy);
+      c.lineTo(cx, cy+r); c.lineTo(cx-r, cy);
+      c.closePath(); c.fill();
+      break;
+    }
+    // Layer-only icons (not in MD.events):
+    case 'paths': {
+      c.beginPath();
+      c.moveTo(cx-r, cy+r*0.25);
+      c.bezierCurveTo(cx-r*0.2, cy-r*0.65, cx+r*0.2, cy+r*0.65, cx+r, cy-r*0.25);
+      c.stroke();
+      break;
+    }
+    case 'circles': {
+      c.beginPath(); c.arc(cx, cy, r*0.85, 0, Math.PI*2); c.stroke();
+      break;
+    }
+    case 'transport': {
+      const ah = r*0.38;
+      c.beginPath();
+      c.moveTo(cx-r, cy); c.lineTo(cx+r*0.25, cy);
+      c.moveTo(cx+r*0.25-ah, cy-ah); c.lineTo(cx+r*0.25, cy); c.lineTo(cx+r*0.25-ah, cy+ah);
+      c.stroke();
+      break;
+    }
+    case 'enemies': {
+      c.beginPath(); c.arc(cx, cy, r*0.7, 0, Math.PI*2); c.fill();
+      break;
+    }
+    default: {
+      c.beginPath(); c.arc(cx, cy, r*0.6, 0, Math.PI*2); c.fill();
+    }
+  }
+  c.globalAlpha = 1;
+}
 
 /* ============================================================================
    EVENTS TIMELINE
 ============================================================================ */
-const TL_H       = 72;
-const TL_PAD_L   = 28;
-const TL_D282_Y  = 21;
-const TL_S821_Y  = 51;
-const TL_DOT_R   = 4;
-const TL_DOT_SEP = TL_DOT_R * 2 + 2;
+const TL_H       = 110;    // total timeline height px
+const TL_PAD_L   = 28;     // left margin for player labels
+const TL_D282_Y  = 30;     // centre y for D282 lane
+const TL_S821_Y  = 80;     // centre y for S821 lane
+const TL_DOT_R   = 5;      // icon radius
+const TL_DOT_SEP = TL_DOT_R * 2 + 2;  // spacing between stacked icons
 
 let tlCanvas = null, tlCtx = null, tlMarkers = [];
 
@@ -417,9 +549,7 @@ function initTimeline() {
   tlCtx    = tlCanvas.getContext('2d');
   tlCanvas.addEventListener('click',      onTlClick);
   tlCanvas.addEventListener('mousemove',  onTlMouseMove);
-  tlCanvas.addEventListener('mouseleave', () => {
-    document.getElementById('tooltip').style.display = 'none';
-  });
+  tlCanvas.addEventListener('mouseleave', onTlLeave);
   resizeTimeline();
   drawTimeline();
 }
@@ -444,23 +574,18 @@ function tlXToTime(px) {
   return Math.max(0, (px - TL_PAD_L) / (tlCanvas.width - TL_PAD_L - 4) * dur);
 }
 
-function tlEventColor(type) {
-  const ld = LAYER_DEFS.find(l => l.id === type);
-  return (ld && ld.color) ? ld.color : null;
-}
-
 function drawTimeline() {
   if (!tlCanvas || !MD) return;
   const w = tlCanvas.width, h = tlCanvas.height;
   tlCtx.clearRect(0, 0, w, h);
 
-  // Alternating row tints
+  // Row tint bands
   tlCtx.fillStyle = 'rgba(244,163,0,0.04)';
   tlCtx.fillRect(TL_PAD_L, 0, w - TL_PAD_L, h / 2);
   tlCtx.fillStyle = 'rgba(74,158,221,0.04)';
   tlCtx.fillRect(TL_PAD_L, h / 2, w - TL_PAD_L, h / 2);
 
-  // Row divider
+  // Divider between lanes
   tlCtx.beginPath();
   tlCtx.moveTo(TL_PAD_L, h / 2); tlCtx.lineTo(w, h / 2);
   tlCtx.strokeStyle = 'rgba(56,52,44,0.7)';
@@ -470,11 +595,11 @@ function drawTimeline() {
   // Player labels
   tlCtx.font = 'bold 10px system-ui, sans-serif';
   tlCtx.textBaseline = 'middle';
-  tlCtx.textAlign = 'left';
-  tlCtx.fillStyle = '#f4a300'; tlCtx.fillText('D282', 1, TL_D282_Y);
-  tlCtx.fillStyle = '#4a9edd'; tlCtx.fillText('S821', 1, TL_S821_Y);
+  tlCtx.textAlign    = 'left';
+  tlCtx.fillStyle    = '#f4a300'; tlCtx.fillText('D282', 1, TL_D282_Y);
+  tlCtx.fillStyle    = '#4a9edd'; tlCtx.fillText('S821', 1, TL_S821_Y);
 
-  // Event dots — bucket by pixel position to stack overlapping events
+  // Event icons — bucket by pixel position to stack overlapping events
   tlMarkers = [];
   const BUCKET = TL_DOT_SEP;
 
@@ -490,16 +615,14 @@ function drawTimeline() {
       const cx = parseInt(bxStr) * BUCKET + BUCKET / 2;
       if (cx < TL_PAD_L || cx > w - 2) continue;
       for (let i = 0; i < Math.min(evs.length, 3); i++) {
-        const ev = evs[i];
-        const cy = rowY + stackDir * i * TL_DOT_SEP;
+        const ev  = evs[i];
+        const cy  = rowY + stackDir * i * TL_DOT_SEP;
         if (cy < TL_DOT_R + 1 || cy > h - TL_DOT_R - 1) break;
-        const col = tlEventColor(ev.type) || PLAYER_COLOR[player];
-        tlCtx.beginPath();
-        tlCtx.arc(cx, cy, TL_DOT_R, 0, Math.PI * 2);
-        tlCtx.fillStyle = col;
-        tlCtx.globalAlpha = 0.8;
-        tlCtx.fill();
-        tlCtx.globalAlpha = 1;
+        const ld  = LAYER_DEFS.find(l => l.id === ev.type);
+        const col = (ld && ld.color) ? ld.color : PLAYER_COLOR[player];
+        tlCtx.save();
+        drawEventIcon(tlCtx, cx, cy, TL_DOT_R, 1.5, ev.type, col);
+        tlCtx.restore();
         tlMarkers.push({ cx, cy, ev });
       }
     }
@@ -511,7 +634,7 @@ function drawTimeline() {
     tlCtx.beginPath();
     tlCtx.moveTo(x, 0); tlCtx.lineTo(x, h);
     tlCtx.strokeStyle = 'rgba(244,163,0,0.85)';
-    tlCtx.lineWidth = 1.5;
+    tlCtx.lineWidth   = 1.5;
     tlCtx.stroke();
   }
 }
@@ -539,7 +662,7 @@ function onTlMouseMove(e) {
   let found  = null;
   for (const m of tlMarkers) {
     const dx = mx - m.cx, dy = my - m.cy;
-    if (dx * dx + dy * dy <= (TL_DOT_R + 5) * (TL_DOT_R + 5)) { found = m; break; }
+    if (dx*dx + dy*dy <= (TL_DOT_R + 6) * (TL_DOT_R + 6)) { found = m; break; }
   }
   if (found) {
     const txt = fmtEvent(found.ev);
@@ -548,9 +671,16 @@ function onTlMouseMove(e) {
     tip.style.top     = (e.clientY - 12) + 'px';
     tip.style.display = 'block';
     document.getElementById('eventDetail').textContent = txt;
+    if (highlightEv !== found.ev) { highlightEv = found.ev; draw(); }
   } else {
     tip.style.display = 'none';
+    if (highlightEv !== null) { highlightEv = null; draw(); }
   }
+}
+
+function onTlLeave() {
+  document.getElementById('tooltip').style.display = 'none';
+  if (highlightEv !== null) { highlightEv = null; draw(); }
 }
 
 /* ============================================================================
@@ -673,6 +803,7 @@ function draw() {
 
   const maxT = state.time;
   if (state.layers.circles) drawCircles(maxT);
+  if (state.layers.enemies) drawEnemies(maxT);
   if (state.layers.paths)   drawPaths(maxT);
 
   markers = [];
@@ -683,6 +814,20 @@ function draw() {
     const { cx, cy } = w2c(ev.x, ev.y);
     drawMarker(ev, cx, cy);
     markers.push({ cx, cy, ev });
+  }
+
+  // Highlight ring for timeline-hovered event
+  if (highlightEv) {
+    const { cx, cy } = w2c(highlightEv.x, highlightEv.y);
+    const ld  = LAYER_DEFS.find(l => l.id === highlightEv.type);
+    const col = (ld && ld.color) ? ld.color : PLAYER_COLOR[highlightEv.player] || '#fff';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 16 / view.scale, 0, Math.PI * 2);
+    ctx.strokeStyle  = col;
+    ctx.lineWidth    = 2.5 / view.scale;
+    ctx.globalAlpha  = 0.85;
+    ctx.stroke();
+    ctx.globalAlpha  = 1;
   }
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -697,12 +842,12 @@ function drawPaths(maxT) {
     const vis = pts.filter(p => p.t >= 0 && p.t <= maxT);
     if (vis.length < 2) continue;
 
-    // Group into life-segments — never connect across a blue-chip revive
+    // Group into life-segments — never draw a line across a blue-chip revive
     const segments = [];
     let seg = [vis[0]];
     for (let i = 1; i < vis.length; i++) {
       const life     = vis[i].life     != null ? vis[i].life     : 0;
-      const prevLife = vis[i - 1].life != null ? vis[i - 1].life : 0;
+      const prevLife = vis[i-1].life   != null ? vis[i-1].life   : 0;
       if (life !== prevLife) { segments.push(seg); seg = [vis[i]]; }
       else seg.push(vis[i]);
     }
@@ -713,10 +858,10 @@ function drawPaths(maxT) {
       if (!showTransport) {
         _strokePath(player, s, 2, 0.55, false);
       } else {
-        // Sub-segment by transport type for distinct styling
+        // Sub-segment by transport type
         let sub = [s[0]];
         for (let i = 1; i < s.length; i++) {
-          const tr = s[i].tr || 'foot', prevTr = s[i - 1].tr || 'foot';
+          const tr = s[i].tr || 'foot', prevTr = s[i-1].tr || 'foot';
           if (tr !== prevTr) { _drawTrSeg(player, sub); sub = [s[i]]; }
           else sub.push(s[i]);
         }
@@ -725,11 +870,11 @@ function drawPaths(maxT) {
     }
 
     // Current-position dot
-    const last        = vis[vis.length - 1];
-    const { cx, cy }  = w2c(last.x, last.y);
+    const last       = vis[vis.length - 1];
+    const { cx, cy } = w2c(last.x, last.y);
     ctx.beginPath();
     ctx.arc(cx, cy, 5 / view.scale, 0, Math.PI * 2);
-    ctx.fillStyle = PLAYER_COLOR[player];
+    ctx.fillStyle   = PLAYER_COLOR[player];
     ctx.fill();
     ctx.strokeStyle = '#fff';
     ctx.lineWidth   = 1 / view.scale;
@@ -737,16 +882,14 @@ function drawPaths(maxT) {
   }
 }
 
-// Draw one transport-type sub-segment with the appropriate style
 function _drawTrSeg(player, pts) {
   if (!pts.length) return;
   const tr        = pts[0].tr || 'foot';
-  if (tr === 'plane') return;   // in-flight — hidden in transport mode
-  const isVehicle = ['WheeledVehicle', 'BikesVehicle', 'FloatingVehicle', 'FlyingVehicle'].includes(tr);
+  if (tr === 'plane') return;
+  const isVehicle = ['WheeledVehicle','BikesVehicle','FloatingVehicle','FlyingVehicle'].includes(tr);
   _strokePath(player, pts, isVehicle ? 4 : 2, isVehicle ? 0.75 : 0.55, tr === 'chute');
 }
 
-// Low-level: stroke a list of positions as a path
 function _strokePath(player, pts, lw, alpha, dashed) {
   if (pts.length < 2) return;
   const f = w2c(pts[0].x, pts[0].y);
@@ -795,7 +938,53 @@ function drawCircles(maxT) {
   }
 }
 
-/* ── Event markers ──────────────────────────────────────────────────────── */
+/* ── Enemy positions ────────────────────────────────────────────────────── */
+function drawEnemies(maxT) {
+  const enemies = MD.enemies;
+  if (!enemies || !enemies.length) return;
+
+  // When time is Infinity use the match end as the reference
+  const effectiveT = maxT === Infinity ? (MD.duration_s || 1800) : maxT;
+  const MEDAL_COL  = { 1: '#ffd700', 2: '#c0c0c0', 3: '#cd7f32' };
+
+  for (const en of enemies) {
+    // Hide if dead before current time
+    if (en.death_t != null && effectiveT >= en.death_t) continue;
+
+    // Binary search: last position at or before effectiveT
+    const pos = en.pos;
+    if (!pos || !pos.length) continue;
+    let lo = 0, hi = pos.length - 1, idx = -1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (pos[mid][0] <= effectiveT) { idx = mid; lo = mid + 1; }
+      else hi = mid - 1;
+    }
+    if (idx < 0) continue;
+
+    const { cx, cy } = w2c(pos[idx][1], pos[idx][2]);
+    const r = 4 / view.scale;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle   = '#ff4444';
+    ctx.globalAlpha = 0.65;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    if (en.medal) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 2.4, 0, Math.PI * 2);
+      ctx.strokeStyle = MEDAL_COL[en.medal] || '#fff';
+      ctx.lineWidth   = 1.8 / view.scale;
+      ctx.globalAlpha = 0.85;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+
+/* ── Event markers (use unified icon function) ──────────────────────────── */
 const LAYER_COLOR = Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.color]));
 
 function markerColor(ev) {
@@ -803,105 +992,7 @@ function markerColor(ev) {
 }
 
 function drawMarker(ev, cx, cy) {
-  const col = markerColor(ev);
-  const r   = 7 / view.scale;
-  ctx.strokeStyle = col;
-  ctx.fillStyle   = col;
-  ctx.lineWidth   = 2 / view.scale;
-  ctx.globalAlpha = 0.9;
-
-  switch (ev.type) {
-    case 'kill': {
-      const s = r * 0.8;
-      ctx.beginPath();
-      ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s, cy + s);
-      ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s, cy + s);
-      ctx.stroke();
-      break;
-    }
-    case 'knockdown': {
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - r);
-      ctx.lineTo(cx + r, cy + r * 0.7);
-      ctx.lineTo(cx - r, cy + r * 0.7);
-      ctx.closePath(); ctx.fill();
-      break;
-    }
-    case 'knocked': {
-      ctx.beginPath();
-      ctx.moveTo(cx, cy + r);
-      ctx.lineTo(cx + r, cy - r * 0.7);
-      ctx.lineTo(cx - r, cy - r * 0.7);
-      ctx.closePath(); ctx.stroke();
-      break;
-    }
-    case 'death': {
-      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
-      const s = r * 0.55;
-      ctx.beginPath();
-      ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s, cy + s);
-      ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s, cy + s);
-      ctx.stroke();
-      break;
-    }
-    case 'revive': {
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - r); ctx.lineTo(cx - r * 0.55, cy - r * 0.1);
-      ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r * 0.55, cy - r * 0.1);
-      ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r);
-      ctx.stroke();
-      break;
-    }
-    case 'blue_chip_revive': {
-      // Double-circle (outer ring + filled centre) — beacon/respawn icon
-      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(cx, cy, r * 0.42, 0, Math.PI * 2); ctx.fill();
-      break;
-    }
-    case 'dmg_dealt': {
-      const s = r * 0.8;
-      ctx.beginPath();
-      ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s * 0.5, cy); ctx.lineTo(cx - s, cy + s);
-      ctx.globalAlpha = 0.6; ctx.stroke();
-      break;
-    }
-    case 'dmg_taken': {
-      const s = r * 0.8;
-      ctx.beginPath();
-      ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s * 0.5, cy); ctx.lineTo(cx + s, cy + s);
-      ctx.globalAlpha = 0.55; ctx.stroke();
-      break;
-    }
-    case 'heal': {
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r);
-      ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy);
-      ctx.stroke();
-      break;
-    }
-    case 'boost': {
-      ctx.beginPath(); ctx.arc(cx, cy, r * 0.7, 0, Math.PI * 2); ctx.fill();
-      break;
-    }
-    case 'throwable': {
-      ctx.beginPath(); ctx.arc(cx, cy, r * 0.45, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.globalAlpha = 0.4; ctx.stroke();
-      ctx.globalAlpha = 0.9;
-      break;
-    }
-    case 'carepack': {
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r, cy);
-      ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r, cy);
-      ctx.closePath(); ctx.fill();
-      break;
-    }
-    default: {
-      ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.fill();
-    }
-  }
-  ctx.globalAlpha = 1;
+  drawEventIcon(ctx, cx, cy, 7 / view.scale, 2 / view.scale, ev.type, markerColor(ev));
 }
 
 /* ============================================================================
@@ -943,14 +1034,14 @@ function onMouseMove(e) {
   for (const m of markers) {
     const dx = wp.cx - m.cx, dy = wp.cy - m.cy;
     const hitR = 12 / view.scale;
-    if (dx * dx + dy * dy <= hitR * hitR) { found = m; break; }
+    if (dx*dx + dy*dy <= hitR*hitR) { found = m; break; }
   }
 
   if (found) {
     const txt = fmtEvent(found.ev);
-    tip.textContent = txt;
-    tip.style.left  = (e.clientX + 14) + 'px';
-    tip.style.top   = (e.clientY - 12) + 'px';
+    tip.textContent   = txt;
+    tip.style.left    = (e.clientX + 14) + 'px';
+    tip.style.top     = (e.clientY - 12) + 'px';
     tip.style.display = 'block';
     document.getElementById('eventDetail').textContent = txt;
   } else {
@@ -1039,14 +1130,24 @@ function buildPlayerCards() {
 
 function buildLayerToggles() {
   document.getElementById('layerGrid').innerHTML = LAYER_DEFS.map(l => {
-    const dotStyle = l.color
-      ? `background:${l.color}`
-      : `background:linear-gradient(90deg,#f4a300 50%,#4a9edd 50%)`;
     const active = state.layers[l.id] ? 'active' : '';
     return `<button class="layer-btn ${active}" data-layer="${l.id}" onclick="toggleLayer('${l.id}')">
-        <span class="layer-dot" style="${dotStyle}"></span>${l.label}
+        <canvas class="layer-icon" id="li-${l.id}" width="18" height="18"></canvas>
+        ${l.label}
       </button>`;
   }).join('');
+
+  // Draw the actual icon onto each small canvas
+  for (const l of LAYER_DEFS) {
+    const lc = document.getElementById(`li-${l.id}`);
+    if (!lc) continue;
+    const lx  = lc.getContext('2d');
+    const col = l.color || '#e8e3d8';
+    lx.clearRect(0, 0, 18, 18);
+    lx.save();
+    drawEventIcon(lx, 9, 9, 5.5, 1.8, l.id, col);
+    lx.restore();
+  }
 }
 
 /* ============================================================================
@@ -1073,8 +1174,8 @@ function fmtEvent(ev) {
     case 'blue_chip_revive': return `${p} blue chip revived ${ev.target} · ${t}`;
     case 'heal':             return `${p} +${ev.amount}hp · ${ev.item} · ${t}`;
     case 'boost':            return `${p} boosted · ${ev.item} · ${t}`;
-    case 'dmg_dealt':        return `${p} ▶ ${ev.target} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
-    case 'dmg_taken':        return `${p} ◀ ${ev.attacker} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
+    case 'dmg_dealt':        return `${p} > ${ev.target} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
+    case 'dmg_taken':        return `${p} < ${ev.attacker} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
     case 'throwable':        return `${p} threw ${ev.weapon} · ${t}`;
     case 'carepack':         return `${p} looted care pack: ${ev.item} · ${t}`;
     default:                 return `${p} ${ev.type} · ${t}`;
