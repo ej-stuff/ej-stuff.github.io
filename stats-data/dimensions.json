@@ -1,0 +1,590 @@
+[
+  {
+    "key": "kills",
+    "label": "Kills",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "damage",
+    "label": "Damage Dealt",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "damage_taken",
+    "label": "Damage Taken",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "damage_taken",
+    "unit": "damage"
+  },
+  {
+    "key": "knockdowns",
+    "label": "Knockdowns Given",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "times_knocked",
+    "label": "Times Knocked",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "times_knocked",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "hs_kills",
+    "label": "Headshot Kills",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "hs_kills",
+    "unit": "kills"
+  },
+  {
+    "key": "assists",
+    "label": "Assists",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "assists",
+    "unit": "assists"
+  },
+  {
+    "key": "revives",
+    "label": "Revives Given",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "revives",
+    "unit": "revives"
+  },
+  {
+    "key": "revive_response_s",
+    "label": "Revive Response Time",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "revive_response_s",
+    "unit": "seconds"
+  },
+  {
+    "key": "heals",
+    "label": "Heals Used",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "heals",
+    "unit": "heals"
+  },
+  {
+    "key": "boosts",
+    "label": "Boosts Used",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "boosts",
+    "unit": "boosts"
+  },
+  {
+    "key": "blue_chips",
+    "label": "Blue Chips Used",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "blue_chips",
+    "unit": "uses"
+  },
+  {
+    "key": "shots_fired",
+    "label": "Shots Fired",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "shots_fired",
+    "unit": "shots"
+  },
+  {
+    "key": "survival_s",
+    "label": "Survival Time",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "survival_s",
+    "unit": "seconds"
+  },
+  {
+    "key": "parachute_dist",
+    "label": "Parachute Glide",
+    "category": "Player stats",
+    "type": "player_stat",
+    "field": "parachute_dist",
+    "unit": "m"
+  },
+  {
+    "key": "throwable_total_count",
+    "label": "Count — All Throwables",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "__total__",
+    "throw_field": "count",
+    "unit": "thrown"
+  },
+  {
+    "key": "throwable_total_kills",
+    "label": "Kills — All Throwables",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "__total__",
+    "throw_field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "throwable_total_damage",
+    "label": "Damage — All Throwables",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "__total__",
+    "throw_field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "throwable_total_knockdowns",
+    "label": "Knockdowns — All Throwables",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "__total__",
+    "throw_field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "throwable_total_picked_up",
+    "label": "Picked Up — All Throwables",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "__total__",
+    "throw_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "flare_gun_count",
+    "label": "Count — Flare Gun",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "count",
+    "unit": "thrown"
+  },
+  {
+    "key": "grenade_count",
+    "label": "Count — Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "count",
+    "unit": "thrown"
+  },
+  {
+    "key": "smoke_grenade_count",
+    "label": "Count — Smoke Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Smoke Grenade",
+    "throw_field": "count",
+    "unit": "thrown"
+  },
+  {
+    "key": "sticky_grenade_count",
+    "label": "Count — Sticky Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "count",
+    "unit": "thrown"
+  },
+  {
+    "key": "flare_gun_kills",
+    "label": "Kills — Flare Gun",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "grenade_kills",
+    "label": "Kills — Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "sticky_grenade_kills",
+    "label": "Kills — Sticky Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "kills",
+    "unit": "kills"
+  },
+  {
+    "key": "flare_gun_damage",
+    "label": "Damage — Flare Gun",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "grenade_damage",
+    "label": "Damage — Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "sticky_grenade_damage",
+    "label": "Damage — Sticky Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "damage",
+    "unit": "damage"
+  },
+  {
+    "key": "flare_gun_knockdowns",
+    "label": "Knockdowns — Flare Gun",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "grenade_knockdowns",
+    "label": "Knockdowns — Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "sticky_grenade_knockdowns",
+    "label": "Knockdowns — Sticky Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "knockdowns",
+    "unit": "knockdowns"
+  },
+  {
+    "key": "flare_gun_picked_up",
+    "label": "Picked Up — Flare Gun",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Flare Gun",
+    "throw_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "grenade_picked_up",
+    "label": "Picked Up — Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Grenade",
+    "throw_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "smoke_grenade_picked_up",
+    "label": "Picked Up — Smoke Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Smoke Grenade",
+    "throw_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "sticky_grenade_picked_up",
+    "label": "Picked Up — Sticky Grenade",
+    "category": "Throwables",
+    "type": "throwable",
+    "throw_name": "Sticky Grenade",
+    "throw_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "ammo_total_picked_up",
+    "label": "Picked Up — All Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "__total__",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_300_magnum_ammo_picked_up",
+    "label": "Picked Up — .300 Magnum Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": ".300 Magnum Ammo",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_45_acp_ammo_picked_up",
+    "label": "Picked Up — .45 ACP Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": ".45 ACP Ammo",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_12_gauge_ammo_picked_up",
+    "label": "Picked Up — 12 Gauge Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "12 Gauge Ammo",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_40mm_grenade_picked_up",
+    "label": "Picked Up — 40mm Grenade",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "40mm Grenade",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_556mm_ammo_picked_up",
+    "label": "Picked Up — 5.56mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "5.56mm Ammo",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_762mm_ammo_picked_up",
+    "label": "Picked Up — 7.62mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "7.62mm Ammo",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_9mm_ammo_picked_up",
+    "label": "Picked Up — 9mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "9mm Ammo",
+    "ammo_field": "picked_up",
+    "unit": "rounds"
+  },
+  {
+    "key": "ammo_total_reloads",
+    "label": "Reloads — All Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "__total__",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "ammo_300_magnum_ammo_reloads",
+    "label": "Reloads — .300 Magnum Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": ".300 Magnum Ammo",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "ammo_45_acp_ammo_reloads",
+    "label": "Reloads — .45 ACP Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": ".45 ACP Ammo",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "ammo_12_gauge_ammo_reloads",
+    "label": "Reloads — 12 Gauge Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "12 Gauge Ammo",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "ammo_40mm_grenade_reloads",
+    "label": "Reloads — 40mm Grenade",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "40mm Grenade",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "ammo_556mm_ammo_reloads",
+    "label": "Reloads — 5.56mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "5.56mm Ammo",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "ammo_762mm_ammo_reloads",
+    "label": "Reloads — 7.62mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "7.62mm Ammo",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "ammo_9mm_ammo_reloads",
+    "label": "Reloads — 9mm Ammo",
+    "category": "Ammo",
+    "type": "ammo",
+    "ammo_name": "9mm Ammo",
+    "ammo_field": "reloads",
+    "unit": "reloads"
+  },
+  {
+    "key": "heal_total_picked_up",
+    "label": "Picked Up — All Heals",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "__total__",
+    "heal_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "heal_adrenaline_syringe_picked_up",
+    "label": "Picked Up — Adrenaline Syringe",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Adrenaline Syringe",
+    "heal_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "heal_energy_drink_picked_up",
+    "label": "Picked Up — Energy Drink",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Energy Drink",
+    "heal_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "heal_painkiller_picked_up",
+    "label": "Picked Up — Painkiller",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Painkiller",
+    "heal_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "heal_bandage_picked_up",
+    "label": "Picked Up — Bandage",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Bandage",
+    "heal_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "heal_first_aid_kit_picked_up",
+    "label": "Picked Up — First Aid Kit",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "First Aid Kit",
+    "heal_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "heal_med_kit_picked_up",
+    "label": "Picked Up — Med Kit",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Med Kit",
+    "heal_field": "picked_up",
+    "unit": "items"
+  },
+  {
+    "key": "heal_total_used",
+    "label": "Used — All Heals",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "__total__",
+    "heal_field": "used",
+    "unit": "uses"
+  },
+  {
+    "key": "heal_adrenaline_syringe_used",
+    "label": "Used — Adrenaline Syringe",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Adrenaline Syringe",
+    "heal_field": "used",
+    "unit": "uses"
+  },
+  {
+    "key": "heal_energy_drink_used",
+    "label": "Used — Energy Drink",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Energy Drink",
+    "heal_field": "used",
+    "unit": "uses"
+  },
+  {
+    "key": "heal_painkiller_used",
+    "label": "Used — Painkiller",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Painkiller",
+    "heal_field": "used",
+    "unit": "uses"
+  },
+  {
+    "key": "heal_bandage_used",
+    "label": "Used — Bandage",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Bandage",
+    "heal_field": "used",
+    "unit": "uses"
+  },
+  {
+    "key": "heal_first_aid_kit_used",
+    "label": "Used — First Aid Kit",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "First Aid Kit",
+    "heal_field": "used",
+    "unit": "uses"
+  },
+  {
+    "key": "heal_med_kit_used",
+    "label": "Used — Med Kit",
+    "category": "Heals",
+    "type": "heal",
+    "heal_name": "Med Kit",
+    "heal_field": "used",
+    "unit": "uses"
+  }
+]

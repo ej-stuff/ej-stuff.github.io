@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Match Analysis — PUBG</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:     #14130f;
+  --panel:  #1e1c17;
+  --line:   #38342c;
+  --text:   #e8e3d8;
+  --muted:  #9a9385;
+  --accent: #f4a300;
+  --blue:   #4a9edd;
+  --ok:     #8fae5d;
+  --danger: #d7443e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 16px;
+}
+
+.wrap { max-width: 1300px; margin: 0 auto; }
+
+/* ── Breadcrumb nav ──────────────────────────────────────────────────────── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.bc-home {
+  font-family: Oswald, sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 16px;
+}
+.bc-home:hover { opacity: 0.8; }
+.bc-sep { color: var(--line); font-size: 11px; }
+.bc-cur { color: var(--muted); }
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.hd { margin-bottom: 16px; }
+h1 {
+  font-family: Oswald, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  font-size: 22px;
+}
+.subtitle { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+/* ── Panels ─────────────────────────────────────────────────────────────── */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.panel-title {
+  font-family: Oswald, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* ── Main layout ─────────────────────────────────────────────────────────── */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 12px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .main-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Map canvas ──────────────────────────────────────────────────────────── */
+.map-col { display: flex; flex-direction: column; gap: 12px; }
+
+.map-wrap {
+  position: relative;
+  background: #0d0c09;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  width: 100%;
+  max-height: 78vh;
+  user-select: none;
+}
+.map-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.map-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+.map-ctrl-btn {
+  background: rgba(30,28,23,0.88);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color .15s, border-color .15s;
+  line-height: 1;
+}
+.map-ctrl-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.tooltip {
+  position: fixed;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 200;
+  max-width: 340px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* ── Timeline ────────────────────────────────────────────────────────────── */
+.tl-hdr {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+.tl-flex-spacer { flex: 1; }
+.tl-jumps { display: flex; gap: 3px; }
+.tl-label { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.tl-val   { color: var(--accent); font-size: 12px; white-space: nowrap; min-width: 70px; }
+.tl-slider-row {
+  padding-left: 28px;  /* match TL_PAD_L so slider aligns with canvas events area */
+  margin-bottom: 2px;
+}
+.tl-slider-row input[type=range] {
+  display: block;
+  width: 100%;
+  accent-color: var(--accent);
+  height: 4px;
+  cursor: pointer;
+}
+.tl-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.tl-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+#tlCanvas {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  cursor: crosshair;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+.sidebar { display: flex; flex-direction: column; gap: 12px; }
+
+/* ── Player cards ────────────────────────────────────────────────────────── */
+.player-cards { display: flex; flex-direction: column; gap: 8px; }
+.pcard {
+  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+}
+.pcard.amber { border-color: rgba(244,163,0,0.4);  background: rgba(244,163,0,0.04); }
+.pcard.blue  { border-color: rgba(74,158,221,0.4); background: rgba(74,158,221,0.04); }
+.pcard-name {
+  font-family: Oswald, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+.pcard.amber .pcard-name { color: var(--accent); }
+.pcard.blue  .pcard-name { color: var(--blue); }
+.pcard-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.pcard-stats strong { color: var(--text); margin-left: 2px; }
+
+/* ── Layer toggles ───────────────────────────────────────────────────────── */
+.layer-grid { display: flex; flex-direction: column; gap: 5px; }
+.layer-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 5px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: color .15s, border-color .15s, background .15s;
+  width: 100%;
+}
+.layer-btn.active { color: var(--text); border-color: var(--muted); }
+.layer-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.35;
+  transition: opacity .15s;
+  display: block;
+}
+.layer-btn.active .layer-icon { opacity: 1; }
+
+/* ── Player filter ───────────────────────────────────────────────────────── */
+.btn-group { display: flex; gap: 6px; }
+.btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.btn.active { color: var(--accent); border-color: var(--accent); }
+
+/* ── Event log ───────────────────────────────────────────────────────────── */
+.event-detail {
+  font-size: 13px;
+  color: var(--muted);
+  min-height: 20px;
+}
+
+/* ── Misc ────────────────────────────────────────────────────────────────── */
+.loading { color: var(--muted); font-style: italic; padding: 20px 0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="breadcrumb">
+    <a href="stats.html" class="bc-home">PUBG Stats</a>
+    <span class="bc-sep">▸</span>
+    <span class="bc-cur" id="bcCur">Match Analysis</span>
+  </nav>
+
+  <div class="hd">
+    <h1 id="pageTitle">Match Analysis</h1>
+    <div class="subtitle" id="matchMeta">Loading…</div>
+  </div>
+
+  <div class="main-layout">
+
+    <div class="map-col">
+      <div class="map-wrap" id="mapWrap">
+        <canvas id="mapCanvas"></canvas>
+        <div class="map-controls">
+          <button class="map-ctrl-btn" onclick="resetView()" title="Fit map">⤢</button>
+        </div>
+        <div id="tooltip" class="tooltip" style="display:none"></div>
+      </div>
+
+      <div class="panel">
+        <div class="tl-hdr">
+          <span class="tl-label">Time</span>
+          <span class="tl-val" id="timeDisplay">Full match</span>
+          <div class="tl-flex-spacer"></div>
+          <div class="tl-jumps">
+            <button class="tl-btn" onclick="jumpTime(-10)" title="Back 10s">−10s</button>
+            <button class="tl-btn" onclick="jumpTime(-5)"  title="Back 5s">−5s</button>
+            <button class="tl-btn" onclick="jumpTime(-1)"  title="Back 1s">−1s</button>
+            <button class="tl-btn" onclick="jumpTime(1)"   title="Forward 1s">+1s</button>
+            <button class="tl-btn" onclick="jumpTime(5)"   title="Forward 5s">+5s</button>
+            <button class="tl-btn" onclick="jumpTime(10)"  title="Forward 10s">+10s</button>
+            <button class="tl-btn" onclick="resetTime()">All</button>
+          </div>
+        </div>
+        <div class="tl-slider-row">
+          <input type="range" id="timeSlider" min="0" value="99999" step="1">
+        </div>
+        <div id="tlWrap">
+          <canvas id="tlCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+
+      <div class="panel">
+        <div class="panel-title">Match Summary</div>
+        <div class="player-cards" id="playerCards"><p class="loading">Loading…</p></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Layers</div>
+        <div class="layer-grid" id="layerGrid"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Show</div>
+        <div class="btn-group" id="playerFilter">
+          <button class="btn active" data-p="both" onclick="setPlayerFilter('both')">Both</button>
+          <button class="btn" data-p="D282"  onclick="setPlayerFilter('D282')">D282</button>
+          <button class="btn" data-p="S821"  onclick="setPlayerFilter('S821')">S821</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Hovered Event</div>
+    <div class="event-detail" id="eventDetail">Hover over a marker on the map or timeline to see details.</div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================================
+   CONFIG
+============================================================================ */
+const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
+
+// Layer ids MUST match event.type strings from the match JSON exactly
+const LAYER_DEFS = [
+  { id: 'paths',            label: 'Movement Paths',    color: null,      default: true  },
+  { id: 'enemies',          label: 'Enemy Positions',   color: '#ff4444', default: false },
+  { id: 'circles',          label: 'Blue Zone',         color: '#4a9edd', default: true  },
+  { id: 'kill',             label: 'Kills',             color: '#f4a300', default: true  },
+  { id: 'knockdown',        label: 'Knocks Out',        color: '#f4a300', default: true  },
+  { id: 'knocked',          label: 'Knocked Down',      color: '#d7443e', default: true  },
+  { id: 'death',            label: 'Deaths',            color: '#d7443e', default: true  },
+  { id: 'revive',           label: 'Revives',           color: '#c080ff', default: true  },
+  { id: 'blue_chip_revive', label: 'Blue Chip Revives', color: '#ff66ff', default: true  },
+  { id: 'dmg_dealt',        label: 'Damage Dealt',      color: '#f4a300', default: false },
+  { id: 'dmg_taken',        label: 'Damage Taken',      color: '#d7443e', default: false },
+  { id: 'heal',             label: 'Heals',             color: '#8fae5d', default: false },
+  { id: 'boost',            label: 'Boosts',            color: '#56c1a5', default: false },
+  { id: 'throwable',        label: 'Throwables',        color: '#ff9944', default: false },
+  { id: 'carepack',         label: 'Care Package',      color: '#ffe44d', default: false },
+  { id: 'transport',        label: 'Transport Mode',    color: null,      default: false },
+];
+
+/* ============================================================================
+   STATE
+============================================================================ */
+const state = {
+  time:   Infinity,
+  player: 'both',
+  layers: Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.default])),
+};
+
+const view = { scale: 1, offsetX: 0, offsetY: 0 };
+let isDragging = false, dragStart = null;
+
+/* ============================================================================
+   DATA
+============================================================================ */
+let MD  = null;
+let MAP = null;
+
+const canvas = document.getElementById('mapCanvas');
+const ctx    = canvas.getContext('2d');
+const mapImg = new Image();
+mapImg.onload  = () => draw();
+mapImg.onerror = () => {
+  if (MAP && MAP.cdn_url && mapImg.src !== MAP.cdn_url) {
+    mapImg.src = MAP.cdn_url;
+  } else {
+    draw();
+  }
+};
+
+let markers    = [];
+let highlightEv = null;   // event to highlight on the map (set from timeline hover)
+
+/* ============================================================================
+   UNIFIED ICON DRAW FUNCTION
+   Works on any canvas 2D context. r and lw are already in the target coordinate
+   space (scale-compensated for the map, fixed pixels for timeline/layer icons).
+============================================================================ */
+function drawEventIcon(c, cx, cy, r, lw, type, col) {
+  c.strokeStyle = col;
+  c.fillStyle   = col;
+  c.lineWidth   = lw;
+  c.globalAlpha = 0.9;
+
+  switch (type) {
+    case 'kill': {
+      const s = r * 0.82;
+      c.beginPath();
+      c.moveTo(cx-s, cy-s); c.lineTo(cx+s, cy+s);
+      c.moveTo(cx+s, cy-s); c.lineTo(cx-s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'knockdown': {
+      c.beginPath();
+      c.moveTo(cx, cy-r);
+      c.lineTo(cx+r, cy+r*0.7);
+      c.lineTo(cx-r, cy+r*0.7);
+      c.closePath(); c.fill();
+      break;
+    }
+    case 'knocked': {
+      c.beginPath();
+      c.moveTo(cx, cy+r);
+      c.lineTo(cx+r, cy-r*0.7);
+      c.lineTo(cx-r, cy-r*0.7);
+      c.closePath(); c.stroke();
+      break;
+    }
+    case 'death': {
+      c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
+      const s = r*0.55;
+      c.beginPath();
+      c.moveTo(cx-s, cy-s); c.lineTo(cx+s, cy+s);
+      c.moveTo(cx+s, cy-s); c.lineTo(cx-s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'revive': {
+      c.beginPath();
+      c.moveTo(cx, cy-r); c.lineTo(cx-r*0.55, cy-r*0.1);
+      c.moveTo(cx, cy-r); c.lineTo(cx+r*0.55, cy-r*0.1);
+      c.moveTo(cx, cy-r); c.lineTo(cx, cy+r);
+      c.stroke();
+      break;
+    }
+    case 'blue_chip_revive': {
+      c.beginPath(); c.arc(cx, cy, r,      0, Math.PI*2); c.stroke();
+      c.beginPath(); c.arc(cx, cy, r*0.42, 0, Math.PI*2); c.fill();
+      break;
+    }
+    case 'heal': {
+      const a = r*0.9;
+      c.beginPath();
+      c.moveTo(cx,  cy-a); c.lineTo(cx,  cy+a);
+      c.moveTo(cx-a, cy); c.lineTo(cx+a, cy);
+      c.stroke();
+      break;
+    }
+    case 'boost': {
+      c.beginPath(); c.arc(cx, cy, r*0.7, 0, Math.PI*2); c.fill();
+      break;
+    }
+    case 'dmg_dealt': {
+      const s = r*0.8;
+      c.globalAlpha = 0.6;
+      c.beginPath();
+      c.moveTo(cx-s, cy-s); c.lineTo(cx+s*0.5, cy); c.lineTo(cx-s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'dmg_taken': {
+      const s = r*0.8;
+      c.globalAlpha = 0.55;
+      c.beginPath();
+      c.moveTo(cx+s, cy-s); c.lineTo(cx-s*0.5, cy); c.lineTo(cx+s, cy+s);
+      c.stroke();
+      break;
+    }
+    case 'throwable': {
+      c.beginPath(); c.arc(cx, cy, r*0.45, 0, Math.PI*2); c.fill();
+      c.globalAlpha = 0.4;
+      c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
+      c.globalAlpha = 0.9;
+      break;
+    }
+    case 'carepack': {
+      c.beginPath();
+      c.moveTo(cx, cy-r); c.lineTo(cx+r, cy);
+      c.lineTo(cx, cy+r); c.lineTo(cx-r, cy);
+      c.closePath(); c.fill();
+      break;
+    }
+    // Layer-only icons (not in MD.events):
+    case 'paths': {
+      c.beginPath();
+      c.moveTo(cx-r, cy+r*0.25);
+      c.bezierCurveTo(cx-r*0.2, cy-r*0.65, cx+r*0.2, cy+r*0.65, cx+r, cy-r*0.25);
+      c.stroke();
+      break;
+    }
+    case 'circles': {
+      c.beginPath(); c.arc(cx, cy, r*0.85, 0, Math.PI*2); c.stroke();
+      break;
+    }
+    case 'transport': {
+      const ah = r*0.38;
+      c.beginPath();
+      c.moveTo(cx-r, cy); c.lineTo(cx+r*0.25, cy);
+      c.moveTo(cx+r*0.25-ah, cy-ah); c.lineTo(cx+r*0.25, cy); c.lineTo(cx+r*0.25-ah, cy+ah);
+      c.stroke();
+      break;
+    }
+    case 'enemies': {
+      c.beginPath(); c.arc(cx, cy, r*0.7, 0, Math.PI*2); c.fill();
+      break;
+    }
+    default: {
+      c.beginPath(); c.arc(cx, cy, r*0.6, 0, Math.PI*2); c.fill();
+    }
+  }
+  c.globalAlpha = 1;
+}
+
+/* ============================================================================
+   EVENTS TIMELINE
+============================================================================ */
+const TL_H       = 110;    // total timeline height px
+const TL_PAD_L   = 28;     // left margin for player labels
+const TL_D282_Y  = 30;     // centre y for D282 lane
+const TL_S821_Y  = 80;     // centre y for S821 lane
+const TL_DOT_R   = 5;      // icon radius
+const TL_DOT_SEP = TL_DOT_R * 2 + 2;  // spacing between stacked icons
+
+let tlCanvas = null, tlCtx = null, tlMarkers = [];
+
+function initTimeline() {
+  tlCanvas = document.getElementById('tlCanvas');
+  tlCtx    = tlCanvas.getContext('2d');
+  tlCanvas.addEventListener('click',      onTlClick);
+  tlCanvas.addEventListener('mousemove',  onTlMouseMove);
+  tlCanvas.addEventListener('mouseleave', onTlLeave);
+  resizeTimeline();
+  drawTimeline();
+}
+
+function resizeTimeline() {
+  if (!tlCanvas) return;
+  const wrap = document.getElementById('tlWrap');
+  const w    = wrap.clientWidth;
+  if (tlCanvas.width !== w || tlCanvas.height !== TL_H) {
+    tlCanvas.width  = w;
+    tlCanvas.height = TL_H;
+  }
+}
+
+function tlX(t) {
+  const dur = MD ? (MD.duration_s || 1800) : 1800;
+  return TL_PAD_L + (Math.max(0, t) / dur) * (tlCanvas.width - TL_PAD_L - 4);
+}
+
+function tlXToTime(px) {
+  const dur = MD ? (MD.duration_s || 1800) : 1800;
+  return Math.max(0, (px - TL_PAD_L) / (tlCanvas.width - TL_PAD_L - 4) * dur);
+}
+
+function drawTimeline() {
+  if (!tlCanvas || !MD) return;
+  const w = tlCanvas.width, h = tlCanvas.height;
+  tlCtx.clearRect(0, 0, w, h);
+
+  // Row tint bands
+  tlCtx.fillStyle = 'rgba(244,163,0,0.04)';
+  tlCtx.fillRect(TL_PAD_L, 0, w - TL_PAD_L, h / 2);
+  tlCtx.fillStyle = 'rgba(74,158,221,0.04)';
+  tlCtx.fillRect(TL_PAD_L, h / 2, w - TL_PAD_L, h / 2);
+
+  // Divider between lanes
+  tlCtx.beginPath();
+  tlCtx.moveTo(TL_PAD_L, h / 2); tlCtx.lineTo(w, h / 2);
+  tlCtx.strokeStyle = 'rgba(56,52,44,0.7)';
+  tlCtx.lineWidth = 1;
+  tlCtx.stroke();
+
+  // Player labels
+  tlCtx.font = 'bold 10px system-ui, sans-serif';
+  tlCtx.textBaseline = 'middle';
+  tlCtx.textAlign    = 'left';
+  tlCtx.fillStyle    = '#f4a300'; tlCtx.fillText('D282', 1, TL_D282_Y);
+  tlCtx.fillStyle    = '#4a9edd'; tlCtx.fillText('S821', 1, TL_S821_Y);
+
+  // Event icons — bucket by pixel position to stack overlapping events
+  tlMarkers = [];
+  const BUCKET = TL_DOT_SEP;
+
+  for (const [player, rowY, stackDir] of [['D282', TL_D282_Y, -1], ['S821', TL_S821_Y, 1]]) {
+    const buckets = {};
+    for (const ev of MD.events) {
+      if (ev.player !== player || ev.t < 0) continue;
+      const bx = Math.round(tlX(ev.t) / BUCKET);
+      if (!buckets[bx]) buckets[bx] = [];
+      buckets[bx].push(ev);
+    }
+    for (const [bxStr, evs] of Object.entries(buckets)) {
+      const cx = parseInt(bxStr) * BUCKET + BUCKET / 2;
+      if (cx < TL_PAD_L || cx > w - 2) continue;
+      for (let i = 0; i < Math.min(evs.length, 3); i++) {
+        const ev  = evs[i];
+        const cy  = rowY + stackDir * i * TL_DOT_SEP;
+        if (cy < TL_DOT_R + 1 || cy > h - TL_DOT_R - 1) break;
+        const ld  = LAYER_DEFS.find(l => l.id === ev.type);
+        const col = (ld && ld.color) ? ld.color : PLAYER_COLOR[player];
+        tlCtx.save();
+        drawEventIcon(tlCtx, cx, cy, TL_DOT_R, 1.5, ev.type, col);
+        tlCtx.restore();
+        tlMarkers.push({ cx, cy, ev });
+      }
+    }
+  }
+
+  // Current-time indicator line
+  if (state.time !== Infinity) {
+    const x = tlX(state.time);
+    tlCtx.beginPath();
+    tlCtx.moveTo(x, 0); tlCtx.lineTo(x, h);
+    tlCtx.strokeStyle = 'rgba(244,163,0,0.85)';
+    tlCtx.lineWidth   = 1.5;
+    tlCtx.stroke();
+  }
+}
+
+function onTlClick(e) {
+  const rect    = tlCanvas.getBoundingClientRect();
+  const x       = (e.clientX - rect.left) * (tlCanvas.width / rect.width);
+  const t       = Math.round(tlXToTime(x));
+  const sl      = document.getElementById('timeSlider');
+  const max     = parseInt(sl.max, 10);
+  const clamped = Math.max(0, Math.min(t, max));
+  sl.value      = clamped;
+  state.time    = clamped >= max ? Infinity : clamped;
+  document.getElementById('timeDisplay').textContent =
+    state.time === Infinity ? 'Full match' : mmss(clamped);
+  draw();
+  drawTimeline();
+}
+
+function onTlMouseMove(e) {
+  const rect = tlCanvas.getBoundingClientRect();
+  const mx   = (e.clientX - rect.left) * (tlCanvas.width  / rect.width);
+  const my   = (e.clientY - rect.top)  * (tlCanvas.height / rect.height);
+  const tip  = document.getElementById('tooltip');
+  let found  = null;
+  for (const m of tlMarkers) {
+    const dx = mx - m.cx, dy = my - m.cy;
+    if (dx*dx + dy*dy <= (TL_DOT_R + 6) * (TL_DOT_R + 6)) { found = m; break; }
+  }
+  if (found) {
+    const txt = fmtEvent(found.ev);
+    tip.textContent   = txt;
+    tip.style.left    = (e.clientX + 14) + 'px';
+    tip.style.top     = (e.clientY - 12) + 'px';
+    tip.style.display = 'block';
+    document.getElementById('eventDetail').textContent = txt;
+    if (highlightEv !== found.ev) { highlightEv = found.ev; draw(); }
+  } else {
+    tip.style.display = 'none';
+    if (highlightEv !== null) { highlightEv = null; draw(); }
+  }
+}
+
+function onTlLeave() {
+  document.getElementById('tooltip').style.display = 'none';
+  if (highlightEv !== null) { highlightEv = null; draw(); }
+}
+
+/* ============================================================================
+   BOOT
+============================================================================ */
+async function boot() {
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) {
+    document.body.innerHTML =
+      '<p style="padding:40px;color:#d7443e">No match ID in URL — add <code>?id=…</code></p>';
+    return;
+  }
+
+  let mapsData;
+  try {
+    [MD, mapsData] = await Promise.all([
+      fetch(`stats-data/matches/${id}.json`).then(r => { if (!r.ok) throw r; return r.json(); }),
+      fetch('stats-data/maps.json').then(r => r.json()),
+    ]);
+  } catch {
+    document.body.innerHTML =
+      `<p style="padding:40px;color:#d7443e">Failed to load match data for <code>${id}</code>.</p>`;
+    return;
+  }
+
+  MAP = mapsData[MD.map] || null;
+
+  document.title = `Match — ${MD.map_name}`;
+  document.getElementById('pageTitle').textContent = MD.map_name;
+  document.getElementById('bcCur').textContent =
+    `${MD.map_name} · ${MD.created_at.slice(0, 10)}`;
+  document.getElementById('matchMeta').textContent =
+    `${MD.created_at.slice(0, 10)} · ${mmss(MD.duration_s || 0)} match`;
+
+  buildPlayerCards();
+  buildLayerToggles();
+
+  const sl = document.getElementById('timeSlider');
+  sl.max   = MD.duration_s || 1800;
+  sl.value = sl.max;
+  sl.addEventListener('input', onTimeInput);
+
+  if (MAP) mapImg.src = MAP.image_url;
+
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    resizeTimeline();
+    draw();
+    drawTimeline();
+  });
+  canvas.addEventListener('wheel',      onWheel,     { passive: false });
+  canvas.addEventListener('mousedown',  onMouseDown);
+  canvas.addEventListener('mousemove',  onMouseMove);
+  canvas.addEventListener('mouseup',    () => { isDragging = false; canvas.style.cursor = 'crosshair'; });
+  canvas.addEventListener('mouseleave', () => {
+    isDragging = false;
+    document.getElementById('tooltip').style.display = 'none';
+  });
+
+  resizeCanvas();
+  draw();
+  initTimeline();
+}
+
+/* ============================================================================
+   CANVAS SIZING
+============================================================================ */
+function resizeCanvas() {
+  const wrap = document.getElementById('mapWrap');
+  const sz   = wrap.clientWidth;
+  if (canvas.width !== sz) {
+    canvas.width  = sz;
+    canvas.height = sz;
+  }
+}
+
+/* ============================================================================
+   COORDINATE TRANSFORMS
+============================================================================ */
+function w2c(x, y) {
+  const sz = canvas.width;
+  const ws = MAP ? MAP.world_size : 816000;
+  return { cx: (x / ws) * sz, cy: (y / ws) * sz };
+}
+
+function screenToCanvasPx(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    cx: (clientX - rect.left) * (canvas.width  / rect.width),
+    cy: (clientY - rect.top)  * (canvas.height / rect.height),
+  };
+}
+
+function canvasToWorldPx(canvasPxX, canvasPxY) {
+  return {
+    cx: (canvasPxX - view.offsetX) / view.scale,
+    cy: (canvasPxY - view.offsetY) / view.scale,
+  };
+}
+
+/* ============================================================================
+   DRAW
+============================================================================ */
+function draw() {
+  if (!MD) return;
+  const sz = canvas.width;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, sz, sz);
+  ctx.setTransform(view.scale, 0, 0, view.scale, view.offsetX, view.offsetY);
+
+  if (mapImg.complete && mapImg.naturalWidth > 0) {
+    ctx.drawImage(mapImg, 0, 0, sz, sz);
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.fillRect(0, 0, sz, sz);
+  } else {
+    ctx.fillStyle = '#0d0c09';
+    ctx.fillRect(0, 0, sz, sz);
+  }
+
+  const maxT = state.time;
+  if (state.layers.circles) drawCircles(maxT);
+  if (state.layers.enemies) drawEnemies(maxT);
+  if (state.layers.paths)   drawPaths(maxT);
+
+  markers = [];
+  for (const ev of MD.events) {
+    if (ev.t > maxT)            continue;
+    if (!playerVis(ev.player))  continue;
+    if (!state.layers[ev.type]) continue;
+    // Timed markers (throwables etc.) disappear after their duration
+    if (ev.duration_s != null && maxT !== Infinity && maxT > ev.t + ev.duration_s) continue;
+    const { cx, cy } = w2c(ev.x, ev.y);
+    drawMarker(ev, cx, cy);
+    markers.push({ cx, cy, ev });
+  }
+
+  // Player position dots — always shown regardless of paths layer toggle
+  drawPlayerDots(maxT);
+
+  // Highlight ring for timeline-hovered event
+  if (highlightEv) {
+    const { cx, cy } = w2c(highlightEv.x, highlightEv.y);
+    const ld  = LAYER_DEFS.find(l => l.id === highlightEv.type);
+    const col = (ld && ld.color) ? ld.color : PLAYER_COLOR[highlightEv.player] || '#fff';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 16 / view.scale, 0, Math.PI * 2);
+    ctx.strokeStyle  = col;
+    ctx.lineWidth    = 2.5 / view.scale;
+    ctx.globalAlpha  = 0.85;
+    ctx.stroke();
+    ctx.globalAlpha  = 1;
+  }
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+/* ── Movement paths ─────────────────────────────────────────────────────── */
+function drawPaths(maxT) {
+  const showTransport = state.layers.transport;
+
+  for (const [player, pts] of Object.entries(MD.positions)) {
+    if (!playerVis(player)) continue;
+    const vis = pts.filter(p => p.t >= 0 && p.t <= maxT);
+    if (vis.length < 2) continue;
+
+    // Group into life-segments — never draw a line across a blue-chip revive
+    const segments = [];
+    let seg = [vis[0]];
+    for (let i = 1; i < vis.length; i++) {
+      const life     = vis[i].life     != null ? vis[i].life     : 0;
+      const prevLife = vis[i-1].life   != null ? vis[i-1].life   : 0;
+      if (life !== prevLife) { segments.push(seg); seg = [vis[i]]; }
+      else seg.push(vis[i]);
+    }
+    segments.push(seg);
+
+    for (const s of segments) {
+      if (s.length < 2) continue;
+      if (!showTransport) {
+        _strokePath(player, s, 2, 0.55, false);
+      } else {
+        // Sub-segment by transport type
+        let sub = [s[0]];
+        for (let i = 1; i < s.length; i++) {
+          const tr = s[i].tr || 'foot', prevTr = s[i-1].tr || 'foot';
+          if (tr !== prevTr) { _drawTrSeg(player, sub); sub = [s[i]]; }
+          else sub.push(s[i]);
+        }
+        _drawTrSeg(player, sub);
+      }
+    }
+
+  }
+}
+
+function drawPlayerDots(maxT) {
+  for (const [player, pts] of Object.entries(MD.positions)) {
+    if (!playerVis(player)) continue;
+    const vis = pts.filter(p => p.t >= 0 && p.t <= maxT);
+    if (!vis.length) continue;
+    const last       = vis[vis.length - 1];
+    const { cx, cy } = w2c(last.x, last.y);
+    ctx.beginPath();
+    ctx.arc(cx, cy, 5 / view.scale, 0, Math.PI * 2);
+    ctx.fillStyle   = PLAYER_COLOR[player];
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth   = 1 / view.scale;
+    ctx.stroke();
+  }
+}
+
+function _drawTrSeg(player, pts) {
+  if (!pts.length) return;
+  const tr        = pts[0].tr || 'foot';
+  if (tr === 'plane') return;
+  const isVehicle = ['WheeledVehicle','BikesVehicle','FloatingVehicle','FlyingVehicle'].includes(tr);
+  _strokePath(player, pts, isVehicle ? 4 : 2, isVehicle ? 0.75 : 0.55, tr === 'chute');
+}
+
+function _strokePath(player, pts, lw, alpha, dashed) {
+  if (pts.length < 2) return;
+  const f = w2c(pts[0].x, pts[0].y);
+  ctx.beginPath();
+  ctx.moveTo(f.cx, f.cy);
+  for (let i = 1; i < pts.length; i++) {
+    const { cx, cy } = w2c(pts[i].x, pts[i].y);
+    ctx.lineTo(cx, cy);
+  }
+  ctx.strokeStyle = PLAYER_COLOR[player];
+  ctx.lineWidth   = lw / view.scale;
+  ctx.globalAlpha = alpha;
+  if (dashed) ctx.setLineDash([6 / view.scale, 4 / view.scale]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+}
+
+/* ── Blue zone circles ──────────────────────────────────────────────────── */
+function drawCircles(maxT) {
+  if (!MAP || !MD.circles.length) return;
+  const cs = MD.circles.filter(c => c.t <= maxT);
+  if (!cs.length) return;
+  const c  = cs[cs.length - 1];
+  const sz = canvas.width;
+  const ws = MAP.world_size;
+  const lw = 1.5 / view.scale;
+
+  if (c.safe_r > 500) {
+    const { cx, cy } = w2c(c.safe_x, c.safe_y);
+    ctx.beginPath();
+    ctx.arc(cx, cy, (c.safe_r / ws) * sz, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth   = lw;
+    ctx.setLineDash([6 / view.scale, 5 / view.scale]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  if (c.warn_r > 500) {
+    const { cx, cy } = w2c(c.warn_x, c.warn_y);
+    ctx.beginPath();
+    ctx.arc(cx, cy, (c.warn_r / ws) * sz, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(74,158,221,0.75)';
+    ctx.lineWidth   = lw;
+    ctx.stroke();
+  }
+}
+
+/* ── Enemy positions ────────────────────────────────────────────────────── */
+function drawEnemies(maxT) {
+  const enemies = MD.enemies;
+  if (!enemies || !enemies.length) return;
+
+  // When time is Infinity use the match end as the reference
+  const effectiveT = maxT === Infinity ? (MD.duration_s || 1800) : maxT;
+  const MEDAL_COL  = { 1: '#ffd700', 2: '#c0c0c0', 3: '#cd7f32' };
+
+  for (const en of enemies) {
+    // Hide if dead before current time
+    if (en.death_t != null && effectiveT >= en.death_t) continue;
+
+    // Binary search: last position at or before effectiveT
+    const pos = en.pos;
+    if (!pos || !pos.length) continue;
+    let lo = 0, hi = pos.length - 1, idx = -1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (pos[mid][0] <= effectiveT) { idx = mid; lo = mid + 1; }
+      else hi = mid - 1;
+    }
+    if (idx < 0) continue;
+
+    const { cx, cy } = w2c(pos[idx][1], pos[idx][2]);
+    const r = 4 / view.scale;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle   = '#ff4444';
+    ctx.globalAlpha = 0.65;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    if (en.medal) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 1.55, 0, Math.PI * 2);
+      ctx.strokeStyle = MEDAL_COL[en.medal] || '#fff';
+      ctx.lineWidth   = 1.2 / view.scale;
+      ctx.globalAlpha = 0.92;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+
+/* ── Event markers (use unified icon function) ──────────────────────────── */
+const LAYER_COLOR = Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.color]));
+
+function markerColor(ev) {
+  return LAYER_COLOR[ev.type] || PLAYER_COLOR[ev.player] || '#e8e3d8';
+}
+
+function drawMarker(ev, cx, cy) {
+  drawEventIcon(ctx, cx, cy, 7 / view.scale, 2 / view.scale, ev.type, markerColor(ev));
+}
+
+/* ============================================================================
+   ZOOM & PAN
+============================================================================ */
+function onWheel(e) {
+  e.preventDefault();
+  const { cx, cy } = screenToCanvasPx(e.clientX, e.clientY);
+  const factor   = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+  const newScale = Math.max(0.8, Math.min(view.scale * factor, 24));
+  view.offsetX   = cx - (cx - view.offsetX) * (newScale / view.scale);
+  view.offsetY   = cy - (cy - view.offsetY) * (newScale / view.scale);
+  view.scale     = newScale;
+  draw();
+}
+
+function onMouseDown(e) {
+  if (e.button !== 0) return;
+  const { cx, cy } = screenToCanvasPx(e.clientX, e.clientY);
+  isDragging = true;
+  dragStart  = { cx, cy, ox: view.offsetX, oy: view.offsetY };
+  canvas.style.cursor = 'grabbing';
+}
+
+function onMouseMove(e) {
+  if (isDragging && dragStart) {
+    const { cx, cy } = screenToCanvasPx(e.clientX, e.clientY);
+    view.offsetX = dragStart.ox + (cx - dragStart.cx);
+    view.offsetY = dragStart.oy + (cy - dragStart.cy);
+    draw();
+    return;
+  }
+
+  const { cx: scx, cy: scy } = screenToCanvasPx(e.clientX, e.clientY);
+  const wp  = canvasToWorldPx(scx, scy);
+  const tip = document.getElementById('tooltip');
+  let found = null;
+
+  for (const m of markers) {
+    const dx = wp.cx - m.cx, dy = wp.cy - m.cy;
+    const hitR = 12 / view.scale;
+    if (dx*dx + dy*dy <= hitR*hitR) { found = m; break; }
+  }
+
+  if (found) {
+    const txt = fmtEvent(found.ev);
+    tip.textContent   = txt;
+    tip.style.left    = (e.clientX + 14) + 'px';
+    tip.style.top     = (e.clientY - 12) + 'px';
+    tip.style.display = 'block';
+    document.getElementById('eventDetail').textContent = txt;
+  } else {
+    tip.style.display = 'none';
+  }
+}
+
+function resetView() {
+  view.scale = 1; view.offsetX = 0; view.offsetY = 0;
+  draw();
+}
+
+/* ============================================================================
+   INTERACTIONS
+============================================================================ */
+function onTimeInput(e) {
+  const val  = parseInt(e.target.value, 10);
+  const max  = parseInt(e.target.max,   10);
+  state.time = val >= max ? Infinity : val;
+  document.getElementById('timeDisplay').textContent =
+    state.time === Infinity ? 'Full match' : mmss(val);
+  draw();
+  drawTimeline();
+}
+
+function resetTime() {
+  const sl   = document.getElementById('timeSlider');
+  sl.value   = sl.max;
+  state.time = Infinity;
+  document.getElementById('timeDisplay').textContent = 'Full match';
+  draw();
+  drawTimeline();
+}
+
+function jumpTime(delta) {
+  const sl  = document.getElementById('timeSlider');
+  const max = parseInt(sl.max, 10);
+  const cur = state.time === Infinity ? max : state.time;
+  const nv  = Math.max(0, Math.min(cur + delta, max));
+  sl.value  = nv;
+  state.time = nv >= max ? Infinity : nv;
+  document.getElementById('timeDisplay').textContent =
+    state.time === Infinity ? 'Full match' : mmss(nv);
+  draw();
+  drawTimeline();
+}
+
+function setPlayerFilter(p) {
+  state.player = p;
+  document.querySelectorAll('#playerFilter .btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.p === p)
+  );
+  draw();
+}
+
+function toggleLayer(id) {
+  state.layers[id] = !state.layers[id];
+  document.querySelector(`.layer-btn[data-layer="${id}"]`)
+    .classList.toggle('active', state.layers[id]);
+  draw();
+}
+
+/* ============================================================================
+   UI BUILDERS
+============================================================================ */
+function buildPlayerCards() {
+  const stats = MD.match_stats || {};
+  document.getElementById('playerCards').innerHTML = ['D282', 'S821'].map(p => {
+    const s   = stats[p] || {};
+    const cls = p === 'D282' ? 'amber' : 'blue';
+    const pl  = s.placement === 1 ? '#1 Winner' : (s.placement ? `#${s.placement}` : '—');
+
+    const ec = {};
+    (MD.events || []).filter(ev => ev.player === p).forEach(ev => {
+      ec[ev.type] = (ec[ev.type] || 0) + 1;
+    });
+
+    const rows = [
+      ['Place',        pl],
+      ['Kills',        s.kills ?? '—'],
+      ['Damage',       s.damage != null ? Math.round(s.damage) : '—'],
+      ['Survived',     s.survival_s ? mmss(s.survival_s) : '—'],
+      ['Knocks out',   ec['knockdown'] || 0],
+      ['Got knocked',  ec['knocked']   || 0],
+      ['Revives',      (ec['revive'] || 0) + (ec['blue_chip_revive'] || 0)],
+      ['Heals/boosts', (ec['heal']   || 0) + (ec['boost']           || 0)],
+    ];
+
+    return `<div class="pcard ${cls}">
+      <div class="pcard-name">${p}</div>
+      <div class="pcard-stats">
+        ${rows.map(([label, val]) =>
+          `<span>${label} <strong>${val}</strong></span>`
+        ).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildLayerToggles() {
+  document.getElementById('layerGrid').innerHTML = LAYER_DEFS.map(l => {
+    const active = state.layers[l.id] ? 'active' : '';
+    return `<button class="layer-btn ${active}" data-layer="${l.id}" onclick="toggleLayer('${l.id}')">
+        <canvas class="layer-icon" id="li-${l.id}" width="18" height="18"></canvas>
+        ${l.label}
+      </button>`;
+  }).join('');
+
+  // Draw the actual icon onto each small canvas
+  for (const l of LAYER_DEFS) {
+    const lc = document.getElementById(`li-${l.id}`);
+    if (!lc) continue;
+    const lx  = lc.getContext('2d');
+    const col = l.color || '#e8e3d8';
+    lx.clearRect(0, 0, 18, 18);
+    lx.save();
+    drawEventIcon(lx, 9, 9, 5.5, 1.8, l.id, col);
+    lx.restore();
+  }
+}
+
+/* ============================================================================
+   HELPERS
+============================================================================ */
+function playerVis(p) {
+  return state.player === 'both' || state.player === p;
+}
+
+function mmss(s) {
+  if (s == null) return '—';
+  return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+}
+
+function fmtEvent(ev) {
+  const p = ev.player || '?';
+  const t = mmss(ev.t);
+  switch (ev.type) {
+    case 'kill':             return `${p} killed ${ev.victim} · ${ev.weapon}${ev.reason === 'HeadShot' ? ' (HS)' : ''} · ${t}`;
+    case 'knockdown':        return `${p} knocked ${ev.victim} · ${ev.weapon} · ${t}`;
+    case 'knocked':          return `${p} knocked down by ${ev.attacker} · ${t}`;
+    case 'death':            return `${p} died · killed by ${ev.killer} (${ev.weapon}) · ${t}`;
+    case 'revive':           return `${p} revived ${ev.target} · ${t}`;
+    case 'blue_chip_revive': return `${p} blue chip revived ${ev.target} · ${t}`;
+    case 'heal':             return `${p} +${ev.amount}hp · ${ev.item} · ${t}`;
+    case 'boost':            return `${p} boosted · ${ev.item} · ${t}`;
+    case 'dmg_dealt':        return `${p} > ${ev.target} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
+    case 'dmg_taken':        return `${p} < ${ev.attacker} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
+    case 'throwable':        return `${p} threw ${ev.weapon} · ${t}`;
+    case 'carepack':         return `${p} looted care pack: ${ev.item} · ${t}`;
+    default:                 return `${p} ${ev.type} · ${t}`;
+  }
+}
+
+/* ============================================================================
+   GO
+============================================================================ */
+boot();
+</script>
+</body>
+</html>
