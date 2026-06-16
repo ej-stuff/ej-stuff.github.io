@@ -367,7 +367,7 @@ tr.detail-row td { background: #131210; padding: 0; }
 
   <!-- ── MATCH HISTORY ─────────────────────────────────────────────────────── -->
   <div class="panel">
-    <div class="panel-title">Match History <span class="panel-note">— click a row to expand</span></div>
+    <div class="panel-title">Match History <span class="panel-note">— click a row to open match analysis</span> <a href="match.html" style="float:right;color:var(--muted);font-size:12px;font-family:inherit;text-decoration:none;font-weight:400;letter-spacing:0;text-transform:none" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Browse All →</a></div>
     <div class="tbl-wrap">
       <table id="matchTable"><tbody><tr><td class="loading">Loading…</td></tr></tbody></table>
     </div>
@@ -430,6 +430,17 @@ let lastMatches = [];
    BOOT
 ============================================================================ */
 async function boot() {
+  if (location.protocol === 'file:') {
+    document.getElementById('summarySection').innerHTML =
+      `<p style="color:var(--danger);padding:20px 0;line-height:1.8">
+         <strong>Cannot load data when opened as a local file.</strong><br>
+         Run <code style="background:#2a2720;padding:2px 6px;border-radius:3px">serve.bat</code>
+         in the <code style="background:#2a2720;padding:2px 6px;border-radius:3px">Gitpage/files/</code> folder,
+         then open
+         <a href="http://localhost:8080/stats.html" style="color:var(--accent)">http://localhost:8080/stats.html</a>
+       </p>`;
+    return;
+  }
   try {
     const [summary, matches, weapons, items, timeline,
            throwable_stats, ammo_stats, heal_stats, dimensions] = await Promise.all([
@@ -460,9 +471,10 @@ async function boot() {
     renderAll();
   } catch (err) {
     document.getElementById('summarySection').innerHTML =
-      `<p style="color:var(--danger);padding:20px 0">
+      `<p style="color:var(--danger);padding:20px 0;line-height:1.8">
          Failed to load data. Make sure <strong>stats-data/</strong> is in the
-         same folder as this page.<br><small>${err.message}</small>
+         same folder as this page, and open via <strong>serve.bat</strong> (not as a local file).<br>
+         <small>${err.message}</small>
        </p>`;
   }
 }
@@ -533,8 +545,9 @@ const f2  = n => (+n).toFixed(2);
 const pct = n => (n * 100).toFixed(1) + '%';
 
 function mmss(s) {
+  if (s == null) return '—';
   s = Math.round(s);
-  return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
 function placeHTML(p) {
@@ -961,98 +974,60 @@ function sortWeap(col) {
    "Duration" column replaced with "Survival" (duo_survival_s)
 ============================================================================ */
 function renderMatchHistory(matches) {
-  const table   = document.getElementById('matchTable');
-  const compare = state.player === 'compare';
-  const p0      = compare ? 'D282' : state.player;
+  const table = document.getElementById('matchTable');
 
   if (matches.length === 0) {
     table.innerHTML =
-      '<tbody><tr><td class="empty" colspan="8">No matches for these filters.</td></tr></tbody>';
+      '<tbody><tr><td class="empty" colspan="10">No matches for these filters.</td></tr></tbody>';
     return;
   }
 
-  const playerHeaders = compare
-    ? `<th class="no-sort" style="color:var(--accent)">D282 K</th>
-       <th class="no-sort" style="color:var(--accent)">D282 Dmg</th>
-       <th class="no-sort" style="color:var(--blue)">S821 K</th>
-       <th class="no-sort" style="color:var(--blue)">S821 Dmg</th>`
-    : `<th class="no-sort">Kills</th>
-       <th class="no-sort">Damage</th>
-       <th class="no-sort">Placement</th>`;
+  const fmtDt = iso => {
+    const d = new Date(iso);
+    return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')} `
+         + `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  };
+  const kdCell = (p, col) =>
+    `<span style="color:${col}">${p.kills ?? 0}</span>` +
+    ` <span class="panel-note">(${f0(p.damage || 0)})</span>`;
 
-  const colspan = compare ? 9 : 8;
+  const body = matches.map(m => {
+    const pD       = m.players['D282'] || {};
+    const pS       = m.players['S821'] || {};
+    const throwRow = DATA.throwIdx?.[m.match_id];
+    const throws   = (throwRow?.players?.D282?.['__total__']?.count || 0)
+                   + (throwRow?.players?.S821?.['__total__']?.count || 0);
+    const revives  = (pD.revives || 0) + (pS.revives || 0);
+    const bc       = (pD.blue_chips || 0) + (pS.blue_chips || 0);
 
-  const body = matches.map((m, i) => {
-    const id = 'dr_' + i;
-    const pD = m.players['D282'] || {};
-    const pS = m.players['S821'] || {};
-    const px = m.players[p0]    || {};
-
-    const playerCells = compare
-      ? `<td>${pD.kills ?? '—'}</td><td>${f0(pD.damage || 0)}</td>
-         <td>${pS.kills ?? '—'}</td><td>${f0(pS.damage || 0)}</td>`
-      : `<td>${px.kills ?? '—'}</td><td>${f0(px.damage || 0)}</td>
-         <td>${placeHTML(px.placement)}</td>`;
-
-    return `
-      <tr class="match-row" onclick="toggleRow('${id}',this)">
-        <td>${m.created_at.slice(0, 10)}</td>
-        <td>${m.map || '—'}</td>
-        <td>${m.game_mode || '—'}</td>
-        ${playerCells}
-        <td>${m.duo_survival_s != null ? mmss(m.duo_survival_s) : '—'}</td>
-        <td><a href="match.html?id=${m.match_id}" onclick="event.stopPropagation()" class="match-link" title="Match Analysis">→</a></td>
-      </tr>
-      <tr id="${id}" class="detail-row" style="display:none">
-        <td colspan="${colspan}">
-          <div class="detail-inner">${detailHTML(m)}</div>
-        </td>
-      </tr>`;
+    return `<tr class="match-row" onclick="location.href='match.html?id=${m.match_id}'">
+      <td style="white-space:nowrap">${fmtDt(m.created_at)}</td>
+      <td>${m.map || '—'}</td>
+      <td>${kdCell(pD, 'var(--accent)')}</td>
+      <td>${kdCell(pS, 'var(--blue)')}</td>
+      <td>${revives}</td>
+      <td>${bc}</td>
+      <td>${throws}</td>
+      <td style="white-space:nowrap">${mmss(m.duo_survival_s)}</td>
+      <td>${placeHTML(pD.placement)}</td>
+      <td><a href="match.html?id=${m.match_id}" onclick="event.stopPropagation()" class="match-link" title="Match Analysis">→</a></td>
+    </tr>`;
   }).join('');
 
   table.innerHTML = `
     <thead><tr>
-      <th class="no-sort">Date</th>
+      <th class="no-sort">Date/Time</th>
       <th class="no-sort">Map</th>
-      <th class="no-sort">Mode</th>
-      ${playerHeaders}
+      <th class="no-sort" style="color:var(--accent)">D282 K (Dmg)</th>
+      <th class="no-sort" style="color:var(--blue)">S821 K (Dmg)</th>
+      <th class="no-sort" title="Revives given">Rev</th>
+      <th class="no-sort" title="Blue chip revives">BC</th>
+      <th class="no-sort" title="Throwables used">Throws</th>
       <th class="no-sort">Survival</th>
+      <th class="no-sort">Place</th>
       <th class="no-sort"></th>
     </tr></thead>
     <tbody>${body}</tbody>`;
-}
-
-function toggleRow(id, row) {
-  const el   = document.getElementById(id);
-  const open = el.style.display !== 'none';
-  el.style.display     = open ? 'none' : 'table-row';
-  row.style.background = open ? '' : 'rgba(244,163,0,0.05)';
-}
-
-function detailHTML(m) {
-  const playerLines = ['D282', 'S821'].map(p => {
-    const s = m.players[p];
-    if (!s) return '';
-    return `<div class="detail-player">
-      <span style="color:${PLAYER_COLOR[p]};font-weight:600">${p}</span> &nbsp;
-      ${placeHTML(s.placement)} &nbsp;·&nbsp;
-      ${s.kills} kill${s.kills !== 1 ? 's' : ''} &nbsp;·&nbsp;
-      ${f0(s.damage)} dmg &nbsp;·&nbsp;
-      ${s.knockdowns} knock${s.knockdowns !== 1 ? 's' : ''} &nbsp;·&nbsp;
-      ${s.assists} assist${s.assists !== 1 ? 's' : ''} &nbsp;·&nbsp;
-      ${s.hs_kills} headshot${s.hs_kills !== 1 ? 's' : ''} &nbsp;·&nbsp;
-      survived ${mmss(s.survival_s || 0)}
-    </div>`;
-  }).join('');
-
-  return `
-    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
-      <strong style="color:var(--text)">${m.map}</strong> &nbsp;·&nbsp;
-      ${m.game_mode} &nbsp;·&nbsp;
-      duo survived ${mmss(m.duo_survival_s || 0)} of ${mmss(m.duration_s || 0)} &nbsp;·&nbsp;
-      ${m.created_at.slice(0, 10)}
-    </div>
-    ${playerLines}`;
 }
 
 /* ============================================================================

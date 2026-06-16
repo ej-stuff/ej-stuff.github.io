@@ -279,6 +279,53 @@ h1 {
 
 /* ── Misc ────────────────────────────────────────────────────────────────── */
 .loading { color: var(--muted); font-style: italic; padding: 20px 0; font-size: 13px; }
+
+/* ── Match list table ────────────────────────────────────────────────────── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  font-family: Oswald, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(56,52,44,0.45);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr.match-row { cursor: pointer; }
+tr.match-row:hover td { background: rgba(244,163,0,0.04); }
+tr.match-row.current td { background: rgba(244,163,0,0.1); }
+tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
+
+/* ── Breadcrumb link (parent pages) ─────────────────────────────────────── */
+.bc-link { color: var(--muted); text-decoration: none; transition: color .15s; }
+.bc-link:hover { color: var(--text); }
+.bc-flex-spacer { flex: 1; }
+
+/* ── Match navigation buttons ────────────────────────────────────────────── */
+#matchNavBtns { gap: 6px; align-items: center; }
+.nav-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.nav-btn:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.nav-btn:disabled { opacity: 0.35; cursor: default; }
 </style>
 </head>
 <body>
@@ -287,7 +334,15 @@ h1 {
   <nav class="breadcrumb">
     <a href="stats.html" class="bc-home">PUBG Stats</a>
     <span class="bc-sep">▸</span>
-    <span class="bc-cur" id="bcCur">Match Analysis</span>
+    <a href="match.html" class="bc-link" id="bcMatchesLink">Matches</a>
+    <span class="bc-sep" id="bcMatchSep" style="display:none">▸</span>
+    <span class="bc-cur" id="bcCur" style="display:none">Match Analysis</span>
+    <div class="bc-flex-spacer"></div>
+    <div id="matchNavBtns" style="display:none">
+      <button class="nav-btn" id="btnPrev" disabled>← Older</button>
+      <button class="nav-btn" id="btnNext" disabled>Newer →</button>
+      <button class="nav-btn" onclick="toggleMatchList()">☰ All Matches</button>
+    </div>
   </nav>
 
   <div class="hd">
@@ -359,6 +414,20 @@ h1 {
     <div class="event-detail" id="eventDetail">Hover over a marker on the map or timeline to see details.</div>
   </div>
 
+  <!-- Stub shown when match list is closed -->
+  <div id="matchListStub" style="display:none;padding:4px 0">
+    <button class="nav-btn" onclick="toggleMatchList()" style="width:100%;justify-content:center">▶ Show Match History</button>
+  </div>
+
+  <!-- Match list panel — open by default -->
+  <div class="panel" id="matchListPanel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span class="panel-title" style="margin-bottom:0">Match History</span>
+      <button class="nav-btn" onclick="toggleMatchList()">✕ Close</button>
+    </div>
+    <div style="max-height:360px;overflow-y:auto" id="matchListContainer"></div>
+  </div>
+
 </div>
 
 <script>
@@ -404,6 +473,8 @@ let isDragging = false, dragStart = null;
 ============================================================================ */
 let MD  = null;
 let MAP = null;
+let ALL_MATCHES       = null;  // matches.json array (newest-first)
+let CURRENT_MATCH_IDX = -1;    // index of current match in ALL_MATCHES
 
 const canvas = document.getElementById('mapCanvas');
 const ctx    = canvas.getContext('2d');
@@ -706,12 +777,35 @@ function onTlLeave() {
    BOOT
 ============================================================================ */
 async function boot() {
-  const id = new URLSearchParams(location.search).get('id');
-  if (!id) {
+  if (location.protocol === 'file:') {
     document.body.innerHTML =
-      '<p style="padding:40px;color:#d7443e">No match ID in URL — add <code>?id=…</code></p>';
+      `<p style="padding:40px;color:#d7443e;line-height:1.8">
+         <strong>Cannot load data when opened as a local file.</strong><br>
+         Run <code style="background:#2a2720;padding:2px 6px;border-radius:3px">serve.bat</code>
+         in the <code style="background:#2a2720;padding:2px 6px;border-radius:3px">Gitpage/files/</code> folder,
+         then open
+         <a href="http://localhost:8080/stats.html" style="color:#f4a300">http://localhost:8080/stats.html</a>
+       </p>`;
     return;
   }
+
+  const id = new URLSearchParams(location.search).get('id');
+
+  // Always load the match list — needed for navigation and the selector view
+  try {
+    ALL_MATCHES = await fetch('stats-data/matches.json').then(r => r.json());
+  } catch {
+    document.querySelector('.wrap').innerHTML =
+      `<p style="padding:40px;color:#d7443e">Failed to load match list.</p>`;
+    return;
+  }
+
+  if (!id) {
+    showMatchSelector();
+    return;
+  }
+
+  CURRENT_MATCH_IDX = ALL_MATCHES.findIndex(m => m.match_id === id);
 
   let mapsData;
   try {
@@ -720,7 +814,7 @@ async function boot() {
       fetch('stats-data/maps.json').then(r => r.json()),
     ]);
   } catch {
-    document.body.innerHTML =
+    document.querySelector('.wrap').innerHTML =
       `<p style="padding:40px;color:#d7443e">Failed to load match data for <code>${id}</code>.</p>`;
     return;
   }
@@ -729,11 +823,16 @@ async function boot() {
 
   document.title = `Match — ${MD.map_name}`;
   document.getElementById('pageTitle').textContent = MD.map_name;
-  document.getElementById('bcCur').textContent =
-    `${MD.map_name} · ${MD.created_at.slice(0, 10)}`;
   document.getElementById('matchMeta').textContent =
     `${MD.created_at.slice(0, 10)} · ${mmss(MD.duration_s || 0)} match`;
 
+  // Reveal "Matches ▸ [current]" breadcrumb trail
+  document.getElementById('bcMatchSep').style.display = '';
+  const bcCur = document.getElementById('bcCur');
+  bcCur.style.display = '';
+  bcCur.textContent   = `${MD.map_name} · ${MD.created_at.slice(0, 10)}`;
+
+  setupNavButtons(id);
   buildPlayerCards();
   buildLayerToggles();
 
@@ -762,6 +861,12 @@ async function boot() {
   resizeCanvas();
   draw();
   initTimeline();
+
+  renderMatchTable('matchListContainer', id);
+  setTimeout(() => {
+    const row = document.getElementById(`mrow-${id}`);
+    if (row) row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 150);
 }
 
 /* ============================================================================
@@ -769,11 +874,17 @@ async function boot() {
 ============================================================================ */
 function resizeCanvas() {
   const wrap = document.getElementById('mapWrap');
-  const sz   = wrap.clientWidth;
-  if (canvas.width !== sz) {
-    canvas.width  = sz;
-    canvas.height = sz;
+  const dpr  = window.devicePixelRatio || 1;
+  const cssW = wrap.clientWidth;
+  const pxW  = Math.round(cssW * dpr);
+  if (canvas.width !== pxW) {
+    canvas.width  = pxW;
+    canvas.height = pxW;
+    canvas.style.width  = cssW + 'px';
+    canvas.style.height = cssW + 'px';
   }
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
 }
 
 /* ============================================================================
@@ -809,6 +920,8 @@ function draw() {
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, sz, sz);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.setTransform(view.scale, 0, 0, view.scale, view.offsetX, view.offsetY);
 
   if (mapImg.complete && mapImg.naturalWidth > 0) {
@@ -1224,6 +1337,139 @@ function fmtEvent(ev) {
     case 'carepack':         return `${p} looted care pack: ${ev.item} · ${t}`;
     default:                 return `${p} ${ev.type} · ${t}`;
   }
+}
+
+/* ============================================================================
+   MATCH SELECTOR — full-page list when no ?id= in URL
+============================================================================ */
+function showMatchSelector() {
+  document.title = 'Match History — PUBG';
+  document.querySelector('.wrap').innerHTML = `
+    <nav class="breadcrumb">
+      <a href="stats.html" class="bc-home">PUBG Stats</a>
+      <span class="bc-sep">▸</span>
+      <span class="bc-cur">Matches</span>
+    </nav>
+    <div class="hd">
+      <h1>Match History</h1>
+      <div class="subtitle">Select a match to open the interactive map</div>
+    </div>
+    <div class="panel">
+      <div id="matchSelectorContainer"></div>
+    </div>`;
+  renderMatchTable('matchSelectorContainer', null);
+}
+
+/* ============================================================================
+   MATCH TABLE — renders into any container element
+============================================================================ */
+function renderMatchTable(containerId, currentId) {
+  const el = document.getElementById(containerId);
+  if (!el || !ALL_MATCHES) return;
+
+  const f0 = n => Math.round(n).toLocaleString();
+  const fmts = s => {
+    if (s == null) return '—';
+    s = Math.round(s);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  };
+  const fmtDt = iso => {
+    const d = new Date(iso);
+    return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')} `
+         + `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  };
+  const plHtml = p => {
+    if (p === 1)              return `<span style="color:var(--accent);font-weight:600">#1 ✦</span>`;
+    if (p != null && p <= 10) return `<span style="color:var(--ok)">#${p}</span>`;
+    return p != null ? `#${p}` : '—';
+  };
+  const kdCell = (p, col) =>
+    `<span style="color:${col}">${p.kills ?? 0}</span> <span style="color:var(--muted);font-size:11px">(${f0(p.damage || 0)})</span>`;
+
+  const rows = ALL_MATCHES.map(m => {
+    const pD      = m.players['D282'] || {};
+    const pS      = m.players['S821'] || {};
+    const revives = (pD.revives || 0) + (pS.revives || 0);
+    const bc      = (pD.blue_chips || 0) + (pS.blue_chips || 0);
+    const throws  = (pD.throwables || 0) + (pS.throwables || 0);
+    const cls     = m.match_id === currentId ? 'match-row current' : 'match-row';
+    return `<tr class="${cls}" id="mrow-${m.match_id}"
+               onclick="location.href='match.html?id=${m.match_id}'">
+      <td style="white-space:nowrap">${fmtDt(m.created_at)}</td>
+      <td>${m.map || '—'}</td>
+      <td>${kdCell(pD, 'var(--accent)')}</td>
+      <td>${kdCell(pS, 'var(--blue)')}</td>
+      <td>${revives}</td>
+      <td>${bc}</td>
+      <td>${throws}</td>
+      <td style="white-space:nowrap">${fmts(m.duo_survival_s)}</td>
+      <td>${plHtml(pD.placement)}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Date/Time</th><th>Map</th>
+          <th style="color:var(--accent)">D282 K (Dmg)</th>
+          <th style="color:var(--blue)">S821 K (Dmg)</th>
+          <th title="Revives given (D282+S821)">Rev</th>
+          <th title="Blue chip revives (D282+S821)">BC</th>
+          <th title="Throwables used (D282+S821)">Throws</th>
+          <th>Survival</th><th>Place</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+/* ============================================================================
+   NAVIGATION — ← Older / Newer → buttons in the breadcrumb bar
+============================================================================ */
+function setupNavButtons(currentId) {
+  const nav  = document.getElementById('matchNavBtns');
+  nav.style.display = 'flex';
+
+  const idx   = CURRENT_MATCH_IDX;
+  // matches.json is newest-first: idx+1 is the older match, idx-1 is newer
+  const older = ALL_MATCHES[idx + 1];
+  const newer = ALL_MATCHES[idx - 1];
+  const btnP  = document.getElementById('btnPrev');
+  const btnN  = document.getElementById('btnNext');
+
+  if (older) {
+    btnP.disabled = false;
+    btnP.title    = `${older.map} · ${older.created_at.slice(0, 10)}`;
+    btnP.onclick  = () => { location.href = `match.html?id=${older.match_id}`; };
+  }
+  if (newer) {
+    btnN.disabled = false;
+    btnN.title    = `${newer.map} · ${newer.created_at.slice(0, 10)}`;
+    btnN.onclick  = () => { location.href = `match.html?id=${newer.match_id}`; };
+  }
+}
+
+/* ============================================================================
+   MATCH LIST PANEL — toggleable at the bottom of the analysis page
+============================================================================ */
+function toggleMatchList() {
+  const panel   = document.getElementById('matchListPanel');
+  const stub    = document.getElementById('matchListStub');
+  const showing = panel.style.display !== 'none';
+  if (showing) {
+    panel.style.display = 'none';
+    if (stub) stub.style.display = 'block';
+    return;
+  }
+  if (stub) stub.style.display = 'none';
+  panel.style.display = 'block';
+  const id = new URLSearchParams(location.search).get('id');
+  if (!document.getElementById('matchListContainer').firstChild) {
+    renderMatchTable('matchListContainer', id);
+  }
+  const row = document.getElementById(`mrow-${id}`);
+  if (row) setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
 }
 
 /* ============================================================================
