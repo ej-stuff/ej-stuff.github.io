@@ -158,15 +158,23 @@ h1 {
 }
 
 /* ── Timeline ────────────────────────────────────────────────────────────── */
-.timeline-row {
+.tl-hdr {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  margin-bottom: 5px;
 }
+.tl-flex-spacer { flex: 1; }
+.tl-jumps { display: flex; gap: 3px; }
 .tl-label { color: var(--muted); font-size: 12px; white-space: nowrap; }
-.tl-val   { color: var(--accent); font-size: 12px; white-space: nowrap; min-width: 80px; }
-#timeSlider {
-  flex: 1;
+.tl-val   { color: var(--accent); font-size: 12px; white-space: nowrap; min-width: 70px; }
+.tl-slider-row {
+  padding-left: 28px;  /* match TL_PAD_L so slider aligns with canvas events area */
+  margin-bottom: 2px;
+}
+.tl-slider-row input[type=range] {
+  display: block;
+  width: 100%;
   accent-color: var(--accent);
   height: 4px;
   cursor: pointer;
@@ -176,10 +184,11 @@ h1 {
   border: 1px solid var(--line);
   color: var(--muted);
   border-radius: 4px;
-  padding: 4px 10px;
-  font-size: 12px;
+  padding: 3px 7px;
+  font-size: 11px;
   cursor: pointer;
   transition: color .15s, border-color .15s;
+  white-space: nowrap;
 }
 .tl-btn:hover { color: var(--accent); border-color: var(--accent); }
 
@@ -298,14 +307,24 @@ h1 {
       </div>
 
       <div class="panel">
-        <div class="timeline-row">
+        <div class="tl-hdr">
           <span class="tl-label">Time</span>
-          <input type="range" id="timeSlider" min="0" value="99999" step="1">
           <span class="tl-val" id="timeDisplay">Full match</span>
-          <button class="tl-btn" onclick="resetTime()">All</button>
+          <div class="tl-flex-spacer"></div>
+          <div class="tl-jumps">
+            <button class="tl-btn" onclick="jumpTime(-10)" title="Back 10s">−10s</button>
+            <button class="tl-btn" onclick="jumpTime(-5)"  title="Back 5s">−5s</button>
+            <button class="tl-btn" onclick="jumpTime(-1)"  title="Back 1s">−1s</button>
+            <button class="tl-btn" onclick="jumpTime(1)"   title="Forward 1s">+1s</button>
+            <button class="tl-btn" onclick="jumpTime(5)"   title="Forward 5s">+5s</button>
+            <button class="tl-btn" onclick="jumpTime(10)"  title="Forward 10s">+10s</button>
+            <button class="tl-btn" onclick="resetTime()">All</button>
+          </div>
         </div>
-        <!-- Events timeline: all events as icons per player lane, clickable/hoverable -->
-        <div id="tlWrap" style="margin-top:8px">
+        <div class="tl-slider-row">
+          <input type="range" id="timeSlider" min="0" value="99999" step="1">
+        </div>
+        <div id="tlWrap">
           <canvas id="tlCanvas"></canvas>
         </div>
       </div>
@@ -811,10 +830,15 @@ function draw() {
     if (ev.t > maxT)            continue;
     if (!playerVis(ev.player))  continue;
     if (!state.layers[ev.type]) continue;
+    // Timed markers (throwables etc.) disappear after their duration
+    if (ev.duration_s != null && maxT !== Infinity && maxT > ev.t + ev.duration_s) continue;
     const { cx, cy } = w2c(ev.x, ev.y);
     drawMarker(ev, cx, cy);
     markers.push({ cx, cy, ev });
   }
+
+  // Player position dots — always shown regardless of paths layer toggle
+  drawPlayerDots(maxT);
 
   // Highlight ring for timeline-hovered event
   if (highlightEv) {
@@ -869,7 +893,14 @@ function drawPaths(maxT) {
       }
     }
 
-    // Current-position dot
+  }
+}
+
+function drawPlayerDots(maxT) {
+  for (const [player, pts] of Object.entries(MD.positions)) {
+    if (!playerVis(player)) continue;
+    const vis = pts.filter(p => p.t >= 0 && p.t <= maxT);
+    if (!vis.length) continue;
     const last       = vis[vis.length - 1];
     const { cx, cy } = w2c(last.x, last.y);
     ctx.beginPath();
@@ -974,10 +1005,10 @@ function drawEnemies(maxT) {
 
     if (en.medal) {
       ctx.beginPath();
-      ctx.arc(cx, cy, r * 2.4, 0, Math.PI * 2);
+      ctx.arc(cx, cy, r * 1.55, 0, Math.PI * 2);
       ctx.strokeStyle = MEDAL_COL[en.medal] || '#fff';
-      ctx.lineWidth   = 1.8 / view.scale;
-      ctx.globalAlpha = 0.85;
+      ctx.lineWidth   = 1.2 / view.scale;
+      ctx.globalAlpha = 0.92;
       ctx.stroke();
       ctx.globalAlpha = 1;
     }
@@ -1072,6 +1103,19 @@ function resetTime() {
   sl.value   = sl.max;
   state.time = Infinity;
   document.getElementById('timeDisplay').textContent = 'Full match';
+  draw();
+  drawTimeline();
+}
+
+function jumpTime(delta) {
+  const sl  = document.getElementById('timeSlider');
+  const max = parseInt(sl.max, 10);
+  const cur = state.time === Infinity ? max : state.time;
+  const nv  = Math.max(0, Math.min(cur + delta, max));
+  sl.value  = nv;
+  state.time = nv >= max ? Infinity : nv;
+  document.getElementById('timeDisplay').textContent =
+    state.time === Infinity ? 'Full match' : mmss(nv);
   draw();
   drawTimeline();
 }
