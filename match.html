@@ -256,6 +256,54 @@ h1 {
 }
 .layer-btn.active .layer-icon { opacity: 1; }
 
+/* ── Layer groups ────────────────────────────────────────────────────────── */
+.layer-group { margin-bottom: 10px; }
+.layer-group:last-child { margin-bottom: 0; }
+.layer-group-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+}
+.layer-group-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.group-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.group-toggle-btn:hover { color: var(--accent); border-color: var(--accent); }
+.layer-global-btns { display: flex; gap: 4px; margin-bottom: 10px; }
+.layer-global-btns .group-toggle-btn { flex: 1; text-align: center; }
+
+/* ── Mini charts ─────────────────────────────────────────────────────────── */
+#hpCanvas, #proxCanvas { display: block; width: 100%; border-radius: 3px; }
+.chart-legend { display: flex; gap: 10px; }
+.chart-legend span { font-size: 10px; color: var(--muted); }
+
+/* ── Engagement summary ──────────────────────────────────────────────────── */
+.eng-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(56,52,44,0.4);
+  font-size: 12px;
+}
+.eng-row:last-child { border-bottom: none; }
+
 /* ── Player filter ───────────────────────────────────────────────────────── */
 .btn-group { display: flex; gap: 6px; }
 .btn {
@@ -383,6 +431,22 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <canvas id="tlCanvas"></canvas>
         </div>
       </div>
+
+      <div class="panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span class="panel-title" style="margin-bottom:0">HP Over Time</span>
+          <div class="chart-legend">
+            <span style="color:var(--accent)">▬ D282</span>
+            <span style="color:var(--blue)">▬ S821</span>
+          </div>
+        </div>
+        <div id="hpWrap"><canvas id="hpCanvas"></canvas></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;margin-bottom:6px">
+          <span class="panel-title" style="margin-bottom:0">Proximity (m)</span>
+          <span style="color:var(--muted);font-size:10px">— 100 m ref</span>
+        </div>
+        <div id="proxWrap"><canvas id="proxCanvas"></canvas></div>
+      </div>
     </div>
 
     <div class="sidebar">
@@ -404,6 +468,11 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <button class="btn" data-p="D282"  onclick="setPlayerFilter('D282')">D282</button>
           <button class="btn" data-p="S821"  onclick="setPlayerFilter('S821')">S821</button>
         </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Engagements</div>
+        <div id="engagementList"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
       </div>
 
     </div>
@@ -439,7 +508,7 @@ const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
 // Layer ids MUST match event.type strings from the match JSON exactly
 const LAYER_DEFS = [
   { id: 'paths',            label: 'Movement Paths',    color: null,      default: true  },
-  { id: 'enemies',          label: 'Enemy Positions',   color: '#ff4444', default: false },
+  { id: 'enemies',          label: 'Enemy Positions',   color: '#ff4444', default: true  },
   { id: 'circles',          label: 'Blue Zone',         color: '#4a9edd', default: true  },
   { id: 'kill',             label: 'Kills',             color: '#f4a300', default: true  },
   { id: 'knockdown',        label: 'Knocks Out',        color: '#f4a300', default: true  },
@@ -675,6 +744,14 @@ function drawTimeline() {
   tlCtx.fillStyle = 'rgba(74,158,221,0.04)';
   tlCtx.fillRect(TL_PAD_L, h / 2, w - TL_PAD_L, h / 2);
 
+  // Combat phase shading
+  const phases = computeCombatPhases();
+  tlCtx.fillStyle = 'rgba(244,100,0,0.09)';
+  for (const ph of phases) {
+    const x1 = tlX(ph.start - 4), x2 = tlX(ph.end + 4);
+    tlCtx.fillRect(x1, 0, x2 - x1, h);
+  }
+
   // Divider between lanes
   tlCtx.beginPath();
   tlCtx.moveTo(TL_PAD_L, h / 2); tlCtx.lineTo(w, h / 2);
@@ -742,6 +819,8 @@ function onTlClick(e) {
     state.time === Infinity ? 'Full match' : mmss(clamped);
   draw();
   drawTimeline();
+  drawHpChart();
+  drawProxChart();
 }
 
 function onTlMouseMove(e) {
@@ -771,6 +850,25 @@ function onTlMouseMove(e) {
 function onTlLeave() {
   document.getElementById('tooltip').style.display = 'none';
   if (highlightEv !== null) { highlightEv = null; draw(); }
+}
+
+function computeCombatPhases() {
+  if (!MD) return [];
+  const COMBAT = new Set(['kill', 'knockdown', 'knocked', 'death', 'dmg_dealt', 'dmg_taken']);
+  const GAP_S  = 30;
+  const times  = MD.events
+    .filter(ev => COMBAT.has(ev.type) && ev.t >= 0)
+    .map(ev => ev.t)
+    .sort((a, b) => a - b);
+  if (!times.length) return [];
+  const phases = [];
+  let start = times[0], last = times[0];
+  for (let i = 1; i < times.length; i++) {
+    if (times[i] - last > GAP_S) { phases.push({ start, end: last }); start = times[i]; }
+    last = times[i];
+  }
+  phases.push({ start, end: last });
+  return phases;
 }
 
 /* ============================================================================
@@ -846,8 +944,12 @@ async function boot() {
   window.addEventListener('resize', () => {
     resizeCanvas();
     resizeTimeline();
+    resizeHpChart();
+    resizeProxChart();
     draw();
     drawTimeline();
+    drawHpChart();
+    drawProxChart();
   });
   canvas.addEventListener('wheel',      onWheel,     { passive: false });
   canvas.addEventListener('mousedown',  onMouseDown);
@@ -861,6 +963,9 @@ async function boot() {
   resizeCanvas();
   draw();
   initTimeline();
+  initHpChart();
+  initProxChart();
+  buildEngagementSummary();
 
   renderMatchTable('matchListContainer', id);
   setTimeout(() => {
@@ -1205,6 +1310,8 @@ function onTimeInput(e) {
     state.time === Infinity ? 'Full match' : mmss(val);
   draw();
   drawTimeline();
+  drawHpChart();
+  drawProxChart();
 }
 
 function resetTime() {
@@ -1214,6 +1321,8 @@ function resetTime() {
   document.getElementById('timeDisplay').textContent = 'Full match';
   draw();
   drawTimeline();
+  drawHpChart();
+  drawProxChart();
 }
 
 function jumpTime(delta) {
@@ -1227,6 +1336,8 @@ function jumpTime(delta) {
     state.time === Infinity ? 'Full match' : mmss(nv);
   draw();
   drawTimeline();
+  drawHpChart();
+  drawProxChart();
 }
 
 function setPlayerFilter(p) {
@@ -1281,16 +1392,41 @@ function buildPlayerCards() {
   }).join('');
 }
 
-function buildLayerToggles() {
-  document.getElementById('layerGrid').innerHTML = LAYER_DEFS.map(l => {
-    const active = state.layers[l.id] ? 'active' : '';
-    return `<button class="layer-btn ${active}" data-layer="${l.id}" onclick="toggleLayer('${l.id}')">
-        <canvas class="layer-icon" id="li-${l.id}" width="18" height="18"></canvas>
-        ${l.label}
-      </button>`;
-  }).join('');
+const LAYER_GROUPS = [
+  { id: 'map',    label: 'Map',    ids: ['paths', 'circles', 'enemies', 'transport'] },
+  { id: 'events', label: 'Events', ids: ['kill', 'knockdown', 'knocked', 'death', 'revive', 'blue_chip_revive'] },
+  { id: 'damage', label: 'Damage', ids: ['dmg_dealt', 'dmg_taken'] },
+  { id: 'items',  label: 'Items',  ids: ['heal', 'boost', 'throwable', 'carepack'] },
+];
 
-  // Draw the actual icon onto each small canvas
+function buildLayerToggles() {
+  const layerMap = Object.fromEntries(LAYER_DEFS.map(l => [l.id, l]));
+  let html = `<div class="layer-global-btns">
+    <button class="group-toggle-btn" onclick="setAllLayers(true)">All on</button>
+    <button class="group-toggle-btn" onclick="setAllLayers(false)">All off</button>
+  </div>`;
+
+  for (const g of LAYER_GROUPS) {
+    html += `<div class="layer-group">
+      <div class="layer-group-hdr">
+        <span class="layer-group-label">${g.label}</span>
+        <button class="group-toggle-btn" onclick="setGroupLayers('${g.id}')">Toggle</button>
+      </div>
+      <div class="layer-grid">`;
+    for (const id of g.ids) {
+      const l = layerMap[id];
+      if (!l) continue;
+      const active = state.layers[l.id] ? 'active' : '';
+      html += `<button class="layer-btn ${active}" data-layer="${l.id}" onclick="toggleLayer('${l.id}')">
+          <canvas class="layer-icon" id="li-${l.id}" width="18" height="18"></canvas>
+          ${l.label}
+        </button>`;
+    }
+    html += `</div></div>`;
+  }
+
+  document.getElementById('layerGrid').innerHTML = html;
+
   for (const l of LAYER_DEFS) {
     const lc = document.getElementById(`li-${l.id}`);
     if (!lc) continue;
@@ -1301,6 +1437,252 @@ function buildLayerToggles() {
     drawEventIcon(lx, 9, 9, 5.5, 1.8, l.id, col);
     lx.restore();
   }
+}
+
+function setAllLayers(on) {
+  for (const l of LAYER_DEFS) {
+    state.layers[l.id] = on;
+    const btn = document.querySelector(`.layer-btn[data-layer="${l.id}"]`);
+    if (btn) btn.classList.toggle('active', on);
+  }
+  draw();
+}
+
+function setGroupLayers(groupId) {
+  const g = LAYER_GROUPS.find(x => x.id === groupId);
+  if (!g) return;
+  const anyOn = g.ids.some(id => state.layers[id]);
+  const newVal = !anyOn;
+  for (const id of g.ids) {
+    state.layers[id] = newVal;
+    const btn = document.querySelector(`.layer-btn[data-layer="${id}"]`);
+    if (btn) btn.classList.toggle('active', newVal);
+  }
+  draw();
+}
+
+/* ============================================================================
+   HP CHART
+============================================================================ */
+const HP_H = 70;
+let hpCanvas = null, hpCtx = null;
+
+function initHpChart() {
+  hpCanvas = document.getElementById('hpCanvas');
+  if (!hpCanvas) return;
+  hpCtx = hpCanvas.getContext('2d');
+  resizeHpChart();
+  drawHpChart();
+}
+
+function resizeHpChart() {
+  if (!hpCanvas) return;
+  const wrap = document.getElementById('hpWrap');
+  const w    = wrap.clientWidth;
+  if (hpCanvas.width !== w || hpCanvas.height !== HP_H) {
+    hpCanvas.width  = w;
+    hpCanvas.height = HP_H;
+  }
+}
+
+function drawHpChart() {
+  if (!hpCanvas || !hpCtx || !MD) return;
+  const w = hpCanvas.width, h = hpCanvas.height;
+  hpCtx.clearRect(0, 0, w, h);
+
+  const PAD_L = TL_PAD_L, PAD_R = 4, PAD_T = 3, PAD_B = 3;
+  const dur   = MD.duration_s || 1800;
+  const plotW = w - PAD_L - PAD_R;
+  const plotH = h - PAD_T - PAD_B;
+  const tx    = t  => PAD_L + (Math.max(0, t) / dur) * plotW;
+  const ty    = hp => PAD_T + (1 - (hp / 100)) * plotH;
+
+  hpCtx.fillStyle = 'rgba(0,0,0,0.15)';
+  hpCtx.fillRect(PAD_L, PAD_T, plotW, plotH);
+
+  for (const [player, col] of [['D282', '#f4a300'], ['S821', '#4a9edd']]) {
+    const pts = (MD.positions[player] || []).filter(p => p.t >= 0 && p.hp != null);
+    if (!pts.length) continue;
+    hpCtx.beginPath();
+    hpCtx.moveTo(tx(pts[0].t), ty(pts[0].hp));
+    for (let i = 1; i < pts.length; i++) hpCtx.lineTo(tx(pts[i].t), ty(pts[i].hp));
+    hpCtx.strokeStyle = col;
+    hpCtx.lineWidth   = 1.5;
+    hpCtx.globalAlpha = 0.85;
+    hpCtx.stroke();
+    hpCtx.globalAlpha = 1;
+  }
+
+  hpCtx.font = 'bold 10px system-ui, sans-serif';
+  hpCtx.textBaseline = 'middle';
+  hpCtx.textAlign    = 'left';
+  hpCtx.fillStyle    = '#f4a300'; hpCtx.fillText('D', 1, PAD_T + plotH * 0.2);
+  hpCtx.fillStyle    = '#4a9edd'; hpCtx.fillText('S', 1, PAD_T + plotH * 0.75);
+
+  if (state.time !== Infinity) {
+    const x = tx(state.time);
+    hpCtx.beginPath();
+    hpCtx.moveTo(x, PAD_T); hpCtx.lineTo(x, h - PAD_B);
+    hpCtx.strokeStyle = 'rgba(244,163,0,0.85)';
+    hpCtx.lineWidth   = 1.5;
+    hpCtx.stroke();
+  }
+}
+
+/* ============================================================================
+   PROXIMITY CHART
+============================================================================ */
+const PROX_H     = 60;
+const PROX_MAX_M = 1500;
+let proxCanvas = null, proxCtx = null, _proxData = null;
+
+function initProxChart() {
+  proxCanvas = document.getElementById('proxCanvas');
+  if (!proxCanvas) return;
+  proxCtx   = proxCanvas.getContext('2d');
+  _proxData = computeProxData();
+  resizeProxChart();
+  drawProxChart();
+}
+
+function resizeProxChart() {
+  if (!proxCanvas) return;
+  const wrap = document.getElementById('proxWrap');
+  const w    = wrap.clientWidth;
+  if (proxCanvas.width !== w || proxCanvas.height !== PROX_H) {
+    proxCanvas.width  = w;
+    proxCanvas.height = PROX_H;
+  }
+}
+
+function getPositionAt(player, t) {
+  const pts = MD.positions[player];
+  if (!pts || !pts.length) return null;
+  let lo = 0, hi = pts.length - 1, idx = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (pts[mid].t <= t) { idx = mid; lo = mid + 1; }
+    else hi = mid - 1;
+  }
+  return idx >= 0 ? pts[idx] : null;
+}
+
+function computeProxData() {
+  if (!MD) return [];
+  const dur  = MD.duration_s || 1800;
+  const data = [];
+  for (let t = 0; t <= dur; t += 5) {
+    const pD = getPositionAt('D282', t);
+    const pS = getPositionAt('S821', t);
+    if (!pD || !pS) continue;
+    const dx    = pD.x - pS.x, dy = pD.y - pS.y;
+    const distM = Math.sqrt(dx * dx + dy * dy) / 100;
+    data.push({ t, distM });
+  }
+  return data;
+}
+
+function drawProxChart() {
+  if (!proxCanvas || !proxCtx || !MD || !_proxData || !_proxData.length) return;
+  const w = proxCanvas.width, h = proxCanvas.height;
+  proxCtx.clearRect(0, 0, w, h);
+
+  const PAD_L = TL_PAD_L, PAD_R = 4, PAD_T = 3, PAD_B = 3;
+  const dur   = MD.duration_s || 1800;
+  const plotW = w - PAD_L - PAD_R;
+  const plotH = h - PAD_T - PAD_B;
+  const tx    = t => PAD_L + (Math.max(0, t) / dur) * plotW;
+  const ty    = d => PAD_T + (1 - Math.min(d, PROX_MAX_M) / PROX_MAX_M) * plotH;
+
+  proxCtx.fillStyle = 'rgba(0,0,0,0.15)';
+  proxCtx.fillRect(PAD_L, PAD_T, plotW, plotH);
+
+  const ref100y = ty(100);
+  proxCtx.beginPath();
+  proxCtx.moveTo(PAD_L, ref100y); proxCtx.lineTo(w - PAD_R, ref100y);
+  proxCtx.strokeStyle = 'rgba(56,52,44,0.7)';
+  proxCtx.lineWidth   = 1;
+  proxCtx.setLineDash([3, 3]);
+  proxCtx.stroke();
+  proxCtx.setLineDash([]);
+
+  proxCtx.beginPath();
+  proxCtx.moveTo(tx(_proxData[0].t), ty(_proxData[0].distM));
+  for (let i = 1; i < _proxData.length; i++) {
+    proxCtx.lineTo(tx(_proxData[i].t), ty(_proxData[i].distM));
+  }
+  proxCtx.strokeStyle = '#8fae5d';
+  proxCtx.lineWidth   = 1.5;
+  proxCtx.globalAlpha = 0.85;
+  proxCtx.stroke();
+
+  const last = _proxData[_proxData.length - 1];
+  proxCtx.lineTo(tx(last.t), PAD_T + plotH);
+  proxCtx.lineTo(PAD_L, PAD_T + plotH);
+  proxCtx.closePath();
+  proxCtx.fillStyle = 'rgba(143,174,93,0.1)';
+  proxCtx.fill();
+  proxCtx.globalAlpha = 1;
+
+  proxCtx.font = '9px system-ui, sans-serif';
+  proxCtx.fillStyle = 'rgba(56,52,44,0.9)';
+  proxCtx.textAlign = 'left';
+  proxCtx.textBaseline = 'bottom';
+  proxCtx.fillText('100m', PAD_L + 2, ref100y - 1);
+
+  proxCtx.font = 'bold 10px system-ui, sans-serif';
+  proxCtx.fillStyle = '#8fae5d';
+  proxCtx.textBaseline = 'middle';
+  proxCtx.fillText('↔', 1, h / 2);
+
+  if (state.time !== Infinity) {
+    const x = tx(state.time);
+    proxCtx.beginPath();
+    proxCtx.moveTo(x, PAD_T); proxCtx.lineTo(x, h - PAD_B);
+    proxCtx.strokeStyle = 'rgba(244,163,0,0.85)';
+    proxCtx.lineWidth   = 1.5;
+    proxCtx.stroke();
+  }
+}
+
+/* ============================================================================
+   ENGAGEMENT SUMMARY
+============================================================================ */
+function buildEngagementSummary() {
+  const el = document.getElementById('engagementList');
+  if (!el || !MD) return;
+
+  const eng = {};
+  for (const ev of MD.events) {
+    if (ev.type === 'dmg_dealt') {
+      if (!eng[ev.target]) eng[ev.target] = { dmg: 0, hits: 0, killed: false };
+      eng[ev.target].dmg  += ev.damage;
+      eng[ev.target].hits += 1;
+    }
+    if (ev.type === 'kill' && ev.victim) {
+      if (!eng[ev.victim]) eng[ev.victim] = { dmg: 0, hits: 0, killed: false };
+      eng[ev.victim].killed = true;
+    }
+  }
+
+  const sorted = Object.entries(eng)
+    .map(([target, d]) => ({ target, ...d }))
+    .sort((a, b) => b.dmg - a.dmg)
+    .slice(0, 12);
+
+  if (!sorted.length) {
+    el.innerHTML = '<span style="color:var(--muted);font-size:12px">No engagement data.</span>';
+    return;
+  }
+
+  el.innerHTML = sorted.map(e => {
+    const killMark = e.killed ? ` <span style="color:var(--accent)">✕</span>` : '';
+    const dmgCol   = e.dmg >= 200 ? 'var(--danger)' : e.dmg >= 100 ? 'var(--accent)' : 'var(--text)';
+    return `<div class="eng-row">
+      <span style="color:var(--muted)">${e.target}${killMark}</span>
+      <span style="color:${dmgCol};font-weight:600">${Math.round(e.dmg)}<span style="color:var(--muted);font-weight:400;font-size:11px"> dmg</span></span>
+    </div>`;
+  }).join('');
 }
 
 /* ============================================================================
