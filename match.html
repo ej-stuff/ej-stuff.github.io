@@ -579,7 +579,7 @@ mapImg.onerror = () => {
 
 let markers    = [];
 let highlightEv = null;   // event to highlight on the map (set from timeline hover)
-let _engLines  = null;    // precomputed engagement lines (shared D282+S821 fights)
+// engagement lines drawn per-event on draw() — no precompute needed
 
 /* ============================================================================
    UNIFIED ICON DRAW FUNCTION
@@ -1003,7 +1003,7 @@ async function boot() {
   initHpChart();
   initProxChart();
   initDistCharts();
-  _engLines = computeEngLines();
+  // engagement lines rendered per-event in drawEngagements() — no precompute
   buildEngagementSummary();
 
   renderMatchTable('matchListContainer', id);
@@ -1709,92 +1709,50 @@ function drawProxChart() {
    Lines are drawn between D282 and S821 for shared fights (same enemy).
    Enemy positions are not tracked, so lines show team positioning during fights.
 ============================================================================ */
-function computeEngLines() {
-  if (!MD) return [];
-  const WINDOW = 15;
-  const lines  = [];
-
-  const getEnemy = ev => {
-    if (ev.type === 'dmg_dealt' || ev.type === 'kill' || ev.type === 'knockdown') return ev.target || ev.victim;
-    if (ev.type === 'dmg_taken') return ev.attacker;
-    return null;
-  };
-
-  const byEnemy = {};
-  for (const ev of MD.events) {
-    if (!['dmg_dealt','dmg_taken','kill','knockdown'].includes(ev.type)) continue;
-    const name = getEnemy(ev);
-    if (!name || name === 'D282' || name === 'S821') continue;
-    if (!byEnemy[name]) byEnemy[name] = [];
-    byEnemy[name].push(ev);
-  }
-
-  for (const [, evs] of Object.entries(byEnemy)) {
-    const d282evs = evs.filter(e => e.player === 'D282');
-    const s821evs = evs.filter(e => e.player === 'S821');
-    if (!d282evs.length || !s821evs.length) continue;
-
-    // Cluster all events into 30s windows
-    const all = [...evs].sort((a, b) => a.t - b.t);
-    const wins = []; let win = [all[0]];
-    for (let i = 1; i < all.length; i++) {
-      if (all[i].t - all[i-1].t > 30) { wins.push(win); win = []; }
-      win.push(all[i]);
-    }
-    wins.push(win);
-
-    for (const w of wins) {
-      const wd = w.filter(e => e.player === 'D282' && e.x != null);
-      const ws = w.filter(e => e.player === 'S821' && e.x != null);
-      if (!wd.length || !ws.length) continue;
-
-      const x1 = wd.reduce((s, e) => s + e.x, 0) / wd.length;
-      const y1 = wd.reduce((s, e) => s + e.y, 0) / wd.length;
-      const x2 = ws.reduce((s, e) => s + e.x, 0) / ws.length;
-      const y2 = ws.reduce((s, e) => s + e.y, 0) / ws.length;
-      const t  = Math.min(...w.map(e => e.t));
-
-      const hasKill  = w.some(e => e.type === 'kill' || e.type === 'knockdown');
-      const hasTaken = w.some(e => e.type === 'dmg_taken');
-      const hasDealt = w.some(e => e.type === 'dmg_dealt' || e.type === 'kill' || e.type === 'knockdown');
-      const avgDmg   = w.filter(e => e.type === 'dmg_dealt')
-                        .reduce((s, e, _, a) => s + (e.damage || 0) / a.length, 0);
-
-      const lineType  = hasKill ? 'kill' : 'dmg';
-      const direction = (hasDealt && !hasTaken) ? 'attack' : (hasTaken && !hasDealt) ? 'defend' : 'mixed';
-      lines.push({ x1, y1, x2, y2, t, lineType, direction, avgDmg });
-    }
-  }
-  return lines;
-}
-
 function drawEngagements(maxT) {
-  if (!_engLines || !_engLines.length) return;
-  for (const line of _engLines) {
-    if (line.t > maxT) continue;
-    const { cx: lx1, cy: ly1 } = w2c(line.x1, line.y1);
-    const { cx: lx2, cy: ly2 } = w2c(line.x2, line.y2);
+  if (!MD) return;
+  const WINDOW = 12; // seconds to look back from current scrubber position
 
-    const col = line.direction === 'attack' ? '#44ff88'
-              : line.direction === 'defend' ? '#ff4444' : '#ffaa44';
-    ctx.beginPath();
-    ctx.moveTo(lx1, ly1);
-    ctx.lineTo(lx2, ly2);
-    ctx.strokeStyle = col;
-    ctx.lineWidth   = 1.2 / view.scale;
-    ctx.globalAlpha = 0.65;
+  ctx.save();
+  ctx.lineWidth = 1.2 / view.scale;
 
-    if (line.lineType === 'kill') {
+  for (const ev of MD.events) {
+    if (ev.type !== 'dmg_dealt' && ev.type !== 'dmg_taken') continue;
+    if (!ev.ex && !ev.ey) continue; // no enemy position
+    if (ev.t > maxT) continue;
+    // When scrubbing, only show events in the recent window
+    if (isFinite(maxT) && ev.t < maxT - WINDOW) continue;
+
+    const { cx: px, cy: py } = w2c(ev.x,  ev.y);
+    const { cx: ex, cy: ey } = w2c(ev.ex, ev.ey);
+
+    // Fade older lines within the window
+    const age   = isFinite(maxT) ? maxT - ev.t : 0;
+    const alpha = isFinite(maxT) ? 0.7 * (1 - age / WINDOW) + 0.1 : 0.35;
+
+    const col = ev.type === 'dmg_dealt' ? '#44ff88' : '#ff4444';
+
+    // Dash: solid for high damage (likely kill/knock), small gaps ≥40, big gaps <40
+    const dmg = ev.damage || 0;
+    if (dmg >= 100) {
       ctx.setLineDash([]);
-    } else if (line.avgDmg >= 40) {
+    } else if (dmg >= 40) {
       ctx.setLineDash([8 / view.scale, 3 / view.scale]);
     } else {
       ctx.setLineDash([3 / view.scale, 10 / view.scale]);
     }
+
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(ex, ey);
+    ctx.strokeStyle = col;
+    ctx.globalAlpha = alpha;
     ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.globalAlpha = 1;
   }
+
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
 /* ============================================================================
