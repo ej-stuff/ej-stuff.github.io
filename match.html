@@ -296,13 +296,22 @@ h1 {
 /* ── Engagement summary ──────────────────────────────────────────────────── */
 .eng-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 4px;
   padding: 4px 0;
   border-bottom: 1px solid rgba(56,52,44,0.4);
-  font-size: 12px;
+  font-size: 11px;
 }
 .eng-row:last-child { border-bottom: none; }
+.eng-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.eng-stats { white-space: nowrap; margin-left: auto; }
 
 /* ── Player filter ───────────────────────────────────────────────────────── */
 .btn-group { display: flex; gap: 6px; }
@@ -446,6 +455,16 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <span style="color:var(--muted);font-size:10px">— 100 m ref</span>
         </div>
         <div id="proxWrap"><canvas id="proxCanvas"></canvas></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+          <div>
+            <div style="font-size:10px;color:var(--accent);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">D282 Travel /30s</div>
+            <div id="dist282Wrap"><canvas id="dist282Canvas"></canvas></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--blue);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">S821 Travel /30s</div>
+            <div id="dist821Wrap"><canvas id="dist821Canvas"></canvas></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -523,6 +542,7 @@ const LAYER_DEFS = [
   { id: 'throwable',        label: 'Throwables',        color: '#ff9944', default: false },
   { id: 'carepack',         label: 'Care Package',      color: '#ffe44d', default: false },
   { id: 'transport',        label: 'Transport Mode',    color: null,      default: false },
+  { id: 'engagement',       label: 'Engagement Lines',  color: '#44ff88', default: false },
 ];
 
 /* ============================================================================
@@ -559,6 +579,7 @@ mapImg.onerror = () => {
 
 let markers    = [];
 let highlightEv = null;   // event to highlight on the map (set from timeline hover)
+let _engLines  = null;    // precomputed engagement lines (shared D282+S821 fights)
 
 /* ============================================================================
    UNIFIED ICON DRAW FUNCTION
@@ -682,6 +703,17 @@ function drawEventIcon(c, cx, cy, r, lw, type, col) {
     }
     case 'enemies': {
       c.beginPath(); c.arc(cx, cy, r*0.7, 0, Math.PI*2); c.fill();
+      break;
+    }
+    case 'engagement': {
+      c.beginPath();
+      c.moveTo(cx-r, cy); c.lineTo(cx+r, cy);
+      c.stroke();
+      c.globalAlpha = 0.5;
+      c.beginPath();
+      c.moveTo(cx-r*0.6, cy-r*0.4); c.lineTo(cx-r, cy); c.lineTo(cx-r*0.6, cy+r*0.4);
+      c.moveTo(cx+r*0.6, cy-r*0.4); c.lineTo(cx+r, cy); c.lineTo(cx+r*0.6, cy+r*0.4);
+      c.stroke();
       break;
     }
     default: {
@@ -821,6 +853,8 @@ function onTlClick(e) {
   drawTimeline();
   drawHpChart();
   drawProxChart();
+  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
+  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
 }
 
 function onTlMouseMove(e) {
@@ -946,10 +980,13 @@ async function boot() {
     resizeTimeline();
     resizeHpChart();
     resizeProxChart();
+    resizeDistCharts();
     draw();
     drawTimeline();
     drawHpChart();
     drawProxChart();
+    drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
+    drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
   });
   canvas.addEventListener('wheel',      onWheel,     { passive: false });
   canvas.addEventListener('mousedown',  onMouseDown);
@@ -965,6 +1002,8 @@ async function boot() {
   initTimeline();
   initHpChart();
   initProxChart();
+  initDistCharts();
+  _engLines = computeEngLines();
   buildEngagementSummary();
 
   renderMatchTable('matchListContainer', id);
@@ -1035,9 +1074,10 @@ function draw() {
   }
 
   const maxT = state.time;
-  if (state.layers.circles) drawCircles(maxT);
-  if (state.layers.enemies) drawEnemies(maxT);
-  if (state.layers.paths)   drawPaths(maxT);
+  if (state.layers.circles)    drawCircles(maxT);
+  if (state.layers.enemies)    drawEnemies(maxT);
+  if (state.layers.paths)      drawPaths(maxT);
+  if (state.layers.engagement) drawEngagements(maxT);
 
   markers = [];
   for (const ev of MD.events) {
@@ -1117,13 +1157,26 @@ function drawPlayerDots(maxT) {
     if (!vis.length) continue;
     const last       = vis[vis.length - 1];
     const { cx, cy } = w2c(last.x, last.y);
-    ctx.beginPath();
-    ctx.arc(cx, cy, 5 / view.scale, 0, Math.PI * 2);
     ctx.fillStyle   = PLAYER_COLOR[player];
-    ctx.fill();
     ctx.strokeStyle = '#fff';
     ctx.lineWidth   = 1 / view.scale;
-    ctx.stroke();
+
+    if (last.dbno) {
+      // Inverted triangle (pointing down) = DBNO / knocked
+      const r = 6 / view.scale;
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.866, cy - r * 0.5);
+      ctx.lineTo(cx + r * 0.866, cy - r * 0.5);
+      ctx.lineTo(cx, cy + r);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(cx, cy, 5 / view.scale, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
   }
 }
 
@@ -1312,6 +1365,8 @@ function onTimeInput(e) {
   drawTimeline();
   drawHpChart();
   drawProxChart();
+  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
+  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
 }
 
 function resetTime() {
@@ -1323,6 +1378,8 @@ function resetTime() {
   drawTimeline();
   drawHpChart();
   drawProxChart();
+  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
+  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
 }
 
 function jumpTime(delta) {
@@ -1338,6 +1395,8 @@ function jumpTime(delta) {
   drawTimeline();
   drawHpChart();
   drawProxChart();
+  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
+  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
 }
 
 function setPlayerFilter(p) {
@@ -1395,7 +1454,7 @@ function buildPlayerCards() {
 const LAYER_GROUPS = [
   { id: 'map',    label: 'Map',    ids: ['paths', 'circles', 'enemies', 'transport'] },
   { id: 'events', label: 'Events', ids: ['kill', 'knockdown', 'knocked', 'death', 'revive', 'blue_chip_revive'] },
-  { id: 'damage', label: 'Damage', ids: ['dmg_dealt', 'dmg_taken'] },
+  { id: 'damage', label: 'Damage', ids: ['dmg_dealt', 'dmg_taken', 'engagement'] },
   { id: 'items',  label: 'Items',  ids: ['heal', 'boost', 'throwable', 'carepack'] },
 ];
 
@@ -1646,29 +1705,231 @@ function drawProxChart() {
 }
 
 /* ============================================================================
+   ENGAGEMENT LINES LAYER
+   Lines are drawn between D282 and S821 for shared fights (same enemy).
+   Enemy positions are not tracked, so lines show team positioning during fights.
+============================================================================ */
+function computeEngLines() {
+  if (!MD) return [];
+  const WINDOW = 15;
+  const lines  = [];
+
+  const getEnemy = ev => {
+    if (ev.type === 'dmg_dealt' || ev.type === 'kill' || ev.type === 'knockdown') return ev.target || ev.victim;
+    if (ev.type === 'dmg_taken') return ev.attacker;
+    return null;
+  };
+
+  const byEnemy = {};
+  for (const ev of MD.events) {
+    if (!['dmg_dealt','dmg_taken','kill','knockdown'].includes(ev.type)) continue;
+    const name = getEnemy(ev);
+    if (!name || name === 'D282' || name === 'S821') continue;
+    if (!byEnemy[name]) byEnemy[name] = [];
+    byEnemy[name].push(ev);
+  }
+
+  for (const [, evs] of Object.entries(byEnemy)) {
+    const d282evs = evs.filter(e => e.player === 'D282');
+    const s821evs = evs.filter(e => e.player === 'S821');
+    if (!d282evs.length || !s821evs.length) continue;
+
+    // Cluster all events into 30s windows
+    const all = [...evs].sort((a, b) => a.t - b.t);
+    const wins = []; let win = [all[0]];
+    for (let i = 1; i < all.length; i++) {
+      if (all[i].t - all[i-1].t > 30) { wins.push(win); win = []; }
+      win.push(all[i]);
+    }
+    wins.push(win);
+
+    for (const w of wins) {
+      const wd = w.filter(e => e.player === 'D282' && e.x != null);
+      const ws = w.filter(e => e.player === 'S821' && e.x != null);
+      if (!wd.length || !ws.length) continue;
+
+      const x1 = wd.reduce((s, e) => s + e.x, 0) / wd.length;
+      const y1 = wd.reduce((s, e) => s + e.y, 0) / wd.length;
+      const x2 = ws.reduce((s, e) => s + e.x, 0) / ws.length;
+      const y2 = ws.reduce((s, e) => s + e.y, 0) / ws.length;
+      const t  = Math.min(...w.map(e => e.t));
+
+      const hasKill  = w.some(e => e.type === 'kill' || e.type === 'knockdown');
+      const hasTaken = w.some(e => e.type === 'dmg_taken');
+      const hasDealt = w.some(e => e.type === 'dmg_dealt' || e.type === 'kill' || e.type === 'knockdown');
+      const avgDmg   = w.filter(e => e.type === 'dmg_dealt')
+                        .reduce((s, e, _, a) => s + (e.damage || 0) / a.length, 0);
+
+      const lineType  = hasKill ? 'kill' : 'dmg';
+      const direction = (hasDealt && !hasTaken) ? 'attack' : (hasTaken && !hasDealt) ? 'defend' : 'mixed';
+      lines.push({ x1, y1, x2, y2, t, lineType, direction, avgDmg });
+    }
+  }
+  return lines;
+}
+
+function drawEngagements(maxT) {
+  if (!_engLines || !_engLines.length) return;
+  for (const line of _engLines) {
+    if (line.t > maxT) continue;
+    const { cx: lx1, cy: ly1 } = w2c(line.x1, line.y1);
+    const { cx: lx2, cy: ly2 } = w2c(line.x2, line.y2);
+
+    const col = line.direction === 'attack' ? '#44ff88'
+              : line.direction === 'defend' ? '#ff4444' : '#ffaa44';
+    ctx.beginPath();
+    ctx.moveTo(lx1, ly1);
+    ctx.lineTo(lx2, ly2);
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = 1.2 / view.scale;
+    ctx.globalAlpha = 0.65;
+
+    if (line.lineType === 'kill') {
+      ctx.setLineDash([]);
+    } else if (line.avgDmg >= 40) {
+      ctx.setLineDash([8 / view.scale, 3 / view.scale]);
+    } else {
+      ctx.setLineDash([3 / view.scale, 10 / view.scale]);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  }
+}
+
+/* ============================================================================
+   DISTANCE TRAVELED CHARTS  (rolling 30-second window per player)
+============================================================================ */
+const DIST_H      = 55;
+const DIST_WIN    = 30;
+const DIST_MAX_M  = 700;
+let dist282Canvas = null, dist282Ctx = null, _dist282 = null;
+let dist821Canvas = null, dist821Ctx = null, _dist821 = null;
+
+function initDistCharts() {
+  dist282Canvas = document.getElementById('dist282Canvas');
+  dist821Canvas = document.getElementById('dist821Canvas');
+  if (!dist282Canvas || !dist821Canvas) return;
+  dist282Ctx = dist282Canvas.getContext('2d');
+  dist821Ctx = dist821Canvas.getContext('2d');
+  _dist282   = computeRollingDist('D282');
+  _dist821   = computeRollingDist('S821');
+  resizeDistCharts();
+  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
+  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
+}
+
+function resizeDistCharts() {
+  for (const [wrapId, can] of [['dist282Wrap', dist282Canvas], ['dist821Wrap', dist821Canvas]]) {
+    if (!can) continue;
+    const wrap = document.getElementById(wrapId);
+    if (!wrap) continue;
+    const w = wrap.clientWidth;
+    if (can.width !== w || can.height !== DIST_H) { can.width = w; can.height = DIST_H; }
+  }
+}
+
+function computeRollingDist(player) {
+  if (!MD) return [];
+  const pts = MD.positions[player];
+  if (!pts || pts.length < 2) return [];
+  const dur  = MD.duration_s || 1800;
+  const data = [];
+  for (let T = 0; T <= dur; T += 5) {
+    // Binary search window start
+    let lo = 0, hi = pts.length - 1, si = pts.length;
+    const winStart = T - DIST_WIN;
+    while (lo <= hi) { const m = (lo+hi)>>1; if (pts[m].t >= winStart) { si = m; hi = m-1; } else lo = m+1; }
+    // Binary search window end
+    lo = 0; hi = pts.length - 1; let ei = -1;
+    while (lo <= hi) { const m = (lo+hi)>>1; if (pts[m].t <= T) { ei = m; lo = m+1; } else hi = m-1; }
+    let total = 0;
+    for (let i = Math.max(si, 1); i <= ei; i++) {
+      const dx = pts[i].x - pts[i-1].x, dy = pts[i].y - pts[i-1].y;
+      total += Math.sqrt(dx*dx + dy*dy) / 100;
+    }
+    data.push({ t: T, distM: total });
+  }
+  return data;
+}
+
+function drawDistChart(player, can, cx, data) {
+  if (!can || !cx || !MD || !data || !data.length) return;
+  const w = can.width, h = can.height;
+  cx.clearRect(0, 0, w, h);
+  const PAD_T = 3, PAD_B = 3;
+  const dur   = MD.duration_s || 1800;
+  const plotH = h - PAD_T - PAD_B;
+  const col   = player === 'D282' ? '#f4a300' : '#4a9edd';
+  const tx    = t => (Math.max(0, t) / dur) * w;
+  const ty    = d => PAD_T + (1 - Math.min(d, DIST_MAX_M) / DIST_MAX_M) * plotH;
+
+  cx.fillStyle = 'rgba(0,0,0,0.15)';
+  cx.fillRect(0, PAD_T, w, plotH);
+
+  cx.beginPath();
+  cx.moveTo(tx(data[0].t), ty(data[0].distM));
+  for (let i = 1; i < data.length; i++) cx.lineTo(tx(data[i].t), ty(data[i].distM));
+  const last = data[data.length-1];
+  cx.lineTo(tx(last.t), PAD_T + plotH);
+  cx.lineTo(0, PAD_T + plotH);
+  cx.closePath();
+  cx.fillStyle   = col + '22';
+  cx.fill();
+
+  cx.beginPath();
+  cx.moveTo(tx(data[0].t), ty(data[0].distM));
+  for (let i = 1; i < data.length; i++) cx.lineTo(tx(data[i].t), ty(data[i].distM));
+  cx.strokeStyle = col;
+  cx.lineWidth   = 1.5;
+  cx.globalAlpha = 0.85;
+  cx.stroke();
+  cx.globalAlpha = 1;
+
+  if (state.time !== Infinity) {
+    const x = tx(state.time);
+    cx.beginPath();
+    cx.moveTo(x, PAD_T); cx.lineTo(x, h - PAD_B);
+    cx.strokeStyle = 'rgba(244,163,0,0.85)';
+    cx.lineWidth   = 1.5;
+    cx.stroke();
+  }
+}
+
+/* ============================================================================
    ENGAGEMENT SUMMARY
 ============================================================================ */
 function buildEngagementSummary() {
   const el = document.getElementById('engagementList');
   if (!el || !MD) return;
 
+  const D = 'var(--accent)', S = 'var(--blue)', R = 'var(--danger)';
   const eng = {};
+  const get = name => {
+    if (!eng[name]) eng[name] = { d282: 0, s821: 0, tk282: 0, tk821: 0, killedBy: null, killedUs: [] };
+    return eng[name];
+  };
+
   for (const ev of MD.events) {
-    if (ev.type === 'dmg_dealt') {
-      if (!eng[ev.target]) eng[ev.target] = { dmg: 0, hits: 0, killed: false };
-      eng[ev.target].dmg  += ev.damage;
-      eng[ev.target].hits += 1;
+    if (ev.type === 'dmg_dealt' && ev.target) {
+      const e = get(ev.target);
+      if (ev.player === 'D282') e.d282 += ev.damage; else e.s821 += ev.damage;
     }
-    if (ev.type === 'kill' && ev.victim) {
-      if (!eng[ev.victim]) eng[ev.victim] = { dmg: 0, hits: 0, killed: false };
-      eng[ev.victim].killed = true;
+    if (ev.type === 'dmg_taken' && ev.attacker && ev.attacker !== 'D282' && ev.attacker !== 'S821') {
+      const e = get(ev.attacker);
+      if (ev.player === 'D282') e.tk282 += ev.damage; else e.tk821 += ev.damage;
     }
+    if (ev.type === 'kill'      && ev.victim)  get(ev.victim).killedBy = ev.player;
+    if (ev.type === 'knockdown' && ev.victim && !get(ev.victim).killedBy) get(ev.victim).killedBy = ev.player + '_k';
+    if (ev.type === 'death'     && ev.killer)  get(ev.killer).killedUs.push(ev.player);
+    if (ev.type === 'knocked'   && ev.attacker && ev.attacker !== 'D282' && ev.attacker !== 'S821')
+      get(ev.attacker).killedUs.push(ev.player + '_k');
   }
 
   const sorted = Object.entries(eng)
-    .map(([target, d]) => ({ target, ...d }))
-    .sort((a, b) => b.dmg - a.dmg)
-    .slice(0, 12);
+    .map(([name, d]) => ({ name, ...d }))
+    .sort((a, b) => (b.d282 + b.s821) - (a.d282 + a.s821))
+    .slice(0, 14);
 
   if (!sorted.length) {
     el.innerHTML = '<span style="color:var(--muted);font-size:12px">No engagement data.</span>';
@@ -1676,11 +1937,29 @@ function buildEngagementSummary() {
   }
 
   el.innerHTML = sorted.map(e => {
-    const killMark = e.killed ? ` <span style="color:var(--accent)">✕</span>` : '';
-    const dmgCol   = e.dmg >= 200 ? 'var(--danger)' : e.dmg >= 100 ? 'var(--accent)' : 'var(--text)';
+    // Kill mark for us killing/knocking them
+    let killMark = '';
+    if (e.killedBy === 'D282')   killMark = `<span style="color:${D}">✕</span>`;
+    else if (e.killedBy === 'S821')  killMark = `<span style="color:${S}">✕</span>`;
+    else if (e.killedBy === 'D282_k') killMark = `<span style="color:${D};opacity:.65">✕</span>`;
+    else if (e.killedBy === 'S821_k') killMark = `<span style="color:${S};opacity:.65">✕</span>`;
+
+    // Markers for enemy killing/knocking us
+    for (const p of e.killedUs) {
+      const isKnock = p.endsWith('_k');
+      const pName   = isKnock ? p.slice(0, -2) : p;
+      const pCol    = pName === 'D282' ? D : S;
+      killMark += `<span style="color:${R}">${isKnock ? '▽' : '●'}</span><span style="color:${pCol}">✕</span>`;
+    }
+
+    const tkTotal = e.tk282 + e.tk821;
     return `<div class="eng-row">
-      <span style="color:var(--muted)">${e.target}${killMark}</span>
-      <span style="color:${dmgCol};font-weight:600">${Math.round(e.dmg)}<span style="color:var(--muted);font-weight:400;font-size:11px"> dmg</span></span>
+      <span class="eng-name">${e.name}</span>
+      <span class="eng-stats">
+        ${killMark ? `<span style="margin-right:3px">${killMark}</span>` : ''}
+        <span style="color:${D}">${Math.round(e.d282)}</span><span style="color:var(--line)">|</span><span style="color:${S}">${Math.round(e.s821)}</span>
+        ${tkTotal > 0 ? `<span style="color:${R};font-size:10px">←${Math.round(tkTotal)}</span>` : ''}
+      </span>
     </div>`;
   }).join('');
 }
