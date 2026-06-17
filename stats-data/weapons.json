@@ -13,12 +13,12 @@
     {
       "weapon": "M249",
       "category": "LMG",
-      "kills": 5,
+      "kills": 6,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 47,
-      "total_damage": 636.4,
-      "avg_damage_per_hit": 13.5
+      "hits": 65,
+      "total_damage": 826.8,
+      "avg_damage_per_hit": 12.7
     },
     {
       "weapon": "Mk12 SPR",
@@ -91,6 +91,16 @@
       "avg_damage_per_hit": 9.2
     },
     {
+      "weapon": "SLR",
+      "category": "DMR",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 6,
+      "total_damage": 208.5,
+      "avg_damage_per_hit": 34.8
+    },
+    {
       "weapon": "Mini 14",
       "category": "DMR",
       "kills": 0,
@@ -109,16 +119,6 @@
       "hits": 10,
       "total_damage": 124.6,
       "avg_damage_per_hit": 12.5
-    },
-    {
-      "weapon": "SLR",
-      "category": "DMR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 3,
-      "total_damage": 107.0,
-      "avg_damage_per_hit": 35.7
     },
     {
       "weapon": "UMP45",
@@ -218,9 +218,9 @@
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 27,
-      "total_damage": 535.0,
-      "avg_damage_per_hit": 19.8
+      "hits": 32,
+      "total_damage": 673.7,
+      "avg_damage_per_hit": 21.1
     },
     {
       "weapon": "M249",
@@ -231,6 +231,26 @@
       "hits": 12,
       "total_damage": 214.5,
       "avg_damage_per_hit": 17.9
+    },
+    {
+      "weapon": "Vector",
+      "category": "SMG",
+      "kills": 2,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 9,
+      "total_damage": 130.8,
+      "avg_damage_per_hit": 14.5
+    },
+    {
+      "weapon": "AK-M",
+      "category": "AR",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 17,
+      "total_damage": 577.6,
+      "avg_damage_per_hit": 34.0
     },
     {
       "weapon": "SLR",
@@ -283,16 +303,6 @@
       "avg_damage_per_hit": 25.0
     },
     {
-      "weapon": "AK-M",
-      "category": "AR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 14,
-      "total_damage": 477.6,
-      "avg_damage_per_hit": 34.1
-    },
-    {
       "weapon": "UMP45",
       "category": "SMG",
       "kills": 0,
@@ -333,6 +343,16 @@
       "avg_damage_per_hit": 31.3
     },
     {
+      "weapon": "M16A4",
+      "category": "AR",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 6,
+      "total_damage": 114.2,
+      "avg_damage_per_hit": 19.0
+    },
+    {
       "weapon": "JS9",
       "category": "SMG",
       "kills": 0,
@@ -361,16 +381,6 @@
       "hits": 4,
       "total_damage": 94.9,
       "avg_damage_per_hit": 23.7
-    },
-    {
-      "weapon": "M16A4",
-      "category": "AR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 4,
-      "total_damage": 76.8,
-      "avg_damage_per_hit": 19.2
     },
     {
       "weapon": "SKS",
