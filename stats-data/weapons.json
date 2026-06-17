@@ -56,9 +56,9 @@
       "kills": 2,
       "headshot_kills": 2,
       "headshot_kill_pct": 1.0,
-      "hits": 22,
-      "total_damage": 552.6,
-      "avg_damage_per_hit": 25.1
+      "hits": 26,
+      "total_damage": 662.1,
+      "avg_damage_per_hit": 25.5
     },
     {
       "weapon": "SCAR-L",
@@ -185,12 +185,12 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 5,
+      "kills": 6,
       "headshot_kills": 1,
-      "headshot_kill_pct": 0.2,
-      "hits": 41,
-      "total_damage": 550.2,
-      "avg_damage_per_hit": 13.4
+      "headshot_kill_pct": 0.167,
+      "hits": 54,
+      "total_damage": 596.4,
+      "avg_damage_per_hit": 11.0
     },
     {
       "weapon": "ACE32",
@@ -201,6 +201,16 @@
       "hits": 30,
       "total_damage": 367.4,
       "avg_damage_per_hit": 12.2
+    },
+    {
+      "weapon": "Mini 14",
+      "category": "DMR",
+      "kills": 3,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 38,
+      "total_damage": 816.6,
+      "avg_damage_per_hit": 21.5
     },
     {
       "weapon": "Mk12 SPR",
@@ -221,16 +231,6 @@
       "hits": 21,
       "total_damage": 721.6,
       "avg_damage_per_hit": 34.4
-    },
-    {
-      "weapon": "Mini 14",
-      "category": "DMR",
-      "kills": 2,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 32,
-      "total_damage": 673.7,
-      "avg_damage_per_hit": 21.1
     },
     {
       "weapon": "M249",
