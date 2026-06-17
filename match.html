@@ -1119,6 +1119,12 @@ function draw() {
   if (state.layers.paths)      drawPaths(maxT);
   if (state.layers.engagement) drawEngagements(maxT);
 
+  // For outgoing events (kill/knockdown/dmg_dealt) the marker belongs on the enemy.
+  const _enemyPos = ev => ev.ex ? { x: ev.ex, y: ev.ey } : { x: ev.x, y: ev.y };
+  const _markerPos = ev =>
+    (ev.type === 'kill' || ev.type === 'knockdown' || ev.type === 'dmg_dealt')
+      ? _enemyPos(ev) : { x: ev.x, y: ev.y };
+
   markers = [];
   for (const ev of MD.events) {
     if (ev.t > maxT)            continue;
@@ -1126,7 +1132,8 @@ function draw() {
     if (!state.layers[ev.type]) continue;
     // Timed markers (throwables etc.) disappear after their duration
     if (ev.duration_s != null && maxT !== Infinity && maxT > ev.t + ev.duration_s) continue;
-    const { cx, cy } = w2c(ev.x, ev.y);
+    const mp = _markerPos(ev);
+    const { cx, cy } = w2c(mp.x, mp.y);
     drawMarker(ev, cx, cy);
     markers.push({ cx, cy, ev });
   }
@@ -1136,7 +1143,8 @@ function draw() {
 
   // Highlight ring for timeline-hovered event
   if (highlightEv) {
-    const { cx, cy } = w2c(highlightEv.x, highlightEv.y);
+    const mp = _markerPos(highlightEv);
+    const { cx, cy } = w2c(mp.x, mp.y);
     const ld  = LAYER_DEFS.find(l => l.id === highlightEv.type);
     const col = (ld && ld.color) ? ld.color : PLAYER_COLOR[highlightEv.player] || '#fff';
     ctx.beginPath();
