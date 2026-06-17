@@ -933,5 +933,22 @@
       "damage": 138.6,
       "placement": 14
     }
+  },
+  {
+    "match_id": "694542fc-2dc3-454a-956d-6f79dd19f891",
+    "created_at": "2026-06-17T17:27:26Z",
+    "date": "2026-06-17",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 6,
+      "damage": 410.0,
+      "placement": 1
+    },
+    "S821": {
+      "kills": 2,
+      "damage": 238.7,
+      "placement": 1
+    }
   }
 ]

@@ -1,6 +1,16 @@
 {
   "D282": [
     {
+      "weapon": "M249",
+      "category": "LMG",
+      "kills": 8,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.125,
+      "hits": 73,
+      "total_damage": 1022.2,
+      "avg_damage_per_hit": 14.0
+    },
+    {
       "weapon": "HK416",
       "category": "AR",
       "kills": 7,
@@ -11,16 +21,6 @@
       "avg_damage_per_hit": 19.9
     },
     {
-      "weapon": "M249",
-      "category": "LMG",
-      "kills": 6,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 65,
-      "total_damage": 826.8,
-      "avg_damage_per_hit": 12.7
-    },
-    {
       "weapon": "Mk12 SPR",
       "category": "DMR",
       "kills": 3,
@@ -29,6 +29,16 @@
       "hits": 34,
       "total_damage": 743.1,
       "avg_damage_per_hit": 21.9
+    },
+    {
+      "weapon": "Mini 14",
+      "category": "DMR",
+      "kills": 3,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 35,
+      "total_damage": 402.3,
+      "avg_damage_per_hit": 11.5
     },
     {
       "weapon": "Tommy Gun",
@@ -91,6 +101,16 @@
       "avg_damage_per_hit": 9.2
     },
     {
+      "weapon": "Grenade",
+      "category": "Throwable",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 3,
+      "total_damage": 55.3,
+      "avg_damage_per_hit": 18.4
+    },
+    {
       "weapon": "SLR",
       "category": "DMR",
       "kills": 0,
@@ -99,16 +119,6 @@
       "hits": 6,
       "total_damage": 208.5,
       "avg_damage_per_hit": 34.8
-    },
-    {
-      "weapon": "Mini 14",
-      "category": "DMR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 7,
-      "total_damage": 199.4,
-      "avg_damage_per_hit": 28.5
     },
     {
       "weapon": "G36C",
@@ -161,16 +171,6 @@
       "avg_damage_per_hit": 4.3
     },
     {
-      "weapon": "Grenade",
-      "category": "Throwable",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 2,
-      "total_damage": 43.6,
-      "avg_damage_per_hit": 21.8
-    },
-    {
       "weapon": "AUG A3",
       "category": "AR",
       "kills": 0,
@@ -195,12 +195,12 @@
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 4,
+      "kills": 5,
       "headshot_kills": 1,
-      "headshot_kill_pct": 0.25,
-      "hits": 26,
-      "total_damage": 285.0,
-      "avg_damage_per_hit": 11.0
+      "headshot_kill_pct": 0.2,
+      "hits": 30,
+      "total_damage": 367.4,
+      "avg_damage_per_hit": 12.2
     },
     {
       "weapon": "Mk12 SPR",
@@ -211,6 +211,16 @@
       "hits": 29,
       "total_damage": 453.9,
       "avg_damage_per_hit": 15.7
+    },
+    {
+      "weapon": "SLR",
+      "category": "DMR",
+      "kills": 2,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 1.0,
+      "hits": 21,
+      "total_damage": 721.6,
+      "avg_damage_per_hit": 34.4
     },
     {
       "weapon": "Mini 14",
@@ -251,16 +261,6 @@
       "hits": 17,
       "total_damage": 577.6,
       "avg_damage_per_hit": 34.0
-    },
-    {
-      "weapon": "SLR",
-      "category": "DMR",
-      "kills": 1,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 1.0,
-      "hits": 16,
-      "total_damage": 565.4,
-      "avg_damage_per_hit": 35.3
     },
     {
       "weapon": "MP5K",
