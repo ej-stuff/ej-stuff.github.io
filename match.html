@@ -505,6 +505,7 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
             <div id="dist821Wrap"><canvas id="dist821Canvas"></canvas></div>
           </div>
         </div>
+        <div id="loadoutDisplay" style="font-size:11px; color:var(--muted); padding:4px 0; min-height:28px;"></div>
       </div>
     </div>
 
@@ -581,8 +582,12 @@ const LAYER_DEFS = [
   { id: 'boost',            label: 'Boosts',            color: '#56c1a5', default: false },
   { id: 'throwable',        label: 'Throwables',        color: '#ff9944', default: false },
   { id: 'carepack',         label: 'Care Package',      color: '#ffe44d', default: false },
+  { id: 'crate_land',       label: 'Care Packages',     color: '#ffe44d', default: true  },
   { id: 'transport',        label: 'Transport Mode',    color: null,      default: false },
   { id: 'engagement',       label: 'Engagement Lines',  color: '#44ff88', default: false },
+  { id: 'vehicle_in',       label: 'Vehicle Entry',     color: '#aaddff', default: false },
+  { id: 'vehicle_out',      label: 'Vehicle Exit',      color: '#aaddff', default: false },
+  { id: 'armor_break',      label: 'Armor Break',       color: '#ff9944', default: false },
 ];
 
 /* ============================================================================
@@ -719,6 +724,58 @@ function drawEventIcon(c, cx, cy, r, lw, type, col) {
       c.moveTo(cx, cy-r); c.lineTo(cx+r, cy);
       c.lineTo(cx, cy+r); c.lineTo(cx-r, cy);
       c.closePath(); c.fill();
+      break;
+    }
+    case 'crate_land': {
+      // Small yellow square with a cross on top (gift box)
+      const hs = r * 0.7;
+      c.fillRect(cx - hs, cy - hs * 0.5, hs * 2, hs * 1.5);
+      c.beginPath();
+      c.moveTo(cx, cy - hs * 0.5); c.lineTo(cx, cy - hs * 1.3);
+      c.moveTo(cx - hs * 0.5, cy - hs); c.lineTo(cx + hs * 0.5, cy - hs);
+      c.strokeStyle = '#000';
+      c.lineWidth   = lw * 0.7;
+      c.globalAlpha = 0.7;
+      c.stroke();
+      c.globalAlpha = 0.9;
+      break;
+    }
+    case 'vehicle_in': {
+      // Small car-like filled rectangle (entering)
+      const bw = r * 1.4, bh = r * 0.7;
+      c.fillRect(cx - bw, cy - bh, bw * 2, bh * 2);
+      c.beginPath();
+      c.moveTo(cx - bw * 0.5, cy - bh); c.lineTo(cx + bw * 0.2, cy - bh * 1.6); c.lineTo(cx + bw * 0.8, cy - bh * 1.6); c.lineTo(cx + bw, cy - bh);
+      c.fill();
+      // Arrow pointing in
+      c.beginPath();
+      c.moveTo(cx - bw - r * 0.6, cy); c.lineTo(cx - bw, cy);
+      c.strokeStyle = col; c.lineWidth = lw;
+      c.stroke();
+      break;
+    }
+    case 'vehicle_out': {
+      // Small car-like stroked rectangle (exiting)
+      const bw = r * 1.4, bh = r * 0.7;
+      c.strokeRect(cx - bw, cy - bh, bw * 2, bh * 2);
+      c.beginPath();
+      c.moveTo(cx + bw, cy); c.lineTo(cx + bw + r * 0.6, cy);
+      c.stroke();
+      break;
+    }
+    case 'armor_break': {
+      // Broken diamond shape
+      c.beginPath();
+      c.moveTo(cx, cy - r);
+      c.lineTo(cx + r * 0.7, cy);
+      c.lineTo(cx, cy + r);
+      c.lineTo(cx - r * 0.7, cy);
+      c.closePath();
+      c.stroke();
+      // Crack lines
+      c.beginPath();
+      c.moveTo(cx - r * 0.2, cy - r * 0.4); c.lineTo(cx + r * 0.3, cy + r * 0.3);
+      c.stroke();
       break;
     }
     // Layer-only icons (not in MD.events):
@@ -1157,6 +1214,7 @@ function draw() {
   }
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+  updateLoadout(maxT);
 }
 
 /* ── Movement paths ─────────────────────────────────────────────────────── */
@@ -1182,7 +1240,8 @@ function drawPaths(maxT) {
     for (const s of segments) {
       if (s.length < 2) continue;
       if (!showTransport) {
-        _strokePath(player, s, 2, 0.55, false);
+        // Always draw per-segment to show blue-zone tinting on foot paths
+        _strokeFootPerSegment(player, s);
       } else {
         // Sub-segment by transport type
         let sub = [s[0]];
@@ -1232,8 +1291,52 @@ function _drawTrSeg(player, pts) {
   if (!pts.length) return;
   const tr        = pts[0].tr || 'foot';
   if (tr === 'plane') return;
-  const isVehicle = ['WheeledVehicle','BikesVehicle','FloatingVehicle','FlyingVehicle'].includes(tr);
-  _strokePath(player, pts, isVehicle ? 4 : 2, isVehicle ? 0.75 : 0.55, tr === 'chute');
+  const isVehicle = tr !== 'foot' && tr !== 'chute';
+  if (isVehicle) {
+    // Vehicle: white, slightly thicker
+    _strokeSegments(pts, '#ffffff', 2.5 / view.scale, 0.75, false);
+  } else if (tr === 'chute') {
+    _strokeSegments(pts, '#aaaaaa', 2 / view.scale, 0.55, true);
+  } else {
+    // Foot: draw per-point with blue-zone colour tinting
+    _strokeFootPerSegment(player, pts);
+  }
+}
+
+function _strokeFootPerSegment(player, pts) {
+  // Draw foot path segment-by-segment so blue-zone points get pink colour
+  for (let i = 1; i < pts.length; i++) {
+    const p = pts[i];
+    const col = p.blue ? '#ff8888' : PLAYER_COLOR[player];
+    const f = w2c(pts[i-1].x, pts[i-1].y);
+    const t = w2c(p.x, p.y);
+    ctx.beginPath();
+    ctx.moveTo(f.cx, f.cy);
+    ctx.lineTo(t.cx, t.cy);
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = 2 / view.scale;
+    ctx.globalAlpha = 0.55;
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function _strokeSegments(pts, color, lw, alpha, dashed) {
+  if (pts.length < 2) return;
+  const f = w2c(pts[0].x, pts[0].y);
+  ctx.beginPath();
+  ctx.moveTo(f.cx, f.cy);
+  for (let i = 1; i < pts.length; i++) {
+    const { cx, cy } = w2c(pts[i].x, pts[i].y);
+    ctx.lineTo(cx, cy);
+  }
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = lw;
+  ctx.globalAlpha = alpha;
+  if (dashed) ctx.setLineDash([6 / view.scale, 4 / view.scale]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
 }
 
 function _strokePath(player, pts, lw, alpha, dashed) {
@@ -1500,10 +1603,11 @@ function buildPlayerCards() {
 }
 
 const LAYER_GROUPS = [
-  { id: 'map',    label: 'Map',    ids: ['paths', 'circles', 'enemies', 'transport'] },
-  { id: 'events', label: 'Events', ids: ['kill', 'knockdown', 'knocked', 'death', 'revive', 'blue_chip_revive'] },
-  { id: 'damage', label: 'Damage', ids: ['dmg_dealt', 'dmg_taken', 'engagement'] },
-  { id: 'items',  label: 'Items',  ids: ['heal', 'boost', 'throwable', 'carepack'] },
+  { id: 'map',       label: 'Map',       ids: ['paths', 'circles', 'enemies', 'transport', 'crate_land'] },
+  { id: 'events',    label: 'Events',    ids: ['kill', 'knockdown', 'knocked', 'death', 'revive', 'blue_chip_revive'] },
+  { id: 'damage',    label: 'Damage',    ids: ['dmg_dealt', 'dmg_taken', 'engagement', 'armor_break'] },
+  { id: 'items',     label: 'Items',     ids: ['heal', 'boost', 'throwable', 'carepack'] },
+  { id: 'transport', label: 'Transport', ids: ['vehicle_in', 'vehicle_out'] },
 ];
 
 function buildLayerToggles() {
@@ -1619,6 +1723,20 @@ function drawHpChart() {
     hpCtx.stroke();
     hpCtx.globalAlpha = 1;
   }
+
+  // Armor break ticks
+  hpCtx.lineWidth   = 1.5;
+  hpCtx.globalAlpha = 0.85;
+  for (const ev of (MD.events || [])) {
+    if (ev.type !== 'armor_break') continue;
+    const x = tx(ev.t);
+    hpCtx.beginPath();
+    hpCtx.moveTo(x, PAD_T + plotH - 8);
+    hpCtx.lineTo(x, PAD_T + plotH);
+    hpCtx.strokeStyle = '#ff9944';
+    hpCtx.stroke();
+  }
+  hpCtx.globalAlpha = 1;
 
   hpCtx.font = 'bold 10px system-ui, sans-serif';
   hpCtx.textBaseline = 'middle';
@@ -1974,6 +2092,7 @@ function buildEngagementSummary() {
    HELPERS
 ============================================================================ */
 function playerVis(p) {
+  if (p === 'all') return true;
   return state.player === 'both' || state.player === p;
 }
 
@@ -1986,8 +2105,14 @@ function fmtEvent(ev) {
   const p = ev.player || '?';
   const t = mmss(ev.t);
   switch (ev.type) {
-    case 'kill':             return `${p} killed ${ev.victim} · ${ev.weapon}${ev.reason === 'HeadShot' ? ' (HS)' : ''} · ${t}`;
-    case 'knockdown':        return `${p} knocked ${ev.victim} · ${ev.weapon} · ${t}`;
+    case 'kill': {
+      const dist = (ev.ex != null && ev.ey != null) ? Math.round(Math.sqrt((ev.ex-ev.x)**2 + (ev.ey-ev.y)**2) / 100) : null;
+      return `${p} killed ${ev.victim} · ${ev.weapon}${ev.reason === 'HeadShot' ? ' (HS)' : ''}${dist != null ? ` — ${dist}m` : ''} · ${t}`;
+    }
+    case 'knockdown': {
+      const dist = (ev.ex != null && ev.ey != null) ? Math.round(Math.sqrt((ev.ex-ev.x)**2 + (ev.ey-ev.y)**2) / 100) : null;
+      return `${p} knocked ${ev.victim} · ${ev.weapon}${dist != null ? ` — ${dist}m` : ''} · ${t}`;
+    }
     case 'knocked':          return `${p} knocked down by ${ev.attacker} · ${t}`;
     case 'death':            return `${p} died · killed by ${ev.killer} (${ev.weapon}) · ${t}`;
     case 'revive':           return `${p} revived ${ev.target} · ${t}`;
@@ -1998,8 +2123,47 @@ function fmtEvent(ev) {
     case 'dmg_taken':        return `${p} < ${ev.attacker} ${ev.damage}dmg · ${ev.weapon}${ev.reason ? ' · ' + ev.reason : ''} · ${t}`;
     case 'throwable':        return `${p} threw ${ev.weapon} · ${t}`;
     case 'carepack':         return `${p} looted care pack: ${ev.item} · ${t}`;
+    case 'crate_land':       return `Care Package${ev.weapon ? ` — ${ev.weapon}` : ''} · ${t}`;
+    case 'vehicle_in':       return `${p} entered ${ev.vehicle || 'vehicle'} · ${t}`;
+    case 'vehicle_out':      return `${p} exited ${ev.vehicle || 'vehicle'} · ${t}`;
+    case 'armor_break':      return `${p} Armor Break — ${ev.slot || 'Unknown'} · ${t}`;
     default:                 return `${p} ${ev.type} · ${t}`;
   }
+}
+
+/* ============================================================================
+   LOADOUT DISPLAY
+============================================================================ */
+function updateLoadout(t) {
+  const el = document.getElementById('loadoutDisplay');
+  if (!el || !MD) return;
+  const effectiveT = t === Infinity ? (MD.duration_s || 9999) : t;
+
+  const parts = [];
+  for (const player of ['D282', 'S821']) {
+    const col = player === 'D282' ? '#f4a300' : '#4a9edd';
+    const state2 = { Main: null, Sub: null, Pistol: null, Handgun: null, Vest: 0, Headgear: 0 };
+    for (const ev of MD.events) {
+      if (ev.player !== player) continue;
+      if (ev.t > effectiveT) break;
+      if (ev.type === 'equip') {
+        const s = ev.slot;
+        if (s === 'Main' || s === 'Sub' || s === 'Pistol' || s === 'Handgun') state2[s] = ev.item;
+        else if (s === 'Vest') { const m = (ev.item||'').match(/\d/); if(m) state2.Vest = +m[0]; }
+        else if (s === 'Headgear') { const m = (ev.item||'').match(/\d/); if(m) state2.Headgear = +m[0]; }
+      } else if (ev.type === 'unequip') {
+        const s = ev.slot;
+        if (s === 'Main') state2.Main = null;
+        else if (s === 'Sub' || s === 'Pistol' || s === 'Handgun') state2[s] = null;
+      }
+    }
+    const pri  = state2.Main || '—';
+    const sec  = state2.Sub || state2.Pistol || state2.Handgun || '—';
+    const vest = state2.Vest ? `V${state2.Vest}` : 'V?';
+    const helm = state2.Headgear ? `H${state2.Headgear}` : 'H?';
+    parts.push(`<span style="color:${col}">${player}</span> ${pri} / ${sec} &nbsp; ${vest} ${helm}`);
+  }
+  el.innerHTML = parts.join('<span style="color:#38342c"> &nbsp;|&nbsp; </span>');
 }
 
 /* ============================================================================
