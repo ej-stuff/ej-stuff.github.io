@@ -294,24 +294,47 @@ h1 {
 .chart-legend span { font-size: 10px; color: var(--muted); }
 
 /* ── Engagement summary ──────────────────────────────────────────────────── */
-.eng-row {
-  display: flex;
+.eng-row2 {
+  display: grid;
+  grid-template-columns: 1fr 32px 38px 38px 28px;
+  column-gap: 3px;
   align-items: center;
-  gap: 4px;
-  padding: 4px 0;
-  border-bottom: 1px solid rgba(56,52,44,0.4);
   font-size: 11px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(56,52,44,0.2);
 }
-.eng-row:last-child { border-bottom: none; }
+.eng-row2:last-child { border-bottom: none; }
 .eng-name {
-  flex: 1;
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--muted);
 }
-.eng-stats { white-space: nowrap; margin-left: auto; }
+.eng-icon { text-align: center; font-size: 10px; white-space: nowrap; }
+.eng-d    { text-align: right; color: var(--accent); }
+.eng-s    { text-align: right; color: var(--blue); }
+.eng-tk   { text-align: right; color: var(--danger); font-size: 10px; }
+
+/* ── Loadout boxes ───────────────────────────────────────────────────────── */
+.loadout-box {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid rgba(56,52,44,0.4);
+  border-radius: 5px;
+  padding: 5px 7px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.lb-hdr {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  margin-bottom: 3px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.lb-row { margin-bottom: 1px; color: var(--fg); }
+.lb-dim  { color: var(--muted); font-size: 9.5px; }
 
 /* ── Player filter ───────────────────────────────────────────────────────── */
 .btn-group { display: flex; gap: 6px; }
@@ -505,7 +528,10 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
             <div id="dist821Wrap"><canvas id="dist821Canvas"></canvas></div>
           </div>
         </div>
-        <div id="loadoutDisplay" style="font-size:11px; color:var(--muted); padding:4px 0; min-height:28px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+          <div id="loadout282" class="loadout-box"></div>
+          <div id="loadout821" class="loadout-box"></div>
+        </div>
       </div>
     </div>
 
@@ -903,6 +929,7 @@ function drawTimeline() {
     const buckets = {};
     for (const ev of MD.events) {
       if (ev.player !== player || ev.t < 0) continue;
+      if (ev.type === 'heal' || ev.type === 'boost') continue;
       const bx = Math.round(tlX(ev.t) / BUCKET);
       if (!buckets[bx]) buckets[bx] = [];
       buckets[bx].push(ev);
@@ -1724,7 +1751,7 @@ function drawHpChart() {
     hpCtx.globalAlpha = 1;
   }
 
-  // Armor break ticks
+  // Armor break ticks (bottom edge, orange)
   hpCtx.lineWidth   = 1.5;
   hpCtx.globalAlpha = 0.85;
   for (const ev of (MD.events || [])) {
@@ -1734,6 +1761,28 @@ function drawHpChart() {
     hpCtx.moveTo(x, PAD_T + plotH - 8);
     hpCtx.lineTo(x, PAD_T + plotH);
     hpCtx.strokeStyle = '#ff9944';
+    hpCtx.stroke();
+  }
+
+  // Heal/boost markers: D282 ticks at top, S821 at bottom
+  hpCtx.lineWidth = 1.5;
+  for (const ev of (MD.events || [])) {
+    if (ev.type !== 'heal' && ev.type !== 'boost') continue;
+    const x       = tx(ev.t);
+    const isHeal  = ev.type === 'heal';
+    const isD     = ev.player === 'D282';
+    const col     = isHeal ? '#8fbe5d' : '#56c1a5';
+    const len     = isHeal ? 11 : 7;
+    hpCtx.strokeStyle = col;
+    hpCtx.globalAlpha = 0.8;
+    hpCtx.beginPath();
+    if (isD) {
+      hpCtx.moveTo(x, PAD_T);
+      hpCtx.lineTo(x, PAD_T + len);
+    } else {
+      hpCtx.moveTo(x, PAD_T + plotH);
+      hpCtx.lineTo(x, PAD_T + plotH - len);
+    }
     hpCtx.stroke();
   }
   hpCtx.globalAlpha = 1;
@@ -2030,7 +2079,7 @@ function buildEngagementSummary() {
   const D = 'var(--accent)', S = 'var(--blue)', R = 'var(--danger)';
   const eng = {};
   const get = name => {
-    if (!eng[name]) eng[name] = { d282: 0, s821: 0, tk282: 0, tk821: 0, killedBy: null, killedUs: [] };
+    if (!eng[name]) eng[name] = { d282:0, s821:0, tk282:0, tk821:0, killedBy:null, killedUs:[] };
     return eng[name];
   };
 
@@ -2053,39 +2102,46 @@ function buildEngagementSummary() {
   const sorted = Object.entries(eng)
     .map(([name, d]) => ({ name, ...d }))
     .sort((a, b) => (b.d282 + b.s821) - (a.d282 + a.s821))
-    .slice(0, 14);
+    .slice(0, 16);
 
   if (!sorted.length) {
     el.innerHTML = '<span style="color:var(--muted);font-size:12px">No engagement data.</span>';
     return;
   }
 
-  el.innerHTML = sorted.map(e => {
-    // Kill mark for us killing/knocking them
-    let killMark = '';
-    if (e.killedBy === 'D282')   killMark = `<span style="color:${D}">✕</span>`;
-    else if (e.killedBy === 'S821')  killMark = `<span style="color:${S}">✕</span>`;
-    else if (e.killedBy === 'D282_k') killMark = `<span style="color:${D};opacity:.65">✕</span>`;
-    else if (e.killedBy === 'S821_k') killMark = `<span style="color:${S};opacity:.65">✕</span>`;
-
-    // Markers for enemy killing/knocking us
+  const rowsHtml = sorted.map((e, idx) => {
+    // Icon: what WE did (kill/knock them)
+    let icons = '';
+    if      (e.killedBy === 'D282')   icons += `<span style="color:${D}">✕</span>`;
+    else if (e.killedBy === 'S821')   icons += `<span style="color:${S}">✕</span>`;
+    else if (e.killedBy === 'D282_k') icons += `<span style="color:${D};opacity:.5">∼</span>`;
+    else if (e.killedBy === 'S821_k') icons += `<span style="color:${S};opacity:.5">∼</span>`;
+    // Icon: what THEY did (killed/knocked us) — one symbol per event
     for (const p of e.killedUs) {
       const isKnock = p.endsWith('_k');
-      const pName   = isKnock ? p.slice(0, -2) : p;
-      const pCol    = pName === 'D282' ? D : S;
-      killMark += `<span style="color:${R}">${isKnock ? '▽' : '●'}</span><span style="color:${pCol}">✕</span>`;
+      const pCol    = (isKnock ? p.slice(0,-2) : p) === 'D282' ? D : S;
+      icons += `<span style="color:${pCol}">${isKnock ? '↓' : '†'}</span>`;
     }
 
     const tkTotal = e.tk282 + e.tk821;
-    return `<div class="eng-row">
-      <span class="eng-name">${e.name}</span>
-      <span class="eng-stats">
-        ${killMark ? `<span style="margin-right:3px">${killMark}</span>` : ''}
-        <span style="color:${D}">${Math.round(e.d282)}</span><span style="color:var(--line)">|</span><span style="color:${S}">${Math.round(e.s821)}</span>
-        ${tkTotal > 0 ? `<span style="color:${R};font-size:10px">←${Math.round(tkTotal)}</span>` : ''}
-      </span>
-    </div>`;
+    const borderStyle = idx === sorted.length - 1 ? 'border-bottom:none' : '';
+    return `<div class="eng-row2" style="${borderStyle}">` +
+      `<div class="eng-name">${e.name}</div>` +
+      `<div class="eng-icon">${icons || '<span style="color:var(--muted)">·</span>'}</div>` +
+      `<div class="eng-d">${e.d282 > 0 ? Math.round(e.d282) : ''}</div>` +
+      `<div class="eng-s">${e.s821 > 0 ? Math.round(e.s821) : ''}</div>` +
+      `<div class="eng-tk">${tkTotal > 0 ? Math.round(tkTotal) : ''}</div>` +
+      `</div>`;
   }).join('');
+
+  el.innerHTML =
+    `<div class="eng-row2" style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding-bottom:4px;border-bottom:1px solid rgba(56,52,44,.55);">` +
+      `<div class="eng-name">Enemy</div>` +
+      `<div class="eng-icon"></div>` +
+      `<div class="eng-d" style="color:var(--accent)">D</div>` +
+      `<div class="eng-s" style="color:var(--blue)">S</div>` +
+      `<div class="eng-tk">←</div>` +
+    `</div>` + rowsHtml;
 }
 
 /* ============================================================================
@@ -2134,36 +2190,111 @@ function fmtEvent(ev) {
 /* ============================================================================
    LOADOUT DISPLAY
 ============================================================================ */
+const _HEAL_IDS  = ['Item_Heal_Bandage_C','Item_Heal_FirstAid_C','Item_Heal_MedKit_C'];
+const _BOOST_IDS = ['Item_Boost_EnergyDrink_C','Item_Boost_PainKiller_C','Item_Boost_AdrenalineSyringe_C'];
+const _AMMO_IDS  = ['Item_Ammo_556mm_C','Item_Ammo_9mm_C','Item_Ammo_762mm_C',
+                    'Item_Ammo_45ACP_C','Item_Ammo_12Gauge_C','Item_Ammo_300Magnum_C'];
+const _ITEM_SHORT = {
+  'Item_Heal_Bandage_C':'Band', 'Item_Heal_FirstAid_C':'FA', 'Item_Heal_MedKit_C':'MKit',
+  'Item_Boost_EnergyDrink_C':'ED', 'Item_Boost_PainKiller_C':'PK',
+  'Item_Boost_AdrenalineSyringe_C':'Adren',
+  'Item_Ammo_556mm_C':'5.56', 'Item_Ammo_9mm_C':'9mm', 'Item_Ammo_762mm_C':'7.62',
+  'Item_Ammo_45ACP_C':'.45',  'Item_Ammo_12Gauge_C':'12g','Item_Ammo_300Magnum_C':'.300',
+};
+
 function updateLoadout(t) {
-  const el = document.getElementById('loadoutDisplay');
-  if (!el || !MD) return;
+  if (!MD) return;
   const effectiveT = t === Infinity ? (MD.duration_s || 9999) : t;
 
-  const parts = [];
   for (const player of ['D282', 'S821']) {
+    const el  = document.getElementById(player === 'D282' ? 'loadout282' : 'loadout821');
+    if (!el) continue;
     const col = player === 'D282' ? '#f4a300' : '#4a9edd';
-    const state2 = { Main: null, Sub: null, Pistol: null, Handgun: null, Vest: 0, Headgear: 0 };
-    for (const ev of MD.events) {
-      if (ev.player !== player) continue;
+
+    // Replay equip/unequip/armor_break events (sorted by t)
+    const slots = { Main:null, Sub:null, Pistol:null, Handgun:null,
+                    Vest:null, Headgear:null, Backpack:null };
+    let vestBroken = false, helmBroken = false;
+    for (const ev of (MD.events || [])) {
       if (ev.t > effectiveT) break;
+      if (ev.player !== player) continue;
       if (ev.type === 'equip') {
-        const s = ev.slot;
-        if (s === 'Main' || s === 'Sub' || s === 'Pistol' || s === 'Handgun') state2[s] = ev.item;
-        else if (s === 'Vest') { const m = (ev.item||'').match(/\d/); if(m) state2.Vest = +m[0]; }
-        else if (s === 'Headgear') { const m = (ev.item||'').match(/\d/); if(m) state2.Headgear = +m[0]; }
+        if (ev.slot in slots) {
+          slots[ev.slot] = ev.item;
+          if (ev.slot === 'Vest')    vestBroken = false;
+          if (ev.slot === 'Headgear') helmBroken = false;
+        }
       } else if (ev.type === 'unequip') {
-        const s = ev.slot;
-        if (s === 'Main') state2.Main = null;
-        else if (s === 'Sub' || s === 'Pistol' || s === 'Handgun') state2[s] = null;
+        if (ev.slot in slots) {
+          slots[ev.slot] = null;
+          if (ev.slot === 'Vest')    vestBroken = false;
+          if (ev.slot === 'Headgear') helmBroken = false;
+        }
+      } else if (ev.type === 'armor_break') {
+        if (ev.slot === 'Vest')     vestBroken = true;
+        if (ev.slot === 'Headgear') helmBroken = true;
       }
     }
-    const pri  = state2.Main || '—';
-    const sec  = state2.Sub || state2.Pistol || state2.Handgun || '—';
-    const vest = state2.Vest ? `V${state2.Vest}` : 'V?';
-    const helm = state2.Headgear ? `H${state2.Headgear}` : 'H?';
-    parts.push(`<span style="color:${col}">${player}</span> ${pri} / ${sec} &nbsp; ${vest} ${helm}`);
+
+    // Replay inventory (sorted by t)
+    const cnt = {};
+    for (const iv of (MD.inventory || [])) {
+      if (iv.t > effectiveT) break;
+      if (iv.player !== player) continue;
+      const n = iv.n || 1;
+      if      (iv.ev === 'pick') cnt[iv.id] = (cnt[iv.id] || 0) + n;
+      else if (iv.ev === 'drop') cnt[iv.id] = Math.max(0, (cnt[iv.id] || 0) - n);
+      else if (iv.ev === 'use')  cnt[iv.id] = Math.max(0, (cnt[iv.id] || 0) - 1);
+    }
+
+    // Weapons line
+    const pri = slots.Main || '—';
+    const sec = slots.Sub || slots.Pistol || slots.Handgun || '—';
+    const wpnHtml = (pri !== '—' || sec !== '—')
+      ? `<span style="color:var(--fg)">${pri}</span>`
+        + (pri !== '—' && sec !== '—' ? `<span style="color:var(--muted)"> · </span>` : '')
+        + (sec !== '—' ? `<span style="color:var(--fg)">${sec}</span>` : '')
+      : `<span style="color:var(--muted)">No weapons</span>`;
+
+    // Gear line (vest / helmet / backpack)
+    const fmtSlot = (sName, broken) => {
+      const v = slots[sName];
+      const pfx = sName === 'Vest' ? 'V' : sName === 'Headgear' ? 'H' : 'Bag';
+      if (!v) return `<span style="color:var(--muted)">${pfx}—</span>`;
+      const m = v.match(/(\d)/);
+      const lvl = m ? m[1] : '?';
+      return broken
+        ? `<span style="color:var(--danger)" title="${v}">${pfx}${lvl}✗</span>`
+        : `<span title="${v}">${pfx}${lvl}</span>`;
+    };
+    const gearHtml = [fmtSlot('Vest',vestBroken), fmtSlot('Headgear',helmBroken), fmtSlot('Backpack',false)]
+      .join('<span style="color:var(--muted)"> · </span>');
+
+    // Heals + boosts line
+    const hbParts = [..._HEAL_IDS, ..._BOOST_IDS]
+      .map(id => ({ s: _ITEM_SHORT[id], n: cnt[id] || 0 }))
+      .filter(x => x.n > 0)
+      .map(x => `${x.s}×<b>${x.n}</b>`);
+    const healHtml = hbParts.length
+      ? hbParts.join('<span style="color:var(--muted)"> · </span>')
+      : `<span style="color:var(--muted)">—</span>`;
+
+    // Ammo line
+    const ammoParts = _AMMO_IDS
+      .map(id => ({ s: _ITEM_SHORT[id], n: cnt[id] || 0 }))
+      .filter(x => x.n > 0)
+      .map(x => `${x.s}:${x.n}`);
+    const ammoHtml = ammoParts.length
+      ? ammoParts.join('<span style="color:var(--muted)"> · </span>')
+      : `<span style="color:var(--muted)">—</span>`;
+
+    el.innerHTML =
+      `<div class="lb-hdr" style="color:${col}">${player}</div>` +
+      `<div class="lb-row">${wpnHtml}</div>` +
+      `<div class="lb-row">${gearHtml}</div>` +
+      `<div class="lb-row lb-dim">${healHtml}</div>` +
+      `<div class="lb-row lb-dim">${ammoHtml}</div>`;
   }
-  el.innerHTML = parts.join('<span style="color:#38342c"> &nbsp;|&nbsp; </span>');
 }
 
 /* ============================================================================
