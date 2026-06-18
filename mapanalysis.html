@@ -194,7 +194,7 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
 
         <!-- Engagement grouping sub-control -->
         <div class="sub-control" id="engControl">
-          <div class="sub-label">Group radius
+          <div class="sub-label">Group distance
             <span id="engGroupLabel" style="float:right;color:var(--text);font-weight:600">Off</span>
           </div>
           <div class="eng-slider-wrap">
@@ -411,9 +411,16 @@ function setCirclePhase(n) {
    ENGAGEMENT GROUPING
 ============================================================================ */
 function setEngGrouping(v) {
-  state.engGroupSlider = v;
-  const lbl = document.getElementById('engGroupLabel');
-  lbl.textContent = v===0 ? 'Off' : v===100 ? 'Max' : v+'%';
+  state.engGroupSlider=v;
+  const lbl=document.getElementById('engGroupLabel');
+  if (v===0) { lbl.textContent='Off'; }
+  else if (v>=100) { lbl.textContent='Max'; }
+  else {
+    const dc=5*Math.pow((CSZ*1.5)/5,v/100);
+    const ws=CURRENT_MAP?.world_size||816000;
+    const dm=Math.round(dc*(ws/CSZ)/100);
+    lbl.textContent=dm>=1000?`${(dm/1000).toFixed(1)}km`:`~${dm}m`;
+  }
   scheduleRedraw();
 }
 
@@ -631,9 +638,9 @@ function computeEngagementClusters() {
       const cy=group.reduce((s,e)=>s+e.cy,0)/group.length;
       const tMin=group[0].t-5;
       const tMax=group[group.length-1].t+TEMPORAL_W;
-      const involvedPlayers=[...new Set(group.map(e=>e.player))];
 
-      const ev=k=>LAYER.events[k].filter(e=>e.matchId===matchId&&involvedPlayers.includes(e.player)&&e.t>=tMin&&e.t<=tMax);
+      // Score the whole duo together (both players) not per-player
+      const ev=k=>LAYER.events[k].filter(e=>e.matchId===matchId&&e.t>=tMin&&e.t<=tMax);
       const kills      = ev('kills').length;
       const deaths     = ev('deaths').length;
       const knocks     = ev('knockdowns').length;
@@ -646,7 +653,7 @@ function computeEngagementClusters() {
       const outcome= scoreToOutcome(score);
 
       clusters.push({cx,cy,score,outcome,kills,deaths,knocks,knocked,bothDied,
-                     matchId,date:group[0].date,t:group[0].t,player:group[0].player});
+                     matchId,date:group[0].date,t:group[0].t});
     }
   }
   LAYER.engClusters=clusters;
@@ -799,46 +806,52 @@ function drawPaths() {
 
 /* ── Engagements: dots or pie charts ───────────────────────────────────── */
 function drawEngagements() {
-  const players=state.player==='both'?['D282','S821']:[state.player];
-  const filtered=LAYER.engClusters.filter(c=>players.includes(c.player));
-
+  const clusters=LAYER.engClusters;
   const slider=state.engGroupSlider;
+
   if (slider===0) {
-    // Individual small dots
     const r=4/view.scale;
-    for (const cl of filtered) {
+    for (const cl of clusters) {
       ctx.beginPath(); ctx.arc(cl.cx,cl.cy,r,0,Math.PI*2);
       ctx.fillStyle=ENG_COLOR[cl.outcome]+'cc'; ctx.fill();
       ctx.strokeStyle=ENG_COLOR[cl.outcome]; ctx.lineWidth=0.8/view.scale; ctx.stroke();
       hitTargets.push({cx:cl.cx,cy:cl.cy,r:r+4/view.scale,type:'engagement',
-        player:cl.player,outcome:cl.outcome,score:cl.score,
+        outcome:cl.outcome,score:cl.score,
         kills:cl.kills,deaths:cl.deaths,knocks:cl.knocks,knocked:cl.knocked,
         bothDied:cl.bothDied,date:cl.date,t:cl.t});
     }
   } else {
-    // Group into grid cells and draw pie charts
-    // cellSize in canvas coords: exponential from 6px to CSZ
-    const cellSize=Math.round(6*Math.pow(CSZ/6,slider/100));
-    drawEngagementPies(filtered,cellSize);
+    const distThreshold=5*Math.pow((CSZ*1.5)/5,slider/100);
+    const groups=groupEngagementsByDistance(clusters,distThreshold);
+    drawEngagementPies(groups);
   }
 }
 
-function drawEngagementPies(filtered,cellSize) {
-  // Build grid
-  const cells={};
-  for (const cl of filtered) {
-    const gx=Math.floor(cl.cx/cellSize), gy=Math.floor(cl.cy/cellSize);
-    const key=`${gx},${gy}`;
-    if (!cells[key]) cells[key]={cx:0,cy:0,n:0,outcomes:Object.fromEntries(ENG_ORDER.map(k=>[k,0]))};
-    cells[key].cx+=cl.cx; cells[key].cy+=cl.cy; cells[key].n++;
-    cells[key].outcomes[cl.outcome]++;
+function groupEngagementsByDistance(engs,dist) {
+  const n=engs.length; if(!n) return [];
+  const parent=Array.from({length:n},(_,i)=>i);
+  const d2=dist*dist;
+  function find(x){return parent[x]===x?x:(parent[x]=find(parent[x]));}
+  function union(a,b){parent[find(a)]=find(b);}
+  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
+    const dx=engs[i].cx-engs[j].cx,dy=engs[i].cy-engs[j].cy;
+    if(dx*dx+dy*dy<=d2) union(i,j);
   }
+  const gm={};
+  for(let i=0;i<n;i++){const r=find(i);if(!gm[r])gm[r]=[];gm[r].push(engs[i]);}
+  return Object.values(gm);
+}
 
-  for (const cell of Object.values(cells)) {
-    const cx=cell.cx/cell.n, cy=cell.cy/cell.n;
-    const r=Math.max(6,Math.min(28,3+Math.sqrt(cell.n)*5))/view.scale;
-    drawPieChart(cx,cy,r,cell.outcomes,cell.n);
-    hitTargets.push({cx,cy,r:r+3/view.scale,type:'eng_group',outcomes:cell.outcomes,n:cell.n});
+function drawEngagementPies(groups) {
+  for (const group of groups) {
+    const cx=group.reduce((s,c)=>s+c.cx,0)/group.length;
+    const cy=group.reduce((s,c)=>s+c.cy,0)/group.length;
+    const outcomes=Object.fromEntries(ENG_ORDER.map(k=>[k,0]));
+    for (const cl of group) outcomes[cl.outcome]++;
+    const n=group.length;
+    const r=Math.max(6,Math.min(28,3+Math.sqrt(n)*5))/view.scale;
+    drawPieChart(cx,cy,r,outcomes,n);
+    hitTargets.push({cx,cy,r:r+3/view.scale,type:'eng_group',outcomes,n});
   }
 }
 
@@ -1000,7 +1013,7 @@ function hoverMain(t){
   if(t.type==='death')      return`${pc(t.player)} died`;
   if(t.type==='drop')       return`${pc(t.player)} landed`;
   if(t.type==='knocked')    return`${pc(t.player)} knocked down`;
-  if(t.type==='engagement') return`${pc(t.player)} — <span style="color:${ENG_COLOR[t.outcome]}">${t.outcome.replace('_',' ')}</span>`;
+  if(t.type==='engagement') return`Duo engagement — <span style="color:${ENG_COLOR[t.outcome]}">${t.outcome.replace('_',' ')}</span>`;
   if(t.type==='eng_group')  return`${t.n} engagement${t.n!==1?'s':''}`;
   return t.player?pc(t.player):'';
 }
