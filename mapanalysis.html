@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map Analysis — D282 &amp; S821</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #14130f;
+  --panel:  #1e1c17;
+  --line:   #38342c;
+  --text:   #e8e3d8;
+  --muted:  #9a9385;
+  --accent: #f4a300;
+  --blue:   #4a9edd;
+  --ok:     #8fae5d;
+  --danger: #d7443e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: 14px; line-height: 1.5;
+  padding: 24px 16px;
+}
+.wrap { max-width: 1200px; margin: 0 auto; }
+
+h1 {
+  font-family: Oswald, system-ui, sans-serif; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--accent); font-size: 28px; margin-bottom: 2px;
+}
+.subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+
+.panel {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 10px; padding: 16px 18px; margin-bottom: 14px;
+}
+.panel-title {
+  font-family: Oswald, system-ui, sans-serif; text-transform: uppercase;
+  letter-spacing: 1px; font-size: 13px; color: var(--muted); margin-bottom: 12px;
+}
+
+/* ── Map tabs ────────────────────────────────────────────────────────────── */
+.map-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.map-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 10px 16px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line); background: #2a2720; transition: all .15s;
+  font-family: Oswald, system-ui, sans-serif; text-transform: uppercase;
+  letter-spacing: .5px; font-size: 12px; color: var(--muted); min-width: 80px;
+}
+.map-tab:hover { border-color: var(--accent); color: var(--text); }
+.map-tab.active { background: var(--accent); color: #14130f; border-color: var(--accent); font-weight: 600; }
+.map-tab .tab-count { font-size: 10px; opacity: .8; font-family: inherit; }
+
+/* ── Filters ─────────────────────────────────────────────────────────────── */
+.filter-row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.filter-group { display: flex; flex-direction: column; gap: 6px; }
+.filter-label {
+  font-family: Oswald, system-ui, sans-serif; font-size: 11px;
+  letter-spacing: 1px; color: var(--muted); text-transform: uppercase;
+}
+.btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn {
+  background: #2a2720; color: var(--text); border: 1px solid var(--line);
+  padding: 7px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;
+  font-family: inherit; transition: border-color .1s; white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.active { background: var(--accent); color: #14130f; border-color: var(--accent); font-weight: 600; }
+.btn.blue-active { background: var(--blue); color: #fff; border-color: var(--blue); font-weight: 600; }
+
+/* ── Date slider ─────────────────────────────────────────────────────────── */
+.date-slider-outer { min-width: 220px; flex: 1; max-width: 420px; }
+.date-slider-wrap { position: relative; height: 36px; margin-top: 4px; }
+.slider-track-bg { position: absolute; top: 10px; left: 0; right: 0; height: 4px; background: var(--line); border-radius: 2px; pointer-events: none; }
+.slider-track-fill { position: absolute; top: 10px; height: 4px; background: var(--accent); border-radius: 2px; pointer-events: none; }
+.date-slider-wrap input[type=range] {
+  position: absolute; top: 0; left: 0; width: 100%;
+  appearance: none; -webkit-appearance: none; background: transparent;
+  height: 24px; pointer-events: none; border: none; padding: 0; outline: none;
+}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--accent); border: 2px solid var(--bg);
+  cursor: grab; pointer-events: all; transition: transform .1s;
+}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.2); }
+.date-slider-wrap input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--accent);
+  border: 2px solid var(--bg); cursor: grab; pointer-events: all;
+}
+.slider-labels { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; }
+.slider-tick { position: absolute; transform: translateX(-50%); font-size: 10px; color: var(--muted); white-space: nowrap; }
+.date-range-display { font-size: 12px; color: var(--text); margin-top: 2px; min-height: 18px; }
+.date-range-display span { color: var(--accent); font-weight: 600; }
+.match-count-badge {
+  background: #2a2720; border: 1px solid var(--line); border-radius: 5px;
+  padding: 5px 12px; font-size: 12px; color: var(--muted); white-space: nowrap;
+}
+.match-count-badge strong { color: var(--accent); }
+
+/* ── Main layout ─────────────────────────────────────────────────────────── */
+.main-layout {
+  display: grid; grid-template-columns: 1fr 260px; gap: 14px; align-items: start;
+}
+@media (max-width: 820px) { .main-layout { grid-template-columns: 1fr; } }
+
+/* ── Canvas area ─────────────────────────────────────────────────────────── */
+.canvas-wrap {
+  position: relative; background: #0a0906;
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+}
+#mapCanvas {
+  display: block; width: 100%; aspect-ratio: 1/1;
+  cursor: grab; touch-action: none;
+}
+#mapCanvas.grabbing { cursor: grabbing; }
+
+.canvas-toolbar {
+  position: absolute; top: 10px; right: 10px;
+  display: flex; flex-direction: column; gap: 4px; z-index: 10;
+}
+.canvas-btn {
+  width: 30px; height: 30px; background: rgba(30,28,23,.85); border: 1px solid var(--line);
+  border-radius: 6px; color: var(--text); font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: border-color .1s;
+}
+.canvas-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Loading overlay */
+.canvas-loading {
+  position: absolute; inset: 0; background: rgba(20,19,15,.8);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; z-index: 20; border-radius: 10px;
+}
+.canvas-loading.hidden { display: none; }
+.load-bar-wrap { width: 200px; height: 4px; background: var(--line); border-radius: 2px; }
+.load-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width .2s; }
+.load-text { font-size: 12px; color: var(--muted); }
+
+/* Hover info tooltip */
+#hoverInfo {
+  position: absolute; bottom: 12px; left: 12px;
+  background: rgba(30,28,23,.92); border: 1px solid var(--line);
+  border-radius: 7px; padding: 8px 12px; font-size: 12px;
+  max-width: 240px; pointer-events: none; z-index: 15;
+  opacity: 0; transition: opacity .15s;
+}
+#hoverInfo.visible { opacity: 1; }
+#hoverInfo .hi-type { font-family: Oswald, sans-serif; text-transform: uppercase; font-size: 10px; color: var(--muted); margin-bottom: 2px; }
+#hoverInfo .hi-main { font-weight: 600; margin-bottom: 2px; }
+#hoverInfo .hi-sub  { color: var(--muted); font-size: 11px; }
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+.sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+/* Layer toggles */
+.layer-list { display: flex; flex-direction: column; gap: 2px; }
+.layer-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 8px; border-radius: 6px; cursor: pointer;
+  transition: background .1s; user-select: none;
+}
+.layer-row:hover { background: rgba(255,255,255,.04); }
+.layer-row.active { background: rgba(255,255,255,.06); }
+.layer-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid transparent;
+}
+.layer-row.active .layer-dot { border-color: rgba(255,255,255,.3); }
+.layer-name { flex: 1; font-size: 13px; }
+.layer-row.active .layer-name { color: var(--text); }
+.layer-row:not(.active) .layer-name { color: var(--muted); }
+.layer-key {
+  font-size: 10px; font-family: Oswald, sans-serif; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--muted);
+}
+
+/* Circle phase control */
+.phase-control {
+  margin-top: 6px; padding: 8px; background: rgba(0,0,0,.2);
+  border-radius: 6px; display: none;
+}
+.phase-control.visible { display: block; }
+.phase-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.phase-btns { display: flex; gap: 3px; flex-wrap: wrap; }
+.phase-btn {
+  width: 28px; height: 22px; font-size: 11px; border-radius: 4px;
+  border: 1px solid var(--line); background: #2a2720; color: var(--muted);
+  cursor: pointer; font-family: inherit; transition: all .1s;
+}
+.phase-btn:hover { border-color: var(--blue); color: var(--text); }
+.phase-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); font-weight: 600; }
+
+/* Stats cards */
+.stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid rgba(56,52,44,.4); font-size: 12px; }
+.stat-row:last-child { border-bottom: none; }
+.stat-key { color: var(--muted); }
+.stat-val { font-weight: 600; font-family: Oswald, sans-serif; font-size: 14px; }
+.stat-val.amber { color: var(--accent); }
+.stat-val.blue  { color: var(--blue); }
+
+/* Drop zone mini-list */
+.drop-zone-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; }
+.drop-zone-bar-wrap { flex: 1; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.drop-zone-bar { height: 100%; border-radius: 2px; }
+
+/* ── Site nav ─────────────────────────────────────────────────────────────── */
+#siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
+#siteNavBtn { width: 34px; height: 34px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; color: var(--accent); font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .15s; }
+#siteNavBtn:hover { border-color: var(--accent); }
+#siteNavMenu { display: none; position: absolute; top: 40px; left: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 6px; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,.6); }
+#siteNavMenu.open { display: block; }
+#siteNavMenu a { display: block; padding: 9px 14px; color: var(--text); text-decoration: none; border-radius: 7px; font-size: 13px; font-family: Oswald, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .5px; transition: background .1s, color .1s; }
+#siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
+#siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
+#siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+</style>
+</head>
+
+<body>
+<div id="siteNav">
+  <button id="siteNavBtn" onclick="toggleSiteNav()" title="Navigate">&#9776;</button>
+  <div id="siteNavMenu">
+    <a href="index.html">Home</a>
+    <div class="nav-sep"></div>
+    <a href="stats.html">PUBG Stats</a>
+    <a href="mapanalysis.html" class="nav-cur">Map Analysis</a>
+    <a href="match.html">Match Analysis</a>
+    <a href="pubg.html">Loadout Planner</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1>Map Analysis</h1>
+  <p class="subtitle">Aggregate patterns across all matches — heatmaps, routes, circles &amp; events</p>
+
+  <!-- MAP SELECTOR -->
+  <div class="panel">
+    <div class="panel-title">Select Map</div>
+    <div class="map-tabs" id="mapTabs"><!-- built on boot --></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="panel">
+    <div class="filter-row">
+
+      <div class="filter-group">
+        <span class="filter-label">Player</span>
+        <div class="btn-group">
+          <button class="btn" data-f="player:both"  onclick="setPlayer('both')">Both</button>
+          <button class="btn" data-f="player:D282"  onclick="setPlayer('D282')">D282</button>
+          <button class="btn" data-f="player:S821"  onclick="setPlayer('S821')">S821</button>
+        </div>
+      </div>
+
+      <div class="filter-group date-slider-outer">
+        <span class="filter-label">Date Range</span>
+        <div class="date-slider-wrap" id="dateSliderWrap">
+          <div class="slider-track-bg"></div>
+          <div class="slider-track-fill" id="sliderFill"></div>
+          <input type="range" id="sliderMin" min="0" value="0">
+          <input type="range" id="sliderMax" value="0">
+          <div class="slider-labels" id="sliderLabels"></div>
+        </div>
+        <div class="date-range-display" id="dateRangeDisplay"></div>
+      </div>
+
+      <div class="filter-group" style="justify-content:flex-end">
+        <span class="filter-label">&nbsp;</span>
+        <div class="match-count-badge" id="matchCountBadge">Loading…</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+
+    <!-- MAP CANVAS -->
+    <div class="canvas-wrap">
+      <canvas id="mapCanvas"></canvas>
+      <div class="canvas-toolbar">
+        <button class="canvas-btn" onclick="zoomStep(1.35)" title="Zoom in">+</button>
+        <button class="canvas-btn" onclick="zoomStep(1/1.35)" title="Zoom out">−</button>
+        <button class="canvas-btn" onclick="resetView()" title="Reset view">⊡</button>
+      </div>
+      <div id="canvasLoading" class="canvas-loading">
+        <div class="load-text" id="loadText">Loading matches…</div>
+        <div class="load-bar-wrap"><div class="load-bar" id="loadBar" style="width:0%"></div></div>
+      </div>
+      <div id="hoverInfo">
+        <div class="hi-type" id="hiType"></div>
+        <div class="hi-main" id="hiMain"></div>
+        <div class="hi-sub"  id="hiSub"></div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <div class="panel" style="padding:14px">
+        <div class="panel-title">Layers</div>
+        <div class="layer-list" id="layerList">
+          <!-- built by JS -->
+        </div>
+        <div class="phase-control" id="phaseControl">
+          <div class="phase-label">Circle phase</div>
+          <div class="phase-btns" id="phaseBtns"><!-- built by JS --></div>
+        </div>
+      </div>
+
+      <div class="panel" style="padding:14px" id="statsPanel">
+        <div class="panel-title">Session Stats</div>
+        <p style="color:var(--muted);font-size:12px;font-style:italic">Select a map to see stats</p>
+      </div>
+
+      <div class="panel" style="padding:14px" id="dropZonePanel" style="display:none">
+        <div class="panel-title">Landing Zones</div>
+        <div id="dropZoneList"></div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- .wrap -->
+
+<script>
+/* ============================================================================
+   CONSTANTS
+============================================================================ */
+const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
+const CSZ = 720; // canvas internal resolution
+
+const LAYER_DEFS = [
+  { id: 'heatmap',     label: 'Position Heatmap',  color: '#ff6b35', defaultOn: true  },
+  { id: 'paths',       label: 'Rotation Paths',    color: '#a0a0a0', defaultOn: false },
+  { id: 'drops',       label: 'Landing Zones',     color: '#8fae5d', defaultOn: true  },
+  { id: 'circles',     label: 'Circle Zones',      color: '#4a9edd', defaultOn: false },
+  { id: 'deaths',      label: 'Deaths',            color: '#d7443e', defaultOn: true  },
+  { id: 'kills',       label: 'Kills',             color: '#f4a300', defaultOn: true  },
+  { id: 'knocked',     label: 'Got Knocked',       color: '#e07030', defaultOn: false },
+  { id: 'engagements', label: 'Engagements',       color: '#c060c0', defaultOn: false },
+];
+
+/* ============================================================================
+   STATE
+============================================================================ */
+const state = {
+  map:         null,         // selected map name (e.g. "Erangel")
+  player:      'both',
+  dateIdxMin:  0,
+  dateIdxMax:  0,
+  layers:      Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.defaultOn])),
+  circlePhase: 3,            // 1-8
+};
+
+/* ============================================================================
+   DATA
+============================================================================ */
+const DATA = {
+  maps:       null,   // maps.json
+  matches:    null,   // matches.json (duo-only)
+  mapDates:   {},     // mapName → sorted unique dates
+};
+const MATCH_CACHE = new Map(); // match_id → processed match detail
+
+// Aggregated layer data for current selection
+const LAYER = {
+  positions:   { D282: [], S821: [] },
+  drops:       [],              // [{cx,cy,player,matchId,date}]
+  paths:       [],              // [{pts:[{cx,cy}], player, matchId}]
+  events: {
+    deaths:      [],            // [{cx,cy,player,matchId,t,date}]
+    kills:       [],            // [{cx,cy,player,matchId,t,weapon,target,date}]
+    knocked:     [],            // [{cx,cy,player,matchId,t,date}]
+    engagements: [],            // [{cx,cy,player,matchId,t,weapon,damage,date}]
+  },
+  circlePhases: [],             // [{circles:[{cx,cy,r}], matchId}] — one entry per match, circles[] indexed by phase
+  heatmapCanvas: { D282: null, S821: null },
+};
+
+// Hover hit targets (rebuilt each draw)
+let hitTargets = [];
+
+/* ============================================================================
+   VIEW
+============================================================================ */
+const canvas = document.getElementById('mapCanvas');
+canvas.width  = CSZ;
+canvas.height = CSZ;
+const ctx = canvas.getContext('2d');
+
+const view = { scale: 1, offsetX: 0, offsetY: 0 };
+let   drag  = null;
+let   mapImg = new Image();
+let   CURRENT_MAP = null; // maps.json entry for selected map
+
+function w2c(x, y) {
+  const ws = CURRENT_MAP?.world_size || 816000;
+  return { cx: (x / ws) * CSZ, cy: (y / ws) * CSZ };
+}
+
+/* ============================================================================
+   BOOT
+============================================================================ */
+async function boot() {
+  const [mapsData, matchesData] = await Promise.all([
+    fetch('stats-data/maps.json').then(r => r.json()),
+    fetch('stats-data/matches.json').then(r => r.json()),
+  ]);
+
+  DATA.maps    = mapsData;
+  DATA.matches = matchesData.filter(m =>
+    m.players['D282']?.placement != null && m.players['S821']?.placement != null);
+
+  // Build per-map date arrays
+  for (const m of DATA.matches) {
+    const name = m.map;
+    if (!name) continue;
+    if (!DATA.mapDates[name]) DATA.mapDates[name] = new Set();
+    DATA.mapDates[name].add(m.created_at.slice(0, 10));
+  }
+  for (const k of Object.keys(DATA.mapDates))
+    DATA.mapDates[k] = [...DATA.mapDates[k]].sort();
+
+  buildMapTabs();
+  buildLayerList();
+  buildPhaseBtns();
+
+  // Default to map with most games
+  const topMap = Object.entries(
+    DATA.matches.reduce((acc, m) => { acc[m.map] = (acc[m.map] || 0) + 1; return acc; }, {})
+  ).sort((a, b) => b[1] - a[1])[0]?.[0];
+
+  if (topMap) selectMap(topMap);
+}
+
+/* ============================================================================
+   MAP TABS
+============================================================================ */
+function buildMapTabs() {
+  const counts = DATA.matches.reduce((acc, m) => {
+    if (m.map) acc[m.map] = (acc[m.map] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Find which maps have entries in maps.json
+  const nameToKey = {};
+  for (const [key, info] of Object.entries(DATA.maps))
+    nameToKey[info.name] = key;
+
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+  document.getElementById('mapTabs').innerHTML = sorted.map(([name, count]) => `
+    <div class="map-tab" id="mapTab_${name.replace(/\s/g,'_')}" onclick="selectMap('${name}')">
+      <span>${name}</span>
+      <span class="tab-count">${count} games</span>
+    </div>`
+  ).join('');
+}
+
+function selectMap(name) {
+  state.map = name;
+
+  document.querySelectorAll('.map-tab').forEach(el =>
+    el.classList.toggle('active', el.id === `mapTab_${name.replace(/\s/g,'_')}`));
+
+  // Find map info
+  CURRENT_MAP = Object.values(DATA.maps).find(m => m.name === name) || null;
+
+  // Load map image
+  if (CURRENT_MAP) {
+    mapImg = new Image();
+    mapImg.onload  = () => scheduleRedraw();
+    mapImg.onerror = () => scheduleRedraw();
+    mapImg.src = CURRENT_MAP.image_url;
+  }
+
+  // Build date slider for this map
+  const dates = DATA.mapDates[name] || [];
+  state.dateIdxMin = 0;
+  state.dateIdxMax = Math.max(0, dates.length - 1);
+  buildDateSlider(dates);
+  resetView();
+
+  loadAndRender();
+}
+
+/* ============================================================================
+   DATE SLIDER
+============================================================================ */
+function buildDateSlider(dates) {
+  const n = dates.length;
+  const slMin = document.getElementById('sliderMin');
+  const slMax = document.getElementById('sliderMax');
+  slMin.min = 0; slMin.max = n - 1; slMin.value = 0;
+  slMax.min = 0; slMax.max = n - 1; slMax.value = n - 1;
+
+  const labelsEl = document.getElementById('sliderLabels');
+  labelsEl.style.height = '16px';
+  const pct = i => n <= 1 ? 50 : (i / (n - 1)) * 100;
+  labelsEl.innerHTML = dates.map((d, i) => {
+    const [, mm, dd] = d.split('-');
+    return `<span class="slider-tick" style="left:${pct(i)}%">${mm}/${dd}</span>`;
+  }).join('');
+
+  slMin.oninput = () => {
+    if (+slMin.value > +slMax.value) slMax.value = slMin.value;
+    state.dateIdxMin = +slMin.value;
+    state.dateIdxMax = +slMax.value;
+    updateSliderFill(dates);
+    loadAndRender();
+  };
+  slMax.oninput = () => {
+    if (+slMax.value < +slMin.value) slMin.value = slMax.value;
+    state.dateIdxMin = +slMin.value;
+    state.dateIdxMax = +slMax.value;
+    updateSliderFill(dates);
+    loadAndRender();
+  };
+  updateSliderFill(dates);
+}
+
+function updateSliderFill(dates) {
+  if (!dates.length) return;
+  const n    = dates.length;
+  const minP = n <= 1 ? 0   : (state.dateIdxMin / (n - 1)) * 100;
+  const maxP = n <= 1 ? 100 : (state.dateIdxMax / (n - 1)) * 100;
+  const fill = document.getElementById('sliderFill');
+  fill.style.left  = minP + '%';
+  fill.style.width = (maxP - minP) + '%';
+  const fmt = iso => { const [,mm,dd] = iso.split('-'); return `${mm}/${dd}`; };
+  const d0 = dates[state.dateIdxMin], d1 = dates[state.dateIdxMax];
+  document.getElementById('dateRangeDisplay').innerHTML =
+    d0 === d1 ? `<span>${fmt(d0)}</span>` : `<span>${fmt(d0)}</span> → <span>${fmt(d1)}</span>`;
+}
+
+/* ============================================================================
+   LAYER LIST
+============================================================================ */
+function buildLayerList() {
+  document.getElementById('layerList').innerHTML = LAYER_DEFS.map(l => `
+    <div class="layer-row ${state.layers[l.id] ? 'active' : ''}"
+         id="layerRow_${l.id}" onclick="toggleLayer('${l.id}')">
+      <div class="layer-dot" style="background:${l.color}"></div>
+      <span class="layer-name">${l.label}</span>
+    </div>`
+  ).join('');
+}
+
+function toggleLayer(id) {
+  state.layers[id] = !state.layers[id];
+  document.getElementById(`layerRow_${id}`)?.classList.toggle('active', state.layers[id]);
+  const phaseCtrl = document.getElementById('phaseControl');
+  if (phaseCtrl) phaseCtrl.classList.toggle('visible', state.layers.circles);
+  scheduleRedraw();
+}
+
+/* ============================================================================
+   PHASE BUTTONS
+============================================================================ */
+function buildPhaseBtns() {
+  document.getElementById('phaseBtns').innerHTML =
+    ['All', 1, 2, 3, 4, 5, 6, 7, 8].map(n => `
+      <button class="phase-btn ${(n === 'All' ? 0 : n) === state.circlePhase ? 'active' : ''}"
+              onclick="setCirclePhase(${n === 'All' ? 0 : n})">${n}</button>`
+    ).join('');
+}
+
+function setCirclePhase(n) {
+  state.circlePhase = n;
+  document.querySelectorAll('.phase-btn').forEach((btn, i) =>
+    btn.classList.toggle('active', (i === 0 ? 0 : i) === n));
+  scheduleRedraw();
+}
+
+/* ============================================================================
+   PLAYER FILTER
+============================================================================ */
+function setPlayer(p) {
+  state.player = p;
+  document.querySelectorAll('[data-f]').forEach(el => {
+    const [, val] = el.dataset.f.split(':');
+    el.classList.toggle('active', val === p);
+  });
+  rebuildHeatmaps();
+  scheduleRedraw();
+  renderStats();
+}
+
+/* ============================================================================
+   FILTERED MATCHES (for current map + date range)
+============================================================================ */
+function filteredMatches() {
+  if (!state.map) return [];
+  const dates = DATA.mapDates[state.map] || [];
+  const lo    = dates[state.dateIdxMin];
+  const hi    = dates[state.dateIdxMax];
+  return DATA.matches.filter(m =>
+    m.map === state.map &&
+    m.created_at.slice(0, 10) >= lo &&
+    m.created_at.slice(0, 10) <= hi
+  );
+}
+
+/* ============================================================================
+   LOAD + PROCESS
+============================================================================ */
+async function loadAndRender() {
+  const matches = filteredMatches();
+  if (!matches.length) {
+    clearLayers();
+    scheduleRedraw();
+    renderStats();
+    return;
+  }
+
+  // Show loading overlay
+  setLoading(true, 0, matches.length);
+
+  // Fetch uncached match files
+  const toFetch = matches.filter(m => !MATCH_CACHE.has(m.match_id));
+  let loaded = matches.length - toFetch.length;
+
+  await Promise.all(toFetch.map(async m => {
+    try {
+      const data = await fetch(`stats-data/matches/${m.match_id}.json`).then(r => r.json());
+      processMatch(data, m);
+    } catch (e) {
+      console.warn('Failed to load', m.match_id, e);
+    }
+    loaded++;
+    setLoading(true, loaded, matches.length);
+  }));
+
+  // Aggregate layers from cache for filtered matches
+  aggregateLayers(matches);
+  rebuildHeatmaps();
+
+  setLoading(false, 1, 1);
+  renderStats();
+  scheduleRedraw();
+}
+
+function setLoading(visible, done, total) {
+  const el = document.getElementById('canvasLoading');
+  const bar = document.getElementById('loadBar');
+  const txt = document.getElementById('loadText');
+  el.classList.toggle('hidden', !visible);
+  if (visible) {
+    bar.style.width = Math.round((done / total) * 100) + '%';
+    txt.textContent = `Loading ${done} / ${total} matches…`;
+  }
+}
+
+/* ============================================================================
+   PROCESS SINGLE MATCH — extract and store in MATCH_CACHE
+============================================================================ */
+function processMatch(matchDetail, matchMeta) {
+  const ws   = CURRENT_MAP?.world_size || 816000;
+  const tc   = (x, y) => ({ cx: (x / ws) * CSZ, cy: (y / ws) * CSZ });
+  const date = matchMeta.created_at.slice(0, 10);
+  const mid  = matchDetail.match_id;
+
+  // ── Positions (heatmap + paths) ──────────────────────────────────────────
+  const posData = {};
+  const pathData = {};
+  for (const player of ['D282', 'S821']) {
+    const raw = matchDetail.positions?.[player] || [];
+    const heatPts = []; const pathPts = [];
+    let lastHeatT = -Infinity; let lastPathT = -Infinity;
+
+    for (const p of raw) {
+      if (p.tr === 'plane' || p.tr === 'chute') continue;
+      if (p.x == null || p.y == null) continue;
+      const { cx, cy } = tc(p.x, p.y);
+      if (p.t - lastHeatT >= 4) { heatPts.push({ cx, cy }); lastHeatT = p.t; }
+      if (p.t - lastPathT >= 12) { pathPts.push({ cx, cy, tr: p.tr }); lastPathT = p.t; }
+    }
+    posData[player]  = heatPts;
+    pathData[player] = pathPts;
+  }
+
+  // ── Drop zones ────────────────────────────────────────────────────────────
+  const dropData = {};
+  for (const player of ['D282', 'S821']) {
+    const raw  = matchDetail.positions?.[player] || [];
+    let prev   = null;
+    for (const p of raw) {
+      if (p.x == null) continue;
+      if ((prev?.tr === 'chute' || prev?.tr === 'plane') && p.tr === 'foot') {
+        dropData[player] = { ...tc(p.x, p.y), player, matchId: mid, date };
+        break;
+      }
+      if (p.tr === 'foot' && !prev) {
+        dropData[player] = { ...tc(p.x, p.y), player, matchId: mid, date };
+        break;
+      }
+      prev = p;
+    }
+  }
+
+  // ── Events ────────────────────────────────────────────────────────────────
+  const evData = { deaths: [], kills: [], knocked: [], engagements: [] };
+  for (const ev of (matchDetail.events || [])) {
+    if (!['D282','S821'].includes(ev.player)) continue;
+    if (ev.x == null || ev.y == null) continue;
+    const pt = tc(ev.x, ev.y);
+    const base = { ...pt, player: ev.player, matchId: mid, date, t: ev.t };
+    if (ev.type === 'death')      evData.deaths.push(base);
+    if (ev.type === 'kill')       evData.kills.push({ ...base, weapon: ev.weapon, target: ev.target });
+    if (ev.type === 'knocked')    evData.knocked.push(base);
+    if (ev.type === 'dmg_dealt')  evData.engagements.push({ ...base, weapon: ev.weapon, damage: ev.damage, target: ev.target });
+  }
+
+  // ── Circle phases ─────────────────────────────────────────────────────────
+  const rawCircles = matchDetail.circles || [];
+  const circlePhases = extractCirclePhases(rawCircles, ws);
+
+  MATCH_CACHE.set(mid, { posData, pathData, dropData, evData, circlePhases, date });
+}
+
+function extractCirclePhases(rawCircles, ws) {
+  if (!rawCircles.length) return [];
+  const phases = [];
+  let prevR = Infinity;
+
+  for (const c of rawCircles) {
+    if (c.safe_r < prevR * 0.88) { // >12% radius drop = new phase
+      const cx = (c.safe_x / ws) * CSZ;
+      const cy = (c.safe_y / ws) * CSZ;
+      const r  = (c.safe_r / ws) * CSZ;
+      phases.push({ cx, cy, r, safe_r: c.safe_r });
+      prevR = c.safe_r;
+    }
+  }
+  return phases;
+}
+
+/* ============================================================================
+   AGGREGATE LAYERS from MATCH_CACHE for current filtered set
+============================================================================ */
+function aggregateLayers(matches) {
+  const L = LAYER;
+  L.positions   = { D282: [], S821: [] };
+  L.drops       = [];
+  L.paths       = [];
+  L.events.deaths      = [];
+  L.events.kills       = [];
+  L.events.knocked     = [];
+  L.events.engagements = [];
+  L.circlePhases       = [];
+
+  for (const m of matches) {
+    const cached = MATCH_CACHE.get(m.match_id);
+    if (!cached) continue;
+
+    for (const player of ['D282', 'S821'])
+      L.positions[player].push(...(cached.posData[player] || []));
+
+    for (const player of ['D282', 'S821'])
+      if (cached.pathData[player]?.length)
+        L.paths.push({ pts: cached.pathData[player], player, matchId: m.match_id, date: cached.date });
+
+    for (const player of ['D282', 'S821'])
+      if (cached.dropData[player]) L.drops.push(cached.dropData[player]);
+
+    L.events.deaths.push(...cached.evData.deaths);
+    L.events.kills.push(...cached.evData.kills);
+    L.events.knocked.push(...cached.evData.knocked);
+    L.events.engagements.push(...cached.evData.engagements);
+    L.circlePhases.push({ phases: cached.circlePhases, matchId: m.match_id, date: cached.date });
+  }
+
+  document.getElementById('matchCountBadge').innerHTML =
+    `<strong>${matches.length}</strong> match${matches.length !== 1 ? 'es' : ''} on ${state.map}`;
+}
+
+function clearLayers() {
+  LAYER.positions   = { D282: [], S821: [] };
+  LAYER.drops       = [];
+  LAYER.paths       = [];
+  LAYER.events      = { deaths: [], kills: [], knocked: [], engagements: [] };
+  LAYER.circlePhases = [];
+  LAYER.heatmapCanvas = { D282: null, S821: null };
+  document.getElementById('matchCountBadge').textContent = '0 matches';
+}
+
+/* ============================================================================
+   HEATMAP BUILD
+============================================================================ */
+function rebuildHeatmaps() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  for (const p of ['D282', 'S821']) {
+    if (players.includes(p) && LAYER.positions[p].length)
+      LAYER.heatmapCanvas[p] = buildHeatmapCanvas(LAYER.positions[p], p);
+    else
+      LAYER.heatmapCanvas[p] = null;
+  }
+}
+
+function buildHeatmapCanvas(points, player) {
+  const sz  = CSZ;
+  const off = document.createElement('canvas');
+  off.width = sz; off.height = sz;
+  const oc  = off.getContext('2d');
+
+  const radius = Math.round(sz * 0.021);
+
+  for (const { cx, cy } of points) {
+    const g = oc.createRadialGradient(cx, cy, 0, cx, cy, radius);
+    g.addColorStop(0, 'rgba(0,0,0,0.055)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    oc.fillStyle = g;
+    oc.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+  }
+
+  const idata = oc.getImageData(0, 0, sz, sz);
+  let maxA = 0;
+  for (let i = 3; i < idata.data.length; i += 4)
+    maxA = Math.max(maxA, idata.data[i]);
+  if (maxA === 0) return null;
+
+  const out = new ImageData(sz, sz);
+  for (let i = 0; i < idata.data.length; i += 4) {
+    const a = idata.data[i + 3];
+    if (a === 0) continue;
+    const v        = a / maxA;
+    const t        = Math.pow(v, 0.42);
+    const [r, g, b] = player === 'D282' ? amberGrad(t) : blueGrad(t);
+    out.data[i]     = r;
+    out.data[i + 1] = g;
+    out.data[i + 2] = b;
+    out.data[i + 3] = Math.min(255, Math.round(t * 220));
+  }
+
+  const out_c = document.createElement('canvas');
+  out_c.width = sz; out_c.height = sz;
+  out_c.getContext('2d').putImageData(out, 0, 0);
+  return out_c;
+}
+
+function amberGrad(t) {
+  if (t < 0.25) { const s = t/0.25; return [Math.round(80+100*s), Math.round(20+40*s), 0]; }
+  if (t < 0.55) { const s = (t-0.25)/0.30; return [Math.round(180+55*s), Math.round(60+80*s), 0]; }
+  if (t < 0.80) { const s = (t-0.55)/0.25; return [235, Math.round(140+80*s), Math.round(s*30)]; }
+  { const s = (t-0.80)/0.20; return [Math.round(235+20*s), Math.round(220+35*s), Math.round(30+180*s)]; }
+}
+
+function blueGrad(t) {
+  if (t < 0.25) { const s = t/0.25; return [0, Math.round(20+40*s), Math.round(100+100*s)]; }
+  if (t < 0.55) { const s = (t-0.25)/0.30; return [0, Math.round(60+100*s), Math.round(200+35*s)]; }
+  if (t < 0.80) { const s = (t-0.55)/0.25; return [Math.round(s*80), Math.round(160+60*s), 235]; }
+  { const s = (t-0.80)/0.20; return [Math.round(80+140*s), Math.round(220+35*s), Math.round(235+20*s)]; }
+}
+
+/* ============================================================================
+   DRAW
+============================================================================ */
+let rafPending = false;
+function scheduleRedraw() {
+  if (!rafPending) { rafPending = true; requestAnimationFrame(drawFrame); }
+}
+
+function drawFrame() {
+  rafPending = false;
+  draw();
+}
+
+function draw() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, CSZ, CSZ);
+
+  if (!CURRENT_MAP) {
+    ctx.fillStyle = '#0a0906';
+    ctx.fillRect(0, 0, CSZ, CSZ);
+    ctx.fillStyle = '#9a9385';
+    ctx.font = '16px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('Select a map', CSZ/2, CSZ/2);
+    return;
+  }
+
+  ctx.setTransform(view.scale, 0, 0, view.scale, view.offsetX, view.offsetY);
+
+  // 1. Map image
+  if (mapImg.complete && mapImg.naturalWidth > 0) {
+    ctx.drawImage(mapImg, 0, 0, CSZ, CSZ);
+    ctx.fillStyle = 'rgba(0,0,0,0.30)';
+    ctx.fillRect(0, 0, CSZ, CSZ);
+  } else {
+    ctx.fillStyle = '#0a0906';
+    ctx.fillRect(0, 0, CSZ, CSZ);
+  }
+
+  // 2. Position heatmap
+  if (state.layers.heatmap) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+    for (const p of players) {
+      if (LAYER.heatmapCanvas[p]) {
+        ctx.globalAlpha = 0.80;
+        ctx.drawImage(LAYER.heatmapCanvas[p], 0, 0, CSZ, CSZ);
+      }
+    }
+    ctx.restore();
+  }
+
+  hitTargets = [];
+
+  // 3. Circle zones
+  if (state.layers.circles) drawCircles();
+
+  // 4. Paths
+  if (state.layers.paths) drawPaths();
+
+  // 5. Engagements (draw before deaths/kills so they're underneath)
+  if (state.layers.engagements) drawEngagements();
+
+  // 6. Drop zones
+  if (state.layers.drops) drawDropZones();
+
+  // 7. Knocked
+  if (state.layers.knocked) drawKnocked();
+
+  // 8. Kills
+  if (state.layers.kills) drawKills();
+
+  // 9. Deaths (on top)
+  if (state.layers.deaths) drawDeaths();
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+/* ── Circle zones ───────────────────────────────────────────────────────── */
+function drawCircles() {
+  const phase = state.circlePhase; // 0 = all
+  for (const matchCircles of LAYER.circlePhases) {
+    const phases = matchCircles.phases;
+    if (!phases.length) continue;
+
+    if (phase === 0) {
+      // Draw all phases with fading opacity
+      phases.forEach((c, i) => {
+        const t = 1 - i / Math.max(1, phases.length - 1);
+        ctx.beginPath();
+        ctx.arc(c.cx, c.cy, c.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(100,160,255,${0.08 + t * 0.12})`;
+        ctx.lineWidth = 1 / view.scale;
+        ctx.stroke();
+      });
+    } else {
+      const c = phases[Math.min(phase - 1, phases.length - 1)];
+      if (!c) continue;
+      // Filled safe zone
+      ctx.beginPath();
+      ctx.arc(c.cx, c.cy, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(74,158,221,0.07)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(74,158,221,0.55)';
+      ctx.lineWidth = 1.5 / view.scale;
+      ctx.stroke();
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(c.cx, c.cy, 2 / view.scale, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(74,158,221,0.6)';
+      ctx.fill();
+    }
+  }
+}
+
+/* ── Paths ──────────────────────────────────────────────────────────────── */
+function drawPaths() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  const filtered = LAYER.paths.filter(p => players.includes(p.player));
+
+  for (const path of filtered) {
+    if (path.pts.length < 2) continue;
+    const col = PLAYER_COLOR[path.player] + '38'; // low opacity
+    ctx.beginPath();
+    ctx.moveTo(path.pts[0].cx, path.pts[0].cy);
+    for (let i = 1; i < path.pts.length; i++)
+      ctx.lineTo(path.pts[i].cx, path.pts[i].cy);
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1.5 / view.scale;
+    ctx.setLineDash([]);
+    ctx.stroke();
+  }
+}
+
+/* ── Drop zones ─────────────────────────────────────────────────────────── */
+function drawDropZones() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  const r  = 5 / view.scale;
+  const rO = 8 / view.scale;
+
+  for (const drop of LAYER.drops) {
+    if (!players.includes(drop.player)) continue;
+    const col = PLAYER_COLOR[drop.player];
+
+    ctx.beginPath();
+    ctx.arc(drop.cx, drop.cy, rO, 0, Math.PI * 2);
+    ctx.strokeStyle = col + '88';
+    ctx.lineWidth = 1 / view.scale;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(drop.cx, drop.cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = col + 'cc';
+    ctx.fill();
+
+    hitTargets.push({
+      cx: drop.cx, cy: drop.cy, r: rO,
+      type: 'drop', player: drop.player,
+      date: drop.date, matchId: drop.matchId,
+    });
+  }
+}
+
+/* ── Engagements ────────────────────────────────────────────────────────── */
+function drawEngagements() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  const r = 3 / view.scale;
+
+  for (const ev of LAYER.events.engagements) {
+    if (!players.includes(ev.player)) continue;
+    ctx.beginPath();
+    ctx.arc(ev.cx, ev.cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(180,80,200,0.40)';
+    ctx.fill();
+
+    hitTargets.push({
+      cx: ev.cx, cy: ev.cy, r: r + 2 / view.scale,
+      type: 'engagement', player: ev.player,
+      weapon: ev.weapon, damage: ev.damage, target: ev.target,
+      date: ev.date, t: ev.t,
+    });
+  }
+}
+
+/* ── Knocked ────────────────────────────────────────────────────────────── */
+function drawKnocked() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  const r = 5 / view.scale;
+
+  for (const ev of LAYER.events.knocked) {
+    if (!players.includes(ev.player)) continue;
+    const col = '#e07030';
+    ctx.beginPath();
+    ctx.arc(ev.cx, ev.cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = col + 'bb';
+    ctx.lineWidth = 1.5 / view.scale;
+    ctx.stroke();
+    // downward chevron
+    const s = 3 / view.scale;
+    ctx.beginPath();
+    ctx.moveTo(ev.cx - s, ev.cy - s/2);
+    ctx.lineTo(ev.cx, ev.cy + s/2);
+    ctx.lineTo(ev.cx + s, ev.cy - s/2);
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1.5 / view.scale;
+    ctx.stroke();
+
+    hitTargets.push({ cx: ev.cx, cy: ev.cy, r: r + 2 / view.scale, type: 'knocked', player: ev.player, date: ev.date, t: ev.t });
+  }
+}
+
+/* ── Kills ──────────────────────────────────────────────────────────────── */
+function drawKills() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  const r  = 6 / view.scale;
+  const ri = 3 / view.scale;
+
+  for (const ev of LAYER.events.kills) {
+    if (!players.includes(ev.player)) continue;
+    const col = PLAYER_COLOR[ev.player];
+
+    // Star shape via 5-point calculation
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const ao = (i * 4 * Math.PI / 5) - Math.PI / 2;
+      const ai = ao + 2 * Math.PI / 5;
+      if (i === 0) ctx.moveTo(ev.cx + r * Math.cos(ao), ev.cy + r * Math.sin(ao));
+      else          ctx.lineTo(ev.cx + r * Math.cos(ao), ev.cy + r * Math.sin(ao));
+      ctx.lineTo(ev.cx + ri * Math.cos(ai), ev.cy + ri * Math.sin(ai));
+    }
+    ctx.closePath();
+    ctx.fillStyle   = col + 'dd';
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = 0.8 / view.scale;
+    ctx.fill();
+    ctx.stroke();
+
+    hitTargets.push({ cx: ev.cx, cy: ev.cy, r: r + 2 / view.scale, type: 'kill', player: ev.player, weapon: ev.weapon, target: ev.target, date: ev.date, t: ev.t });
+  }
+}
+
+/* ── Deaths ─────────────────────────────────────────────────────────────── */
+function drawDeaths() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  const r = 6 / view.scale;
+
+  for (const ev of LAYER.events.deaths) {
+    if (!players.includes(ev.player)) continue;
+    const col  = '#d7443e';
+    const colP = PLAYER_COLOR[ev.player];
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(ev.cx, ev.cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = col + 'cc';
+    ctx.lineWidth = 1.5 / view.scale;
+    ctx.stroke();
+
+    // X mark
+    const s = 3.5 / view.scale;
+    ctx.beginPath();
+    ctx.moveTo(ev.cx - s, ev.cy - s); ctx.lineTo(ev.cx + s, ev.cy + s);
+    ctx.moveTo(ev.cx + s, ev.cy - s); ctx.lineTo(ev.cx - s, ev.cy + s);
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = 2 / view.scale;
+    ctx.stroke();
+
+    // Player dot in center
+    ctx.beginPath();
+    ctx.arc(ev.cx, ev.cy, 1.5 / view.scale, 0, Math.PI * 2);
+    ctx.fillStyle = colP;
+    ctx.fill();
+
+    hitTargets.push({ cx: ev.cx, cy: ev.cy, r: r + 2 / view.scale, type: 'death', player: ev.player, date: ev.date, t: ev.t });
+  }
+}
+
+/* ============================================================================
+   RENDER STATS PANEL
+============================================================================ */
+function renderStats() {
+  const matches = filteredMatches();
+  const panel   = document.getElementById('statsPanel');
+
+  if (!matches.length) {
+    panel.innerHTML = '<div class="panel-title">Session Stats</div><p style="color:var(--muted);font-size:12px;font-style:italic">No matches selected</p>';
+    return;
+  }
+
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+
+  function statsFor(player) {
+    let n = 0, kills = 0, wins = 0, top3 = 0, plSum = 0;
+    for (const m of matches) {
+      const p = m.players[player];
+      if (!p) continue;
+      n++; kills += p.kills || 0; plSum += p.placement || 0;
+      if (p.placement === 1) wins++;
+      if (p.placement <= 3)  top3++;
+    }
+    return { n, kills, wins, top3, avgPlacement: n ? plSum / n : 0 };
+  }
+
+  let html = `<div class="panel-title">${state.map} Stats</div>`;
+
+  for (const p of players) {
+    const s   = statsFor(p);
+    const col = p === 'D282' ? 'amber' : 'blue';
+    html += `
+      <div style="margin-bottom:10px">
+        <div style="font-family:Oswald,sans-serif;font-size:12px;text-transform:uppercase;color:${PLAYER_COLOR[p]};margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid ${PLAYER_COLOR[p]}44">${p}</div>
+        <div class="stat-row"><span class="stat-key">Matches</span><span class="stat-val ${col}">${s.n}</span></div>
+        <div class="stat-row"><span class="stat-key">Kills</span><span class="stat-val ${col}">${s.kills}</span></div>
+        <div class="stat-row"><span class="stat-key">Wins</span><span class="stat-val ${col}">${s.wins}</span></div>
+        <div class="stat-row"><span class="stat-key">Top 3</span><span class="stat-val ${col}">${s.top3}</span></div>
+        <div class="stat-row"><span class="stat-key">Avg Placement</span><span class="stat-val ${col}">#${s.avgPlacement.toFixed(1)}</span></div>
+      </div>`;
+  }
+
+  // Landing zone clusters
+  html += renderDropZoneSummary();
+
+  panel.innerHTML = html;
+}
+
+function renderDropZoneSummary() {
+  const players = state.player === 'both' ? ['D282', 'S821'] : [state.player];
+  const drops   = LAYER.drops.filter(d => players.includes(d.player));
+  if (!drops.length) return '';
+
+  // Grid-cluster drops into a 20×20 grid
+  const gridSize = 20;
+  const cells    = {};
+  for (const d of drops) {
+    const gx = Math.floor((d.cx / CSZ) * gridSize);
+    const gy = Math.floor((d.cy / CSZ) * gridSize);
+    const key = `${gx},${gy}`;
+    if (!cells[key]) cells[key] = { count: 0, gx, gy, players: {} };
+    cells[key].count++;
+    cells[key].players[d.player] = (cells[key].players[d.player] || 0) + 1;
+  }
+
+  const sorted = Object.values(cells).sort((a, b) => b.count - a.count).slice(0, 6);
+  const maxC   = sorted[0]?.count || 1;
+
+  let html = `<div style="font-family:Oswald,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:10px;margin-bottom:6px">Top Landing Zones</div>`;
+
+  for (const cell of sorted) {
+    const pBars = players.map(p => {
+      const cnt = cell.players[p] || 0;
+      if (!cnt) return '';
+      return `<div class="drop-zone-bar" style="width:${(cnt/maxC)*100}%;background:${PLAYER_COLOR[p]};flex:${cnt}"></div>`;
+    }).join('');
+
+    const label = mapGridLabel(cell.gx, cell.gy);
+    html += `
+      <div class="drop-zone-item">
+        <span style="width:28px;text-align:right;color:var(--muted);font-size:11px">${cell.count}×</span>
+        <div class="drop-zone-bar-wrap">
+          <div style="display:flex;height:100%">${pBars}</div>
+        </div>
+        <span style="font-size:11px;color:var(--muted);width:60px">${label}</span>
+      </div>`;
+  }
+  return html;
+}
+
+function mapGridLabel(gx, gy) {
+  // PUBG-style grid reference: letters A-T for rows, 1-20 for columns
+  const col = String(gx + 1).padStart(2, ' ');
+  const row = String.fromCharCode(65 + gy);
+  return `${row}${col.trim()}`;
+}
+
+/* ============================================================================
+   HOVER DETECTION
+============================================================================ */
+canvas.addEventListener('mousemove', e => {
+  if (drag) return;
+  const rect  = canvas.getBoundingClientRect();
+  const rawX  = (e.clientX - rect.left) * (CSZ / rect.width);
+  const rawY  = (e.clientY - rect.top)  * (CSZ / rect.height);
+  const wcx   = (rawX - view.offsetX) / view.scale;
+  const wcy   = (rawY - view.offsetY) / view.scale;
+
+  let nearest = null; let nearestD = Infinity;
+  for (const t of hitTargets) {
+    const dx = t.cx - wcx, dy = t.cy - wcy;
+    const d2 = dx*dx + dy*dy;
+    const thr = t.r * t.r;
+    if (d2 < thr && d2 < nearestD) { nearest = t; nearestD = d2; }
+  }
+
+  const infoEl = document.getElementById('hoverInfo');
+  if (nearest) {
+    infoEl.classList.add('visible');
+    document.getElementById('hiType').textContent  = nearest.type.toUpperCase().replace('_',' ');
+    document.getElementById('hiMain').innerHTML    = hoverMainText(nearest);
+    document.getElementById('hiSub').innerHTML     = hoverSubText(nearest);
+  } else {
+    infoEl.classList.remove('visible');
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  document.getElementById('hoverInfo').classList.remove('visible');
+});
+
+function hoverMainText(t) {
+  const col = PLAYER_COLOR[t.player];
+  const p   = `<span style="color:${col}">${t.player}</span>`;
+  if (t.type === 'kill')       return `${p} killed <span style="color:var(--muted)">${t.target || '?'}</span>`;
+  if (t.type === 'death')      return `${p} died`;
+  if (t.type === 'drop')       return `${p} landed here`;
+  if (t.type === 'knocked')    return `${p} was knocked`;
+  if (t.type === 'engagement') return `${p} → ${t.target || '?'}`;
+  return p;
+}
+
+function hoverSubText(t) {
+  const parts = [];
+  if (t.weapon)  parts.push(t.weapon);
+  if (t.damage)  parts.push(`${Math.round(t.damage)} dmg`);
+  if (t.t != null) parts.push(mmss(t.t));
+  if (t.date)    parts.push(t.date);
+  return parts.join(' · ');
+}
+
+function mmss(s) {
+  s = Math.round(s);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+
+/* ============================================================================
+   PAN + ZOOM
+============================================================================ */
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect  = canvas.getBoundingClientRect();
+  const cx    = (e.clientX - rect.left) * (CSZ / rect.width);
+  const cy    = (e.clientY - rect.top)  * (CSZ / rect.height);
+  const delta = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+  applyZoom(delta, cx, cy);
+}, { passive: false });
+
+canvas.addEventListener('mousedown', e => {
+  if (e.button !== 0) return;
+  drag = { x: e.clientX, y: e.clientY, ox: view.offsetX, oy: view.offsetY };
+  canvas.classList.add('grabbing');
+});
+window.addEventListener('mousemove', e => {
+  if (!drag) return;
+  const rect = canvas.getBoundingClientRect();
+  const scale = CSZ / rect.width;
+  view.offsetX = drag.ox + (e.clientX - drag.x) * scale;
+  view.offsetY = drag.oy + (e.clientY - drag.y) * scale;
+  clampView();
+  scheduleRedraw();
+});
+window.addEventListener('mouseup', () => {
+  drag = null;
+  canvas.classList.remove('grabbing');
+});
+
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    const t = e.touches[0];
+    drag = { x: t.clientX, y: t.clientY, ox: view.offsetX, oy: view.offsetY };
+  }
+}, { passive: true });
+canvas.addEventListener('touchmove', e => {
+  if (!drag || e.touches.length !== 1) return;
+  e.preventDefault();
+  const t = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const sc = CSZ / rect.width;
+  view.offsetX = drag.ox + (t.clientX - drag.x) * sc;
+  view.offsetY = drag.oy + (t.clientY - drag.y) * sc;
+  clampView();
+  scheduleRedraw();
+}, { passive: false });
+canvas.addEventListener('touchend', () => { drag = null; });
+
+function applyZoom(factor, cx, cy) {
+  const ns = Math.max(0.8, Math.min(view.scale * factor, 20));
+  view.offsetX = cx - (cx - view.offsetX) * (ns / view.scale);
+  view.offsetY = cy - (cy - view.offsetY) * (ns / view.scale);
+  view.scale   = ns;
+  clampView();
+  scheduleRedraw();
+}
+
+function zoomStep(f) { applyZoom(f, CSZ / 2, CSZ / 2); }
+
+function clampView() {
+  const s = view.scale;
+  const maxOff = CSZ * (s - 1);
+  view.offsetX = Math.max(-maxOff * 0.1, Math.min(view.offsetX, CSZ * 0.1));
+  view.offsetY = Math.max(-maxOff * 0.1, Math.min(view.offsetY, CSZ * 0.1));
+}
+
+function resetView() {
+  view.scale = 1; view.offsetX = 0; view.offsetY = 0;
+  scheduleRedraw();
+}
+
+/* ============================================================================
+   SITE NAV
+============================================================================ */
+function toggleSiteNav() {
+  document.getElementById('siteNavMenu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('siteNav').contains(e.target))
+    document.getElementById('siteNavMenu').classList.remove('open');
+});
+
+/* ============================================================================
+   GO
+============================================================================ */
+boot();
+</script>
+</body>
+</html>
