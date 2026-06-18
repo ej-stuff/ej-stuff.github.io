@@ -296,7 +296,7 @@ h1 {
 /* ── Engagement summary ──────────────────────────────────────────────────── */
 .eng-row2 {
   display: grid;
-  grid-template-columns: 1fr 32px 38px 38px 28px;
+  grid-template-columns: 1fr 28px 56px 50px;
   column-gap: 3px;
   align-items: center;
   font-size: 11px;
@@ -310,10 +310,9 @@ h1 {
   white-space: nowrap;
   color: var(--muted);
 }
-.eng-icon { text-align: center; font-size: 10px; white-space: nowrap; }
-.eng-d    { text-align: right; color: var(--accent); }
-.eng-s    { text-align: right; color: var(--blue); }
-.eng-tk   { text-align: right; color: var(--danger); font-size: 10px; }
+.eng-icon  { text-align: center; font-size: 10px; white-space: nowrap; }
+.eng-dealt { text-align: right; white-space: nowrap; }
+.eng-taken { text-align: right; white-space: nowrap; font-size: 10px; }
 
 /* ── Loadout boxes ───────────────────────────────────────────────────────── */
 .loadout-box {
@@ -929,7 +928,7 @@ function drawTimeline() {
     const buckets = {};
     for (const ev of MD.events) {
       if (ev.player !== player || ev.t < 0) continue;
-      if (ev.type === 'heal' || ev.type === 'boost') continue;
+      if (ev.type === 'heal' || ev.type === 'boost' || ev.type === 'equip' || ev.type === 'unequip') continue;
       const bx = Math.round(tlX(ev.t) / BUCKET);
       if (!buckets[bx]) buckets[bx] = [];
       buckets[bx].push(ev);
@@ -2109,6 +2108,15 @@ function buildEngagementSummary() {
     return;
   }
 
+  const fmtSplit = (dVal, sVal, dimDmg) => {
+    const dTxt = dVal > 0 ? Math.round(dVal) : '·';
+    const sTxt = sVal > 0 ? Math.round(sVal) : '·';
+    const dCol = dVal > 0 ? D : 'var(--muted)';
+    const sCol = sVal > 0 ? S : 'var(--muted)';
+    const style = dimDmg ? 'opacity:.75;' : '';
+    return `<span style="${style}color:${dCol}">${dTxt}</span><span style="color:rgba(56,52,44,.8)">/</span><span style="${style}color:${sCol}">${sTxt}</span>`;
+  };
+
   const rowsHtml = sorted.map((e, idx) => {
     // Icon: what WE did (kill/knock them)
     let icons = '';
@@ -2123,14 +2131,14 @@ function buildEngagementSummary() {
       icons += `<span style="color:${pCol}">${isKnock ? '↓' : '†'}</span>`;
     }
 
-    const tkTotal = e.tk282 + e.tk821;
     const borderStyle = idx === sorted.length - 1 ? 'border-bottom:none' : '';
+    const dealtHtml = fmtSplit(e.d282, e.s821, false);
+    const takenHtml = fmtSplit(e.tk282, e.tk821, true);
     return `<div class="eng-row2" style="${borderStyle}">` +
       `<div class="eng-name">${e.name}</div>` +
       `<div class="eng-icon">${icons || '<span style="color:var(--muted)">·</span>'}</div>` +
-      `<div class="eng-d">${e.d282 > 0 ? Math.round(e.d282) : ''}</div>` +
-      `<div class="eng-s">${e.s821 > 0 ? Math.round(e.s821) : ''}</div>` +
-      `<div class="eng-tk">${tkTotal > 0 ? Math.round(tkTotal) : ''}</div>` +
+      `<div class="eng-dealt">${dealtHtml}</div>` +
+      `<div class="eng-taken">${takenHtml}</div>` +
       `</div>`;
   }).join('');
 
@@ -2138,9 +2146,10 @@ function buildEngagementSummary() {
     `<div class="eng-row2" style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding-bottom:4px;border-bottom:1px solid rgba(56,52,44,.55);">` +
       `<div class="eng-name">Enemy</div>` +
       `<div class="eng-icon"></div>` +
-      `<div class="eng-d" style="color:var(--accent)">D</div>` +
-      `<div class="eng-s" style="color:var(--blue)">S</div>` +
-      `<div class="eng-tk">←</div>` +
+      `<div class="eng-dealt" style="text-align:right">` +
+        `<span style="color:var(--accent)">D</span><span style="color:rgba(56,52,44,.8)">/</span><span style="color:var(--blue)">S</span>` +
+      `</div>` +
+      `<div class="eng-taken" style="text-align:right;color:var(--muted)">←D/S</div>` +
     `</div>` + rowsHtml;
 }
 
@@ -2193,13 +2202,24 @@ function fmtEvent(ev) {
 const _HEAL_IDS  = ['Item_Heal_Bandage_C','Item_Heal_FirstAid_C','Item_Heal_MedKit_C'];
 const _BOOST_IDS = ['Item_Boost_EnergyDrink_C','Item_Boost_PainKiller_C','Item_Boost_AdrenalineSyringe_C'];
 const _AMMO_IDS  = ['Item_Ammo_556mm_C','Item_Ammo_9mm_C','Item_Ammo_762mm_C',
-                    'Item_Ammo_45ACP_C','Item_Ammo_12Gauge_C','Item_Ammo_300Magnum_C'];
+                    'Item_Ammo_45ACP_C','Item_Ammo_12Gauge_C','Item_Ammo_300Magnum_C',
+                    'Item_Ammo_40mm_C'];
+const _THROW_IDS = ['Item_Weapon_Grenade_C','Item_Weapon_SmokeBomb_C',
+                    'Item_Weapon_StickyGrenade_C','Item_Weapon_Molotov_C',
+                    'Item_Weapon_FlashBang_C','Item_Weapon_C4_C',
+                    'Item_Weapon_BreachingCharge_C','Item_Weapon_CoverStructDropHandFlare_C'];
 const _ITEM_SHORT = {
-  'Item_Heal_Bandage_C':'Band', 'Item_Heal_FirstAid_C':'FA', 'Item_Heal_MedKit_C':'MKit',
-  'Item_Boost_EnergyDrink_C':'ED', 'Item_Boost_PainKiller_C':'PK',
-  'Item_Boost_AdrenalineSyringe_C':'Adren',
-  'Item_Ammo_556mm_C':'5.56', 'Item_Ammo_9mm_C':'9mm', 'Item_Ammo_762mm_C':'7.62',
-  'Item_Ammo_45ACP_C':'.45',  'Item_Ammo_12Gauge_C':'12g','Item_Ammo_300Magnum_C':'.300',
+  'Item_Heal_Bandage_C':'Band',         'Item_Heal_FirstAid_C':'FA',
+  'Item_Heal_MedKit_C':'MKit',          'Item_Boost_EnergyDrink_C':'ED',
+  'Item_Boost_PainKiller_C':'PK',       'Item_Boost_AdrenalineSyringe_C':'Adren',
+  'Item_Ammo_556mm_C':'5.56',           'Item_Ammo_9mm_C':'9mm',
+  'Item_Ammo_762mm_C':'7.62',           'Item_Ammo_45ACP_C':'.45',
+  'Item_Ammo_12Gauge_C':'12g',          'Item_Ammo_300Magnum_C':'.300',
+  'Item_Ammo_40mm_C':'40mm',
+  'Item_Weapon_Grenade_C':'Nade',       'Item_Weapon_SmokeBomb_C':'Smoke',
+  'Item_Weapon_StickyGrenade_C':'Sticky','Item_Weapon_Molotov_C':'Molo',
+  'Item_Weapon_FlashBang_C':'Flash',    'Item_Weapon_C4_C':'C4',
+  'Item_Weapon_BreachingCharge_C':'Breach','Item_Weapon_CoverStructDropHandFlare_C':'Flare',
 };
 
 function updateLoadout(t) {
@@ -2212,23 +2232,39 @@ function updateLoadout(t) {
     const col = player === 'D282' ? '#f4a300' : '#4a9edd';
 
     // Replay equip/unequip/armor_break events (sorted by t)
-    const slots = { Main:null, Sub:null, Pistol:null, Handgun:null,
-                    Vest:null, Headgear:null, Backpack:null };
+    // Main is an array — PUBG uses same "Main" slot for both primary weapons
+    const mainWeapons = [];
+    let handgun = null, vest = null, headgear = null, backpack = null;
     let vestBroken = false, helmBroken = false;
+
     for (const ev of (MD.events || [])) {
       if (ev.t > effectiveT) break;
       if (ev.player !== player) continue;
       if (ev.type === 'equip') {
-        if (ev.slot in slots) {
-          slots[ev.slot] = ev.item;
-          if (ev.slot === 'Vest')    vestBroken = false;
-          if (ev.slot === 'Headgear') helmBroken = false;
+        if (ev.slot === 'Main') {
+          if (!mainWeapons.includes(ev.item)) mainWeapons.push(ev.item);
+          if (mainWeapons.length > 2) mainWeapons.shift();
+        } else if (ev.slot === 'Handgun') {
+          handgun = ev.item;
+        } else if (ev.slot === 'Vest') {
+          vest = ev.item; vestBroken = false;
+        } else if (ev.slot === 'Headgear') {
+          headgear = ev.item; helmBroken = false;
+        } else if (ev.slot === 'Backpack') {
+          backpack = ev.item;
         }
       } else if (ev.type === 'unequip') {
-        if (ev.slot in slots) {
-          slots[ev.slot] = null;
-          if (ev.slot === 'Vest')    vestBroken = false;
-          if (ev.slot === 'Headgear') helmBroken = false;
+        if (ev.slot === 'Main') {
+          const idx = mainWeapons.indexOf(ev.item);
+          if (idx >= 0) mainWeapons.splice(idx, 1);
+        } else if (ev.slot === 'Handgun') {
+          handgun = null;
+        } else if (ev.slot === 'Vest') {
+          vest = null; vestBroken = false;
+        } else if (ev.slot === 'Headgear') {
+          headgear = null; helmBroken = false;
+        } else if (ev.slot === 'Backpack') {
+          backpack = null;
         }
       } else if (ev.type === 'armor_break') {
         if (ev.slot === 'Vest')     vestBroken = true;
@@ -2244,31 +2280,36 @@ function updateLoadout(t) {
       const n = iv.n || 1;
       if      (iv.ev === 'pick') cnt[iv.id] = (cnt[iv.id] || 0) + n;
       else if (iv.ev === 'drop') cnt[iv.id] = Math.max(0, (cnt[iv.id] || 0) - n);
-      else if (iv.ev === 'use')  cnt[iv.id] = Math.max(0, (cnt[iv.id] || 0) - 1);
+      else if (iv.ev === 'use')  cnt[iv.id] = Math.max(0, (cnt[iv.id] || 0) - n);
     }
 
-    // Weapons line
-    const pri = slots.Main || '—';
-    const sec = slots.Sub || slots.Pistol || slots.Handgun || '—';
-    const wpnHtml = (pri !== '—' || sec !== '—')
-      ? `<span style="color:var(--fg)">${pri}</span>`
-        + (pri !== '—' && sec !== '—' ? `<span style="color:var(--muted)"> · </span>` : '')
-        + (sec !== '—' ? `<span style="color:var(--fg)">${sec}</span>` : '')
+    // Weapons line (main1, main2, handgun)
+    const allWpns = [...mainWeapons];
+    if (handgun) allWpns.push(handgun);
+    const wpnHtml = allWpns.length
+      ? allWpns.map(w => `<span style="color:var(--fg)">${w}</span>`).join('<span style="color:var(--muted)"> · </span>')
       : `<span style="color:var(--muted)">No weapons</span>`;
 
     // Gear line (vest / helmet / backpack)
-    const fmtSlot = (sName, broken) => {
-      const v = slots[sName];
-      const pfx = sName === 'Vest' ? 'V' : sName === 'Headgear' ? 'H' : 'Bag';
-      if (!v) return `<span style="color:var(--muted)">${pfx}—</span>`;
-      const m = v.match(/(\d)/);
+    const fmtArmor = (val, broken, pfx) => {
+      if (!val) return `<span style="color:var(--muted)">${pfx}—</span>`;
+      const m = val.match(/(\d)/);
       const lvl = m ? m[1] : '?';
       return broken
-        ? `<span style="color:var(--danger)" title="${v}">${pfx}${lvl}✗</span>`
-        : `<span title="${v}">${pfx}${lvl}</span>`;
+        ? `<span style="color:var(--danger)" title="${val}">${pfx}${lvl}✗</span>`
+        : `<span title="${val}">${pfx}${lvl}</span>`;
     };
-    const gearHtml = [fmtSlot('Vest',vestBroken), fmtSlot('Headgear',helmBroken), fmtSlot('Backpack',false)]
+    const gearHtml = [fmtArmor(vest,vestBroken,'V'), fmtArmor(headgear,helmBroken,'H'), fmtArmor(backpack,false,'Bag')]
       .join('<span style="color:var(--muted)"> · </span>');
+
+    // Throwables line
+    const throwParts = _THROW_IDS
+      .map(id => ({ s: _ITEM_SHORT[id] || id, n: cnt[id] || 0 }))
+      .filter(x => x.n > 0)
+      .map(x => `${x.s}×<b>${x.n}</b>`);
+    const throwHtml = throwParts.length
+      ? throwParts.join('<span style="color:var(--muted)"> · </span>')
+      : `<span style="color:var(--muted)">—</span>`;
 
     // Heals + boosts line
     const hbParts = [..._HEAL_IDS, ..._BOOST_IDS]
@@ -2292,6 +2333,7 @@ function updateLoadout(t) {
       `<div class="lb-hdr" style="color:${col}">${player}</div>` +
       `<div class="lb-row">${wpnHtml}</div>` +
       `<div class="lb-row">${gearHtml}</div>` +
+      `<div class="lb-row lb-dim">${throwHtml}</div>` +
       `<div class="lb-row lb-dim">${healHtml}</div>` +
       `<div class="lb-row lb-dim">${ammoHtml}</div>`;
   }
