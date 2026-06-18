@@ -8,133 +8,113 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:     #14130f;
-  --panel:  #1e1c17;
-  --line:   #38342c;
-  --text:   #e8e3d8;
-  --muted:  #9a9385;
-  --accent: #f4a300;
-  --blue:   #4a9edd;
-  --ok:     #8fae5d;
-  --danger: #d7443e;
+  --bg:#14130f; --panel:#1e1c17; --line:#38342c; --text:#e8e3d8;
+  --muted:#9a9385; --accent:#f4a300; --blue:#4a9edd; --ok:#8fae5d; --danger:#d7443e;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg); color: var(--text);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  font-size: 14px; line-height: 1.5; padding: 24px 16px;
-}
-.wrap { max-width: 1200px; margin: 0 auto; }
-h1 { font-family: Oswald, system-ui, sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); font-size: 28px; margin-bottom: 2px; }
-.subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
-.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; }
-.panel-title { font-family: Oswald, system-ui, sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;padding:24px 16px}
+.wrap{max-width:1200px;margin:0 auto}
+h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);font-size:28px;margin-bottom:2px}
+.subtitle{color:var(--muted);font-size:13px;margin-bottom:20px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.panel-title{font-family:Oswald,system-ui,sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:13px;color:var(--muted);margin-bottom:12px}
 
-/* ── Map tabs ────────────────────────────────────────────────────────────── */
-.map-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-.map-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 16px; border-radius: 8px; cursor: pointer; border: 1px solid var(--line); background: #2a2720; transition: all .15s; font-family: Oswald, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .5px; font-size: 12px; color: var(--muted); min-width: 80px; }
-.map-tab:hover { border-color: var(--accent); color: var(--text); }
-.map-tab.active { background: var(--accent); color: #14130f; border-color: var(--accent); font-weight: 600; }
-.map-tab .tab-count { font-size: 10px; opacity: .8; }
+.map-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.map-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 16px;border-radius:8px;cursor:pointer;border:1px solid var(--line);background:#2a2720;transition:all .15s;font-family:Oswald,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.5px;font-size:12px;color:var(--muted);min-width:80px}
+.map-tab:hover{border-color:var(--accent);color:var(--text)}
+.map-tab.active{background:var(--accent);color:#14130f;border-color:var(--accent);font-weight:600}
+.map-tab .tab-count{font-size:10px;opacity:.8}
 
-/* ── Filters ─────────────────────────────────────────────────────────────── */
-.filter-row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
-.filter-group { display: flex; flex-direction: column; gap: 6px; }
-.filter-label { font-family: Oswald, system-ui, sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
-.btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
-.btn { background: #2a2720; color: var(--text); border: 1px solid var(--line); padding: 7px 14px; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: inherit; transition: border-color .1s; white-space: nowrap; }
-.btn:hover { border-color: var(--accent); }
-.btn.active { background: var(--accent); color: #14130f; border-color: var(--accent); font-weight: 600; }
+.filter-row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.filter-group{display:flex;flex-direction:column;gap:6px}
+.filter-label{font-family:Oswald,system-ui,sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.btn-group{display:flex;gap:6px;flex-wrap:wrap}
+.btn{background:#2a2720;color:var(--text);border:1px solid var(--line);padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit;transition:border-color .1s;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.active{background:var(--accent);color:#14130f;border-color:var(--accent);font-weight:600}
 
-/* ── Date slider ─────────────────────────────────────────────────────────── */
-.date-slider-outer { min-width: 220px; flex: 1; max-width: 420px; }
-.date-slider-wrap { position: relative; height: 36px; margin-top: 4px; }
-.slider-track-bg { position: absolute; top: 10px; left: 0; right: 0; height: 4px; background: var(--line); border-radius: 2px; pointer-events: none; }
-.slider-track-fill { position: absolute; top: 10px; height: 4px; background: var(--accent); border-radius: 2px; pointer-events: none; }
-.date-slider-wrap input[type=range] { position: absolute; top: 0; left: 0; width: 100%; appearance: none; -webkit-appearance: none; background: transparent; height: 24px; pointer-events: none; border: none; padding: 0; outline: none; }
-.date-slider-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); cursor: grab; pointer-events: all; transition: transform .1s; }
-.date-slider-wrap input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.2); }
-.date-slider-wrap input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); cursor: grab; pointer-events: all; }
-.slider-labels { position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; }
-.slider-tick { position: absolute; transform: translateX(-50%); font-size: 10px; color: var(--muted); white-space: nowrap; }
-.date-range-display { font-size: 12px; color: var(--text); margin-top: 2px; min-height: 18px; }
-.date-range-display span { color: var(--accent); font-weight: 600; }
-.match-count-badge { background: #2a2720; border: 1px solid var(--line); border-radius: 5px; padding: 5px 12px; font-size: 12px; color: var(--muted); white-space: nowrap; }
-.match-count-badge strong { color: var(--accent); }
+.date-slider-outer{min-width:220px;flex:1;max-width:420px}
+.date-slider-wrap{position:relative;height:36px;margin-top:4px}
+.slider-track-bg{position:absolute;top:10px;left:0;right:0;height:4px;background:var(--line);border-radius:2px;pointer-events:none}
+.slider-track-fill{position:absolute;top:10px;height:4px;background:var(--accent);border-radius:2px;pointer-events:none}
+.date-slider-wrap input[type=range]{position:absolute;top:0;left:0;width:100%;appearance:none;-webkit-appearance:none;background:transparent;height:24px;pointer-events:none;border:none;padding:0;outline:none}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);cursor:grab;pointer-events:all;transition:transform .1s}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.2)}
+.date-slider-wrap input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);cursor:grab;pointer-events:all}
+.slider-labels{position:absolute;bottom:0;left:0;right:0;pointer-events:none}
+.slider-tick{position:absolute;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
+.date-range-display{font-size:12px;color:var(--text);margin-top:2px;min-height:18px}
+.date-range-display span{color:var(--accent);font-weight:600}
+.match-count-badge{background:#2a2720;border:1px solid var(--line);border-radius:5px;padding:5px 12px;font-size:12px;color:var(--muted);white-space:nowrap}
+.match-count-badge strong{color:var(--accent)}
 
-/* ── Layout ──────────────────────────────────────────────────────────────── */
-.main-layout { display: grid; grid-template-columns: 1fr 260px; gap: 14px; align-items: start; }
-@media (max-width: 820px) { .main-layout { grid-template-columns: 1fr; } }
+.main-layout{display:grid;grid-template-columns:1fr 260px;gap:14px;align-items:start}
+@media(max-width:820px){.main-layout{grid-template-columns:1fr}}
 
-/* ── Canvas ──────────────────────────────────────────────────────────────── */
-.canvas-wrap { position: relative; background: #0a0906; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-#mapCanvas { display: block; width: 100%; aspect-ratio: 1/1; cursor: grab; touch-action: none; }
-#mapCanvas.grabbing { cursor: grabbing; }
-.canvas-toolbar { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 10; }
-.canvas-btn { width: 30px; height: 30px; background: rgba(30,28,23,.85); border: 1px solid var(--line); border-radius: 6px; color: var(--text); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .1s; }
-.canvas-btn:hover { border-color: var(--accent); color: var(--accent); }
-.canvas-loading { position: absolute; inset: 0; background: rgba(20,19,15,.85); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; z-index: 20; border-radius: 10px; }
-.canvas-loading.hidden { display: none; }
-.load-bar-wrap { width: 200px; height: 4px; background: var(--line); border-radius: 2px; }
-.load-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width .2s; }
-.load-text { font-size: 12px; color: var(--muted); }
-#hoverInfo { position: absolute; bottom: 12px; left: 12px; background: rgba(30,28,23,.93); border: 1px solid var(--line); border-radius: 7px; padding: 8px 12px; font-size: 12px; max-width: 240px; pointer-events: none; z-index: 15; opacity: 0; transition: opacity .15s; }
-#hoverInfo.visible { opacity: 1; }
-.hi-type { font-family: Oswald, sans-serif; text-transform: uppercase; font-size: 10px; color: var(--muted); margin-bottom: 2px; }
-.hi-main { font-weight: 600; margin-bottom: 2px; }
-.hi-sub  { color: var(--muted); font-size: 11px; }
+.canvas-wrap{position:relative;background:#0a0906;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+#mapCanvas{display:block;width:100%;aspect-ratio:1/1;cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+#mapCanvas.grabbing{cursor:grabbing}
+.canvas-toolbar{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:4px;z-index:10}
+.canvas-btn{width:30px;height:30px;background:rgba(30,28,23,.85);border:1px solid var(--line);border-radius:6px;color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .1s}
+.canvas-btn:hover{border-color:var(--accent);color:var(--accent)}
+.canvas-loading{position:absolute;inset:0;background:rgba(20,19,15,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:20;border-radius:10px}
+.canvas-loading.hidden{display:none}
+.load-bar-wrap{width:200px;height:4px;background:var(--line);border-radius:2px}
+.load-bar{height:100%;background:var(--accent);border-radius:2px;transition:width .2s}
+.load-text{font-size:12px;color:var(--muted)}
+#hoverInfo{position:absolute;bottom:12px;left:12px;background:rgba(30,28,23,.93);border:1px solid var(--line);border-radius:7px;padding:8px 12px;font-size:12px;max-width:240px;pointer-events:none;z-index:15;opacity:0;transition:opacity .15s}
+#hoverInfo.visible{opacity:1}
+.hi-type{font-family:Oswald,sans-serif;text-transform:uppercase;font-size:10px;color:var(--muted);margin-bottom:2px}
+.hi-main{font-weight:600;margin-bottom:2px}
+.hi-sub{color:var(--muted);font-size:11px}
 
-/* ── Sidebar ─────────────────────────────────────────────────────────────── */
-.sidebar { display: flex; flex-direction: column; gap: 14px; }
-.layer-list { display: flex; flex-direction: column; gap: 2px; }
-.layer-row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; cursor: pointer; transition: background .1s; user-select: none; }
-.layer-row:hover { background: rgba(255,255,255,.04); }
-.layer-row.active { background: rgba(255,255,255,.06); }
-.layer-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid transparent; }
-.layer-row.active .layer-dot { border-color: rgba(255,255,255,.3); }
-.layer-name { flex: 1; font-size: 13px; }
-.layer-row.active .layer-name { color: var(--text); }
-.layer-row:not(.active) .layer-name { color: var(--muted); }
+.sidebar{display:flex;flex-direction:column;gap:14px}
+.layer-list{display:flex;flex-direction:column;gap:2px}
+.layer-row{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;transition:background .1s;user-select:none}
+.layer-row:hover{background:rgba(255,255,255,.04)}
+.layer-row.active{background:rgba(255,255,255,.06)}
+.layer-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:1.5px solid transparent}
+.layer-row.active .layer-dot{border-color:rgba(255,255,255,.3)}
+.layer-name{flex:1;font-size:13px}
+.layer-row.active .layer-name{color:var(--text)}
+.layer-row:not(.active) .layer-name{color:var(--muted)}
 
-/* Phase control */
-.phase-control { margin-top: 6px; padding: 8px; background: rgba(0,0,0,.2); border-radius: 6px; display: none; }
-.phase-control.visible { display: block; }
-.phase-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-.phase-btns { display: flex; gap: 3px; flex-wrap: wrap; }
-.phase-btn { width: 28px; height: 22px; font-size: 11px; border-radius: 4px; border: 1px solid var(--line); background: #2a2720; color: var(--muted); cursor: pointer; font-family: inherit; transition: all .1s; }
-.phase-btn:hover { border-color: var(--blue); color: var(--text); }
-.phase-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); font-weight: 600; }
+.sub-control{margin-top:4px;padding:8px;background:rgba(0,0,0,.2);border-radius:6px;display:none}
+.sub-control.visible{display:block}
+.sub-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.phase-btns{display:flex;gap:3px;flex-wrap:wrap}
+.phase-btn{width:28px;height:22px;font-size:11px;border-radius:4px;border:1px solid var(--line);background:#2a2720;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .1s}
+.phase-btn:hover{border-color:var(--blue);color:var(--text)}
+.phase-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
 
-/* Engagement legend */
-.eng-legend { margin-top: 8px; display: none; }
-.eng-legend.visible { display: block; }
-.eng-legend-row { display: flex; align-items: center; gap: 6px; padding: 2px 8px; font-size: 11px; color: var(--muted); }
-.eng-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+/* Engagement group slider */
+.eng-slider-wrap{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.eng-slider-wrap input[type=range]{flex:1;accent-color:#66cc66;cursor:pointer;height:4px}
+.eng-legend-row{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:11px;color:var(--muted)}
+.eng-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* Stats */
-.stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid rgba(56,52,44,.4); font-size: 12px; }
-.stat-row:last-child { border-bottom: none; }
-.stat-key { color: var(--muted); }
-.stat-val { font-weight: 600; font-family: Oswald, sans-serif; font-size: 14px; }
-.stat-val.amber { color: var(--accent); }
-.stat-val.blue  { color: var(--blue); }
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid rgba(56,52,44,.4);font-size:12px}
+.stat-row:last-child{border-bottom:none}
+.stat-key{color:var(--muted)}
+.stat-val{font-weight:600;font-family:Oswald,sans-serif;font-size:14px}
+.stat-val.amber{color:var(--accent)}
+.stat-val.blue{color:var(--blue)}
 
-/* Site nav */
-#siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
-#siteNavBtn { width: 34px; height: 34px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; color: var(--accent); font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .15s; }
-#siteNavBtn:hover { border-color: var(--accent); }
-#siteNavMenu { display: none; position: absolute; top: 40px; left: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 6px; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,.6); }
-#siteNavMenu.open { display: block; }
-#siteNavMenu a { display: block; padding: 9px 14px; color: var(--text); text-decoration: none; border-radius: 7px; font-size: 13px; font-family: Oswald, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .5px; transition: background .1s, color .1s; }
-#siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
-#siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
-#siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+#siteNav{position:fixed;top:10px;left:10px;z-index:9000}
+#siteNavBtn{width:34px;height:34px;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--accent);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+#siteNavBtn:hover{border-color:var(--accent)}
+#siteNavMenu{display:none;position:absolute;top:40px;left:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+#siteNavMenu.open{display:block}
+#siteNavMenu a{display:block;padding:9px 14px;color:var(--text);text-decoration:none;border-radius:7px;font-size:13px;font-family:Oswald,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.5px;transition:background .1s,color .1s}
+#siteNavMenu a:hover{background:rgba(244,163,0,.12);color:var(--accent)}
+#siteNavMenu a.nav-cur{color:var(--accent);pointer-events:none}
+#siteNavMenu .nav-sep{height:1px;background:var(--line);margin:5px 8px}
 </style>
 </head>
 <body>
 
 <div id="siteNav">
-  <button id="siteNavBtn" onclick="toggleSiteNav()" title="Navigate">&#9776;</button>
+  <button id="siteNavBtn" onclick="toggleSiteNav()">&#9776;</button>
   <div id="siteNavMenu">
     <a href="index.html">Home</a>
     <div class="nav-sep"></div>
@@ -186,9 +166,9 @@ h1 { font-family: Oswald, system-ui, sans-serif; font-weight: 700; letter-spacin
     <div class="canvas-wrap">
       <canvas id="mapCanvas"></canvas>
       <div class="canvas-toolbar">
-        <button class="canvas-btn" onclick="zoomStep(1.35)" title="Zoom in">+</button>
-        <button class="canvas-btn" onclick="zoomStep(1/1.35)" title="Zoom out">−</button>
-        <button class="canvas-btn" onclick="resetView()" title="Reset">⊡</button>
+        <button class="canvas-btn" onclick="zoomStep(1.35)">+</button>
+        <button class="canvas-btn" onclick="zoomStep(1/1.35)">−</button>
+        <button class="canvas-btn" onclick="resetView()">⊡</button>
       </div>
       <div id="canvasLoading" class="canvas-loading">
         <div class="load-text" id="loadText">Loading…</div>
@@ -205,19 +185,32 @@ h1 { font-family: Oswald, system-ui, sans-serif; font-weight: 700; letter-spacin
       <div class="panel" style="padding:14px">
         <div class="panel-title">Layers</div>
         <div class="layer-list" id="layerList"></div>
-        <div class="phase-control" id="phaseControl">
-          <div class="phase-label">Circle phase (1=early, 8=final)</div>
+
+        <!-- Circle phase sub-control -->
+        <div class="sub-control" id="phaseControl">
+          <div class="sub-label">Phase (1=early, 8=final)</div>
           <div class="phase-btns" id="phaseBtns"></div>
         </div>
-        <div class="eng-legend" id="engLegend">
-          <div class="phase-label" style="padding:0 8px;margin-bottom:4px">Engagement outcome</div>
-          <div class="eng-legend-row"><div class="eng-dot" style="background:#00cc44"></div> Win (kill, survived)</div>
-          <div class="eng-legend-row"><div class="eng-dot" style="background:#88cc44"></div> Win (kill, also died)</div>
-          <div class="eng-legend-row"><div class="eng-dot" style="background:#66aacc"></div> Neutral / inconclusive</div>
-          <div class="eng-legend-row"><div class="eng-dot" style="background:#cc8833"></div> Negative (more taken)</div>
-          <div class="eng-legend-row"><div class="eng-dot" style="background:#cc3333"></div> Loss (died, no kill)</div>
+
+        <!-- Engagement grouping sub-control -->
+        <div class="sub-control" id="engControl">
+          <div class="sub-label">Group radius
+            <span id="engGroupLabel" style="float:right;color:var(--text);font-weight:600">Off</span>
+          </div>
+          <div class="eng-slider-wrap">
+            <input type="range" id="engGroupSlider" min="0" max="100" value="0"
+                   oninput="setEngGrouping(+this.value)">
+          </div>
+          <div style="margin-top:6px">
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#1aaa44"></div> Decisive win (≥150 pts)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#88cc44"></div> Win (50–149 pts)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#4488cc"></div> Neutral (−49 to 49)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#cc6633"></div> Loss (−50 to −199)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#cc1111"></div> Decisive loss (≤−200)</div>
+          </div>
         </div>
       </div>
+
       <div class="panel" style="padding:14px" id="statsPanel">
         <div class="panel-title">Stats</div>
         <p style="color:var(--muted);font-size:12px;font-style:italic">Select a map</p>
@@ -230,51 +223,57 @@ h1 { font-family: Oswald, system-ui, sans-serif; font-weight: 700; letter-spacin
 /* ============================================================================
    CONFIG
 ============================================================================ */
-const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
+const PLAYER_COLOR = { D282:'#f4a300', S821:'#4a9edd' };
 const CSZ = 720;
 
 const LAYER_DEFS = [
-  { id: 'heatmap',     label: 'Position Heatmap',  color: '#ff7040', defaultOn: true  },
-  { id: 'lootHeatmap', label: 'Loot Heatmap',       color: '#88cc44', defaultOn: false },
-  { id: 'paths',       label: 'Rotation Paths',    color: '#aaaaaa', defaultOn: false },
-  { id: 'drops',       label: 'Landing Zones',     color: '#8fae5d', defaultOn: true  },
-  { id: 'circles',     label: 'Circle Zones',      color: '#4a9edd', defaultOn: false },
-  { id: 'deaths',      label: 'Deaths',            color: '#d7443e', defaultOn: true  },
-  { id: 'kills',       label: 'Kills',             color: '#f4a300', defaultOn: true  },
-  { id: 'knocked',     label: 'Got Knocked',       color: '#e07030', defaultOn: false },
-  { id: 'engagements', label: 'Engagements',       color: '#66cc66', defaultOn: false },
+  { id:'heatmap',     label:'Position Heatmap',  color:'#ff7040', defaultOn:true  },
+  { id:'lootHeatmap', label:'Loot Heatmap',       color:'#88cc44', defaultOn:false },
+  { id:'paths',       label:'Rotation Paths',    color:'#aaaaaa', defaultOn:false },
+  { id:'drops',       label:'Landing Zones',     color:'#8fae5d', defaultOn:true  },
+  { id:'circles',     label:'Circle Zones',      color:'#4a9edd', defaultOn:false },
+  { id:'deaths',      label:'Deaths',            color:'#d7443e', defaultOn:true  },
+  { id:'kills',       label:'Kills',             color:'#f4a300', defaultOn:true  },
+  { id:'knocked',     label:'Got Knocked',       color:'#e07030', defaultOn:false },
+  { id:'engagements', label:'Engagements',       color:'#66cc66', defaultOn:false },
 ];
+
+const ENG_COLOR = {
+  dark_green:  '#1aaa44',
+  light_green: '#88cc44',
+  neutral:     '#4488cc',
+  light_red:   '#cc6633',
+  dark_red:    '#cc1111',
+};
+const ENG_ORDER = ['dark_green','light_green','neutral','light_red','dark_red'];
 
 /* ============================================================================
    STATE
 ============================================================================ */
 const state = {
-  map:         null,
-  player:      'both',
-  dateIdxMin:  0,
-  dateIdxMax:  0,
-  layers:      Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.defaultOn])),
+  map: null, player: 'both',
+  dateIdxMin: 0, dateIdxMax: 0,
+  layers: Object.fromEntries(LAYER_DEFS.map(l=>[l.id,l.defaultOn])),
   circlePhase: 3,
+  engGroupSlider: 0,
 };
 
 /* ============================================================================
    DATA
 ============================================================================ */
-const DATA = { maps: null, matches: null, mapDates: {} };
+const DATA = { maps:null, matches:null, mapDates:{} };
 const MATCH_CACHE = new Map();
 
 const LAYER = {
-  positions:    { D282: [], S821: [] },
-  lootPos:      { D282: [], S821: [] },
-  drops:        [],
-  paths:        [],
-  events:       { deaths: [], kills: [], knocked: [], dmgDealt: [], dmgTaken: [] },
-  engClusters:  [],
+  positions:   { D282:[], S821:[] },
+  lootPos:     { D282:[], S821:[] },
+  drops:[], paths:[],
+  events: { deaths:[], kills:[], knocked:[], knockdowns:[], dmgDealt:[], dmgTaken:[] },
+  engClusters: [],
   circlePhases: [],
-  hmCanvas:     { D282: null, S821: null },
-  lootCanvas:   { D282: null, S821: null },
+  hmCanvas:   { D282:null, S821:null },
+  lootCanvas: { D282:null, S821:null },
 };
-
 let hitTargets = [];
 
 /* ============================================================================
@@ -283,8 +282,8 @@ let hitTargets = [];
 const canvas = document.getElementById('mapCanvas');
 canvas.width = CSZ; canvas.height = CSZ;
 const ctx = canvas.getContext('2d');
-const view = { scale: 1, offsetX: 0, offsetY: 0 };
-let drag = null;
+const view = { scale:1, offsetX:0, offsetY:0 };
+let drag = null, lastPinchDist = null, lastPinchMidRaw = null;
 let mapImg = new Image();
 let CURRENT_MAP = null;
 
@@ -293,8 +292,8 @@ let CURRENT_MAP = null;
 ============================================================================ */
 async function boot() {
   const [mapsData, matchesData] = await Promise.all([
-    fetch('stats-data/maps.json').then(r => r.json()),
-    fetch('stats-data/matches.json').then(r => r.json()),
+    fetch('stats-data/maps.json').then(r=>r.json()),
+    fetch('stats-data/matches.json').then(r=>r.json()),
   ]);
   DATA.maps    = mapsData;
   DATA.matches = matchesData.filter(m =>
@@ -303,19 +302,16 @@ async function boot() {
   for (const m of DATA.matches) {
     if (!m.map) continue;
     if (!DATA.mapDates[m.map]) DATA.mapDates[m.map] = new Set();
-    DATA.mapDates[m.map].add(m.created_at.slice(0, 10));
+    DATA.mapDates[m.map].add(m.created_at.slice(0,10));
   }
   for (const k of Object.keys(DATA.mapDates))
     DATA.mapDates[k] = [...DATA.mapDates[k]].sort();
 
-  buildMapTabs();
-  buildLayerList();
-  buildPhaseBtns();
+  buildMapTabs(); buildLayerList(); buildPhaseBtns();
 
   const topMap = Object.entries(
-    DATA.matches.reduce((acc, m) => { acc[m.map] = (acc[m.map]||0)+1; return acc; }, {})
-  ).sort((a,b) => b[1]-a[1])[0]?.[0];
-
+    DATA.matches.reduce((acc,m)=>{ acc[m.map]=(acc[m.map]||0)+1; return acc; }, {})
+  ).sort((a,b)=>b[1]-a[1])[0]?.[0];
   if (topMap) selectMap(topMap);
 }
 
@@ -323,34 +319,28 @@ async function boot() {
    MAP TABS
 ============================================================================ */
 function buildMapTabs() {
-  const counts = DATA.matches.reduce((acc, m) => { if (m.map) acc[m.map]=(acc[m.map]||0)+1; return acc; }, {});
-  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
-  document.getElementById('mapTabs').innerHTML = sorted.map(([name, count]) =>
-    `<div class="map-tab" id="mapTab_${name.replace(/\s/g,'_')}" onclick="selectMap('${name}')">
-       <span>${name}</span><span class="tab-count">${count} games</span>
-     </div>`
-  ).join('');
+  const counts = DATA.matches.reduce((acc,m)=>{ if(m.map) acc[m.map]=(acc[m.map]||0)+1; return acc; },{});
+  document.getElementById('mapTabs').innerHTML =
+    Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([name,count]) =>
+      `<div class="map-tab" id="mt_${name.replace(/\s/g,'_')}" onclick="selectMap('${name}')">
+         <span>${name}</span><span class="tab-count">${count} games</span>
+       </div>`
+    ).join('');
 }
 
 function selectMap(name) {
   state.map = name;
   document.querySelectorAll('.map-tab').forEach(el =>
-    el.classList.toggle('active', el.id === `mapTab_${name.replace(/\s/g,'_')}`));
-
-  CURRENT_MAP = Object.values(DATA.maps).find(m => m.name === name) || null;
-
+    el.classList.toggle('active', el.id===`mt_${name.replace(/\s/g,'_')}`));
+  CURRENT_MAP = Object.values(DATA.maps).find(m=>m.name===name)||null;
   if (CURRENT_MAP) {
     mapImg = new Image();
     mapImg.onload = mapImg.onerror = scheduleRedraw;
     mapImg.src = CURRENT_MAP.image_url;
   }
-
-  const dates = DATA.mapDates[name] || [];
-  state.dateIdxMin = 0;
-  state.dateIdxMax = Math.max(0, dates.length - 1);
-  buildDateSlider(dates);
-  resetView();
-  loadAndRender();
+  const dates = DATA.mapDates[name]||[];
+  state.dateIdxMin = 0; state.dateIdxMax = Math.max(0,dates.length-1);
+  buildDateSlider(dates); resetView(); loadAndRender();
 }
 
 /* ============================================================================
@@ -360,37 +350,26 @@ function buildDateSlider(dates) {
   const n = dates.length;
   const slMin = document.getElementById('sliderMin');
   const slMax = document.getElementById('sliderMax');
-  slMin.min = 0; slMin.max = n-1; slMin.value = 0;
-  slMax.min = 0; slMax.max = n-1; slMax.value = n-1;
-
-  const pct = i => n <= 1 ? 50 : (i/(n-1))*100;
-  document.getElementById('sliderLabels').innerHTML = dates.map((d,i) => {
-    const [,mm,dd] = d.split('-');
+  slMin.min=0; slMin.max=n-1; slMin.value=0;
+  slMax.min=0; slMax.max=n-1; slMax.value=n-1;
+  const pct = i => n<=1?50:(i/(n-1))*100;
+  document.getElementById('sliderLabels').innerHTML = dates.map((d,i)=>{
+    const[,mm,dd]=d.split('-');
     return `<span class="slider-tick" style="left:${pct(i)}%">${mm}/${dd}</span>`;
   }).join('');
-
-  slMin.oninput = () => {
-    if (+slMin.value > +slMax.value) slMax.value = slMin.value;
-    state.dateIdxMin = +slMin.value; state.dateIdxMax = +slMax.value;
-    updateSliderFill(dates); loadAndRender();
-  };
-  slMax.oninput = () => {
-    if (+slMax.value < +slMin.value) slMin.value = slMax.value;
-    state.dateIdxMin = +slMin.value; state.dateIdxMax = +slMax.value;
-    updateSliderFill(dates); loadAndRender();
-  };
+  slMin.oninput = ()=>{ if(+slMin.value>+slMax.value) slMax.value=slMin.value; state.dateIdxMin=+slMin.value; state.dateIdxMax=+slMax.value; updateSliderFill(dates); loadAndRender(); };
+  slMax.oninput = ()=>{ if(+slMax.value<+slMin.value) slMin.value=slMax.value; state.dateIdxMin=+slMin.value; state.dateIdxMax=+slMax.value; updateSliderFill(dates); loadAndRender(); };
   updateSliderFill(dates);
 }
-
 function updateSliderFill(dates) {
-  const n = dates.length;
-  const minP = n<=1 ? 0 : (state.dateIdxMin/(n-1))*100;
-  const maxP = n<=1 ? 100 : (state.dateIdxMax/(n-1))*100;
-  document.getElementById('sliderFill').style.cssText = `left:${minP}%;width:${maxP-minP}%`;
-  const fmt = iso => { const[,mm,dd]=iso.split('-'); return `${mm}/${dd}`; };
-  const d0 = dates[state.dateIdxMin], d1 = dates[state.dateIdxMax];
+  const n=dates.length;
+  const minP=n<=1?0:(state.dateIdxMin/(n-1))*100;
+  const maxP=n<=1?100:(state.dateIdxMax/(n-1))*100;
+  document.getElementById('sliderFill').style.cssText=`left:${minP}%;width:${maxP-minP}%`;
+  const fmt=iso=>{const[,mm,dd]=iso.split('-');return`${mm}/${dd}`;};
+  const d0=dates[state.dateIdxMin],d1=dates[state.dateIdxMax];
   document.getElementById('dateRangeDisplay').innerHTML =
-    d0===d1 ? `<span>${fmt(d0)}</span>` : `<span>${fmt(d0)}</span> → <span>${fmt(d1)}</span>`;
+    d0===d1?`<span>${fmt(d0)}</span>`:`<span>${fmt(d0)}</span> → <span>${fmt(d1)}</span>`;
 }
 
 /* ============================================================================
@@ -404,12 +383,11 @@ function buildLayerList() {
      </div>`
   ).join('');
 }
-
 function toggleLayer(id) {
   state.layers[id] = !state.layers[id];
   document.getElementById(`lr_${id}`)?.classList.toggle('active', state.layers[id]);
   document.getElementById('phaseControl').classList.toggle('visible', state.layers.circles);
-  document.getElementById('engLegend').classList.toggle('visible', state.layers.engagements);
+  document.getElementById('engControl').classList.toggle('visible', state.layers.engagements);
   scheduleRedraw();
 }
 
@@ -423,11 +401,19 @@ function buildPhaseBtns() {
                onclick="setCirclePhase(${i===0?0:n})">${n}</button>`
     ).join('');
 }
-
 function setCirclePhase(n) {
-  state.circlePhase = n;
-  document.querySelectorAll('.phase-btn').forEach((btn, i) =>
-    btn.classList.toggle('active', (i===0?0:i) === n));
+  state.circlePhase=n;
+  document.querySelectorAll('.phase-btn').forEach((b,i)=>b.classList.toggle('active',(i===0?0:i)===n));
+  scheduleRedraw();
+}
+
+/* ============================================================================
+   ENGAGEMENT GROUPING
+============================================================================ */
+function setEngGrouping(v) {
+  state.engGroupSlider = v;
+  const lbl = document.getElementById('engGroupLabel');
+  lbl.textContent = v===0 ? 'Off' : v===100 ? 'Max' : v+'%';
   scheduleRedraw();
 }
 
@@ -435,14 +421,9 @@ function setCirclePhase(n) {
    PLAYER FILTER
 ============================================================================ */
 function setPlayer(p) {
-  state.player = p;
-  document.querySelectorAll('[data-f]').forEach(el => {
-    const [,val] = el.dataset.f.split(':');
-    el.classList.toggle('active', val === p);
-  });
-  rebuildHeatmaps();
-  scheduleRedraw();
-  renderStats();
+  state.player=p;
+  document.querySelectorAll('[data-f]').forEach(el=>{const[,v]=el.dataset.f.split(':');el.classList.toggle('active',v===p);});
+  rebuildHeatmaps(); scheduleRedraw(); renderStats();
 }
 
 /* ============================================================================
@@ -450,152 +431,118 @@ function setPlayer(p) {
 ============================================================================ */
 function filteredMatches() {
   if (!state.map) return [];
-  const dates = DATA.mapDates[state.map] || [];
-  const lo = dates[state.dateIdxMin], hi = dates[state.dateIdxMax];
+  const dates=DATA.mapDates[state.map]||[];
+  const lo=dates[state.dateIdxMin], hi=dates[state.dateIdxMax];
   return DATA.matches.filter(m =>
-    m.map === state.map &&
-    m.created_at.slice(0,10) >= lo &&
-    m.created_at.slice(0,10) <= hi
-  );
+    m.map===state.map && m.created_at.slice(0,10)>=lo && m.created_at.slice(0,10)<=hi);
 }
 
 /* ============================================================================
    LOAD + PROCESS
 ============================================================================ */
 async function loadAndRender() {
-  const matches = filteredMatches();
+  const matches=filteredMatches();
   if (!matches.length) { clearLayers(); scheduleRedraw(); renderStats(); return; }
-
-  setLoading(true, 0, matches.length);
-  const toFetch = matches.filter(m => !MATCH_CACHE.has(m.match_id));
-  let done = matches.length - toFetch.length;
-
-  await Promise.all(toFetch.map(async m => {
+  setLoading(true,0,matches.length);
+  const toFetch=matches.filter(m=>!MATCH_CACHE.has(m.match_id));
+  let done=matches.length-toFetch.length;
+  await Promise.all(toFetch.map(async m=>{
     try {
-      const data = await fetch(`stats-data/matches/${m.match_id}.json`).then(r => r.json());
-      processMatch(data, m);
-    } catch(e) { console.warn('load failed', m.match_id, e); }
-    done++;
-    setLoading(true, done, matches.length);
+      const data=await fetch(`stats-data/matches/${m.match_id}.json`).then(r=>r.json());
+      processMatch(data,m);
+    } catch(e){console.warn('failed',m.match_id,e);}
+    done++; setLoading(true,done,matches.length);
   }));
-
   aggregateLayers(matches);
   rebuildHeatmaps();
-  setLoading(false, 1, 1);
-  renderStats();
-  scheduleRedraw();
+  setLoading(false,1,1);
+  renderStats(); scheduleRedraw();
 }
-
-function setLoading(on, done, total) {
-  document.getElementById('canvasLoading').classList.toggle('hidden', !on);
-  if (on) {
-    document.getElementById('loadBar').style.width = Math.round(done/total*100)+'%';
-    document.getElementById('loadText').textContent = `Loading ${done} / ${total}…`;
-  }
+function setLoading(on,done,total) {
+  document.getElementById('canvasLoading').classList.toggle('hidden',!on);
+  if(on){document.getElementById('loadBar').style.width=Math.round(done/total*100)+'%';document.getElementById('loadText').textContent=`Loading ${done} / ${total}…`;}
 }
 
 /* ============================================================================
-   PROCESS SINGLE MATCH
+   PROCESS MATCH
 ============================================================================ */
 function processMatch(md, meta) {
-  const ws  = CURRENT_MAP?.world_size || 816000;
-  const dur = md.duration_s || 1800;
-  const tc  = (x, y) => ({ cx: (x/ws)*CSZ, cy: (y/ws)*CSZ });
-  const date = meta.created_at.slice(0, 10);
-  const mid  = md.match_id;
+  const ws  = CURRENT_MAP?.world_size||816000;
+  const dur = md.duration_s||1800;
+  const tc  = (x,y)=>({cx:(x/ws)*CSZ, cy:(y/ws)*CSZ});
+  const date= meta.created_at.slice(0,10);
+  const mid = md.match_id;
 
-  // Positions (heatmap + paths)
-  const posData  = { D282: [], S821: [] };
-  const pathData = { D282: [], S821: [] };
+  // Positions + paths
+  const posData={D282:[],S821:[]}, pathData={D282:[],S821:[]};
   for (const player of ['D282','S821']) {
-    const raw = md.positions?.[player] || [];
-    let lastH = -Infinity, lastP = -Infinity;
+    const raw=md.positions?.[player]||[];
+    let lH=-Infinity, lP=-Infinity;
     for (const p of raw) {
-      if (p.tr==='plane'||p.tr==='chute') continue;
-      if (p.x==null) continue;
-      const pt = tc(p.x, p.y);
-      if (p.t - lastH >= 4)  { posData[player].push(pt);                      lastH = p.t; }
-      if (p.t - lastP >= 12) { pathData[player].push({...pt, tr:p.tr});       lastP = p.t; }
+      if (p.tr==='plane'||p.tr==='chute'||p.x==null) continue;
+      const pt=tc(p.x,p.y);
+      if (p.t-lH>=4)  {posData[player].push(pt);lH=p.t;}
+      if (p.t-lP>=12) {pathData[player].push({...pt,tr:p.tr});lP=p.t;}
     }
   }
 
-  // Loot positions (interpolate player pos at each pick time)
-  const lootData = { D282: [], S821: [] };
-  const posByPlayer = {};
+  // Loot positions (inventory picks → interpolate from foot positions)
+  const lootData={D282:[],S821:[]};
+  const footPos={};
   for (const player of ['D282','S821'])
-    posByPlayer[player] = (md.positions?.[player] || []).filter(p => p.tr==='foot');
-
-  for (const inv of (md.inventory || [])) {
-    if (inv.ev !== 'pick') continue;
-    if (!['D282','S821'].includes(inv.player)) continue;
-    const pos = posAtTime(posByPlayer[inv.player], inv.t);
-    if (!pos) continue;
-    lootData[inv.player].push(tc(pos.x, pos.y));
+    footPos[player]=(md.positions?.[player]||[]).filter(p=>p.tr==='foot');
+  for (const inv of (md.inventory||[])) {
+    if (inv.ev!=='pick'||!['D282','S821'].includes(inv.player)) continue;
+    const pos=posAtTime(footPos[inv.player],inv.t);
+    if (pos) lootData[inv.player].push(tc(pos.x,pos.y));
   }
 
   // Drops
-  const dropData = {};
+  const dropData={};
   for (const player of ['D282','S821']) {
-    const raw = md.positions?.[player] || [];
-    let prev = null;
+    const raw=md.positions?.[player]||[];
+    let prev=null;
     for (const p of raw) {
       if (p.x==null) continue;
-      if ((prev?.tr==='chute'||prev?.tr==='plane') && p.tr==='foot') {
-        dropData[player] = {...tc(p.x, p.y), player, matchId: mid, date}; break;
-      }
-      if (p.tr==='foot' && !prev) {
-        dropData[player] = {...tc(p.x, p.y), player, matchId: mid, date}; break;
-      }
-      prev = p;
+      if ((prev?.tr==='chute'||prev?.tr==='plane')&&p.tr==='foot') {dropData[player]={...tc(p.x,p.y),player,matchId:mid,date};break;}
+      if (p.tr==='foot'&&!prev) {dropData[player]={...tc(p.x,p.y),player,matchId:mid,date};break;}
+      prev=p;
     }
   }
 
   // Events
-  const evData = { deaths:[], kills:[], knocked:[], dmgDealt:[], dmgTaken:[] };
+  const evData={deaths:[],kills:[],knocked:[],knockdowns:[],dmgDealt:[],dmgTaken:[]};
   for (const ev of (md.events||[])) {
-    if (!['D282','S821'].includes(ev.player)) continue;
-    if (ev.x==null || ev.y==null) continue;
-    const pt   = tc(ev.x, ev.y);
-    const base = {...pt, player:ev.player, matchId:mid, date, t:ev.t};
+    if (!['D282','S821'].includes(ev.player)||ev.x==null||ev.y==null) continue;
+    const pt=tc(ev.x,ev.y);
+    const base={...pt,player:ev.player,matchId:mid,date,t:ev.t};
     if (ev.type==='death')     evData.deaths.push(base);
-    if (ev.type==='kill')      evData.kills.push({...base, weapon:ev.weapon, target:ev.target});
+    if (ev.type==='kill')      evData.kills.push({...base,weapon:ev.weapon,target:ev.target});
     if (ev.type==='knocked')   evData.knocked.push(base);
-    if (ev.type==='dmg_dealt') evData.dmgDealt.push({...base, damage:ev.damage, weapon:ev.weapon, target:ev.target});
-    if (ev.type==='dmg_taken') evData.dmgTaken.push({...base, damage:ev.damage});
+    if (ev.type==='knockdown') evData.knockdowns.push(base);
+    if (ev.type==='dmg_dealt') evData.dmgDealt.push({...base,damage:ev.damage,weapon:ev.weapon,target:ev.target});
+    if (ev.type==='dmg_taken') evData.dmgTaken.push({...base,damage:ev.damage});
   }
 
   // Circle phases: 8 time-bucket min-radius
-  const circlePhases = extractCirclePhases(md.circles || [], ws, dur);
-
-  MATCH_CACHE.set(mid, { posData, lootData, pathData, dropData, evData, circlePhases, date });
+  const circlePhases=extractCirclePhases(md.circles||[],ws,dur);
+  MATCH_CACHE.set(mid,{posData,lootData,pathData,dropData,evData,circlePhases,date});
 }
 
-function posAtTime(positions, t) {
-  let last = null;
-  for (const p of positions) {
-    if (p.t <= t) last = p;
-    else break;
-  }
+function posAtTime(positions,t) {
+  let last=null;
+  for (const p of positions) { if(p.t<=t) last=p; else break; }
   return last;
 }
-
-/* ── Circle extraction: 8 time buckets, pick min radius per bucket ─────── */
-function extractCirclePhases(rawCircles, ws, dur) {
+function extractCirclePhases(rawCircles,ws,dur) {
   if (!rawCircles.length) return [];
-  const N = 8;
-  const phases = [];
-  for (let i = 0; i < N; i++) {
-    const t0 = (i/N) * dur;
-    const t1 = ((i+1)/N) * dur;
-    const bucket = rawCircles.filter(c => c.t >= t0 && c.t < t1);
+  const phases=[];
+  for (let i=0;i<8;i++) {
+    const t0=(i/8)*dur, t1=((i+1)/8)*dur;
+    const bucket=rawCircles.filter(c=>c.t>=t0&&c.t<t1);
     if (!bucket.length) continue;
-    const c = bucket.reduce((mn, c) => c.safe_r < mn.safe_r ? c : mn);
-    phases.push({
-      cx: (c.safe_x/ws)*CSZ,
-      cy: (c.safe_y/ws)*CSZ,
-      r:  Math.max(1.5, (c.safe_r/ws)*CSZ),
-      phaseNum: i+1,
-    });
+    const c=bucket.reduce((mn,c)=>c.safe_r<mn.safe_r?c:mn);
+    phases.push({cx:(c.safe_x/ws)*CSZ, cy:(c.safe_y/ws)*CSZ, r:Math.max(1.5,(c.safe_r/ws)*CSZ), phaseNum:i+1});
   }
   return phases;
 }
@@ -604,225 +551,203 @@ function extractCirclePhases(rawCircles, ws, dur) {
    AGGREGATE LAYERS
 ============================================================================ */
 function aggregateLayers(matches) {
-  const L = LAYER;
-  L.positions  = { D282:[], S821:[] };
-  L.lootPos    = { D282:[], S821:[] };
-  L.drops      = [];
-  L.paths      = [];
-  L.events     = { deaths:[], kills:[], knocked:[], dmgDealt:[], dmgTaken:[] };
-  L.circlePhases = [];
+  const L=LAYER;
+  L.positions={D282:[],S821:[]}; L.lootPos={D282:[],S821:[]};
+  L.drops=[]; L.paths=[]; L.circlePhases=[];
+  L.events={deaths:[],kills:[],knocked:[],knockdowns:[],dmgDealt:[],dmgTaken:[]};
 
   for (const m of matches) {
-    const c = MATCH_CACHE.get(m.match_id);
-    if (!c) continue;
+    const c=MATCH_CACHE.get(m.match_id); if(!c) continue;
     for (const p of ['D282','S821']) {
       L.positions[p].push(...(c.posData[p]||[]));
       L.lootPos[p].push(...(c.lootData[p]||[]));
-      if (c.pathData[p]?.length) L.paths.push({pts:c.pathData[p], player:p, matchId:m.match_id, date:c.date});
+      if (c.pathData[p]?.length) L.paths.push({pts:c.pathData[p],player:p,matchId:m.match_id,date:c.date});
       if (c.dropData[p]) L.drops.push(c.dropData[p]);
     }
-    L.events.deaths.push(...c.evData.deaths);
-    L.events.kills.push(...c.evData.kills);
-    L.events.knocked.push(...c.evData.knocked);
-    L.events.dmgDealt.push(...c.evData.dmgDealt);
-    L.events.dmgTaken.push(...c.evData.dmgTaken);
-    L.circlePhases.push({phases: c.circlePhases, matchId: m.match_id, date: c.date});
+    for (const k of Object.keys(L.events)) L.events[k].push(...(c.evData[k]||[]));
+    L.circlePhases.push({phases:c.circlePhases,matchId:m.match_id,date:c.date});
   }
-
-  document.getElementById('matchCountBadge').innerHTML =
+  document.getElementById('matchCountBadge').innerHTML=
     `<strong>${matches.length}</strong> match${matches.length!==1?'es':''} · ${state.map}`;
-
   computeEngagementClusters();
 }
 
 function clearLayers() {
-  LAYER.positions = {D282:[],S821:[]};
-  LAYER.lootPos = {D282:[],S821:[]};
-  LAYER.drops=[]; LAYER.paths=[]; LAYER.engClusters=[];
-  LAYER.events={deaths:[],kills:[],knocked:[],dmgDealt:[],dmgTaken:[]};
-  LAYER.circlePhases=[];
-  LAYER.hmCanvas={D282:null,S821:null};
-  LAYER.lootCanvas={D282:null,S821:null};
+  LAYER.positions={D282:[],S821:[]}; LAYER.lootPos={D282:[],S821:[]};
+  LAYER.drops=[]; LAYER.paths=[]; LAYER.engClusters=[]; LAYER.circlePhases=[];
+  LAYER.events={deaths:[],kills:[],knocked:[],knockdowns:[],dmgDealt:[],dmgTaken:[]};
+  LAYER.hmCanvas={D282:null,S821:null}; LAYER.lootCanvas={D282:null,S821:null};
   document.getElementById('matchCountBadge').textContent='—';
 }
 
 /* ============================================================================
-   ENGAGEMENT CLUSTERING
+   ENGAGEMENT CLUSTERING + SCORING
 ============================================================================ */
-const ENG_COLOR = {
-  win:         '#00cc44',
-  partial_win: '#88cc44',
-  neutral:     '#6699cc',
-  behind:      '#cc8833',
-  loss:        '#cc3333',
-};
+/*
+  Score: kill=+100, death=-100, knockdown=+50, knocked=-50
+         both_players_died=-1000 additional
+  5 outcomes:
+    dark_green:  score >= 150
+    light_green: score >= 50
+    neutral:     -49 to 49
+    light_red:   -199 to -50
+    dark_red:    <= -200  (includes both_died which is -1000)
+*/
+function scoreToOutcome(score) {
+  if (score >= 150)  return 'dark_green';
+  if (score >= 50)   return 'light_green';
+  if (score > -50)   return 'neutral';
+  if (score > -200)  return 'light_red';
+  return 'dark_red';
+}
 
 function computeEngagementClusters() {
-  // Group dmgDealt by matchId+player, cluster temporally (40s window)
-  const grouped = {};
+  // Cluster dmgDealt events: per match, spatial (~15px) + temporal (90s)
+  const SPATIAL_R2 = 15*15;
+  const TEMPORAL_W = 90;
+
+  const byMatch = {};
   for (const ev of LAYER.events.dmgDealt) {
-    const key = `${ev.matchId}::${ev.player}`;
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(ev);
+    if (!byMatch[ev.matchId]) byMatch[ev.matchId]=[];
+    byMatch[ev.matchId].push(ev);
   }
 
   const clusters = [];
-  for (const [key, evs] of Object.entries(grouped)) {
-    const [matchId, player] = key.split('::');
-    const sorted = [...evs].sort((a,b) => a.t - b.t);
-    let group = [sorted[0]];
+  for (const [matchId, evs] of Object.entries(byMatch)) {
+    const sorted=[...evs].sort((a,b)=>a.t-b.t);
+    const visited=new Set();
 
-    const flush = () => {
-      if (!group.length) return;
-      const cx  = group.reduce((s,e) => s+e.cx, 0) / group.length;
-      const cy  = group.reduce((s,e) => s+e.cy, 0) / group.length;
-      const dmgDealt = group.reduce((s,e) => s+(e.damage||0), 0);
-      const tMin = group[0].t - 5;
-      const tMax = group[group.length-1].t + 40;
+    for (let i=0;i<sorted.length;i++) {
+      if (visited.has(i)) continue;
+      const group=[sorted[i]]; visited.add(i);
+      for (let j=i+1;j<sorted.length;j++) {
+        if (visited.has(j)) continue;
+        const a=sorted[i],b=sorted[j];
+        const dx=a.cx-b.cx, dy=a.cy-b.cy;
+        if (dx*dx+dy*dy<SPATIAL_R2 && Math.abs(a.t-b.t)<TEMPORAL_W) { group.push(b); visited.add(j); }
+      }
 
-      const dmgTaken = LAYER.events.dmgTaken
-        .filter(e => e.matchId===matchId && e.player===player && e.t>=tMin && e.t<=tMax)
-        .reduce((s,e) => s+(e.damage||0), 0);
-      const kills  = LAYER.events.kills.filter(e => e.matchId===matchId && e.player===player && e.t>=tMin && e.t<=tMax).length;
-      const deaths = LAYER.events.deaths.filter(e => e.matchId===matchId && e.player===player && e.t>=tMin && e.t<=tMax).length;
+      const cx=group.reduce((s,e)=>s+e.cx,0)/group.length;
+      const cy=group.reduce((s,e)=>s+e.cy,0)/group.length;
+      const tMin=group[0].t-5;
+      const tMax=group[group.length-1].t+TEMPORAL_W;
+      const involvedPlayers=[...new Set(group.map(e=>e.player))];
 
-      let outcome;
-      if      (kills>0 && deaths===0)            outcome = 'win';
-      else if (kills>0)                           outcome = 'partial_win';
-      else if (deaths>0)                          outcome = 'loss';
-      else if (dmgDealt > dmgTaken * 1.35)        outcome = 'neutral'; // ahead but no kill
-      else if (dmgTaken > dmgDealt * 1.35)        outcome = 'behind';
-      else                                        outcome = 'neutral';
+      const ev=k=>LAYER.events[k].filter(e=>e.matchId===matchId&&involvedPlayers.includes(e.player)&&e.t>=tMin&&e.t<=tMax);
+      const kills      = ev('kills').length;
+      const deaths     = ev('deaths').length;
+      const knocks     = ev('knockdowns').length;
+      const knocked    = ev('knocked').length;
+      const d282died   = LAYER.events.deaths.some(e=>e.matchId===matchId&&e.player==='D282'&&e.t>=tMin&&e.t<=tMax);
+      const s821died   = LAYER.events.deaths.some(e=>e.matchId===matchId&&e.player==='S821'&&e.t>=tMin&&e.t<=tMax);
+      const bothDied   = d282died && s821died;
 
-      clusters.push({ cx, cy, player, outcome, dmgDealt, dmgTaken, kills, deaths,
-                      matchId, date: group[0].date, t: group[0].t });
-      group = [];
-    };
+      const score  = kills*100 - deaths*100 + knocks*50 - knocked*50 - (bothDied?1000:0);
+      const outcome= scoreToOutcome(score);
 
-    for (let i = 1; i < sorted.length; i++) {
-      if (sorted[i].t - sorted[i-1].t < 40)
-        group.push(sorted[i]);
-      else { flush(); group = [sorted[i]]; }
+      clusters.push({cx,cy,score,outcome,kills,deaths,knocks,knocked,bothDied,
+                     matchId,date:group[0].date,t:group[0].t,player:group[0].player});
     }
-    flush();
   }
-  LAYER.engClusters = clusters;
+  LAYER.engClusters=clusters;
 }
 
 /* ============================================================================
    HEATMAP BUILD
 ============================================================================ */
 function rebuildHeatmaps() {
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
+  const players=state.player==='both'?['D282','S821']:[state.player];
   for (const p of ['D282','S821']) {
-    LAYER.hmCanvas[p]   = players.includes(p) && LAYER.positions[p].length ? buildHeatmapCanvas(LAYER.positions[p], p, false) : null;
-    LAYER.lootCanvas[p] = players.includes(p) && LAYER.lootPos[p].length   ? buildHeatmapCanvas(LAYER.lootPos[p],   p, true)  : null;
+    LAYER.hmCanvas[p]   = players.includes(p)&&LAYER.positions[p].length ? buildHeatmapCanvas(LAYER.positions[p],p,false) : null;
+    LAYER.lootCanvas[p] = players.includes(p)&&LAYER.lootPos[p].length   ? buildHeatmapCanvas(LAYER.lootPos[p],  p,true)  : null;
   }
 }
 
-function buildHeatmapCanvas(points, player, isLoot) {
-  const off = document.createElement('canvas');
-  off.width = CSZ; off.height = CSZ;
-  const oc  = off.getContext('2d');
-  const rad = Math.round(CSZ * (isLoot ? 0.014 : 0.020));
+function buildHeatmapCanvas(points,player,isLoot) {
+  const off=document.createElement('canvas');
+  off.width=CSZ; off.height=CSZ;
+  const oc=off.getContext('2d');
+  const rad=Math.round(CSZ*(isLoot?0.014:0.020));
 
-  for (const {cx, cy} of points) {
-    const g = oc.createRadialGradient(cx, cy, 0, cx, cy, rad);
-    g.addColorStop(0, 'rgba(0,0,0,0.05)');
-    g.addColorStop(1, 'rgba(0,0,0,0)');
-    oc.fillStyle = g;
-    oc.fillRect(cx-rad, cy-rad, rad*2, rad*2);
+  for (const {cx,cy} of points) {
+    const g=oc.createRadialGradient(cx,cy,0,cx,cy,rad);
+    g.addColorStop(0,'rgba(0,0,0,0.05)'); g.addColorStop(1,'rgba(0,0,0,0)');
+    oc.fillStyle=g; oc.fillRect(cx-rad,cy-rad,rad*2,rad*2);
   }
 
-  const idata = oc.getImageData(0, 0, CSZ, CSZ);
-  let maxA = 0;
-  for (let i = 3; i < idata.data.length; i += 4) maxA = Math.max(maxA, idata.data[i]);
+  const idata=oc.getImageData(0,0,CSZ,CSZ);
+  let maxA=0;
+  for (let i=3;i<idata.data.length;i+=4) maxA=Math.max(maxA,idata.data[i]);
   if (!maxA) return null;
 
-  // Minimum threshold: suppress areas visited very rarely (< 8% of max density)
-  const THRESH = 0.08;
-  const out = new ImageData(CSZ, CSZ);
-  for (let i = 0; i < idata.data.length; i += 4) {
-    const v = idata.data[i+3] / maxA;
-    if (v < THRESH) continue;
-    const t = Math.pow((v - THRESH) / (1 - THRESH), 0.48);
-    const [r, g, b] = isLoot ? lootGrad(t) : (player==='D282' ? amberGrad(t) : blueGrad(t));
-    out.data[i]   = r; out.data[i+1] = g; out.data[i+2] = b;
-    out.data[i+3] = Math.min(255, Math.round(t * 215));
+  const THRESH=0.08;
+  const out=new ImageData(CSZ,CSZ);
+  for (let i=0;i<idata.data.length;i+=4) {
+    const v=idata.data[i+3]/maxA;
+    if (v<THRESH) continue;
+    const t=Math.pow((v-THRESH)/(1-THRESH),0.48);
+    const[r,g,b]=isLoot?lootGrad(t):(player==='D282'?amberGrad(t):blueGrad(t));
+    out.data[i]=r; out.data[i+1]=g; out.data[i+2]=b;
+    out.data[i+3]=Math.min(255,Math.round(t*215));
   }
-
-  const out_c = document.createElement('canvas');
-  out_c.width = CSZ; out_c.height = CSZ;
-  out_c.getContext('2d').putImageData(out, 0, 0);
-  return out_c;
+  const oc2=document.createElement('canvas'); oc2.width=CSZ; oc2.height=CSZ;
+  oc2.getContext('2d').putImageData(out,0,0); return oc2;
 }
-
-function amberGrad(t) {
-  if (t < 0.25) { const s=t/.25; return [Math.round(80+110*s), Math.round(20+45*s), 0]; }
-  if (t < 0.55) { const s=(t-.25)/.30; return [Math.round(190+50*s), Math.round(65+80*s), 0]; }
-  if (t < 0.80) { const s=(t-.55)/.25; return [240, Math.round(145+75*s), Math.round(s*35)]; }
-  { const s=(t-.80)/.20; return [Math.round(240+15*s), Math.round(220+35*s), Math.round(35+190*s)]; }
+function amberGrad(t){
+  if(t<.25){const s=t/.25;return[Math.round(80+110*s),Math.round(20+45*s),0];}
+  if(t<.55){const s=(t-.25)/.30;return[Math.round(190+50*s),Math.round(65+80*s),0];}
+  if(t<.80){const s=(t-.55)/.25;return[240,Math.round(145+75*s),Math.round(s*35)];}
+  const s=(t-.80)/.20;return[Math.round(240+15*s),Math.round(220+35*s),Math.round(35+190*s)];
 }
-function blueGrad(t) {
-  if (t < 0.25) { const s=t/.25; return [0, Math.round(20+45*s), Math.round(100+110*s)]; }
-  if (t < 0.55) { const s=(t-.25)/.30; return [0, Math.round(65+105*s), Math.round(210+30*s)]; }
-  if (t < 0.80) { const s=(t-.55)/.25; return [Math.round(s*85), Math.round(170+60*s), 240]; }
-  { const s=(t-.80)/.20; return [Math.round(85+145*s), Math.round(230+25*s), Math.round(240+15*s)]; }
+function blueGrad(t){
+  if(t<.25){const s=t/.25;return[0,Math.round(20+45*s),Math.round(100+110*s)];}
+  if(t<.55){const s=(t-.25)/.30;return[0,Math.round(65+105*s),Math.round(210+30*s)];}
+  if(t<.80){const s=(t-.55)/.25;return[Math.round(s*85),Math.round(170+60*s),240];}
+  const s=(t-.80)/.20;return[Math.round(85+145*s),Math.round(230+25*s),Math.round(240+15*s)];
 }
-function lootGrad(t) {
-  if (t < 0.25) { const s=t/.25; return [Math.round(10+20*s), Math.round(60+90*s), Math.round(10+20*s)]; }
-  if (t < 0.55) { const s=(t-.25)/.30; return [Math.round(30+100*s), Math.round(150+70*s), Math.round(30+10*s)]; }
-  if (t < 0.80) { const s=(t-.55)/.25; return [Math.round(130+100*s), Math.round(220+25*s), 40]; }
-  { const s=(t-.80)/.20; return [Math.round(230+25*s), Math.round(245+10*s), Math.round(40+185*s)]; }
+function lootGrad(t){
+  if(t<.25){const s=t/.25;return[Math.round(10+20*s),Math.round(60+90*s),Math.round(10+20*s)];}
+  if(t<.55){const s=(t-.25)/.30;return[Math.round(30+100*s),Math.round(150+70*s),Math.round(30+10*s)];}
+  if(t<.80){const s=(t-.55)/.25;return[Math.round(130+100*s),Math.round(220+25*s),40];}
+  const s=(t-.80)/.20;return[Math.round(230+25*s),Math.round(245+10*s),Math.round(40+185*s)];
 }
 
 /* ============================================================================
    DRAW
 ============================================================================ */
-let rafPending = false;
-function scheduleRedraw() {
-  if (!rafPending) { rafPending = true; requestAnimationFrame(() => { rafPending=false; draw(); }); }
-}
+let rafPending=false;
+function scheduleRedraw(){if(!rafPending){rafPending=true;requestAnimationFrame(()=>{rafPending=false;draw();});}}
 
 function draw() {
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.clearRect(0,0,CSZ,CSZ);
+  ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,CSZ,CSZ);
 
   if (!CURRENT_MAP) {
-    ctx.fillStyle = '#0a0906'; ctx.fillRect(0,0,CSZ,CSZ);
+    ctx.fillStyle='#0a0906'; ctx.fillRect(0,0,CSZ,CSZ);
     ctx.fillStyle='#9a9385'; ctx.font='16px system-ui'; ctx.textAlign='center';
-    ctx.fillText('Select a map above', CSZ/2, CSZ/2);
-    return;
+    ctx.fillText('Select a map above',CSZ/2,CSZ/2); return;
   }
 
   ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
 
-  // Map image
-  if (mapImg.complete && mapImg.naturalWidth>0) {
-    ctx.drawImage(mapImg, 0,0, CSZ,CSZ);
+  if (mapImg.complete&&mapImg.naturalWidth>0) {
+    ctx.drawImage(mapImg,0,0,CSZ,CSZ);
     ctx.fillStyle='rgba(0,0,0,0.28)'; ctx.fillRect(0,0,CSZ,CSZ);
   } else {
     ctx.fillStyle='#0a0906'; ctx.fillRect(0,0,CSZ,CSZ);
   }
 
-  // Position heatmap (screen blend to additive mix D282+S821)
-  if (state.layers.heatmap) {
+  // Heatmaps (screen blend)
+  if (state.layers.heatmap||state.layers.lootHeatmap) {
     ctx.save(); ctx.globalCompositeOperation='screen';
-    for (const p of (state.player==='both'?['D282','S821']:[state.player]))
-      if (LAYER.hmCanvas[p]) { ctx.globalAlpha=0.82; ctx.drawImage(LAYER.hmCanvas[p],0,0,CSZ,CSZ); }
+    const players=state.player==='both'?['D282','S821']:[state.player];
+    for (const p of players) {
+      if (state.layers.heatmap&&LAYER.hmCanvas[p])   {ctx.globalAlpha=0.82;ctx.drawImage(LAYER.hmCanvas[p],0,0,CSZ,CSZ);}
+      if (state.layers.lootHeatmap&&LAYER.lootCanvas[p]) {ctx.globalAlpha=0.78;ctx.drawImage(LAYER.lootCanvas[p],0,0,CSZ,CSZ);}
+    }
     ctx.restore();
   }
 
-  // Loot heatmap
-  if (state.layers.lootHeatmap) {
-    ctx.save(); ctx.globalCompositeOperation='screen';
-    for (const p of (state.player==='both'?['D282','S821']:[state.player]))
-      if (LAYER.lootCanvas[p]) { ctx.globalAlpha=0.78; ctx.drawImage(LAYER.lootCanvas[p],0,0,CSZ,CSZ); }
-    ctx.restore();
-  }
-
-  hitTargets = [];
-
+  hitTargets=[];
   if (state.layers.circles)     drawCircles();
   if (state.layers.paths)       drawPaths();
   if (state.layers.engagements) drawEngagements();
@@ -834,151 +759,175 @@ function draw() {
   ctx.setTransform(1,0,0,1,0,0);
 }
 
-/* ── Circles (no fill, stroke only) ────────────────────────────────────── */
-// Phase color gradient: blue (phase1/early) → purple → red (phase8/final)
-const PHASE_COLORS = [
-  '#4488ff','#5577ee','#6655dd','#7744cc','#9933bb','#bb3399','#dd2266','#ff2244'
-];
-
+/* ── Circles ────────────────────────────────────────────────────────────── */
+const PHASE_COLORS=['#4488ff','#5577ee','#6655dd','#7744cc','#9933bb','#bb3399','#dd2266','#ff2244'];
 function drawCircles() {
-  const phase = state.circlePhase;
+  const phase=state.circlePhase;
   for (const mc of LAYER.circlePhases) {
-    const phases = mc.phases;
-    if (!phases.length) continue;
-
-    if (phase === 0) {
-      // All phases: fading rings from blue (early) to red (late)
-      for (let i = 0; i < phases.length; i++) {
-        const c   = phases[i];
-        const col = PHASE_COLORS[Math.min(i, PHASE_COLORS.length-1)];
-        drawCircleRing(c, col, 0.18);
-      }
+    const phases=mc.phases; if(!phases.length) continue;
+    if (phase===0) {
+      phases.forEach((c,i)=>{
+        const col=PHASE_COLORS[Math.min(i,7)];
+        ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
+        ctx.strokeStyle=col+'30'; ctx.lineWidth=1/view.scale; ctx.stroke();
+      });
     } else {
-      const c = phases[Math.min(phase-1, phases.length-1)];
-      if (!c) continue;
-      // Phase 1 = thin stroke; Phase 8 = thicker (small circle needs to be visible)
-      const thickness = 1 + (phase-1) * 0.25;
-      drawCircleRing(c, '#4a9edd', 0.7, thickness);
-      // Center crosshair for small circles (phase 5+)
-      if (phase >= 5) {
-        const s = Math.max(3, c.r * 0.3) / view.scale;
+      const c=phases[Math.min(phase-1,phases.length-1)]; if(!c) continue;
+      ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
+      ctx.strokeStyle='#4a9eddbb'; ctx.lineWidth=Math.max(1,(1+(phase-1)*0.22))/view.scale; ctx.stroke();
+      if (phase>=5) {
+        const s=Math.max(3,c.r*0.3)/view.scale;
         ctx.beginPath();
-        ctx.moveTo(c.cx-s, c.cy); ctx.lineTo(c.cx+s, c.cy);
-        ctx.moveTo(c.cx, c.cy-s); ctx.lineTo(c.cx, c.cy+s);
-        ctx.strokeStyle = '#4a9eddcc';
-        ctx.lineWidth = 1.2 / view.scale;
-        ctx.stroke();
+        ctx.moveTo(c.cx-s,c.cy); ctx.lineTo(c.cx+s,c.cy);
+        ctx.moveTo(c.cx,c.cy-s); ctx.lineTo(c.cx,c.cy+s);
+        ctx.strokeStyle='#4a9eddcc'; ctx.lineWidth=1.2/view.scale; ctx.stroke();
       }
     }
   }
 }
 
-function drawCircleRing(c, col, alpha, thickness=1) {
-  ctx.beginPath();
-  ctx.arc(c.cx, c.cy, c.r, 0, Math.PI*2);
-  ctx.strokeStyle = col + Math.round(alpha*255).toString(16).padStart(2,'0');
-  ctx.lineWidth = thickness / view.scale;
-  ctx.setLineDash([]);
-  ctx.stroke();
-}
-
 /* ── Paths ──────────────────────────────────────────────────────────────── */
 function drawPaths() {
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
+  const players=state.player==='both'?['D282','S821']:[state.player];
   for (const path of LAYER.paths) {
-    if (!players.includes(path.player) || path.pts.length < 2) continue;
-    ctx.beginPath();
-    ctx.moveTo(path.pts[0].cx, path.pts[0].cy);
-    for (let i=1; i<path.pts.length; i++) ctx.lineTo(path.pts[i].cx, path.pts[i].cy);
-    ctx.strokeStyle = PLAYER_COLOR[path.player]+'36';
-    ctx.lineWidth = 1.5 / view.scale;
-    ctx.setLineDash([]);
-    ctx.stroke();
+    if (!players.includes(path.player)||path.pts.length<2) continue;
+    ctx.beginPath(); ctx.moveTo(path.pts[0].cx,path.pts[0].cy);
+    for (let i=1;i<path.pts.length;i++) ctx.lineTo(path.pts[i].cx,path.pts[i].cy);
+    ctx.strokeStyle=PLAYER_COLOR[path.player]+'36'; ctx.lineWidth=1.5/view.scale; ctx.setLineDash([]); ctx.stroke();
   }
 }
 
-/* ── Engagements (clustered, colored by outcome) ───────────────────────── */
+/* ── Engagements: dots or pie charts ───────────────────────────────────── */
 function drawEngagements() {
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
-  for (const cl of LAYER.engClusters) {
-    if (!players.includes(cl.player)) continue;
-    const col = ENG_COLOR[cl.outcome];
-    const r   = Math.max(3.5, Math.min(9, cl.dmgDealt / 25)) / view.scale;
-    ctx.beginPath(); ctx.arc(cl.cx, cl.cy, r, 0, Math.PI*2);
-    ctx.fillStyle   = col + 'aa'; ctx.fill();
-    ctx.strokeStyle = col; ctx.lineWidth = 1.2 / view.scale; ctx.stroke();
-    hitTargets.push({cx:cl.cx, cy:cl.cy, r:r+3/view.scale, type:'engagement',
-      player:cl.player, outcome:cl.outcome, dmgDealt:Math.round(cl.dmgDealt),
-      dmgTaken:Math.round(cl.dmgTaken), kills:cl.kills, deaths:cl.deaths,
-      date:cl.date, t:cl.t});
+  const players=state.player==='both'?['D282','S821']:[state.player];
+  const filtered=LAYER.engClusters.filter(c=>players.includes(c.player));
+
+  const slider=state.engGroupSlider;
+  if (slider===0) {
+    // Individual small dots
+    const r=4/view.scale;
+    for (const cl of filtered) {
+      ctx.beginPath(); ctx.arc(cl.cx,cl.cy,r,0,Math.PI*2);
+      ctx.fillStyle=ENG_COLOR[cl.outcome]+'cc'; ctx.fill();
+      ctx.strokeStyle=ENG_COLOR[cl.outcome]; ctx.lineWidth=0.8/view.scale; ctx.stroke();
+      hitTargets.push({cx:cl.cx,cy:cl.cy,r:r+4/view.scale,type:'engagement',
+        player:cl.player,outcome:cl.outcome,score:cl.score,
+        kills:cl.kills,deaths:cl.deaths,knocks:cl.knocks,knocked:cl.knocked,
+        bothDied:cl.bothDied,date:cl.date,t:cl.t});
+    }
+  } else {
+    // Group into grid cells and draw pie charts
+    // cellSize in canvas coords: exponential from 6px to CSZ
+    const cellSize=Math.round(6*Math.pow(CSZ/6,slider/100));
+    drawEngagementPies(filtered,cellSize);
+  }
+}
+
+function drawEngagementPies(filtered,cellSize) {
+  // Build grid
+  const cells={};
+  for (const cl of filtered) {
+    const gx=Math.floor(cl.cx/cellSize), gy=Math.floor(cl.cy/cellSize);
+    const key=`${gx},${gy}`;
+    if (!cells[key]) cells[key]={cx:0,cy:0,n:0,outcomes:Object.fromEntries(ENG_ORDER.map(k=>[k,0]))};
+    cells[key].cx+=cl.cx; cells[key].cy+=cl.cy; cells[key].n++;
+    cells[key].outcomes[cl.outcome]++;
+  }
+
+  for (const cell of Object.values(cells)) {
+    const cx=cell.cx/cell.n, cy=cell.cy/cell.n;
+    const r=Math.max(6,Math.min(28,3+Math.sqrt(cell.n)*5))/view.scale;
+    drawPieChart(cx,cy,r,cell.outcomes,cell.n);
+    hitTargets.push({cx,cy,r:r+3/view.scale,type:'eng_group',outcomes:cell.outcomes,n:cell.n});
+  }
+}
+
+function drawPieChart(cx,cy,r,outcomes,total) {
+  let angle=-Math.PI/2;
+  ctx.setLineDash([]);
+  for (const key of ENG_ORDER) {
+    const count=outcomes[key]||0; if(!count) continue;
+    const slice=(count/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,angle,angle+slice); ctx.closePath();
+    ctx.fillStyle=ENG_COLOR[key]+'cc'; ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.25)'; ctx.lineWidth=0.5/view.scale; ctx.stroke();
+    angle+=slice;
+  }
+  // Outer ring
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1/view.scale; ctx.stroke();
+  // Count label
+  if (r*view.scale>14&&total>1) {
+    ctx.save(); ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
+    ctx.fillStyle='rgba(255,255,255,0.9)';
+    ctx.font=`bold ${Math.round(Math.min(10,r*view.scale*0.55))}px system-ui`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(total,cx,cy); ctx.restore();
+    ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
   }
 }
 
 /* ── Drop zones ─────────────────────────────────────────────────────────── */
 function drawDropZones() {
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
+  const players=state.player==='both'?['D282','S821']:[state.player];
   for (const d of LAYER.drops) {
     if (!players.includes(d.player)) continue;
-    const col = PLAYER_COLOR[d.player];
-    ctx.beginPath(); ctx.arc(d.cx, d.cy, 8/view.scale, 0, Math.PI*2);
+    const col=PLAYER_COLOR[d.player];
+    ctx.beginPath(); ctx.arc(d.cx,d.cy,8/view.scale,0,Math.PI*2);
     ctx.strokeStyle=col+'88'; ctx.lineWidth=1/view.scale; ctx.stroke();
-    ctx.beginPath(); ctx.arc(d.cx, d.cy, 4.5/view.scale, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(d.cx,d.cy,4.5/view.scale,0,Math.PI*2);
     ctx.fillStyle=col+'cc'; ctx.fill();
-    hitTargets.push({cx:d.cx, cy:d.cy, r:9/view.scale, type:'drop', player:d.player, date:d.date});
+    hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',player:d.player,date:d.date});
   }
 }
 
 /* ── Knocked ────────────────────────────────────────────────────────────── */
 function drawKnocked() {
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
-  const col='#e07030';
+  const players=state.player==='both'?['D282','S821']:[state.player];
   for (const ev of LAYER.events.knocked) {
     if (!players.includes(ev.player)) continue;
-    const r=5/view.scale, s=3/view.scale;
-    ctx.beginPath(); ctx.arc(ev.cx, ev.cy, r, 0, Math.PI*2);
-    ctx.strokeStyle=col+'bb'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
+    const r=5/view.scale,s=3/view.scale;
+    ctx.beginPath(); ctx.arc(ev.cx,ev.cy,r,0,Math.PI*2);
+    ctx.strokeStyle='#e07030bb'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(ev.cx-s, ev.cy-s/2); ctx.lineTo(ev.cx, ev.cy+s/2); ctx.lineTo(ev.cx+s, ev.cy-s/2);
-    ctx.strokeStyle=col; ctx.lineWidth=1.5/view.scale; ctx.stroke();
-    hitTargets.push({cx:ev.cx, cy:ev.cy, r:r+2/view.scale, type:'knocked', player:ev.player, date:ev.date, t:ev.t});
+    ctx.moveTo(ev.cx-s,ev.cy-s/2); ctx.lineTo(ev.cx,ev.cy+s/2); ctx.lineTo(ev.cx+s,ev.cy-s/2);
+    ctx.strokeStyle='#e07030'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
+    hitTargets.push({cx:ev.cx,cy:ev.cy,r:r+2/view.scale,type:'knocked',player:ev.player,date:ev.date,t:ev.t});
   }
 }
 
-/* ── Kills (5-point star) ───────────────────────────────────────────────── */
+/* ── Kills ──────────────────────────────────────────────────────────────── */
 function drawKills() {
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
+  const players=state.player==='both'?['D282','S821']:[state.player];
   for (const ev of LAYER.events.kills) {
     if (!players.includes(ev.player)) continue;
-    const col=PLAYER_COLOR[ev.player], r=6/view.scale, ri=2.8/view.scale;
+    const col=PLAYER_COLOR[ev.player],r=6/view.scale,ri=2.8/view.scale;
     ctx.beginPath();
-    for (let i=0; i<5; i++) {
-      const ao=(i*4*Math.PI/5)-Math.PI/2, ai=ao+2*Math.PI/5;
-      i===0 ? ctx.moveTo(ev.cx+r*Math.cos(ao), ev.cy+r*Math.sin(ao))
-             : ctx.lineTo(ev.cx+r*Math.cos(ao), ev.cy+r*Math.sin(ao));
-      ctx.lineTo(ev.cx+ri*Math.cos(ai), ev.cy+ri*Math.sin(ai));
+    for (let i=0;i<5;i++) {
+      const ao=(i*4*Math.PI/5)-Math.PI/2,ai=ao+2*Math.PI/5;
+      i===0?ctx.moveTo(ev.cx+r*Math.cos(ao),ev.cy+r*Math.sin(ao)):ctx.lineTo(ev.cx+r*Math.cos(ao),ev.cy+r*Math.sin(ao));
+      ctx.lineTo(ev.cx+ri*Math.cos(ai),ev.cy+ri*Math.sin(ai));
     }
-    ctx.closePath();
-    ctx.fillStyle=col+'dd'; ctx.strokeStyle=col; ctx.lineWidth=0.8/view.scale;
-    ctx.fill(); ctx.stroke();
-    hitTargets.push({cx:ev.cx, cy:ev.cy, r:r+2/view.scale, type:'kill', player:ev.player, weapon:ev.weapon, target:ev.target, date:ev.date, t:ev.t});
+    ctx.closePath(); ctx.fillStyle=col+'dd'; ctx.strokeStyle=col; ctx.lineWidth=0.8/view.scale; ctx.fill(); ctx.stroke();
+    hitTargets.push({cx:ev.cx,cy:ev.cy,r:r+2/view.scale,type:'kill',player:ev.player,weapon:ev.weapon,target:ev.target,date:ev.date,t:ev.t});
   }
 }
 
-/* ── Deaths (X in circle) ───────────────────────────────────────────────── */
+/* ── Deaths ─────────────────────────────────────────────────────────────── */
 function drawDeaths() {
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
+  const players=state.player==='both'?['D282','S821']:[state.player];
   for (const ev of LAYER.events.deaths) {
     if (!players.includes(ev.player)) continue;
-    const r=6/view.scale, s=3.5/view.scale, col='#d7443e';
-    ctx.beginPath(); ctx.arc(ev.cx, ev.cy, r, 0, Math.PI*2);
-    ctx.strokeStyle=col+'cc'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
+    const r=6/view.scale,s=3.5/view.scale;
+    ctx.beginPath(); ctx.arc(ev.cx,ev.cy,r,0,Math.PI*2);
+    ctx.strokeStyle='#d7443ecc'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(ev.cx-s, ev.cy-s); ctx.lineTo(ev.cx+s, ev.cy+s);
-    ctx.moveTo(ev.cx+s, ev.cy-s); ctx.lineTo(ev.cx-s, ev.cy+s);
-    ctx.strokeStyle=col; ctx.lineWidth=2/view.scale; ctx.stroke();
-    ctx.beginPath(); ctx.arc(ev.cx, ev.cy, 1.5/view.scale, 0, Math.PI*2);
+    ctx.moveTo(ev.cx-s,ev.cy-s); ctx.lineTo(ev.cx+s,ev.cy+s);
+    ctx.moveTo(ev.cx+s,ev.cy-s); ctx.lineTo(ev.cx-s,ev.cy+s);
+    ctx.strokeStyle='#d7443e'; ctx.lineWidth=2/view.scale; ctx.stroke();
+    ctx.beginPath(); ctx.arc(ev.cx,ev.cy,1.5/view.scale,0,Math.PI*2);
     ctx.fillStyle=PLAYER_COLOR[ev.player]; ctx.fill();
-    hitTargets.push({cx:ev.cx, cy:ev.cy, r:r+2/view.scale, type:'death', player:ev.player, date:ev.date, t:ev.t});
+    hitTargets.push({cx:ev.cx,cy:ev.cy,r:r+2/view.scale,type:'death',player:ev.player,date:ev.date,t:ev.t});
   }
 }
 
@@ -986,165 +935,184 @@ function drawDeaths() {
    STATS PANEL
 ============================================================================ */
 function renderStats() {
-  const matches = filteredMatches();
-  const el = document.getElementById('statsPanel');
-  if (!matches.length) {
-    el.innerHTML='<div class="panel-title">Stats</div><p style="color:var(--muted);font-size:12px;font-style:italic">No matches</p>';
-    return;
-  }
-  const players = state.player==='both' ? ['D282','S821'] : [state.player];
-  let html = `<div class="panel-title">${state.map}</div>`;
-
+  const matches=filteredMatches();
+  const el=document.getElementById('statsPanel');
+  if (!matches.length){el.innerHTML='<div class="panel-title">Stats</div><p style="color:var(--muted);font-size:12px;font-style:italic">No matches</p>';return;}
+  const players=state.player==='both'?['D282','S821']:[state.player];
+  let html=`<div class="panel-title">${state.map}</div>`;
   for (const p of players) {
-    const col = p==='D282' ? 'amber' : 'blue';
-    let n=0, kills=0, wins=0, top3=0, plSum=0;
-    for (const m of matches) {
-      const pd = m.players[p]; if (!pd) continue;
-      n++; kills+=pd.kills||0; plSum+=pd.placement||0;
-      if (pd.placement===1) wins++;
-      if (pd.placement<=3)  top3++;
-    }
-    html += `
-      <div style="margin-bottom:10px">
-        <div style="font-family:Oswald,sans-serif;font-size:12px;text-transform:uppercase;color:${PLAYER_COLOR[p]};margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid ${PLAYER_COLOR[p]}44">${p}</div>
-        <div class="stat-row"><span class="stat-key">Matches</span><span class="stat-val ${col}">${n}</span></div>
-        <div class="stat-row"><span class="stat-key">Kills</span><span class="stat-val ${col}">${kills}</span></div>
-        <div class="stat-row"><span class="stat-key">Wins / Top3</span><span class="stat-val ${col}">${wins} / ${top3}</span></div>
-        <div class="stat-row"><span class="stat-key">Avg Placement</span><span class="stat-val ${col}">${n?'#'+(plSum/n).toFixed(1):'—'}</span></div>
-      </div>`;
+    const col=p==='D282'?'amber':'blue';
+    let n=0,kills=0,wins=0,top3=0,plSum=0;
+    for (const m of matches){const pd=m.players[p];if(!pd)continue;n++;kills+=pd.kills||0;plSum+=pd.placement||0;if(pd.placement===1)wins++;if(pd.placement<=3)top3++;}
+    html+=`<div style="margin-bottom:10px">
+      <div style="font-family:Oswald,sans-serif;font-size:12px;text-transform:uppercase;color:${PLAYER_COLOR[p]};margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid ${PLAYER_COLOR[p]}44">${p}</div>
+      <div class="stat-row"><span class="stat-key">Matches</span><span class="stat-val ${col}">${n}</span></div>
+      <div class="stat-row"><span class="stat-key">Kills</span><span class="stat-val ${col}">${kills}</span></div>
+      <div class="stat-row"><span class="stat-key">Wins / Top3</span><span class="stat-val ${col}">${wins} / ${top3}</span></div>
+      <div class="stat-row"><span class="stat-key">Avg Placement</span><span class="stat-val ${col}">${n?'#'+(plSum/n).toFixed(1):'—'}</span></div>
+    </div>`;
   }
-
   // Top drop clusters
-  const players2 = state.player==='both' ? ['D282','S821'] : [state.player];
-  const drops = LAYER.drops.filter(d => players2.includes(d.player));
+  const drops=LAYER.drops.filter(d=>players.includes(d.player));
   if (drops.length) {
     const cells={};
-    for (const d of drops) {
-      const k=`${Math.floor(d.cx/CSZ*16)},${Math.floor(d.cy/CSZ*16)}`;
-      if (!cells[k]) cells[k]={count:0,D282:0,S821:0};
-      cells[k].count++; cells[k][d.player]++;
-    }
-    const top = Object.entries(cells).sort((a,b)=>b[1].count-a[1].count).slice(0,5);
-    const mx  = top[0]?.[1].count||1;
-    html += `<div style="font-family:Oswald,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:8px;margin-bottom:6px">Top Drop Zones</div>`;
-    for (const [k,v] of top) {
-      const [gx,gy]=k.split(',').map(Number);
-      const label=`${String.fromCharCode(65+gy)}${gx+1}`;
-      html += `<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px">
+    for (const d of drops){const k=`${Math.floor(d.cx/CSZ*16)},${Math.floor(d.cy/CSZ*16)}`;if(!cells[k])cells[k]={count:0,D282:0,S821:0};cells[k].count++;cells[k][d.player]++;}
+    const top=Object.entries(cells).sort((a,b)=>b[1].count-a[1].count).slice(0,5);
+    const mx=top[0]?.[1].count||1;
+    html+=`<div style="font-family:Oswald,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:8px;margin-bottom:6px">Top Drop Zones</div>`;
+    for (const [k,v] of top){
+      const[gx,gy]=k.split(',').map(Number);
+      html+=`<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px">
         <span style="width:22px;text-align:right;color:var(--muted)">${v.count}×</span>
         <div style="flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden;display:flex">
-          ${players2.map(p=>v[p]?`<div style="flex:${v[p]};background:${PLAYER_COLOR[p]};height:100%"></div>`:'').join('')}
+          ${players.map(p=>v[p]?`<div style="flex:${v[p]};background:${PLAYER_COLOR[p]};height:100%"></div>`:'').join('')}
         </div>
-        <span style="color:var(--muted);width:30px">${label}</span>
+        <span style="color:var(--muted);width:30px">${String.fromCharCode(65+gy)}${gx+1}</span>
       </div>`;
     }
   }
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
 /* ============================================================================
    HOVER
 ============================================================================ */
-canvas.addEventListener('mousemove', e => {
+canvas.addEventListener('mousemove', e=>{
   if (drag) return;
-  const rect = canvas.getBoundingClientRect();
-  const wcx = ((e.clientX-rect.left)*(CSZ/rect.width)  - view.offsetX) / view.scale;
-  const wcy = ((e.clientY-rect.top) *(CSZ/rect.height) - view.offsetY) / view.scale;
-  let best=null, bestD=Infinity;
-  for (const t of hitTargets) {
-    const dx=t.cx-wcx, dy=t.cy-wcy, d2=dx*dx+dy*dy;
-    if (d2 < t.r*t.r && d2 < bestD) { best=t; bestD=d2; }
-  }
-  const inf = document.getElementById('hoverInfo');
-  if (best) {
+  const rect=canvas.getBoundingClientRect();
+  const wcx=((e.clientX-rect.left)*(CSZ/rect.width)-view.offsetX)/view.scale;
+  const wcy=((e.clientY-rect.top)*(CSZ/rect.height)-view.offsetY)/view.scale;
+  let best=null,bestD=Infinity;
+  for (const t of hitTargets){const dx=t.cx-wcx,dy=t.cy-wcy,d2=dx*dx+dy*dy;if(d2<t.r*t.r&&d2<bestD){best=t;bestD=d2;}}
+  const inf=document.getElementById('hoverInfo');
+  if (best){
     inf.classList.add('visible');
-    document.getElementById('hiType').textContent  = best.type.toUpperCase().replace('_',' ');
-    document.getElementById('hiMain').innerHTML    = hoverMain(best);
-    document.getElementById('hiSub').innerHTML     = hoverSub(best);
+    document.getElementById('hiType').textContent=best.type.toUpperCase().replace('_',' ');
+    document.getElementById('hiMain').innerHTML=hoverMain(best);
+    document.getElementById('hiSub').innerHTML=hoverSub(best);
   } else inf.classList.remove('visible');
 });
-canvas.addEventListener('mouseleave', () => document.getElementById('hoverInfo').classList.remove('visible'));
+canvas.addEventListener('mouseleave',()=>document.getElementById('hoverInfo').classList.remove('visible'));
 
-function col(p) { return `<span style="color:${PLAYER_COLOR[p]}">${p}</span>`; }
-function hoverMain(t) {
-  if (t.type==='kill')       return `${col(t.player)} killed ${t.target||'?'}`;
-  if (t.type==='death')      return `${col(t.player)} died`;
-  if (t.type==='drop')       return `${col(t.player)} landed`;
-  if (t.type==='knocked')    return `${col(t.player)} knocked`;
-  if (t.type==='engagement') return `${col(t.player)} — <span style="color:${ENG_COLOR[t.outcome]}">${t.outcome.replace('_',' ')}</span>`;
-  return col(t.player);
+function pc(p){return`<span style="color:${PLAYER_COLOR[p]}">${p}</span>`;}
+function hoverMain(t){
+  if(t.type==='kill')       return`${pc(t.player)} killed ${t.target||'?'}`;
+  if(t.type==='death')      return`${pc(t.player)} died`;
+  if(t.type==='drop')       return`${pc(t.player)} landed`;
+  if(t.type==='knocked')    return`${pc(t.player)} knocked down`;
+  if(t.type==='engagement') return`${pc(t.player)} — <span style="color:${ENG_COLOR[t.outcome]}">${t.outcome.replace('_',' ')}</span>`;
+  if(t.type==='eng_group')  return`${t.n} engagement${t.n!==1?'s':''}`;
+  return t.player?pc(t.player):'';
 }
-function hoverSub(t) {
-  const parts=[];
-  if (t.weapon)    parts.push(t.weapon);
-  if (t.type==='engagement') parts.push(`dealt ${t.dmgDealt} · taken ${t.dmgTaken} · ${t.kills}K/${t.deaths}D`);
-  if (t.t!=null)   parts.push(mmss(t.t));
-  if (t.date)      parts.push(t.date);
-  return parts.join(' · ');
+function hoverSub(t){
+  if(t.type==='engagement') return`${t.kills}K / ${t.deaths}D / ${t.knocks} kd / ${t.knocked} kd'd · score ${t.score>0?'+':''}${t.score}${t.bothDied?' (BOTH DIED)':''} · ${t.date}`;
+  if(t.type==='eng_group'){const parts=ENG_ORDER.filter(k=>t.outcomes[k]).map(k=>`${t.outcomes[k]}×${k.replace('_',' ')}`);return parts.join(' · ');}
+  const parts=[];if(t.weapon)parts.push(t.weapon);if(t.t!=null)parts.push(mmss(t.t));if(t.date)parts.push(t.date);return parts.join(' · ');
 }
-function mmss(s) { s=Math.round(s); return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+function mmss(s){s=Math.round(s);return`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;}
 
 /* ============================================================================
-   PAN + ZOOM
+   PAN + ZOOM (mouse + touch with pinch)
 ============================================================================ */
-canvas.addEventListener('wheel', e => {
+canvas.addEventListener('wheel',e=>{
   e.preventDefault();
   const rect=canvas.getBoundingClientRect();
   const cx=(e.clientX-rect.left)*(CSZ/rect.width);
   const cy=(e.clientY-rect.top)*(CSZ/rect.height);
-  applyZoom(e.deltaY<0?1.12:1/1.12, cx, cy);
-}, {passive:false});
+  applyZoom(e.deltaY<0?1.12:1/1.12,cx,cy);
+},{passive:false});
 
-canvas.addEventListener('mousedown', e => {
-  if (e.button!==0) return;
+// ── Mouse drag ────────────────────────────────────────────────────────────
+canvas.addEventListener('mousedown',e=>{
+  if(e.button!==0)return;
   drag={x:e.clientX,y:e.clientY,ox:view.offsetX,oy:view.offsetY};
   canvas.classList.add('grabbing');
 });
-window.addEventListener('mousemove', e => {
-  if (!drag) return;
-  const rect=canvas.getBoundingClientRect(), sc=CSZ/rect.width;
+window.addEventListener('mousemove',e=>{
+  if(!drag)return;
+  const rect=canvas.getBoundingClientRect(),sc=CSZ/rect.width;
   view.offsetX=drag.ox+(e.clientX-drag.x)*sc;
   view.offsetY=drag.oy+(e.clientY-drag.y)*sc;
-  clampView(); scheduleRedraw();
+  clampView();scheduleRedraw();
 });
-window.addEventListener('mouseup', () => { drag=null; canvas.classList.remove('grabbing'); });
+window.addEventListener('mouseup',()=>{drag=null;canvas.classList.remove('grabbing');});
 
-canvas.addEventListener('touchstart', e => {
-  if (e.touches.length===1) { const t=e.touches[0]; drag={x:t.clientX,y:t.clientY,ox:view.offsetX,oy:view.offsetY}; }
-}, {passive:true});
-canvas.addEventListener('touchmove', e => {
-  if (!drag||e.touches.length!==1) return; e.preventDefault();
-  const t=e.touches[0], rect=canvas.getBoundingClientRect(), sc=CSZ/rect.width;
-  view.offsetX=drag.ox+(t.clientX-drag.x)*sc; view.offsetY=drag.oy+(t.clientY-drag.y)*sc;
-  clampView(); scheduleRedraw();
-}, {passive:false});
-canvas.addEventListener('touchend', () => { drag=null; });
+// ── Touch: 1-finger pan, 2-finger pinch zoom ─────────────────────────────
+canvas.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){
+    const t=e.touches[0];
+    drag={x:t.clientX,y:t.clientY,ox:view.offsetX,oy:view.offsetY};
+    lastPinchDist=null;
+  } else if(e.touches.length===2){
+    drag=null;
+    lastPinchDist=pinchDist(e.touches);
+    lastPinchMidRaw=pinchMidRaw(e.touches);
+  }
+},{passive:true});
 
-function applyZoom(f, cx, cy) {
-  const ns=Math.max(0.8, Math.min(view.scale*f, 20));
+canvas.addEventListener('touchmove',e=>{
+  e.preventDefault();
+  if(e.touches.length===2){
+    const dist=pinchDist(e.touches);
+    const mid=pinchMidRaw(e.touches);
+    if(lastPinchDist!==null){
+      const factor=dist/lastPinchDist;
+      const rect=canvas.getBoundingClientRect();
+      const cx=(mid.x-rect.left)*(CSZ/rect.width);
+      const cy=(mid.y-rect.top)*(CSZ/rect.height);
+      applyZoom(factor,cx,cy);
+      // also pan to follow midpoint movement
+      if(lastPinchMidRaw){
+        const sc=CSZ/rect.width;
+        view.offsetX+=(mid.x-lastPinchMidRaw.x)*sc;
+        view.offsetY+=(mid.y-lastPinchMidRaw.y)*sc;
+        clampView();scheduleRedraw();
+      }
+    }
+    lastPinchDist=dist;lastPinchMidRaw=mid;
+  } else if(e.touches.length===1&&drag){
+    const t=e.touches[0];
+    const rect=canvas.getBoundingClientRect(),sc=CSZ/rect.width;
+    view.offsetX=drag.ox+(t.clientX-drag.x)*sc;
+    view.offsetY=drag.oy+(t.clientY-drag.y)*sc;
+    clampView();scheduleRedraw();
+  }
+},{passive:false});
+
+canvas.addEventListener('touchend',e=>{
+  if(e.touches.length<2){lastPinchDist=null;lastPinchMidRaw=null;}
+  if(e.touches.length===0){drag=null;}
+  if(e.touches.length===1){
+    // Switch from pinch to pan smoothly
+    const t=e.touches[0];
+    drag={x:t.clientX,y:t.clientY,ox:view.offsetX,oy:view.offsetY};
+  }
+});
+
+function pinchDist(touches){const dx=touches[0].clientX-touches[1].clientX,dy=touches[0].clientY-touches[1].clientY;return Math.sqrt(dx*dx+dy*dy);}
+function pinchMidRaw(touches){return{x:(touches[0].clientX+touches[1].clientX)/2,y:(touches[0].clientY+touches[1].clientY)/2};}
+
+function applyZoom(f,cx,cy){
+  const ns=Math.max(0.8,Math.min(view.scale*f,20));
   view.offsetX=cx-(cx-view.offsetX)*(ns/view.scale);
   view.offsetY=cy-(cy-view.offsetY)*(ns/view.scale);
-  view.scale=ns; clampView(); scheduleRedraw();
+  view.scale=ns;clampView();scheduleRedraw();
 }
-function zoomStep(f) { applyZoom(f, CSZ/2, CSZ/2); }
-function clampView() {
-  const s = view.scale;
-  if (s <= 1) { view.offsetX = 0; view.offsetY = 0; return; }
-  // Allow panning across the full zoomed content with a small overscroll pad
-  const pad = CSZ * 0.08;
-  view.offsetX = Math.max(CSZ*(1-s) - pad, Math.min(view.offsetX,  pad));
-  view.offsetY = Math.max(CSZ*(1-s) - pad, Math.min(view.offsetY,  pad));
+function zoomStep(f){applyZoom(f,CSZ/2,CSZ/2);}
+function clampView(){
+  const s=view.scale;
+  if(s<=1){view.offsetX=0;view.offsetY=0;return;}
+  const pad=CSZ*0.08;
+  view.offsetX=Math.max(CSZ*(1-s)-pad,Math.min(view.offsetX,pad));
+  view.offsetY=Math.max(CSZ*(1-s)-pad,Math.min(view.offsetY,pad));
 }
-function resetView() { view.scale=1; view.offsetX=0; view.offsetY=0; scheduleRedraw(); }
+function resetView(){view.scale=1;view.offsetX=0;view.offsetY=0;scheduleRedraw();}
 
 /* ============================================================================
    SITE NAV
 ============================================================================ */
-function toggleSiteNav() { document.getElementById('siteNavMenu').classList.toggle('open'); }
-document.addEventListener('click', e => {
-  if (!document.getElementById('siteNav').contains(e.target))
-    document.getElementById('siteNavMenu').classList.remove('open');
-});
+function toggleSiteNav(){document.getElementById('siteNavMenu').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!document.getElementById('siteNav').contains(e.target))document.getElementById('siteNavMenu').classList.remove('open');});
 
 boot();
 </script>
