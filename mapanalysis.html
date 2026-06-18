@@ -155,6 +155,14 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
         </div>
         <div class="date-range-display" id="dateRangeDisplay"></div>
       </div>
+      <div class="filter-group">
+        <span class="filter-label">Game Phase</span>
+        <div class="btn-group">
+          <button class="btn active" id="ph_early" onclick="togglePhase('early')" title="0–8 min">Early</button>
+          <button class="btn active" id="ph_mid"   onclick="togglePhase('mid')"   title="8–20 min">Mid</button>
+          <button class="btn active" id="ph_late"  onclick="togglePhase('late')"  title="20+ min">Late</button>
+        </div>
+      </div>
       <div class="filter-group" style="justify-content:flex-end">
         <span class="filter-label">&nbsp;</span>
         <div class="match-count-badge" id="matchCountBadge">—</div>
@@ -247,6 +255,13 @@ const ENG_COLOR = {
 };
 const ENG_ORDER = ['dark_green','light_green','neutral','light_red','dark_red'];
 
+// Absolute-time phase buckets (seconds). Drops are always <120s → early.
+const PHASE_RANGES = [
+  { id:'early', label:'Early', sub:'0–8 min',  tMin:0,    tMax:480  },
+  { id:'mid',   label:'Mid',   sub:'8–20 min', tMin:480,  tMax:1200 },
+  { id:'late',  label:'Late',  sub:'20+ min',  tMin:1200, tMax:Infinity },
+];
+
 /* ============================================================================
    STATE
 ============================================================================ */
@@ -256,6 +271,7 @@ const state = {
   layers: Object.fromEntries(LAYER_DEFS.map(l=>[l.id,l.defaultOn])),
   circlePhase: 3,
   engGroupSlider: 0,
+  phases: { early:true, mid:true, late:true },
 };
 
 /* ============================================================================
@@ -425,6 +441,19 @@ function setEngGrouping(v) {
 }
 
 /* ============================================================================
+   PHASE FILTER
+============================================================================ */
+function inPhase(t) {
+  if (t == null) return true;
+  return PHASE_RANGES.some(ph => state.phases[ph.id] && t >= ph.tMin && t < ph.tMax);
+}
+function togglePhase(id) {
+  state.phases[id] = !state.phases[id];
+  document.getElementById(`ph_${id}`)?.classList.toggle('active', state.phases[id]);
+  rebuildHeatmaps(); scheduleRedraw();
+}
+
+/* ============================================================================
    PLAYER FILTER
 ============================================================================ */
 function setPlayer(p) {
@@ -488,7 +517,7 @@ function processMatch(md, meta) {
     for (const p of raw) {
       if (p.tr==='plane'||p.tr==='chute'||p.x==null) continue;
       const pt=tc(p.x,p.y);
-      if (p.t-lH>=4)  {posData[player].push(pt);lH=p.t;}
+      if (p.t-lH>=4)  {posData[player].push({...pt,t:p.t});lH=p.t;}
       if (p.t-lP>=12) {pathData[player].push({...pt,tr:p.tr});lP=p.t;}
     }
   }
@@ -501,7 +530,7 @@ function processMatch(md, meta) {
   for (const inv of (md.inventory||[])) {
     if (inv.ev!=='pick'||!['D282','S821'].includes(inv.player)) continue;
     const pos=posAtTime(footPos[inv.player],inv.t);
-    if (pos) lootData[inv.player].push(tc(pos.x,pos.y));
+    if (pos) lootData[inv.player].push({...tc(pos.x,pos.y),t:inv.t});
   }
 
   // Drops
@@ -511,8 +540,8 @@ function processMatch(md, meta) {
     let prev=null;
     for (const p of raw) {
       if (p.x==null) continue;
-      if ((prev?.tr==='chute'||prev?.tr==='plane')&&p.tr==='foot') {dropData[player]={...tc(p.x,p.y),player,matchId:mid,date};break;}
-      if (p.tr==='foot'&&!prev) {dropData[player]={...tc(p.x,p.y),player,matchId:mid,date};break;}
+      if ((prev?.tr==='chute'||prev?.tr==='plane')&&p.tr==='foot') {dropData[player]={...tc(p.x,p.y),player,matchId:mid,date,t:p.t};break;}
+      if (p.tr==='foot'&&!prev) {dropData[player]={...tc(p.x,p.y),player,matchId:mid,date,t:p.t};break;}
       prev=p;
     }
   }
@@ -671,12 +700,14 @@ function rebuildHeatmaps() {
 }
 
 function buildHeatmapCanvas(points,player,isLoot) {
+  const pts=points.filter(pt=>inPhase(pt.t));
+  if (!pts.length) return null;
   const off=document.createElement('canvas');
   off.width=CSZ; off.height=CSZ;
   const oc=off.getContext('2d');
   const rad=Math.round(CSZ*(isLoot?0.014:0.020));
 
-  for (const {cx,cy} of points) {
+  for (const {cx,cy} of pts) {
     const g=oc.createRadialGradient(cx,cy,0,cx,cy,rad);
     g.addColorStop(0,'rgba(0,0,0,0.05)'); g.addColorStop(1,'rgba(0,0,0,0)');
     oc.fillStyle=g; oc.fillRect(cx-rad,cy-rad,rad*2,rad*2);
@@ -809,9 +840,10 @@ function drawEngagements() {
   const clusters=LAYER.engClusters;
   const slider=state.engGroupSlider;
 
+  const active=clusters.filter(cl=>inPhase(cl.t));
   if (slider===0) {
     const r=4/view.scale;
-    for (const cl of clusters) {
+    for (const cl of active) {
       ctx.beginPath(); ctx.arc(cl.cx,cl.cy,r,0,Math.PI*2);
       ctx.fillStyle=ENG_COLOR[cl.outcome]+'cc'; ctx.fill();
       ctx.strokeStyle=ENG_COLOR[cl.outcome]; ctx.lineWidth=0.8/view.scale; ctx.stroke();
@@ -822,7 +854,7 @@ function drawEngagements() {
     }
   } else {
     const distThreshold=5*Math.pow((CSZ*1.5)/5,slider/100);
-    const groups=groupEngagementsByDistance(clusters,distThreshold);
+    const groups=groupEngagementsByDistance(active,distThreshold);
     drawEngagementPies(groups);
   }
 }
@@ -849,9 +881,9 @@ function drawEngagementPies(groups) {
     const outcomes=Object.fromEntries(ENG_ORDER.map(k=>[k,0]));
     for (const cl of group) outcomes[cl.outcome]++;
     const n=group.length;
-    const r=Math.max(6,Math.min(28,3+Math.sqrt(n)*5))/view.scale;
+    const r=Math.max(6,Math.min(28,3+Math.sqrt(n)*5));
     drawPieChart(cx,cy,r,outcomes,n);
-    hitTargets.push({cx,cy,r:r+3/view.scale,type:'eng_group',outcomes,n});
+    hitTargets.push({cx,cy,r:r+3,type:'eng_group',outcomes,n});
   }
 }
 
@@ -885,6 +917,7 @@ function drawDropZones() {
   const players=state.player==='both'?['D282','S821']:[state.player];
   for (const d of LAYER.drops) {
     if (!players.includes(d.player)) continue;
+    if (!inPhase(d.t)) continue;
     const col=PLAYER_COLOR[d.player];
     ctx.beginPath(); ctx.arc(d.cx,d.cy,8/view.scale,0,Math.PI*2);
     ctx.strokeStyle=col+'88'; ctx.lineWidth=1/view.scale; ctx.stroke();
@@ -899,6 +932,7 @@ function drawKnocked() {
   const players=state.player==='both'?['D282','S821']:[state.player];
   for (const ev of LAYER.events.knocked) {
     if (!players.includes(ev.player)) continue;
+    if (!inPhase(ev.t)) continue;
     const r=5/view.scale,s=3/view.scale;
     ctx.beginPath(); ctx.arc(ev.cx,ev.cy,r,0,Math.PI*2);
     ctx.strokeStyle='#e07030bb'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
@@ -914,6 +948,7 @@ function drawKills() {
   const players=state.player==='both'?['D282','S821']:[state.player];
   for (const ev of LAYER.events.kills) {
     if (!players.includes(ev.player)) continue;
+    if (!inPhase(ev.t)) continue;
     const col=PLAYER_COLOR[ev.player],r=6/view.scale,ri=2.8/view.scale;
     ctx.beginPath();
     for (let i=0;i<5;i++) {
@@ -931,6 +966,7 @@ function drawDeaths() {
   const players=state.player==='both'?['D282','S821']:[state.player];
   for (const ev of LAYER.events.deaths) {
     if (!players.includes(ev.player)) continue;
+    if (!inPhase(ev.t)) continue;
     const r=6/view.scale,s=3.5/view.scale;
     ctx.beginPath(); ctx.arc(ev.cx,ev.cy,r,0,Math.PI*2);
     ctx.strokeStyle='#d7443ecc'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
