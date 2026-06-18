@@ -638,7 +638,8 @@ async function boot() {
     DATA.healIdx  = Object.fromEntries(heal_stats.map(r => [r.match_id, r]));
 
     // Build sorted unique dates from duo-only matches
-    const duoMatches = matches.filter(m => m.players['D282'] && m.players['S821']);
+    const duoMatches = matches.filter(m =>
+      m.players['D282']?.placement != null && m.players['S821']?.placement != null);
     DATES = [...new Set(duoMatches.map(m => m.created_at.slice(0, 10)))].sort();
     state.dateIdxMin = 0;
     state.dateIdxMax = DATES.length - 1;
@@ -747,7 +748,8 @@ function setDailyTab(tab) {
 
 // Returns duo-only matches after map + date-range filters
 function filtered() {
-  let list = DATA.matches.filter(m => m.players['D282'] && m.players['S821']);
+  let list = DATA.matches.filter(m =>
+    m.players['D282']?.placement != null && m.players['S821']?.placement != null);
 
   if (state.map !== 'all')
     list = list.filter(m => m.map === state.map);
@@ -901,7 +903,8 @@ function fmtDate(iso) {
    MAP FILTER BUTTONS
 ============================================================================ */
 function buildMapButtons() {
-  const duoMatches = DATA.matches.filter(m => m.players['D282'] && m.players['S821']);
+  const duoMatches = DATA.matches.filter(m =>
+    m.players['D282']?.placement != null && m.players['S821']?.placement != null);
   const maps = [...new Set(duoMatches.map(m => m.map).filter(Boolean))].sort();
   document.getElementById('mapBtns').innerHTML =
     ['all', ...maps].map(m => `
