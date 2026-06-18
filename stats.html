@@ -9,15 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ── Design tokens (exact match to pubg.html) ─────────────────────────────── */
+/* ── Design tokens ────────────────────────────────────────────────────────── */
 :root {
   --bg:     #14130f;
   --panel:  #1e1c17;
   --line:   #38342c;
   --text:   #e8e3d8;
   --muted:  #9a9385;
-  --accent: #f4a300;   /* D282 / amber */
-  --blue:   #4a9edd;   /* S821 */
+  --accent: #f4a300;
+  --blue:   #4a9edd;
   --ok:     #8fae5d;
   --danger: #d7443e;
 }
@@ -72,7 +72,7 @@ h1 {
   color: var(--muted);
 }
 
-/* ── Filters (button-style) ───────────────────────────────────────────────── */
+/* ── Filters ──────────────────────────────────────────────────────────────── */
 .filter-row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
 .filter-group { display: flex; flex-direction: column; gap: 6px; }
 .filter-label {
@@ -105,7 +105,7 @@ h1 {
   font-weight: 600;
 }
 
-/* ── Select dropdowns (chart controls) ───────────────────────────────────── */
+/* ── Select dropdowns ─────────────────────────────────────────────────────── */
 select {
   background: #2a2720;
   color: var(--text);
@@ -117,7 +117,6 @@ select {
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  /* chevron icon */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M.5.5 5 5.5 9.5.5' stroke='%239a9385' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 9px center;
@@ -135,6 +134,113 @@ select option { background: #1e1c17; color: var(--text); }
   align-items: flex-end;
 }
 
+/* ── Date slider ──────────────────────────────────────────────────────────── */
+.date-slider-outer {
+  min-width: 220px;
+  flex: 1;
+  max-width: 420px;
+}
+.date-slider-wrap {
+  position: relative;
+  height: 36px;
+  margin-top: 4px;
+}
+.slider-track-bg {
+  position: absolute;
+  top: 10px;
+  left: 0; right: 0;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.slider-track-fill {
+  position: absolute;
+  top: 10px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.date-slider-wrap input[type=range] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  height: 24px;
+  pointer-events: none;
+  border: none;
+  padding: 0;
+  outline: none;
+}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  cursor: grab;
+  pointer-events: all;
+  position: relative;
+  z-index: 2;
+  transition: transform .1s;
+}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.2); }
+.date-slider-wrap input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  cursor: grab;
+  pointer-events: all;
+}
+.slider-labels {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  pointer-events: none;
+}
+.slider-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.date-range-display {
+  font-size: 12px;
+  color: var(--text);
+  margin-top: 2px;
+  min-height: 18px;
+}
+.date-range-display span { color: var(--accent); font-weight: 600; }
+
+/* ── Number input (min games) ─────────────────────────────────────────────── */
+.num-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+input[type=number].small-num {
+  width: 56px;
+  background: #2a2720;
+  color: var(--text);
+  border: 1px solid var(--line);
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  -moz-appearance: textfield;
+  text-align: center;
+}
+input[type=number].small-num::-webkit-inner-spin-button { -webkit-appearance: none; }
+input[type=number].small-num:focus { border-color: var(--accent); }
+
 /* ── Summary cards ────────────────────────────────────────────────────────── */
 .cards-grid {
   display: grid;
@@ -148,7 +254,6 @@ select option { background: #1e1c17; color: var(--text); }
   border-radius: 8px;
   padding: 14px 12px;
 }
-/* Inside compare-split flatten the card background */
 .compare-col .card { background: #171510; }
 
 .card-label {
@@ -195,6 +300,25 @@ select option { background: #1e1c17; color: var(--text); }
 
 /* ── Chart container ──────────────────────────────────────────────────────── */
 .chart-wrap { position: relative; height: 240px; }
+.chart-wrap.tall { height: 280px; }
+
+/* ── Daily stats ──────────────────────────────────────────────────────────── */
+.daily-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+@media (max-width: 700px) { .daily-grid { grid-template-columns: 1fr; } }
+
+.daily-chart-label {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
 
 /* ── Tables ───────────────────────────────────────────────────────────────── */
 .tbl-wrap { overflow-x: auto; }
@@ -226,28 +350,7 @@ tr:last-child td { border-bottom: none; }
 tr.match-row { cursor: pointer; }
 tr.match-row:hover td { background: rgba(244,163,0,0.04); }
 
-/* ── Category badge ───────────────────────────────────────────────────────── */
-.badge {
-  display: inline-block;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  background: #2a2720;
-  border: 1px solid var(--line);
-  color: var(--muted);
-}
-
-/* ── Bar rows (heals / throwables) ───────────────────────────────────────── */
-.bar-section-label {
-  font-family: Oswald, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 11px;
-  color: var(--muted);
-  margin: 14px 0 8px;
-}
-.bar-section-label:first-child { margin-top: 0; }
+/* ── Bar rows ─────────────────────────────────────────────────────────────── */
 .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
 .bar-label { width: 140px; font-size: 12px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar-track { flex: 1; height: 16px; background: #100f0c; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
@@ -255,10 +358,6 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
 .bar-fill.amber { background: var(--accent); }
 .bar-fill.blue  { background: var(--blue);   }
 .bar-val { width: 40px; text-align: right; font-size: 12px; color: var(--muted); flex-shrink: 0; }
-
-/* ── Compare legend ───────────────────────────────────────────────────────── */
-.cmp-legend { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-.cmp-legend span { font-size: 14px; }
 
 /* ── Placement colours ────────────────────────────────────────────────────── */
 .p1   { color: var(--accent); font-weight: 600; }
@@ -268,7 +367,7 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
 .empty   { color: var(--muted); font-size: 13px; font-style: italic; padding: 8px 0; }
 .loading { color: var(--muted); font-style: italic; padding: 20px 0; font-size: 13px; }
 
-/* ── Match analysis link ──────────────────────────────────────────────────── */
+/* ── Match link ───────────────────────────────────────────────────────────── */
 .match-link {
   display: inline-block;
   color: var(--muted);
@@ -281,6 +380,36 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
 }
 .match-link:hover { color: var(--accent); background: rgba(244,163,0,0.1); }
 
+/* ── Outcome pill ─────────────────────────────────────────────────────────── */
+.pill {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.pill-win  { background: rgba(244,163,0,.18); color: var(--accent); }
+.pill-top3 { background: rgba(143,174,93,.18); color: var(--ok); }
+
+/* ── Tab strip ────────────────────────────────────────────────────────────── */
+.tab-strip { display: flex; gap: 4px; margin-bottom: 14px; }
+.tab {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: Oswald, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  transition: all .1s;
+}
+.tab:hover { color: var(--text); border-color: var(--muted); }
+.tab.active { background: var(--accent); color: #14130f; border-color: var(--accent); font-weight: 600; }
+
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .compare-split { grid-template-columns: 1fr; }
@@ -288,7 +417,7 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
   .compare-col .cards-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ── Site nav ──────────────────────────────────────────────────────────── */
+/* ── Site nav ─────────────────────────────────────────────────────────────── */
 #siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
 #siteNavBtn {
   width: 34px; height: 34px;
@@ -354,13 +483,16 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
         <div class="btn-group" id="mapBtns"><!-- built after load --></div>
       </div>
 
-      <div class="filter-group">
+      <div class="filter-group date-slider-outer">
         <span class="filter-label">Date Range</span>
-        <div class="btn-group">
-          <button class="btn" data-f="dateRange:all" onclick="setFilter('dateRange','all')">All</button>
-          <button class="btn" data-f="dateRange:7d"  onclick="setFilter('dateRange','7d')">Last 7 days</button>
-          <button class="btn" data-f="dateRange:14d" onclick="setFilter('dateRange','14d')">Last 14 days</button>
+        <div class="date-slider-wrap" id="dateSliderWrap">
+          <div class="slider-track-bg"></div>
+          <div class="slider-track-fill" id="sliderFill"></div>
+          <input type="range" id="sliderMin" min="0" value="0">
+          <input type="range" id="sliderMax" value="0">
+          <div class="slider-labels" id="sliderLabels"></div>
         </div>
+        <div class="date-range-display" id="dateRangeDisplay"></div>
       </div>
 
     </div>
@@ -396,15 +528,33 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
   </div>
 
-  <!-- ── WEAPONS ──────────────────────────────────────────────────────────── -->
+  <!-- ── DAILY SESSION STATS ───────────────────────────────────────────────── -->
   <div class="panel">
-    <div class="panel-title">Weapons <span class="panel-note">— career totals · click headers to sort</span></div>
-    <div class="tbl-wrap" id="weaponsWrap"><p class="loading">Loading…</p></div>
+    <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+      <div class="panel-title" style="margin-bottom:0">Daily Sessions</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="filter-label" style="font-size:10px">Min games/day</span>
+        <div class="num-input-wrap">
+          <input type="number" class="small-num" id="minGamesInput"
+                 min="1" max="30" value="1"
+                 oninput="setMinGames(this.value)">
+        </div>
+      </div>
+      <div class="tab-strip" style="margin-bottom:0" id="dailyTabStrip">
+        <button class="tab active" data-dt="overview"  onclick="setDailyTab('overview')">Overview</button>
+        <button class="tab"        data-dt="charts"    onclick="setDailyTab('charts')">Charts</button>
+        <button class="tab"        data-dt="table"     onclick="setDailyTab('table')">Table</button>
+      </div>
+    </div>
+    <div id="dailyContent"><p class="loading">Loading…</p></div>
   </div>
 
   <!-- ── MATCH HISTORY ─────────────────────────────────────────────────────── -->
   <div class="panel">
-    <div class="panel-title">Match History <span class="panel-note">— click a row to open match analysis</span> <a href="match.html" style="float:right;color:var(--muted);font-size:12px;font-family:inherit;text-decoration:none;font-weight:400;letter-spacing:0;text-transform:none" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Browse All →</a></div>
+    <div class="panel-title">Match History <span class="panel-note">— click a row to open match analysis</span>
+      <a href="match.html" style="float:right;color:var(--muted);font-size:12px;font-family:inherit;text-decoration:none;font-weight:400;letter-spacing:0;text-transform:none"
+         onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Browse All →</a>
+    </div>
     <div class="tbl-wrap">
       <table id="matchTable"><tbody><tr><td class="loading">Loading…</td></tr></tbody></table>
     </div>
@@ -412,7 +562,6 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
 
 </div><!-- .wrap -->
 
-<!-- Chart.js from cdnjs (no npm, no build tools) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 <script>
@@ -422,46 +571,35 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
 const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
 
 /* ============================================================================
-   STATE — all user-controlled settings live here
+   STATE
 ============================================================================ */
 const state = {
-  // ── Match filters
-  player:        'compare',   // 'D282' | 'S821' | 'compare'  (default = side-by-side)
+  player:        'compare',
   map:           'all',
-  dateRange:     'all',
-  // ── Weapons table sort
-  weapCol:       'kills',
-  weapDir:       'desc',
-  // ── Chart Explorer
-  chartType:     'timeline',      // 'timeline' | 'histogram'
-  chartCategory: 'Player stats',  // category from dimensions.json
-  chartMetric:   'kills',         // key from dimensions.json
+  dateIdxMin:    0,       // index into DATES array
+  dateIdxMax:    0,       // set after data load
+  minGames:      1,
+  dailyTab:      'overview',
+  dailyMetricA:  'games',
+  dailyMetricB:  'avgKills',
+  chartType:     'timeline',
+  chartCategory: 'Player stats',
+  chartMetric:   'kills',
 };
 
 /* ============================================================================
-   DATA — filled on boot from the 9 JSON files
+   DATA
 ============================================================================ */
 const DATA = {
-  summary:         null,
-  matches:         null,
-  weapons:         null,
-  items:           null,
-  timeline:        null,
-  throwable_stats: null,
-  ammo_stats:      null,
-  heal_stats:      null,
-  dimensions:      null,
-  // Lookup objects built after load (match_id → row)
-  throwIdx: null,
-  ammoIdx:  null,
-  healIdx:  null,
+  summary: null, matches: null, weapons: null, items: null,
+  timeline: null, throwable_stats: null, ammo_stats: null,
+  heal_stats: null, dimensions: null,
+  throwIdx: null, ammoIdx: null, healIdx: null,
 };
 
-// Chart.js instances — stored so we can destroy before recreating
 const CHARTS = {};
-
-// Last computed filtered match list, reused by chart-only re-renders
 let lastMatches = [];
+let DATES = [];   // sorted unique date strings in dataset
 
 /* ============================================================================
    BOOT
@@ -495,16 +633,23 @@ async function boot() {
     Object.assign(DATA, { summary, matches, weapons, items, timeline,
                           throwable_stats, ammo_stats, heal_stats, dimensions });
 
-    document.getElementById('mainSubtitle').textContent =
-      `D282 & S821 — duo-fpp, ${matches.length} shared matches`;
-
-    // Pre-index per-match data for O(1) lookups in chart rendering
     DATA.throwIdx = Object.fromEntries(throwable_stats.map(r => [r.match_id, r]));
     DATA.ammoIdx  = Object.fromEntries(ammo_stats.map(r => [r.match_id, r]));
     DATA.healIdx  = Object.fromEntries(heal_stats.map(r => [r.match_id, r]));
 
+    // Build sorted unique dates from duo-only matches
+    const duoMatches = matches.filter(m => m.players['D282'] && m.players['S821']);
+    DATES = [...new Set(duoMatches.map(m => m.created_at.slice(0, 10)))].sort();
+    state.dateIdxMin = 0;
+    state.dateIdxMax = DATES.length - 1;
+
+    const n = duoMatches.length;
+    document.getElementById('mainSubtitle').textContent =
+      `D282 & S821 — duo-fpp, ${n} shared matches`;
+
     buildMapButtons();
     buildChartDropdowns();
+    buildDateSlider();
     renderAll();
   } catch (err) {
     document.getElementById('summarySection').innerHTML =
@@ -517,6 +662,70 @@ async function boot() {
 }
 
 /* ============================================================================
+   DATE SLIDER
+============================================================================ */
+function buildDateSlider() {
+  const n = DATES.length;
+  if (n === 0) return;
+
+  const slMin = document.getElementById('sliderMin');
+  const slMax = document.getElementById('sliderMax');
+
+  slMin.min = 0; slMin.max = n - 1; slMin.value = 0;
+  slMax.min = 0; slMax.max = n - 1; slMax.value = n - 1;
+
+  // Labels: show all dates (or every other if too many)
+  const labelsEl = document.getElementById('sliderLabels');
+  labelsEl.style.height = '16px';
+  const step = n === 1 ? 1 : 1;
+  const pct  = i => (n === 1 ? 50 : (i / (n - 1)) * 100);
+
+  labelsEl.innerHTML = DATES.map((d, i) => {
+    if (n > 7 && i > 0 && i < n - 1 && i % 2 !== 0) return '';
+    const [, mm, dd] = d.split('-');
+    return `<span class="slider-tick" style="left:${pct(i)}%">${mm}/${dd}</span>`;
+  }).join('');
+
+  slMin.addEventListener('input', () => {
+    if (+slMin.value > +slMax.value) slMax.value = slMin.value;
+    state.dateIdxMin = +slMin.value;
+    state.dateIdxMax = +slMax.value;
+    updateSliderFill();
+    renderAll();
+  });
+  slMax.addEventListener('input', () => {
+    if (+slMax.value < +slMin.value) slMin.value = slMax.value;
+    state.dateIdxMin = +slMin.value;
+    state.dateIdxMax = +slMax.value;
+    updateSliderFill();
+    renderAll();
+  });
+
+  updateSliderFill();
+}
+
+function updateSliderFill() {
+  const n    = DATES.length;
+  if (n < 2) return;
+  const minP = (state.dateIdxMin / (n - 1)) * 100;
+  const maxP = (state.dateIdxMax / (n - 1)) * 100;
+  const fill = document.getElementById('sliderFill');
+  fill.style.left  = minP + '%';
+  fill.style.width = (maxP - minP) + '%';
+
+  const fmt = iso => {
+    const [, mm, dd] = iso.split('-');
+    return `${mm}/${dd}`;
+  };
+  const d0 = DATES[state.dateIdxMin];
+  const d1 = DATES[state.dateIdxMax];
+  document.getElementById('dateRangeDisplay').innerHTML =
+    d0 === d1
+      ? `<span>${fmt(d0)}</span>`
+      : `<span>${fmt(d0)}</span> → <span>${fmt(d1)}</span>`;
+}
+
+/* ============================================================================
    FILTER HELPERS
 ============================================================================ */
 function setFilter(key, val) {
@@ -524,24 +733,38 @@ function setFilter(key, val) {
   renderAll();
 }
 
-// Returns the match list (newest-first) after map + date-range filters
+function setMinGames(val) {
+  state.minGames = Math.max(1, +val || 1);
+  renderAll();
+}
+
+function setDailyTab(tab) {
+  state.dailyTab = tab;
+  document.querySelectorAll('[data-dt]').forEach(el =>
+    el.classList.toggle('active', el.dataset.dt === tab));
+  renderDailyStats(lastMatches);
+}
+
+// Returns duo-only matches after map + date-range filters
 function filtered() {
-  let list = DATA.matches;
+  let list = DATA.matches.filter(m => m.players['D282'] && m.players['S821']);
 
   if (state.map !== 'all')
     list = list.filter(m => m.map === state.map);
 
-  if (state.dateRange !== 'all') {
-    const days   = state.dateRange === '7d' ? 7 : 14;
-    const latest = new Date(DATA.matches[0].created_at);
-    const cutoff = new Date(+latest - days * 86400e3);
-    list = list.filter(m => new Date(m.created_at) >= cutoff);
+  if (DATES.length > 0) {
+    const lo = DATES[state.dateIdxMin];
+    const hi = DATES[state.dateIdxMax];
+    list = list.filter(m => {
+      const d = m.created_at.slice(0, 10);
+      return d >= lo && d <= hi;
+    });
   }
 
   return list;
 }
 
-// Compute per-player summary stats from a filtered match list
+// Per-player summary stats from a match list
 function statsFrom(matches, player) {
   let n = 0, kills = 0, hsK = 0, dmg = 0, placement = 0,
       top10 = 0, wins = 0, deaths = 0, knocks = 0, survTotal = 0, revives = 0;
@@ -574,6 +797,80 @@ function statsFrom(matches, player) {
 }
 
 /* ============================================================================
+   DAILY SESSION HELPERS
+============================================================================ */
+function getDailySessions(matches) {
+  const byDate = {};
+  for (const m of matches) {
+    const d = m.created_at.slice(0, 10);
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(m);
+  }
+
+  return Object.entries(byDate)
+    .map(([date, games]) => {
+      const sess = { date, games: games.length };
+      for (const player of ['D282', 'S821']) {
+        let kills = 0, deaths = 0, plSum = 0, survSum = 0, wins = 0, top3 = 0, dmg = 0;
+        let n = 0;
+        for (const m of games) {
+          const p = m.players[player];
+          if (!p) continue;
+          n++;
+          kills   += p.kills      || 0;
+          dmg     += p.damage     || 0;
+          survSum += p.survival_s || 0;
+          plSum   += p.placement  || 0;
+          if (p.placement === 1)  wins++;
+          if (p.placement <= 3)   top3++;
+          if (p.placement !== 1)  deaths++;
+        }
+        sess[player] = {
+          kills, deaths, wins, top3, dmg, n,
+          avgKills:     n ? kills / n : 0,
+          avgDmg:       n ? dmg / n : 0,
+          avgPlacement: n ? plSum / n : 0,
+          avgSurvival:  n ? survSum / n : 0,
+          kd:           deaths > 0 ? kills / deaths : kills,
+        };
+      }
+      // Combined (used for "total" view)
+      const d282 = sess['D282'], s821 = sess['S821'];
+      sess.total = {
+        kills:        d282.kills + s821.kills,
+        wins:         Math.max(d282.wins, s821.wins), // same game = same win
+        top3:         Math.max(d282.top3, s821.top3),
+        avgKills:     (d282.avgKills + s821.avgKills) / 2,
+        avgDmg:       (d282.avgDmg + s821.avgDmg) / 2,
+        avgPlacement: (d282.avgPlacement + s821.avgPlacement) / 2,
+        avgSurvival:  (d282.avgSurvival + s821.avgSurvival) / 2,
+        kd:           (d282.kd + s821.kd) / 2,
+      };
+      return sess;
+    })
+    .filter(s => s.games >= state.minGames)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+const DAILY_METRICS = [
+  { key: 'games',        label: 'Games',          fmt: v => Math.round(v),       unit: 'games' },
+  { key: 'kills',        label: 'Total Kills',    fmt: v => Math.round(v),       unit: 'kills' },
+  { key: 'avgKills',     label: 'Avg Kills',      fmt: v => v.toFixed(2),        unit: 'kills/game' },
+  { key: 'avgPlacement', label: 'Avg Placement',  fmt: v => '#' + v.toFixed(1),  unit: 'placement' },
+  { key: 'avgSurvival',  label: 'Avg Survival',   fmt: v => mmss(v),             unit: 'mm:ss' },
+  { key: 'kd',           label: 'K/D',            fmt: v => v.toFixed(2),        unit: 'ratio' },
+  { key: 'wins',         label: 'Wins',           fmt: v => Math.round(v),       unit: 'wins' },
+  { key: 'top3',         label: 'Top 3',          fmt: v => Math.round(v),       unit: 'top3' },
+  { key: 'avgDmg',       label: 'Avg Damage',     fmt: v => Math.round(v),       unit: 'dmg' },
+];
+
+function dmKey(sess, player, key) {
+  if (key === 'games') return sess.games;
+  const src = player === 'total' ? sess.total : sess[player];
+  return src?.[key] ?? 0;
+}
+
+/* ============================================================================
    FORMAT HELPERS
 ============================================================================ */
 const f0  = n => Math.round(n).toLocaleString();
@@ -588,16 +885,24 @@ function mmss(s) {
 }
 
 function placeHTML(p) {
-  if (p === 1)             return `<span class="p1">#1 ✦</span>`;
+  if (p === 1)              return `<span class="p1">#1 ✦</span>`;
   if (p != null && p <= 10) return `<span class="ptop">#${p}</span>`;
   return p != null ? `#${p}` : '—';
+}
+
+function fmtDate(iso) {
+  const [, mm, dd] = iso.split('-');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const dow  = days[new Date(iso).getDay()];
+  return `${dow} ${dd}/${mm}`;
 }
 
 /* ============================================================================
    MAP FILTER BUTTONS
 ============================================================================ */
 function buildMapButtons() {
-  const maps = [...new Set(DATA.matches.map(m => m.map).filter(Boolean))].sort();
+  const duoMatches = DATA.matches.filter(m => m.players['D282'] && m.players['S821']);
+  const maps = [...new Set(duoMatches.map(m => m.map).filter(Boolean))].sort();
   document.getElementById('mapBtns').innerHTML =
     ['all', ...maps].map(m => `
       <button class="btn" data-f="map:${m}" onclick="setFilter('map','${m}')">
@@ -607,75 +912,58 @@ function buildMapButtons() {
 }
 
 /* ============================================================================
-   CHART DROPDOWNS — built from dimensions.json, no hardcoding
+   CHART DROPDOWNS
 ============================================================================ */
 function buildChartDropdowns() {
-  // Category dropdown: unique categories in order of first appearance
   const cats = [...new Set(DATA.dimensions.map(d => d.category))];
   const catSel = document.getElementById('ctrlCategory');
-  catSel.innerHTML = cats
-    .map(c => `<option value="${c}">${c}</option>`)
-    .join('');
+  catSel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
   catSel.value = state.chartCategory;
-
   buildMetricDropdown();
 }
 
 function buildMetricDropdown() {
   const dims = DATA.dimensions.filter(d => d.category === state.chartCategory);
   const metSel = document.getElementById('ctrlMetric');
-  metSel.innerHTML = dims
-    .map(d => `<option value="${d.key}">${d.label}</option>`)
-    .join('');
-
-  // If current metric isn't in this category, fall back to first
+  metSel.innerHTML = dims.map(d => `<option value="${d.key}">${d.label}</option>`).join('');
   if (!dims.find(d => d.key === state.chartMetric))
     state.chartMetric = dims[0]?.key || '';
-
   metSel.value = state.chartMetric;
 }
 
 function setChartCtrl(key, val) {
   state[key] = val;
-
   if (key === 'chartCategory') {
-    // Reset metric to first entry in new category
     const first = DATA.dimensions.find(d => d.category === val);
     state.chartMetric = first?.key || '';
     buildMetricDropdown();
   }
-
-  // Only re-render the chart, not the whole page
   renderChart(lastMatches);
 }
 
 /* ============================================================================
-   SYNC ACTIVE STATES ON ALL FILTER BUTTONS + CHART SELECTS
+   SYNC ACTIVE STATES
 ============================================================================ */
 function syncButtons() {
   document.querySelectorAll('[data-f]').forEach(el => {
     const [key, val] = el.dataset.f.split(':');
     el.classList.toggle('active', state[key] === val);
   });
-
   const t = document.getElementById('ctrlChartType');
   if (t) t.value = state.chartType;
 }
 
 /* ============================================================================
-   CHART DATA — extract per-match value for one player given a dimension
+   CHART DATA HELPER
 ============================================================================ */
 function getMatchValue(dim, match, player) {
-  if (dim.type === 'player_stat') {
-    return match.players[player]?.[dim.field] ?? 0;
-  }
+  if (dim.type === 'player_stat') return match.players[player]?.[dim.field] ?? 0;
   if (dim.type === 'throwable') {
     const row = DATA.throwIdx[match.match_id];
     return row?.players[player]?.[dim.throw_name]?.[dim.throw_field] ?? 0;
   }
   if (dim.type === 'ammo') {
     const row = DATA.ammoIdx[match.match_id];
-    // ammo_stats now stores {reloads, picked_up} per caliber
     return row?.players[player]?.[dim.ammo_name]?.[dim.ammo_field] ?? 0;
   }
   if (dim.type === 'heal') {
@@ -688,31 +976,19 @@ function getMatchValue(dim, match, player) {
 /* ============================================================================
    RENDER — CHART EXPLORER
 ============================================================================ */
-
-// Build frequency bins from an array of numeric values.
-// For small integer ranges (≤20 distinct integers) uses exact values.
-// Otherwise auto-bins into ~10 buckets.
 function buildBins(allValues) {
   if (!allValues.length) return { labels: [], map: () => 0 };
-
-  const max    = Math.max(...allValues);
-  const min    = Math.min(...allValues);
-  const isInt  = allValues.every(v => Number.isInteger(v));
-  const range  = max - min;
-
+  const max   = Math.max(...allValues);
+  const min   = Math.min(...allValues);
+  const isInt = allValues.every(v => Number.isInteger(v));
+  const range = max - min;
   if (isInt && range <= 20) {
-    // Exact value per bucket
     const buckets = Array.from({ length: range + 1 }, (_, i) => min + i);
-    return {
-      labels: buckets.map(String),
-      map:    v => v - min,
-    };
+    return { labels: buckets.map(String), map: v => v - min };
   }
-
-  // Auto-bin into ~10 buckets
-  const nBins  = Math.min(12, Math.ceil(range) || 1);
-  const step   = range / nBins;
-  const edges  = Array.from({ length: nBins + 1 }, (_, i) => min + i * step);
+  const nBins = Math.min(12, Math.ceil(range) || 1);
+  const step  = range / nBins;
+  const edges = Array.from({ length: nBins + 1 }, (_, i) => min + i * step);
   const labels = edges.slice(0, nBins).map((lo, i) => {
     const hi = edges[i + 1];
     if (dim_key_is_survival) return `${Math.round(lo / 60)}–${Math.round(hi / 60)}m`;
@@ -720,15 +996,10 @@ function buildBins(allValues) {
   });
   return {
     labels,
-    map: v => {
-      const i = Math.min(nBins - 1,
-        Math.floor((v - min) / step));
-      return i < 0 ? 0 : i;
-    },
+    map: v => Math.min(nBins - 1, Math.max(0, Math.floor((v - min) / step))),
   };
 }
 
-// Hoisted so buildBins() can reference it
 let dim_key_is_survival = false;
 
 function renderChart(matches) {
@@ -737,18 +1008,14 @@ function renderChart(matches) {
 
   const players = state.player === 'compare' ? ['D282', 'S821'] : [state.player];
   const isHisto = state.chartType === 'histogram';
+  const chron   = [...matches].reverse();
 
-  // Chronological order: oldest → newest (used for timeline)
-  const chron = [...matches].reverse();
-
-  // Format a value for display
   dim_key_is_survival = dim.key === 'survival_s';
   const fmtVal = v => {
     if (dim_key_is_survival) return mmss(Math.round(v));
     return dim.unit === 'damage' ? f1(v) : f0(v);
   };
 
-  // Build value series per player
   const series = players.map(p => ({
     player: p,
     values: chron.map(m => getMatchValue(dim, m, p)),
@@ -757,49 +1024,41 @@ function renderChart(matches) {
   let chartType, chartLabels, datasets;
 
   if (isHisto) {
-    // ── True histogram: count of games per value bucket ──────────────────────
     const allVals = series.flatMap(s => s.values);
     const bins    = buildBins(allVals);
     chartType   = 'bar';
     chartLabels = bins.labels;
-
     datasets = series.map(({ player, values }) => {
       const counts = new Array(bins.labels.length).fill(0);
       values.forEach(v => counts[bins.map(v)]++);
       const col = PLAYER_COLOR[player];
       const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
       return {
-        label:           `${player} (avg ${fmtVal(avg)})`,
-        data:            counts,
+        label: `${player} (avg ${fmtVal(avg)})`,
+        data: counts,
         backgroundColor: col + 'aa',
-        borderColor:     col,
-        borderWidth:     1,
-        borderRadius:    2,
+        borderColor: col,
+        borderWidth: 1,
+        borderRadius: 2,
       };
     });
-
   } else {
-    // ── Timeline: value per match in chronological order ─────────────────────
     chartType   = 'line';
     chartLabels = chron.map(m => m.created_at.slice(0, 10));
-
     datasets = series.map(({ player, values }) => ({
-      label:            player,
-      data:             values,
-      borderColor:      PLAYER_COLOR[player],
-      backgroundColor:  PLAYER_COLOR[player] + '18',
-      fill:             false,
-      tension:          0.3,
-      borderWidth:      2,
-      pointRadius:      3,
+      label:           player,
+      data:            values,
+      borderColor:     PLAYER_COLOR[player],
+      backgroundColor: PLAYER_COLOR[player] + '18',
+      fill:            false,
+      tension:         0.3,
+      borderWidth:     2,
+      pointRadius:     3,
       pointHoverRadius: 5,
     }));
   }
 
   if (CHARTS.main) CHARTS.main.destroy();
-
-  const xLabel = isHisto ? dim.label : 'Match date';
-  const yLabel = isHisto ? 'Games'   : dim.unit;
 
   CHARTS.main = new Chart(
     document.getElementById('mainChart').getContext('2d'),
@@ -807,23 +1066,19 @@ function renderChart(matches) {
       type: chartType,
       data: { labels: chartLabels, datasets },
       options: {
-        responsive:          true,
+        responsive: true,
         maintainAspectRatio: false,
-        interaction:         { mode: 'index', intersect: false },
+        interaction: { mode: 'index', intersect: false },
         plugins: {
-          legend: {
-            labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 },
-          },
+          legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
           tooltip: {
             backgroundColor: '#1e1c17',
-            borderColor:     '#38342c',
-            borderWidth:     1,
-            titleColor:      '#e8e3d8',
-            bodyColor:       '#9a9385',
+            borderColor: '#38342c',
+            borderWidth: 1,
+            titleColor: '#e8e3d8',
+            bodyColor: '#9a9385',
             callbacks: {
-              title: ([ctx]) => isHisto
-                ? `${dim.label}: ${ctx.label}`
-                : ctx.label,
+              title: ([ctx]) => isHisto ? `${dim.label}: ${ctx.label}` : ctx.label,
               label: ctx => {
                 const v = ctx.parsed.y;
                 if (isHisto) return `${ctx.dataset.label}: ${v} game${v !== 1 ? 's' : ''}`;
@@ -834,22 +1089,14 @@ function renderChart(matches) {
         },
         scales: {
           x: {
-            ticks: {
-              color: '#9a9385',
-              maxRotation: isHisto ? 0 : 45,
-              font: { size: 11 },
-            },
-            title: { display: isHisto, text: xLabel, color: '#9a9385', font: { size: 11 } },
+            ticks: { color: '#9a9385', maxRotation: isHisto ? 0 : 45, font: { size: 11 } },
+            title: { display: isHisto, text: dim.label, color: '#9a9385', font: { size: 11 } },
             grid:  { color: 'rgba(56,52,44,0.5)' },
           },
           y: {
-            min:   0,
-            ticks: {
-              color: '#9a9385',
-              font:  { size: 11 },
-              stepSize: isHisto ? 1 : undefined,
-            },
-            title: { display: true, text: yLabel, color: '#9a9385', font: { size: 11 } },
+            min: 0,
+            ticks: { color: '#9a9385', font: { size: 11 }, stepSize: isHisto ? 1 : undefined },
+            title: { display: true, text: isHisto ? 'Games' : dim.unit, color: '#9a9385', font: { size: 11 } },
             grid:  { color: 'rgba(56,52,44,0.4)' },
           },
         },
@@ -859,22 +1106,21 @@ function renderChart(matches) {
 }
 
 /* ============================================================================
-   RENDER — SUMMARY CARDS  (11 cards including avg survival)
+   RENDER — SUMMARY CARDS
 ============================================================================ */
 function renderSummary(matches) {
-  // [label, valueFn, subFn]
   const CARDS = [
-    ['Matches',         s => s.n,                        s => `${s.wins} win${s.wins !== 1 ? 's' : ''}`],
-    ['Kills',           s => s.kills,                    s => `${s.deaths} deaths`],
-    ['K/D',             s => f2(s.kd),                   s => `${s.kills}K / ${s.deaths}D`],
-    ['Avg Damage',      s => f0(s.avgDmg),               ()=> 'per match'],
-    ['Avg Placement',   s => '#' + f1(s.avgPlace),       ()=> 'lower is better'],
-    ['Top 10 %',        s => pct(s.top10r),              s => `${s.wins} win${s.wins !== 1 ? 's' : ''}`],
-    ['Win Rate',        s => pct(s.winr),                s => `${s.wins} / ${s.n}`],
-    ['Knockdowns',      s => s.knocks,                   s => f2(s.knocks / (s.n || 1)) + ' / match'],
-    ['Avg Survival',    s => mmss(s.avgSurv),            ()=> 'per match'],
-    ['Revives Given',   s => s.revives,                  s => `in ${s.n} matches`],
-    ['Headshot Kill %', s => pct(s.hsPct),               s => `${s.hsK} / ${s.kills} kills`],
+    ['Matches',         s => s.n,                      s => `${s.wins} win${s.wins !== 1 ? 's' : ''}`],
+    ['Kills',           s => s.kills,                  s => `${s.deaths} deaths`],
+    ['K/D',             s => f2(s.kd),                 s => `${s.kills}K / ${s.deaths}D`],
+    ['Avg Damage',      s => f0(s.avgDmg),             ()=> 'per match'],
+    ['Avg Placement',   s => '#' + f1(s.avgPlace),     ()=> 'lower is better'],
+    ['Top 10 %',        s => pct(s.top10r),            s => `${s.wins} win${s.wins !== 1 ? 's' : ''}`],
+    ['Win Rate',        s => pct(s.winr),              s => `${s.wins} / ${s.n}`],
+    ['Knockdowns',      s => s.knocks,                 s => f2(s.knocks / (s.n || 1)) + ' / match'],
+    ['Avg Survival',    s => mmss(s.avgSurv),          ()=> 'per match'],
+    ['Revives Given',   s => s.revives,                s => `in ${s.n} matches`],
+    ['Headshot Kill %', s => pct(s.hsPct),             s => `${s.hsK} / ${s.kills} kills`],
   ];
 
   const grid = (player, stats) => {
@@ -891,7 +1137,6 @@ function renderSummary(matches) {
   };
 
   const section = document.getElementById('summarySection');
-
   if (state.player === 'compare') {
     const sA = statsFrom(matches, 'D282');
     const sB = statsFrom(matches, 'S821');
@@ -906,116 +1151,342 @@ function renderSummary(matches) {
 }
 
 /* ============================================================================
-   RENDER — WEAPONS TABLE
+   RENDER — DAILY STATS
 ============================================================================ */
-function renderWeapons() {
-  const wrap = document.getElementById('weaponsWrap');
+function renderDailyStats(matches) {
+  const sessions = getDailySessions(matches);
+  const el       = document.getElementById('dailyContent');
 
-  const th = (col, label) => {
-    const sorted = state.weapCol === col;
-    const arrow  = sorted ? (state.weapDir === 'desc' ? ' ↓' : ' ↑') : '';
-    return `<th class="${sorted ? 'sorted' : ''}" onclick="sortWeap('${col}')">${label}${arrow}</th>`;
-  };
+  if (sessions.length === 0) {
+    el.innerHTML = `<p class="empty">No sessions match the current filters (min ${state.minGames} games/day).</p>`;
+    return;
+  }
 
-  if (state.player !== 'compare') {
-    const p    = state.player;
-    const rows = [...(DATA.weapons[p] || [])].sort((a, b) => {
-      const v = r => r[state.weapCol] ?? 0;
-      return state.weapDir === 'desc' ? v(b) - v(a) : v(a) - v(b);
+  if (state.dailyTab === 'overview')  el.innerHTML = renderDailyOverview(sessions);
+  if (state.dailyTab === 'charts')    el.innerHTML = renderDailyChartsHTML(sessions);
+  if (state.dailyTab === 'table')     el.innerHTML = renderDailyTable(sessions);
+
+  if (state.dailyTab === 'charts') buildDailyCharts(sessions);
+}
+
+/* ── Overview: mini summary cards per session ─────────────────────────────── */
+function renderDailyOverview(sessions) {
+  const players = state.player === 'compare' ? ['D282', 'S821'] : [state.player];
+
+  const rows = sessions.map(sess => {
+    const playerCols = players.map(p => {
+      const ps  = sess[p];
+      const col = PLAYER_COLOR[p];
+      return `
+        <td style="border-right:1px solid var(--line)">
+          <span style="color:${col};font-weight:600">${ps.kills}K</span>
+          <span class="panel-note"> / ${f1(ps.avgPlacement)} avg</span>
+        </td>
+        <td style="border-right:1px solid var(--line)">
+          ${ps.wins > 0 ? `<span class="pill pill-win">${ps.wins}W</span> ` : ''}
+          ${ps.top3 - ps.wins > 0 ? `<span class="pill pill-top3">T${ps.top3}</span>` : ''}
+          ${ps.wins === 0 && ps.top3 === 0 ? '<span class="panel-note">—</span>' : ''}
+        </td>
+        <td style="border-right:1px solid var(--line)">
+          <span style="color:${col}">${f2(ps.kd)}</span>
+          <span class="panel-note"> k/d</span>
+        </td>
+        <td style="border-right:1px solid var(--line)">
+          <span class="panel-note">${mmss(ps.avgSurvival)}</span>
+        </td>`;
+    }).join('');
+
+    return `<tr>
+      <td style="border-right:1px solid var(--line);white-space:nowrap;font-weight:600">
+        ${fmtDate(sess.date)}
+      </td>
+      <td style="border-right:1px solid var(--line);text-align:center;color:var(--muted)">
+        ${sess.games}
+      </td>
+      ${playerCols}
+    </tr>`;
+  }).join('');
+
+  const playerHeaders = players.map(p =>
+    `<th class="no-sort" colspan="4" style="color:${PLAYER_COLOR[p]};border-bottom:2px solid ${PLAYER_COLOR[p]}">${p}</th>`
+  ).join('');
+  const subHeaders = players.map(() =>
+    `<th class="no-sort">Kills / Avg #</th><th class="no-sort">Wins</th><th class="no-sort">K/D</th><th class="no-sort">Avg Surv</th>`
+  ).join('');
+
+  return `<div class="tbl-wrap"><table>
+    <thead>
+      <tr>
+        <th class="no-sort" rowspan="2" style="vertical-align:bottom">Session</th>
+        <th class="no-sort" rowspan="2" style="vertical-align:bottom;text-align:center">Games</th>
+        ${playerHeaders}
+      </tr>
+      <tr>${subHeaders}</tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+/* ── Charts tab HTML shell ────────────────────────────────────────────────── */
+function renderDailyChartsHTML(sessions) {
+  const metOpts = DAILY_METRICS
+    .map(m => `<option value="${m.key}">${m.label}</option>`)
+    .join('');
+
+  return `
+    <div class="daily-grid">
+      <div>
+        <div class="daily-chart-label">Games per Session</div>
+        <div class="chart-wrap"><canvas id="dailyGamesChart"></canvas></div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div class="daily-chart-label" style="margin-bottom:0">Per Session —</div>
+          <select style="padding:4px 26px 4px 8px;font-size:12px" id="dailyMetricSelA" onchange="setDailyMetric('A',this.value)">
+            ${metOpts}
+          </select>
+        </div>
+        <div class="chart-wrap"><canvas id="dailyMetricChartA"></canvas></div>
+      </div>
+    </div>
+    <div class="daily-grid">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div class="daily-chart-label" style="margin-bottom:0">Per Session —</div>
+          <select style="padding:4px 26px 4px 8px;font-size:12px" id="dailyMetricSelB" onchange="setDailyMetric('B',this.value)">
+            ${metOpts}
+          </select>
+        </div>
+        <div class="chart-wrap"><canvas id="dailyMetricChartB"></canvas></div>
+      </div>
+      <div>
+        <div class="daily-chart-label">Win &amp; Top-3 Rate per Session</div>
+        <div class="chart-wrap"><canvas id="dailyOutcomeChart"></canvas></div>
+      </div>
+    </div>`;
+}
+
+function setDailyMetric(slot, key) {
+  if (slot === 'A') state.dailyMetricA = key;
+  else              state.dailyMetricB = key;
+  buildDailyCharts(getDailySessions(lastMatches));
+}
+
+function buildDailyCharts(sessions) {
+  if (!sessions.length) return;
+
+  // Restore select values
+  const selA = document.getElementById('dailyMetricSelA');
+  const selB = document.getElementById('dailyMetricSelB');
+  if (selA) selA.value = state.dailyMetricA;
+  if (selB) selB.value = state.dailyMetricB;
+
+  const labels   = sessions.map(s => fmtDate(s.date));
+  const players  = state.player === 'compare' ? ['D282', 'S821'] : [state.player];
+  const darkGrid = 'rgba(56,52,44,0.4)';
+
+  const chartDefaults = (extra = {}) => ({
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#9a9385', font: { size: 11 }, boxWidth: 14 } },
+      tooltip: {
+        backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1,
+        titleColor: '#e8e3d8', bodyColor: '#9a9385',
+      },
+    },
+    scales: {
+      x: { ticks: { color: '#9a9385', font: { size: 11 } }, grid: { color: darkGrid } },
+      y: { min: 0, ticks: { color: '#9a9385', font: { size: 11 } }, grid: { color: darkGrid } },
+    },
+    ...extra,
+  });
+
+  // ── Games per session (stacked bar: win/top3/other) ──────────────────────
+  if (CHARTS.dailyGames) CHARTS.dailyGames.destroy();
+  const cGames = document.getElementById('dailyGamesChart');
+  if (cGames) {
+    const winCounts  = sessions.map(s => Math.max(s['D282'].wins, s['S821'].wins));
+    const top3Other  = sessions.map(s => Math.max(s['D282'].top3, s['S821'].top3) - winCounts[sessions.indexOf(s)]);
+    const other      = sessions.map((s, i) => s.games - Math.max(s['D282'].top3, s['S821'].top3));
+    CHARTS.dailyGames = new Chart(cGames.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Win',     data: winCounts, backgroundColor: '#f4a30088', borderColor: '#f4a300', borderWidth: 1, borderRadius: 2 },
+          { label: 'Top 3',   data: top3Other, backgroundColor: '#8fae5d88', borderColor: '#8fae5d', borderWidth: 1 },
+          { label: 'Other',   data: other,     backgroundColor: '#38342c88', borderColor: '#4a453c', borderWidth: 1 },
+        ],
+      },
+      options: { ...chartDefaults(), scales: {
+        x: { stacked: true, ticks: { color: '#9a9385', font: { size: 11 } }, grid: { color: darkGrid } },
+        y: { stacked: true, min: 0, ticks: { color: '#9a9385', font: { size: 11 }, stepSize: 1 }, grid: { color: darkGrid } },
+      }},
     });
+  }
 
-    wrap.innerHTML = `
-      <table>
-        <thead><tr>
-          ${th('weapon','Weapon')}
-          <th class="no-sort">Type</th>
-          ${th('kills','Kills')}
-          ${th('total_damage','Damage')}
-          ${th('hits','Hits')}
-          ${th('headshot_kill_pct','HS Kill %')}
-          ${th('avg_damage_per_hit','Dmg / Hit')}
-        </tr></thead>
-        <tbody>
-          ${rows.length === 0
-            ? `<tr><td colspan="7" class="empty">No weapon data</td></tr>`
-            : rows.map(r => `
-                <tr>
-                  <td><strong>${r.weapon}</strong></td>
-                  <td><span class="badge">${r.category}</span></td>
-                  <td>${r.kills}</td>
-                  <td>${f0(r.total_damage)}</td>
-                  <td>${r.hits}</td>
-                  <td>${pct(r.headshot_kill_pct)}</td>
-                  <td>${f1(r.avg_damage_per_hit)}</td>
-                </tr>`
-              ).join('')}
-        </tbody>
-      </table>`;
+  // ── Metric chart A ────────────────────────────────────────────────────────
+  buildDailyMetricChart('dailyMetricChartA', 'dailyMetricA', sessions, labels, players, chartDefaults);
 
-  } else {
-    // Compare: merged table with both players' columns
-    const allNames = new Set([
-      ...(DATA.weapons.D282 || []).map(r => r.weapon),
-      ...(DATA.weapons.S821 || []).map(r => r.weapon),
-    ]);
-    const byName = (p, w) =>
-      DATA.weapons[p]?.find(r => r.weapon === w) ||
-      { kills: 0, total_damage: 0, hits: 0, headshot_kill_pct: 0 };
+  // ── Metric chart B ────────────────────────────────────────────────────────
+  buildDailyMetricChart('dailyMetricChartB', 'dailyMetricB', sessions, labels, players, chartDefaults);
 
-    const rows = [...allNames].map(w => ({
-      weapon: w,
-      cat:    DATA.weapons.D282?.find(r=>r.weapon===w)?.category ||
-              DATA.weapons.S821?.find(r=>r.weapon===w)?.category || '',
-      D282:   byName('D282', w),
-      S821:   byName('S821', w),
-    })).sort((a,b) => (b.D282.kills + b.S821.kills) - (a.D282.kills + a.S821.kills));
-
-    wrap.innerHTML = `
-      <table>
-        <thead><tr>
-          <th class="no-sort">Weapon</th>
-          <th class="no-sort">Type</th>
-          <th class="no-sort" style="color:var(--accent)">D282 Kills</th>
-          <th class="no-sort" style="color:var(--accent)">D282 Dmg</th>
-          <th class="no-sort" style="color:var(--accent)">D282 HS%</th>
-          <th class="no-sort" style="color:var(--blue)">S821 Kills</th>
-          <th class="no-sort" style="color:var(--blue)">S821 Dmg</th>
-          <th class="no-sort" style="color:var(--blue)">S821 HS%</th>
-        </tr></thead>
-        <tbody>
-          ${rows.map(r => `
-            <tr>
-              <td><strong>${r.weapon}</strong></td>
-              <td><span class="badge">${r.cat}</span></td>
-              <td>${r.D282.kills}</td>
-              <td>${f0(r.D282.total_damage)}</td>
-              <td>${pct(r.D282.headshot_kill_pct || 0)}</td>
-              <td>${r.S821.kills}</td>
-              <td>${f0(r.S821.total_damage)}</td>
-              <td>${pct(r.S821.headshot_kill_pct || 0)}</td>
-            </tr>`
-          ).join('')}
-        </tbody>
-      </table>`;
+  // ── Outcome rate chart ────────────────────────────────────────────────────
+  if (CHARTS.dailyOutcome) CHARTS.dailyOutcome.destroy();
+  const cOut = document.getElementById('dailyOutcomeChart');
+  if (cOut) {
+    const winRate  = sessions.map(s => Math.max(s['D282'].wins, s['S821'].wins) / s.games * 100);
+    const top3Rate = sessions.map(s => Math.max(s['D282'].top3, s['S821'].top3) / s.games * 100);
+    CHARTS.dailyOutcome = new Chart(cOut.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Win %',   data: winRate,  borderColor: '#f4a300', backgroundColor: '#f4a30020', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4 },
+          { label: 'Top 3 %', data: top3Rate, borderColor: '#8fae5d', backgroundColor: '#8fae5d20', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 4 },
+        ],
+      },
+      options: {
+        ...chartDefaults(),
+        scales: {
+          x: { ticks: { color: '#9a9385', font: { size: 11 } }, grid: { color: darkGrid } },
+          y: { min: 0, max: 100, ticks: { color: '#9a9385', font: { size: 11 }, callback: v => v + '%' }, grid: { color: darkGrid } },
+        },
+        plugins: {
+          ...chartDefaults().plugins,
+          tooltip: {
+            ...chartDefaults().plugins.tooltip,
+            callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` },
+          },
+        },
+      },
+    });
   }
 }
 
-function sortWeap(col) {
-  if (state.weapCol === col) state.weapDir = state.weapDir === 'desc' ? 'asc' : 'desc';
-  else { state.weapCol = col; state.weapDir = 'desc'; }
-  renderWeapons();
+function buildDailyMetricChart(canvasId, metricKey, sessions, labels, players, chartDefaults) {
+  const chartKey = 'daily_' + canvasId;
+  if (CHARTS[chartKey]) CHARTS[chartKey].destroy();
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const metDef  = DAILY_METRICS.find(m => m.key === state[metricKey]) || DAILY_METRICS[0];
+  const isTotal = players.length === 2 || state.player === 'compare';
+
+  let datasets;
+  if (metDef.key === 'games') {
+    datasets = [{
+      label: 'Games',
+      data: sessions.map(s => s.games),
+      borderColor: '#9a9385', backgroundColor: '#9a938530',
+      fill: false, tension: 0.3, borderWidth: 2, pointRadius: 4,
+    }];
+  } else {
+    datasets = players.map(p => ({
+      label: p,
+      data: sessions.map(s => {
+        const src = p === 'total' ? s.total : s[p];
+        return src?.[metDef.key] ?? 0;
+      }),
+      borderColor:     PLAYER_COLOR[p],
+      backgroundColor: PLAYER_COLOR[p] + '20',
+      fill: false, tension: 0.3, borderWidth: 2, pointRadius: 4,
+    }));
+  }
+
+  const isSurv = metDef.key === 'avgSurvival';
+  const opts   = {
+    ...chartDefaults(),
+    scales: {
+      x: { ticks: { color: '#9a9385', font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.4)' } },
+      y: {
+        min: 0,
+        ticks: {
+          color: '#9a9385', font: { size: 11 },
+          callback: v => isSurv ? mmss(v) : v,
+        },
+        grid: { color: 'rgba(56,52,44,0.4)' },
+        title: { display: true, text: metDef.unit, color: '#9a9385', font: { size: 11 } },
+      },
+    },
+    plugins: {
+      ...chartDefaults().plugins,
+      tooltip: {
+        ...chartDefaults().plugins.tooltip,
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: ${metDef.fmt(ctx.parsed.y)}`,
+        },
+      },
+    },
+  };
+
+  CHARTS[chartKey] = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: opts,
+  });
+}
+
+/* ── Table tab ────────────────────────────────────────────────────────────── */
+function renderDailyTable(sessions) {
+  const players = state.player === 'compare' ? ['D282', 'S821'] : [state.player];
+
+  const theadPlayer = players.map(p =>
+    `<th class="no-sort" colspan="7" style="color:${PLAYER_COLOR[p]};border-bottom:2px solid ${PLAYER_COLOR[p]}">${p}</th>`
+  ).join('');
+
+  const subHdr = players.map(() =>
+    `<th class="no-sort">Kills</th>
+     <th class="no-sort">Avg K</th>
+     <th class="no-sort">Avg Dmg</th>
+     <th class="no-sort">Avg #</th>
+     <th class="no-sort">Avg Surv</th>
+     <th class="no-sort">K/D</th>
+     <th class="no-sort">W / T3</th>`
+  ).join('');
+
+  const rows = sessions.map(sess => {
+    const pCols = players.map(p => {
+      const ps = sess[p];
+      return `
+        <td>${ps.kills}</td>
+        <td>${f2(ps.avgKills)}</td>
+        <td>${f0(ps.avgDmg)}</td>
+        <td>#${f1(ps.avgPlacement)}</td>
+        <td>${mmss(ps.avgSurvival)}</td>
+        <td>${f2(ps.kd)}</td>
+        <td>${ps.wins} / ${ps.top3}</td>`;
+    }).join('');
+
+    return `<tr>
+      <td style="white-space:nowrap;font-weight:600">${fmtDate(sess.date)}</td>
+      <td style="text-align:center;color:var(--muted)">${sess.games}</td>
+      ${pCols}
+    </tr>`;
+  }).join('');
+
+  return `<div class="tbl-wrap"><table>
+    <thead>
+      <tr>
+        <th class="no-sort" rowspan="2" style="vertical-align:bottom">Date</th>
+        <th class="no-sort" rowspan="2" style="vertical-align:bottom;text-align:center">Games</th>
+        ${theadPlayer}
+      </tr>
+      <tr>${subHdr}</tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
 }
 
 /* ============================================================================
-   RENDER — MATCH HISTORY TABLE
-   "Duration" column replaced with "Survival" (duo_survival_s)
+   RENDER — MATCH HISTORY
 ============================================================================ */
 function renderMatchHistory(matches) {
   const table = document.getElementById('matchTable');
 
   if (matches.length === 0) {
-    table.innerHTML =
-      '<tbody><tr><td class="empty" colspan="10">No matches for these filters.</td></tr></tbody>';
+    table.innerHTML = '<tbody><tr><td class="empty" colspan="10">No matches for these filters.</td></tr></tbody>';
     return;
   }
 
@@ -1068,14 +1539,14 @@ function renderMatchHistory(matches) {
 }
 
 /* ============================================================================
-   RENDER ALL — called whenever filters change
+   RENDER ALL
 ============================================================================ */
 function renderAll() {
   syncButtons();
   lastMatches = filtered();
   renderSummary(lastMatches);
   renderChart(lastMatches);
-  renderWeapons();
+  renderDailyStats(lastMatches);
   renderMatchHistory(lastMatches);
 }
 
