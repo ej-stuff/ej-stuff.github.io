@@ -292,7 +292,7 @@ h1 {
 .layer-global-btns .group-toggle-btn { flex: 1; text-align: center; }
 
 /* ── Mini charts ─────────────────────────────────────────────────────────── */
-#hpCanvas, #proxCanvas { display: block; width: 100%; border-radius: 3px; }
+#hpCanvas, #scoreCanvas, #distCanvas { display: block; width: 100%; border-radius: 3px; }
 .chart-legend { display: flex; gap: 10px; }
 .chart-legend span { font-size: 10px; color: var(--muted); }
 
@@ -520,11 +520,6 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
         </div>
         <div id="hpWrap"><canvas id="hpCanvas"></canvas></div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;margin-bottom:6px">
-          <span class="panel-title" style="margin-bottom:0">Proximity (m)</span>
-          <span style="color:var(--muted);font-size:10px">— 100 m ref</span>
-        </div>
-        <div id="proxWrap"><canvas id="proxCanvas"></canvas></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;margin-bottom:6px">
           <span class="panel-title" style="margin-bottom:0">Performance Score</span>
           <div class="chart-legend">
             <span style="color:var(--accent)">▬ D282</span>
@@ -532,17 +527,11 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
             <span style="color:#888888">▬ Duo</span>
           </div>
         </div>
-        <div id="scoreWrap"><canvas id="scoreCanvas"></canvas></div>
+        <div id="scoreWrap" style="height:180px"><canvas id="scoreCanvas"></canvas></div>
         <div id="scoreDefGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:3px;margin-top:6px;font-size:11px;color:var(--muted)"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-          <div>
-            <div style="font-size:10px;color:var(--accent);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">D282 Travel /30s</div>
-            <div id="dist282Wrap"><canvas id="dist282Canvas"></canvas></div>
-          </div>
-          <div>
-            <div style="font-size:10px;color:var(--blue);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">S821 Travel /30s</div>
-            <div id="dist821Wrap"><canvas id="dist821Canvas"></canvas></div>
-          </div>
+        <div style="margin-top:10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">Travel /30s &nbsp;<span style="color:var(--accent)">&#9644; D282</span> &nbsp;<span style="color:var(--blue)">&#9644; S821</span></div>
+          <div id="distWrap"><canvas id="distCanvas"></canvas></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
           <div id="loadout282" class="loadout-box"></div>
@@ -998,9 +987,7 @@ function onTlClick(e) {
   draw();
   drawTimeline();
   drawHpChart();
-  drawProxChart();
-  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
-  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
+  drawDistCharts();
 }
 
 function onTlMouseMove(e) {
@@ -1125,14 +1112,11 @@ async function boot() {
     resizeCanvas();
     resizeTimeline();
     resizeHpChart();
-    resizeProxChart();
     resizeDistCharts();
     draw();
     drawTimeline();
     drawHpChart();
-    drawProxChart();
-    drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
-    drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
+    drawDistCharts();
   });
   canvas.addEventListener('wheel',      onWheel,     { passive: false });
   canvas.addEventListener('mousedown',  onMouseDown);
@@ -1187,7 +1171,6 @@ async function boot() {
   draw();
   initTimeline();
   initHpChart();
-  initProxChart();
   initDistCharts();
   // engagement lines rendered per-event in drawEngagements() — no precompute
   buildEngagementSummary();
@@ -1637,9 +1620,7 @@ function onTimeInput(e) {
   draw();
   drawTimeline();
   drawHpChart();
-  drawProxChart();
-  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
-  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
+  drawDistCharts();
 }
 
 function resetTime() {
@@ -1650,9 +1631,7 @@ function resetTime() {
   draw();
   drawTimeline();
   drawHpChart();
-  drawProxChart();
-  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
-  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
+  drawDistCharts();
 }
 
 function jumpTime(delta) {
@@ -1667,9 +1646,7 @@ function jumpTime(delta) {
   draw();
   drawTimeline();
   drawHpChart();
-  drawProxChart();
-  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
-  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
+  drawDistCharts();
 }
 
 function setPlayerFilter(p) {
@@ -2116,122 +2093,6 @@ function drawHpChart() {
 }
 
 /* ============================================================================
-   PROXIMITY CHART
-============================================================================ */
-const PROX_H     = 60;
-const PROX_MAX_M = 1500;
-let proxCanvas = null, proxCtx = null, _proxData = null;
-
-function initProxChart() {
-  proxCanvas = document.getElementById('proxCanvas');
-  if (!proxCanvas) return;
-  proxCtx   = proxCanvas.getContext('2d');
-  _proxData = computeProxData();
-  resizeProxChart();
-  drawProxChart();
-}
-
-function resizeProxChart() {
-  if (!proxCanvas) return;
-  const wrap = document.getElementById('proxWrap');
-  const w    = wrap.clientWidth;
-  if (proxCanvas.width !== w || proxCanvas.height !== PROX_H) {
-    proxCanvas.width  = w;
-    proxCanvas.height = PROX_H;
-  }
-}
-
-function getPositionAt(player, t) {
-  const pts = MD.positions[player];
-  if (!pts || !pts.length) return null;
-  let lo = 0, hi = pts.length - 1, idx = -1;
-  while (lo <= hi) {
-    const mid = (lo + hi) >> 1;
-    if (pts[mid].t <= t) { idx = mid; lo = mid + 1; }
-    else hi = mid - 1;
-  }
-  return idx >= 0 ? pts[idx] : null;
-}
-
-function computeProxData() {
-  if (!MD) return [];
-  const dur  = MD.duration_s || 1800;
-  const data = [];
-  for (let t = 0; t <= dur; t += 5) {
-    const pD = getPositionAt('D282', t);
-    const pS = getPositionAt('S821', t);
-    if (!pD || !pS) continue;
-    const dx    = pD.x - pS.x, dy = pD.y - pS.y;
-    const distM = Math.sqrt(dx * dx + dy * dy) / 100;
-    data.push({ t, distM });
-  }
-  return data;
-}
-
-function drawProxChart() {
-  if (!proxCanvas || !proxCtx || !MD || !_proxData || !_proxData.length) return;
-  const w = proxCanvas.width, h = proxCanvas.height;
-  proxCtx.clearRect(0, 0, w, h);
-
-  const PAD_L = TL_PAD_L, PAD_R = 4, PAD_T = 3, PAD_B = 3;
-  const dur   = MD.duration_s || 1800;
-  const plotW = w - PAD_L - PAD_R;
-  const plotH = h - PAD_T - PAD_B;
-  const tx    = t => PAD_L + (Math.max(0, t) / dur) * plotW;
-  const ty    = d => PAD_T + (1 - Math.min(d, PROX_MAX_M) / PROX_MAX_M) * plotH;
-
-  proxCtx.fillStyle = 'rgba(0,0,0,0.15)';
-  proxCtx.fillRect(PAD_L, PAD_T, plotW, plotH);
-
-  const ref100y = ty(100);
-  proxCtx.beginPath();
-  proxCtx.moveTo(PAD_L, ref100y); proxCtx.lineTo(w - PAD_R, ref100y);
-  proxCtx.strokeStyle = 'rgba(56,52,44,0.7)';
-  proxCtx.lineWidth   = 1;
-  proxCtx.setLineDash([3, 3]);
-  proxCtx.stroke();
-  proxCtx.setLineDash([]);
-
-  proxCtx.beginPath();
-  proxCtx.moveTo(tx(_proxData[0].t), ty(_proxData[0].distM));
-  for (let i = 1; i < _proxData.length; i++) {
-    proxCtx.lineTo(tx(_proxData[i].t), ty(_proxData[i].distM));
-  }
-  proxCtx.strokeStyle = '#8fae5d';
-  proxCtx.lineWidth   = 1.5;
-  proxCtx.globalAlpha = 0.85;
-  proxCtx.stroke();
-
-  const last = _proxData[_proxData.length - 1];
-  proxCtx.lineTo(tx(last.t), PAD_T + plotH);
-  proxCtx.lineTo(PAD_L, PAD_T + plotH);
-  proxCtx.closePath();
-  proxCtx.fillStyle = 'rgba(143,174,93,0.1)';
-  proxCtx.fill();
-  proxCtx.globalAlpha = 1;
-
-  proxCtx.font = '9px system-ui, sans-serif';
-  proxCtx.fillStyle = 'rgba(56,52,44,0.9)';
-  proxCtx.textAlign = 'left';
-  proxCtx.textBaseline = 'bottom';
-  proxCtx.fillText('100m', PAD_L + 2, ref100y - 1);
-
-  proxCtx.font = 'bold 10px system-ui, sans-serif';
-  proxCtx.fillStyle = '#8fae5d';
-  proxCtx.textBaseline = 'middle';
-  proxCtx.fillText('↔', 1, h / 2);
-
-  if (state.time !== Infinity) {
-    const x = tx(state.time);
-    proxCtx.beginPath();
-    proxCtx.moveTo(x, PAD_T); proxCtx.lineTo(x, h - PAD_B);
-    proxCtx.strokeStyle = 'rgba(244,163,0,0.85)';
-    proxCtx.lineWidth   = 1.5;
-    proxCtx.stroke();
-  }
-}
-
-/* ============================================================================
    ENGAGEMENT LINES LAYER
    Lines are drawn between D282 and S821 for shared fights (same enemy).
    Enemy positions are not tracked, so lines show team positioning during fights.
@@ -2283,35 +2144,29 @@ function drawEngagements(maxT) {
 }
 
 /* ============================================================================
-   DISTANCE TRAVELED CHARTS  (rolling 30-second window per player)
+   DISTANCE TRAVELED CHARTS  (rolling 30-second window, both players combined)
 ============================================================================ */
 const DIST_H      = 55;
 const DIST_WIN    = 30;
 const DIST_MAX_M  = 700;
-let dist282Canvas = null, dist282Ctx = null, _dist282 = null;
-let dist821Canvas = null, dist821Ctx = null, _dist821 = null;
+let distCanvas = null, distCtx = null, _dist282 = null, _dist821 = null;
 
 function initDistCharts() {
-  dist282Canvas = document.getElementById('dist282Canvas');
-  dist821Canvas = document.getElementById('dist821Canvas');
-  if (!dist282Canvas || !dist821Canvas) return;
-  dist282Ctx = dist282Canvas.getContext('2d');
-  dist821Ctx = dist821Canvas.getContext('2d');
-  _dist282   = computeRollingDist('D282');
-  _dist821   = computeRollingDist('S821');
+  distCanvas = document.getElementById('distCanvas');
+  if (!distCanvas) return;
+  distCtx  = distCanvas.getContext('2d');
+  _dist282 = computeRollingDist('D282');
+  _dist821 = computeRollingDist('S821');
   resizeDistCharts();
-  drawDistChart('D282', dist282Canvas, dist282Ctx, _dist282);
-  drawDistChart('S821', dist821Canvas, dist821Ctx, _dist821);
+  drawDistCharts();
 }
 
 function resizeDistCharts() {
-  for (const [wrapId, can] of [['dist282Wrap', dist282Canvas], ['dist821Wrap', dist821Canvas]]) {
-    if (!can) continue;
-    const wrap = document.getElementById(wrapId);
-    if (!wrap) continue;
-    const w = wrap.clientWidth;
-    if (can.width !== w || can.height !== DIST_H) { can.width = w; can.height = DIST_H; }
-  }
+  if (!distCanvas) return;
+  const wrap = document.getElementById('distWrap');
+  if (!wrap) return;
+  const w = wrap.clientWidth;
+  if (distCanvas.width !== w || distCanvas.height !== DIST_H) { distCanvas.width = w; distCanvas.height = DIST_H; }
 }
 
 function computeRollingDist(player) {
@@ -2321,11 +2176,9 @@ function computeRollingDist(player) {
   const dur  = MD.duration_s || 1800;
   const data = [];
   for (let T = 0; T <= dur; T += 5) {
-    // Binary search window start
     let lo = 0, hi = pts.length - 1, si = pts.length;
     const winStart = T - DIST_WIN;
     while (lo <= hi) { const m = (lo+hi)>>1; if (pts[m].t >= winStart) { si = m; hi = m-1; } else lo = m+1; }
-    // Binary search window end
     lo = 0; hi = pts.length - 1; let ei = -1;
     while (lo <= hi) { const m = (lo+hi)>>1; if (pts[m].t <= T) { ei = m; lo = m+1; } else hi = m-1; }
     let total = 0;
@@ -2338,46 +2191,48 @@ function computeRollingDist(player) {
   return data;
 }
 
-function drawDistChart(player, can, cx, data) {
-  if (!can || !cx || !MD || !data || !data.length) return;
-  const w = can.width, h = can.height;
-  cx.clearRect(0, 0, w, h);
+function drawDistCharts() {
+  if (!distCanvas || !distCtx || !MD) return;
+  const w = distCanvas.width, h = distCanvas.height;
+  distCtx.clearRect(0, 0, w, h);
   const PAD_T = 3, PAD_B = 3;
   const dur   = MD.duration_s || 1800;
   const plotH = h - PAD_T - PAD_B;
-  const col   = player === 'D282' ? '#f4a300' : '#4a9edd';
   const tx    = t => (Math.max(0, t) / dur) * w;
   const ty    = d => PAD_T + (1 - Math.min(d, DIST_MAX_M) / DIST_MAX_M) * plotH;
 
-  cx.fillStyle = 'rgba(0,0,0,0.15)';
-  cx.fillRect(0, PAD_T, w, plotH);
+  distCtx.fillStyle = 'rgba(0,0,0,0.15)';
+  distCtx.fillRect(0, PAD_T, w, plotH);
 
-  cx.beginPath();
-  cx.moveTo(tx(data[0].t), ty(data[0].distM));
-  for (let i = 1; i < data.length; i++) cx.lineTo(tx(data[i].t), ty(data[i].distM));
-  const last = data[data.length-1];
-  cx.lineTo(tx(last.t), PAD_T + plotH);
-  cx.lineTo(0, PAD_T + plotH);
-  cx.closePath();
-  cx.fillStyle   = col + '22';
-  cx.fill();
+  for (const [data, col] of [[_dist282, '#f4a300'], [_dist821, '#4a9edd']]) {
+    if (!data || !data.length) continue;
+    distCtx.beginPath();
+    distCtx.moveTo(tx(data[0].t), ty(data[0].distM));
+    for (let i = 1; i < data.length; i++) distCtx.lineTo(tx(data[i].t), ty(data[i].distM));
+    const last = data[data.length-1];
+    distCtx.lineTo(tx(last.t), PAD_T + plotH);
+    distCtx.lineTo(0, PAD_T + plotH);
+    distCtx.closePath();
+    distCtx.fillStyle = col + '22';
+    distCtx.fill();
 
-  cx.beginPath();
-  cx.moveTo(tx(data[0].t), ty(data[0].distM));
-  for (let i = 1; i < data.length; i++) cx.lineTo(tx(data[i].t), ty(data[i].distM));
-  cx.strokeStyle = col;
-  cx.lineWidth   = 1.5;
-  cx.globalAlpha = 0.85;
-  cx.stroke();
-  cx.globalAlpha = 1;
+    distCtx.beginPath();
+    distCtx.moveTo(tx(data[0].t), ty(data[0].distM));
+    for (let i = 1; i < data.length; i++) distCtx.lineTo(tx(data[i].t), ty(data[i].distM));
+    distCtx.strokeStyle = col;
+    distCtx.lineWidth   = 1.5;
+    distCtx.globalAlpha = 0.85;
+    distCtx.stroke();
+    distCtx.globalAlpha = 1;
+  }
 
   if (state.time !== Infinity) {
     const x = tx(state.time);
-    cx.beginPath();
-    cx.moveTo(x, PAD_T); cx.lineTo(x, h - PAD_B);
-    cx.strokeStyle = 'rgba(244,163,0,0.85)';
-    cx.lineWidth   = 1.5;
-    cx.stroke();
+    distCtx.beginPath();
+    distCtx.moveTo(x, PAD_T); distCtx.lineTo(x, h - PAD_B);
+    distCtx.strokeStyle = 'rgba(244,163,0,0.85)';
+    distCtx.lineWidth   = 1.5;
+    distCtx.stroke();
   }
 }
 
