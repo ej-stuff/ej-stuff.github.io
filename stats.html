@@ -1586,19 +1586,16 @@ let placementChartInst = null;
 
 function renderPlacementChart(matches) {
   const labels = ['#1 Win', '#2–5', '#6–10', '#11–20', '#21–50', '#51+'];
-  function buckets(player) {
-    const b = [0,0,0,0,0,0];
-    for (const m of matches) {
-      const pl = m.players[player]?.placement;
-      if (!pl) continue;
-      if (pl === 1)       b[0]++;
-      else if (pl <= 5)   b[1]++;
-      else if (pl <= 10)  b[2]++;
-      else if (pl <= 20)  b[3]++;
-      else if (pl <= 50)  b[4]++;
-      else                b[5]++;
-    }
-    return b;
+  const b = [0,0,0,0,0,0];
+  for (const m of matches) {
+    const pl = m.players['D282']?.placement;
+    if (!pl) continue;
+    if (pl === 1)       b[0]++;
+    else if (pl <= 5)   b[1]++;
+    else if (pl <= 10)  b[2]++;
+    else if (pl <= 20)  b[3]++;
+    else if (pl <= 50)  b[4]++;
+    else                b[5]++;
   }
   if (placementChartInst) { placementChartInst.destroy(); placementChartInst = null; }
   placementChartInst = new Chart(
@@ -1608,15 +1605,14 @@ function renderPlacementChart(matches) {
       data: {
         labels,
         datasets: [
-          { label: 'D282', data: buckets('D282'), backgroundColor: '#f4a300aa', borderColor: '#f4a300', borderWidth: 1, borderRadius: 2 },
-          { label: 'S821', data: buckets('S821'), backgroundColor: '#4a9eddaa', borderColor: '#4a9edd', borderWidth: 1, borderRadius: 2 },
+          { label: 'Duo', data: b, backgroundColor: '#f4a300aa', borderColor: '#f4a300', borderWidth: 1, borderRadius: 2 },
         ],
       },
       options: {
         responsive: true, maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         plugins: {
-          legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
+          legend: { display: false },
           tooltip: { backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1, titleColor: '#e8e3d8', bodyColor: '#9a9385' },
         },
         scales: {
@@ -1683,32 +1679,31 @@ function renderMapStats(matches) {
   const maps = {};
   for (const m of matches) {
     const key = m.map || 'Unknown';
-    if (!maps[key]) maps[key] = { n:0, d282:{wins:0,kills:0,plSum:0}, s821:{wins:0,kills:0,plSum:0} };
+    if (!maps[key]) maps[key] = { n:0, wins:0, d282:{kills:0,plSum:0}, s821:{kills:0,plSum:0} };
     const s = maps[key]; s.n++;
-    for (const [pid, ps] of [['D282', s.d282], ['S821', s.s821]]) {
-      const p = m.players[pid]; if (!p) continue;
-      ps.kills += p.kills || 0; ps.plSum += p.placement || 99;
-      if (p.placement === 1) ps.wins++;
-    }
+    const pd = m.players['D282'], ps = m.players['S821'];
+    if (pd?.placement === 1) s.wins++;
+    if (pd) { s.d282.kills += pd.kills || 0; s.d282.plSum += pd.placement || 99; }
+    if (ps) { s.s821.kills += ps.kills || 0; s.s821.plSum += ps.placement || 99; }
   }
 
   const rows = Object.entries(maps).sort((a, b) => b[1].n - a[1].n);
-  const avgWin282 = rows.reduce((s, [, v]) => s + v.d282.wins, 0) / rows.reduce((s, [, v]) => s + v.n, 0);
-  const avgWin821 = rows.reduce((s, [, v]) => s + v.s821.wins, 0) / rows.reduce((s, [, v]) => s + v.n, 0);
+  const totalN = rows.reduce((s, [, v]) => s + v.n, 0);
+  const totalW = rows.reduce((s, [, v]) => s + v.wins, 0);
+  const avgWin = totalW / totalN;
 
   const winCol = (pct, avg) => pct > avg ? 'var(--ok)' : pct < avg ? 'var(--danger)' : 'var(--text)';
 
   const html = rows.map(([map, v]) => {
-    const w282 = v.d282.wins / v.n, w821 = v.s821.wins / v.n;
+    const w = v.wins / v.n;
     return `<tr>
       <td>${map}</td>
       <td style="text-align:center">${v.n}</td>
-      <td style="color:${winCol(w282, avgWin282)};text-align:right">${(w282*100).toFixed(1)}%</td>
-      <td style="text-align:right">${(v.d282.kills/v.n).toFixed(1)}</td>
-      <td style="text-align:right">#${(v.d282.plSum/v.n).toFixed(1)}</td>
-      <td style="color:${winCol(w821, avgWin821)};text-align:right">${(w821*100).toFixed(1)}%</td>
-      <td style="text-align:right">${(v.s821.kills/v.n).toFixed(1)}</td>
-      <td style="text-align:right">#${(v.s821.plSum/v.n).toFixed(1)}</td>
+      <td style="color:${winCol(w, avgWin)};text-align:right">${(w*100).toFixed(1)}%</td>
+      <td style="color:var(--accent);text-align:right">${(v.d282.kills/v.n).toFixed(1)}</td>
+      <td style="color:var(--accent);text-align:right">#${(v.d282.plSum/v.n).toFixed(1)}</td>
+      <td style="color:var(--blue);text-align:right">${(v.s821.kills/v.n).toFixed(1)}</td>
+      <td style="color:var(--blue);text-align:right">#${(v.s821.plSum/v.n).toFixed(1)}</td>
     </tr>`;
   }).join('');
 
@@ -1716,10 +1711,9 @@ function renderMapStats(matches) {
     <thead><tr>
       <th class="no-sort">Map</th>
       <th class="no-sort" style="text-align:center">Games</th>
-      <th class="no-sort" style="color:var(--accent);text-align:right">D282 Win%</th>
+      <th class="no-sort" style="text-align:right">Win%</th>
       <th class="no-sort" style="color:var(--accent);text-align:right">D282 Avg K</th>
       <th class="no-sort" style="color:var(--accent);text-align:right">D282 Avg #</th>
-      <th class="no-sort" style="color:var(--blue);text-align:right">S821 Win%</th>
       <th class="no-sort" style="color:var(--blue);text-align:right">S821 Avg K</th>
       <th class="no-sort" style="color:var(--blue);text-align:right">S821 Avg #</th>
     </tr></thead>
@@ -1805,7 +1799,9 @@ function renderLifetimeRecords(matches) {
 
   const sorted = [...matches].sort((a, b) => a.created_at.localeCompare(b.created_at));
 
-  let maxK282 = { v:-1, date:'', id:'' }, maxK821 = { v:-1, date:'', id:'' };
+  const best282 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''} };
+  const best821 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''} };
+  const bestDuo = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''} };
   let maxStreak = { v:0, end:'' };
   let curStreak = 0, curEnd = '';
   const byDay = {};
@@ -1815,18 +1811,29 @@ function renderLifetimeRecords(matches) {
     const d = m.created_at.slice(0, 10);
     byDay[d] = (byDay[d] || 0) + 1;
 
+    if (pd?.placement === 1) { curStreak++; curEnd = d; }
+    else { if (curStreak > maxStreak.v) maxStreak = { v: curStreak, end: curEnd }; curStreak = 0; }
+
+    const chk = (rec, val) => val > rec.v ? { v: val, date: d, id: m.match_id } : rec;
+
     if (pd) {
-      const k = pd.kills || 0;
-      if (k > maxK282.v) maxK282 = { v: k, date: d, id: m.match_id };
-      if (pd.placement === 1) { curStreak++; curEnd = d; } else { if (curStreak > maxStreak.v) maxStreak = { v: curStreak, end: curEnd }; curStreak = 0; }
+      best282.kills   = chk(best282.kills,   pd.kills || 0);
+      best282.dmg     = chk(best282.dmg,     pd.damage || 0);
+      best282.revives = chk(best282.revives, pd.revives || 0);
+      best282.bc      = chk(best282.bc,      pd.blue_chips || 0);
+    }
+    if (ps) {
+      best821.kills   = chk(best821.kills,   ps.kills || 0);
+      best821.dmg     = chk(best821.dmg,     ps.damage || 0);
+      best821.revives = chk(best821.revives, ps.revives || 0);
+      best821.bc      = chk(best821.bc,      ps.blue_chips || 0);
+    }
+    if (pd && ps) {
+      bestDuo.kills = chk(bestDuo.kills, (pd.kills || 0) + (ps.kills || 0));
+      bestDuo.dmg   = chk(bestDuo.dmg,   (pd.damage || 0) + (ps.damage || 0));
     }
   }
   if (curStreak > maxStreak.v) maxStreak = { v: curStreak, end: curEnd };
-
-  for (const m of sorted) {
-    const ps = m.players['S821'];
-    if (ps) { const k = ps.kills || 0; if (k > maxK821.v) maxK821 = { v: k, date: m.created_at.slice(0,10), id: m.match_id }; }
-  }
 
   const mostGamesDay = Object.entries(byDay).sort((a, b) => b[1] - a[1])[0] || ['—', 0];
 
@@ -1837,13 +1844,23 @@ function renderLifetimeRecords(matches) {
     <td style="padding:8px 10px;color:var(--muted);font-size:12px">${date}${id ? ` <a href="match.html?id=${id}" style="color:var(--muted);font-size:11px" title="Match Analysis">→</a>` : ''}</td>
   </tr>`;
 
+  const fmtDmg = v => Math.round(v).toLocaleString();
+
   el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px">
     <thead><tr>
       <th class="no-sort">Record</th><th class="no-sort">Player</th><th class="no-sort">Value</th><th class="no-sort">Date</th>
     </tr></thead>
     <tbody>
-      ${row('Most kills in one game', 'D282', maxK282.v, maxK282.date, maxK282.id)}
-      ${row('Most kills in one game', 'S821', maxK821.v, maxK821.date, maxK821.id)}
+      ${row('Most kills in one game', 'D282', best282.kills.v, best282.kills.date, best282.kills.id)}
+      ${row('Most kills in one game', 'S821', best821.kills.v, best821.kills.date, best821.kills.id)}
+      ${row('Most kills in one game', 'Duo', bestDuo.kills.v, bestDuo.kills.date, bestDuo.kills.id)}
+      ${row('Most damage in one game', 'D282', fmtDmg(best282.dmg.v), best282.dmg.date, best282.dmg.id)}
+      ${row('Most damage in one game', 'S821', fmtDmg(best821.dmg.v), best821.dmg.date, best821.dmg.id)}
+      ${row('Most damage in one game', 'Duo', fmtDmg(bestDuo.dmg.v), bestDuo.dmg.date, bestDuo.dmg.id)}
+      ${row('Most revives in one game', 'D282', best282.revives.v, best282.revives.date, best282.revives.id)}
+      ${row('Most revives in one game', 'S821', best821.revives.v, best821.revives.date, best821.revives.id)}
+      ${row('Most blue chip revives', 'D282', best282.bc.v, best282.bc.date, best282.bc.id)}
+      ${row('Most blue chip revives', 'S821', best821.bc.v, best821.bc.date, best821.bc.id)}
       ${row('Highest win streak', 'Duo', maxStreak.v + ' wins', maxStreak.end, '')}
       ${row('Most games in one day', 'Duo', mostGamesDay[1] + ' games', mostGamesDay[0], '')}
     </tbody>

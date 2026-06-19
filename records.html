@@ -197,66 +197,90 @@ async function boot() {
     return;
   }
 
-  const records = computeRecords(duo);
+  // Load individual match files for solo kill computation
+  document.getElementById('recordsContainer').innerHTML = '<p class="loading">Loading match details…</p>';
+  const matchFiles = await Promise.all(
+    duo.map(m => fetch(`stats-data/matches/${m.match_id}.json`)
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null))
+  );
+
+  const records = computeRecords(duo, matchFiles);
   render(records);
 }
 
-function computeRecords(matches) {
+function soloKillsFromEvents(events, player) {
+  const partner = player === 'D282' ? 'S821' : 'D282';
+  const partnerKnocks  = events.filter(e => e.type === 'knocked' && e.player === partner);
+  const partnerRevives = events.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
+  const partnerDeath   = events.find(e => e.type === 'death' && e.player === partner);
+
+  return events.filter(e => e.type === 'kill' && e.player === player).filter(e => {
+    const t = e.t;
+    if (partnerDeath && partnerDeath.t < t) return true;
+    // Find last knock before t
+    const lastKnock = partnerKnocks.filter(k => k.t < t).sort((a, b) => b.t - a.t)[0];
+    if (!lastKnock) return false;
+    // Check if partner was revived or died after that knock but before t
+    const revivedAfter = partnerRevives.some(r => r.t > lastKnock.t && r.t < t);
+    const diedAfter    = partnerDeath && partnerDeath.t > lastKnock.t && partnerDeath.t < t;
+    return !revivedAfter && !diedAfter;
+  }).length;
+}
+
+function computeRecords(matches, matchFiles) {
   const recs = {};
 
-  // Most kills in one game — per player
-  for (const player of ['D282', 'S821']) {
-    let best = { v: -1, date: '', id: '' };
-    for (const m of matches) {
-      const k = m.players[player]?.kills || 0;
-      if (k > best.v) best = { v: k, date: m.created_at.slice(0, 10), id: m.match_id };
-    }
-    recs[`mostKills_${player}`] = { ...best, player, label: `Most kills — ${player}`, trophy: '🎯' };
-  }
+  const chk = (rec, val, date, id) => val > rec.v ? { v: val, date, id } : rec;
 
-  // Highest damage in one game — per player
-  for (const player of ['D282', 'S821']) {
-    let best = { v: -1, date: '', id: '' };
-    for (const m of matches) {
-      const d = m.players[player]?.damage || 0;
-      if (d > best.v) best = { v: d, date: m.created_at.slice(0, 10), id: m.match_id };
-    }
-    recs[`mostDmg_${player}`] = { ...best, player, label: `Most damage — ${player}`, trophy: '💥', fmt: v => Math.round(v).toLocaleString() };
-  }
+  let best282 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''}, surv:{v:-1,date:'',id:''}, solo:{v:-1,date:'',id:''} };
+  let best821 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''}, surv:{v:-1,date:'',id:''}, solo:{v:-1,date:'',id:''} };
+  let bestDuo = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''} };
 
-  // Longest consecutive win streak (placement=1)
-  let curStreak = 0, maxStreak = 0, maxStreakEnd = '', curEnd = '';
-  for (const m of matches) {
-    if (m.players['D282']?.placement === 1) {
-      curStreak++;
-      curEnd = m.created_at.slice(0, 10);
-      if (curStreak > maxStreak) { maxStreak = curStreak; maxStreakEnd = curEnd; }
-    } else {
-      curStreak = 0;
-    }
-  }
-  recs.winStreak = { v: maxStreak, date: maxStreakEnd, id: '', player: 'Duo', label: 'Longest win streak', trophy: '🏆', fmt: v => v + ' wins' };
-
-  // Most games in one day
+  let curStreak = 0, maxStreak = 0, maxStreakEnd = '';
   const byDay = {};
-  for (const m of matches) {
-    const d = m.created_at.slice(0, 10);
+
+  for (let i = 0; i < matches.length; i++) {
+    const m  = matches[i];
+    const mf = matchFiles?.[i];
+    const pd = m.players['D282'], ps = m.players['S821'];
+    const d  = m.created_at.slice(0, 10);
+    const id = m.match_id;
     byDay[d] = (byDay[d] || 0) + 1;
-  }
-  const topDay = Object.entries(byDay).sort((a, b) => b[1] - a[1])[0] || ['—', 0];
-  recs.mostGamesDay = { v: topDay[1], date: topDay[0], id: '', player: 'Duo', label: 'Most games in one day', trophy: '📅', fmt: v => v + ' games' };
 
-  // Longest survival time — per player
-  for (const player of ['D282', 'S821']) {
-    let best = { v: -1, date: '', id: '' };
-    for (const m of matches) {
-      const s = m.players[player]?.survival_s || 0;
-      if (s > best.v) best = { v: s, date: m.created_at.slice(0, 10), id: m.match_id };
+    if (pd?.placement === 1) { curStreak++; if (curStreak > maxStreak) { maxStreak = curStreak; maxStreakEnd = d; } }
+    else curStreak = 0;
+
+    if (pd) {
+      best282.kills   = chk(best282.kills,   pd.kills || 0,       d, id);
+      best282.dmg     = chk(best282.dmg,     pd.damage || 0,      d, id);
+      best282.revives = chk(best282.revives, pd.revives || 0,     d, id);
+      best282.bc      = chk(best282.bc,      pd.blue_chips || 0,  d, id);
+      best282.surv    = chk(best282.surv,    pd.survival_s || 0,  d, id);
     }
-    recs[`longestSurv_${player}`] = { ...best, player, label: `Longest survival — ${player}`, trophy: '⏱', fmt: v => mmss(v) };
+    if (ps) {
+      best821.kills   = chk(best821.kills,   ps.kills || 0,       d, id);
+      best821.dmg     = chk(best821.dmg,     ps.damage || 0,      d, id);
+      best821.revives = chk(best821.revives, ps.revives || 0,     d, id);
+      best821.bc      = chk(best821.bc,      ps.blue_chips || 0,  d, id);
+      best821.surv    = chk(best821.surv,    ps.survival_s || 0,  d, id);
+    }
+    if (pd && ps) {
+      bestDuo.kills = chk(bestDuo.kills, (pd.kills || 0) + (ps.kills || 0),   d, id);
+      bestDuo.dmg   = chk(bestDuo.dmg,   (pd.damage || 0) + (ps.damage || 0), d, id);
+    }
+
+    if (mf?.events) {
+      const sk282 = soloKillsFromEvents(mf.events, 'D282');
+      const sk821 = soloKillsFromEvents(mf.events, 'S821');
+      best282.solo = chk(best282.solo, sk282, d, id);
+      best821.solo = chk(best821.solo, sk821, d, id);
+    }
   }
 
-  // Best session avg placement — day with ≥3 games, lowest avg placement
+  const topDay = Object.entries(byDay).sort((a, b) => b[1] - a[1])[0] || ['—', 0];
+
+  // Best session avg placement — day with ≥3 games
   const sessions = Object.entries(byDay)
     .filter(([, n]) => n >= 3)
     .map(([date, n]) => {
@@ -265,9 +289,33 @@ function computeRecords(matches) {
       return { date, n, avgPl };
     })
     .sort((a, b) => a.avgPl - b.avgPl);
+
+  const fmtDmg = v => Math.round(v).toLocaleString();
+
+  recs.kills282  = { ...best282.kills,   player:'D282', label:'Most kills',           trophy:'🎯' };
+  recs.kills821  = { ...best821.kills,   player:'S821', label:'Most kills',           trophy:'🎯' };
+  recs.killsDuo  = { ...bestDuo.kills,   player:'Duo',  label:'Most kills (combined)',trophy:'🎯' };
+  recs.dmg282    = { ...best282.dmg,     player:'D282', label:'Most damage',          trophy:'💥', fmt: fmtDmg };
+  recs.dmg821    = { ...best821.dmg,     player:'S821', label:'Most damage',          trophy:'💥', fmt: fmtDmg };
+  recs.dmgDuo    = { ...bestDuo.dmg,     player:'Duo',  label:'Most damage (combined)',trophy:'💥', fmt: fmtDmg };
+  recs.revives282= { ...best282.revives, player:'D282', label:'Most revives',         trophy:'💊' };
+  recs.revives821= { ...best821.revives, player:'S821', label:'Most revives',         trophy:'💊' };
+  recs.bc282     = { ...best282.bc,      player:'D282', label:'Most blue chip revives',trophy:'🔵' };
+  recs.bc821     = { ...best821.bc,      player:'S821', label:'Most blue chip revives',trophy:'🔵' };
+  recs.surv282   = { ...best282.surv,    player:'D282', label:'Longest survival',     trophy:'⏱', fmt: mmss };
+  recs.surv821   = { ...best821.surv,    player:'S821', label:'Longest survival',     trophy:'⏱', fmt: mmss };
+
+  if (best282.solo.v >= 0) {
+    recs.solo282 = { ...best282.solo, player:'D282', label:'Most solo kills', trophy:'🔫' };
+    recs.solo821 = { ...best821.solo, player:'S821', label:'Most solo kills', trophy:'🔫' };
+  }
+
+  recs.winStreak    = { v:maxStreak, date:maxStreakEnd, id:'', player:'Duo', label:'Longest win streak',    trophy:'🏆', fmt: v => v + ' wins' };
+  recs.mostGamesDay = { v:topDay[1], date:topDay[0],   id:'', player:'Duo', label:'Most games in one day', trophy:'📅', fmt: v => v + ' games' };
+
   if (sessions.length) {
     const s = sessions[0];
-    recs.bestSession = { v: s.avgPl, date: s.date, id: '', player: 'Duo', label: `Best session avg placement (≥3 games)`, trophy: '📈', fmt: v => '#' + v.toFixed(1) };
+    recs.bestSession = { v:s.avgPl, date:s.date, id:'', player:'Duo', label:'Best session avg placement (≥3 games)', trophy:'📈', fmt: v => '#' + v.toFixed(1) };
   }
 
   return recs;

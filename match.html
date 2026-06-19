@@ -1679,21 +1679,42 @@ function toggleLayer(id) {
 /* ============================================================================
    UI BUILDERS
 ============================================================================ */
+function soloKillCount(events, player) {
+  const partner = player === 'D282' ? 'S821' : 'D282';
+  const partnerKnocks  = events.filter(e => e.type === 'knocked' && e.player === partner);
+  const partnerRevives = events.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
+  const partnerDeath   = events.find(e => e.type === 'death' && e.player === partner);
+
+  return events.filter(e => e.type === 'kill' && e.player === player).filter(e => {
+    const t = e.t;
+    if (partnerDeath && partnerDeath.t < t) return true;
+    const lastKnock = partnerKnocks.filter(k => k.t < t).sort((a, b) => b.t - a.t)[0];
+    if (!lastKnock) return false;
+    const revivedAfter = partnerRevives.some(r => r.t > lastKnock.t && r.t < t);
+    const diedAfter    = partnerDeath && partnerDeath.t > lastKnock.t && partnerDeath.t < t;
+    return !revivedAfter && !diedAfter;
+  }).length;
+}
+
 function buildPlayerCards() {
   const stats = MD.match_stats || {};
+  const evts  = MD.events || [];
   document.getElementById('playerCards').innerHTML = ['D282', 'S821'].map(p => {
     const s   = stats[p] || {};
     const cls = p === 'D282' ? 'amber' : 'blue';
     const pl  = s.placement === 1 ? '#1 Winner' : (s.placement ? `#${s.placement}` : '—');
 
     const ec = {};
-    (MD.events || []).filter(ev => ev.player === p).forEach(ev => {
+    evts.filter(ev => ev.player === p).forEach(ev => {
       ec[ev.type] = (ec[ev.type] || 0) + 1;
     });
+
+    const soloK = soloKillCount(evts, p);
 
     const rows = [
       ['Place',        pl],
       ['Kills',        s.kills ?? '—'],
+      ['Solo kills',   soloK],
       ['Damage',       s.damage != null ? Math.round(s.damage) : '—'],
       ['Survived',     s.survival_s ? mmss(s.survival_s) : '—'],
       ['Knocks out',   ec['knockdown'] || 0],
