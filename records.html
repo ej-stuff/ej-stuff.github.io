@@ -168,6 +168,49 @@ h1 {
 </div>
 
 <script>
+// Keep SCORE_CFG in sync across stats.html / match.html / records.html
+const SCORE_CFG = {
+  kill:    { pts: 100, soloPts: 200 },
+  knock:   { pts: 25,  soloPts: 50  },
+  damage:  { pts: 1,   soloPts: 2   },
+  revive:  { pts: 50  },
+  bc:      { pts: 100 },
+  death:   { pts: -100 },
+  knocked: { pts: -50  },
+};
+
+function computeExactScore(events, player) {
+  const partner = player === 'D282' ? 'S821' : 'D282';
+  const partnerKnocks  = events.filter(e => e.type === 'knocked' && e.player === partner);
+  const partnerRevives = events.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
+  const partnerDeath   = events.find(e => e.type === 'death' && e.player === partner);
+  function isSoloAt(t) {
+    if (partnerDeath && partnerDeath.t < t) return true;
+    const prev = partnerKnocks.filter(k => k.t < t);
+    if (!prev.length) return false;
+    const last = prev[prev.length - 1];
+    const revAfter  = partnerRevives.some(r => r.t > last.t && r.t < t);
+    const diedAfter = partnerDeath && partnerDeath.t > last.t && partnerDeath.t < t;
+    return !revAfter && !diedAfter;
+  }
+  const C = SCORE_CFG;
+  let score = 0;
+  for (const e of events) {
+    if (e.player !== player) continue;
+    const solo = ['kill','knockdown','dmg_dealt'].includes(e.type) && isSoloAt(e.t);
+    switch (e.type) {
+      case 'kill':             score += solo ? C.kill.soloPts    : C.kill.pts; break;
+      case 'knockdown':        score += solo ? C.knock.soloPts   : C.knock.pts; break;
+      case 'dmg_dealt':        score += (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts); break;
+      case 'revive':           score += C.revive.pts; break;
+      case 'blue_chip_revive': score += C.bc.pts; break;
+      case 'death':            score += C.death.pts; break;
+      case 'knocked':          score += C.knocked.pts; break;
+    }
+  }
+  return score;
+}
+
 async function boot() {
   if (location.protocol === 'file:') {
     document.getElementById('recordsContainer').innerHTML =
@@ -233,9 +276,9 @@ function computeRecords(matches, matchFiles) {
 
   const chk = (rec, val, date, id) => val > rec.v ? { v: val, date, id } : rec;
 
-  let best282 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''}, surv:{v:-1,date:'',id:''}, solo:{v:-1,date:'',id:''} };
-  let best821 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''}, surv:{v:-1,date:'',id:''}, solo:{v:-1,date:'',id:''} };
-  let bestDuo = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''} };
+  let best282 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''}, surv:{v:-1,date:'',id:''}, solo:{v:-1,date:'',id:''}, score:{v:-Infinity,date:'',id:''} };
+  let best821 = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, revives:{v:-1,date:'',id:''}, bc:{v:-1,date:'',id:''}, surv:{v:-1,date:'',id:''}, solo:{v:-1,date:'',id:''}, score:{v:-Infinity,date:'',id:''} };
+  let bestDuo = { kills:{v:-1,date:'',id:''}, dmg:{v:-1,date:'',id:''}, score:{v:-Infinity,date:'',id:''} };
 
   let curStreak = 0, maxStreak = 0, maxStreakEnd = '';
   const byDay = {};
@@ -273,8 +316,13 @@ function computeRecords(matches, matchFiles) {
     if (mf?.events) {
       const sk282 = soloKillsFromEvents(mf.events, 'D282');
       const sk821 = soloKillsFromEvents(mf.events, 'S821');
-      best282.solo = chk(best282.solo, sk282, d, id);
-      best821.solo = chk(best821.solo, sk821, d, id);
+      best282.solo  = chk(best282.solo,  sk282, d, id);
+      best821.solo  = chk(best821.solo,  sk821, d, id);
+      const sc282 = computeExactScore(mf.events, 'D282');
+      const sc821 = computeExactScore(mf.events, 'S821');
+      best282.score = chk(best282.score, sc282, d, id);
+      best821.score = chk(best821.score, sc821, d, id);
+      bestDuo.score = chk(bestDuo.score, sc282 + sc821, d, id);
     }
   }
 
@@ -308,6 +356,13 @@ function computeRecords(matches, matchFiles) {
   if (best282.solo.v >= 0) {
     recs.solo282 = { ...best282.solo, player:'D282', label:'Most solo kills', trophy:'🔫' };
     recs.solo821 = { ...best821.solo, player:'S821', label:'Most solo kills', trophy:'🔫' };
+  }
+
+  if (best282.score.v > -Infinity) {
+    const fmtScore = v => (v >= 0 ? '+' : '') + Math.round(v);
+    recs.score282 = { ...best282.score, player:'D282', label:'Best match score', trophy:'⭐', fmt: fmtScore };
+    recs.score821 = { ...best821.score, player:'S821', label:'Best match score', trophy:'⭐', fmt: fmtScore };
+    recs.scoreDuo = { ...bestDuo.score, player:'Duo',  label:'Best match score (combined)', trophy:'⭐', fmt: fmtScore };
   }
 
   recs.winStreak    = { v:maxStreak, date:maxStreakEnd, id:'', player:'Duo', label:'Longest win streak',    trophy:'🏆', fmt: v => v + ' wins' };

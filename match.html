@@ -533,15 +533,7 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           </div>
         </div>
         <div id="scoreWrap"><canvas id="scoreCanvas"></canvas></div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:3px;margin-top:6px;font-size:11px;color:var(--muted)">
-          <span>Kill: <span style="color:var(--ok)">+100</span> <span style="color:var(--ok)">(+200 if solo)</span></span>
-          <span>Knockdown: <span style="color:var(--ok)">+25</span> <span style="color:var(--ok)">(+50 if solo)</span></span>
-          <span>Damage: <span style="color:var(--ok)">+1/pt</span> <span style="color:var(--ok)">(+2/pt if solo)</span></span>
-          <span>Revive: <span style="color:var(--ok)">+50</span> (always)</span>
-          <span>BC Revive: <span style="color:var(--ok)">+100</span> (always)</span>
-          <span>Death: <span style="color:var(--danger)">−100</span> (always)</span>
-          <span>Knocked: <span style="color:var(--danger)">−50</span> (always)</span>
-        </div>
+        <div id="scoreDefGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:3px;margin-top:6px;font-size:11px;color:var(--muted)"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
           <div>
             <div style="font-size:10px;color:var(--accent);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">D282 Travel /30s</div>
@@ -1701,6 +1693,34 @@ function toggleLayer(id) {
 /* ============================================================================
    PERFORMANCE SCORE CHART
 ============================================================================ */
+// Keep SCORE_CFG in sync across stats.html / match.html / records.html
+const SCORE_CFG = {
+  kill:    { pts: 100, soloPts: 200 },
+  knock:   { pts: 25,  soloPts: 50  },
+  damage:  { pts: 1,   soloPts: 2   },
+  revive:  { pts: 50  },
+  bc:      { pts: 100 },
+  death:   { pts: -100 },
+  knocked: { pts: -50  },
+};
+
+function scoreDefHTML() {
+  const C = SCORE_CFG;
+  const s = (p) => (p >= 0 ? '+' : '') + p;
+  const c = (p) => p >= 0 ? 'var(--ok)' : 'var(--danger)';
+  return [
+    [C.kill.pts,    C.kill.soloPts,    'Kill',             ''],
+    [C.knock.pts,   C.knock.soloPts,   'Knockdown',        ''],
+    [C.damage.pts,  C.damage.soloPts,  'Damage dealt',     '/pt'],
+    [C.revive.pts,  null,              'Revive',           ''],
+    [C.bc.pts,      null,              'Blue chip revive', ''],
+    [C.death.pts,   null,              'Death',            ''],
+    [C.knocked.pts, null,              'Got knocked',      ''],
+  ].map(([pts, solo, label, unit]) =>
+    `<span>${label}: <span style="color:${c(pts)}">${s(pts)}${unit}</span>${solo !== null ? ` <span style="color:${c(solo)};">(${s(solo)}${unit} if solo)</span>` : ' (always)'}</span>`
+  ).join('');
+}
+
 let scoreChartInst = null;
 
 function buildScoreChart() {
@@ -1731,14 +1751,15 @@ function buildScoreChart() {
   function evtScore(e) {
     const ps = partnerStateAt(e.player, e.t);
     const solo = (ps === 'dead' || ps === 'knocked');
+    const C = SCORE_CFG;
     switch (e.type) {
-      case 'kill':             return solo ? 200 : 100;
-      case 'knockdown':        return solo ? 50  : 25;
-      case 'dmg_dealt':        return (e.damage || 0) * (solo ? 2 : 1);
-      case 'revive':           return 50;
-      case 'blue_chip_revive': return 100;
-      case 'death':            return -100;
-      case 'knocked':          return -50;
+      case 'kill':             return solo ? C.kill.soloPts    : C.kill.pts;
+      case 'knockdown':        return solo ? C.knock.soloPts   : C.knock.pts;
+      case 'dmg_dealt':        return (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts);
+      case 'revive':           return C.revive.pts;
+      case 'blue_chip_revive': return C.bc.pts;
+      case 'death':            return C.death.pts;
+      case 'knocked':          return C.knocked.pts;
       default:                 return 0;
     }
   }
@@ -1784,6 +1805,8 @@ function buildScoreChart() {
       },
     },
   });
+  const defGrid = document.getElementById('scoreDefGrid');
+  if (defGrid) defGrid.innerHTML = scoreDefHTML();
 }
 
 function soloKillCount(events, player) {
@@ -1818,8 +1841,39 @@ function buildPlayerCards() {
 
     const soloK = soloKillCount(evts, p);
 
+    // Compute exact match score from events using SCORE_CFG
+    const allEvts = evts;
+    const partner = p === 'D282' ? 'S821' : 'D282';
+    function partnerStateAtT(t) {
+      const pKnocks  = allEvts.filter(e => e.type === 'knocked' && e.player === partner && e.t < t);
+      const pRevives = allEvts.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
+      const pDeath   = allEvts.find(e => e.type === 'death' && e.player === partner);
+      if (pDeath && pDeath.t < t) return 'dead';
+      if (!pKnocks.length) return 'alive';
+      const lastK = pKnocks[pKnocks.length - 1];
+      const revAfter  = pRevives.some(r => r.t > lastK.t && r.t < t);
+      const diedAfter = pDeath && pDeath.t > lastK.t && pDeath.t < t;
+      return (!revAfter && !diedAfter) ? 'knocked' : 'alive';
+    }
+    const C = SCORE_CFG;
+    let matchScore = 0;
+    for (const e of allEvts) {
+      if (e.player !== p) continue;
+      const solo = ['kill','knockdown','dmg_dealt'].includes(e.type) && (() => { const ps = partnerStateAtT(e.t); return ps === 'dead' || ps === 'knocked'; })();
+      switch (e.type) {
+        case 'kill':             matchScore += solo ? C.kill.soloPts    : C.kill.pts; break;
+        case 'knockdown':        matchScore += solo ? C.knock.soloPts   : C.knock.pts; break;
+        case 'dmg_dealt':        matchScore += (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts); break;
+        case 'revive':           matchScore += C.revive.pts; break;
+        case 'blue_chip_revive': matchScore += C.bc.pts; break;
+        case 'death':            matchScore += C.death.pts; break;
+        case 'knocked':          matchScore += C.knocked.pts; break;
+      }
+    }
+
     const rows = [
       ['Place',        pl],
+      ['Score',        (matchScore >= 0 ? '+' : '') + Math.round(matchScore)],
       ['Kills',        s.kills ?? '—'],
       ['Solo kills',   soloK],
       ['Damage',       s.damage != null ? Math.round(s.damage) : '—'],

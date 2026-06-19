@@ -526,17 +526,7 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <div class="chart-wrap"><canvas id="kdTrendChart"></canvas></div>
     <div id="trendScoreDef" style="display:none;margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
       <div style="font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">Score Definition</div>
-      <table style="border-collapse:collapse;width:100%;font-size:12px;color:var(--muted)">
-        <tbody>
-          <tr><td style="padding:2px 8px">Kill</td>             <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px;font-size:11px;color:var(--ok)">+200 if solo</td></tr>
-          <tr><td style="padding:2px 8px">Knockdown</td>        <td style="padding:2px 8px;color:var(--ok)">+25</td>     <td style="padding:2px 8px;font-size:11px;color:var(--ok)">+50 if solo</td></tr>
-          <tr><td style="padding:2px 8px">Damage dealt</td>     <td style="padding:2px 8px;color:var(--ok)">+1 /pt</td>  <td style="padding:2px 8px;font-size:11px;color:var(--ok)">+2 /pt if solo</td></tr>
-          <tr><td style="padding:2px 8px">Revive</td>           <td style="padding:2px 8px;color:var(--ok)">+50</td>     <td style="padding:2px 8px;font-size:11px">always</td></tr>
-          <tr><td style="padding:2px 8px">Blue chip revive</td> <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px;font-size:11px">always</td></tr>
-          <tr><td style="padding:2px 8px">Death</td>            <td style="padding:2px 8px;color:var(--danger)">−100</td><td style="padding:2px 8px;font-size:11px">always</td></tr>
-          <tr><td style="padding:2px 8px">Got knocked</td>      <td style="padding:2px 8px;color:var(--danger)">−50</td> <td style="padding:2px 8px;font-size:11px">always</td></tr>
-        </tbody>
-      </table>
+      <table id="trendScoreDefTable" style="border-collapse:collapse;width:100%;font-size:12px;color:var(--muted)"><tbody></tbody></table>
       <p style="font-size:11px;color:var(--muted);margin-top:8px">Solo = partner dead or knocked. Scores here are approximate (solo bonuses require per-match event data). See Match Analysis for exact scores.</p>
     </div>
   </div>
@@ -892,6 +882,11 @@ function getDailySessions(matches) {
           if (p.placement <= 3)   top3++;
           if (p.placement !== 1)  deaths++;
         }
+        let scoreSum = 0;
+        for (const m of games) {
+          const p = m.players[player]; if (!p) continue;
+          scoreSum += computeMatchScore(p);
+        }
         sess[player] = {
           kills, deaths, wins, top3, dmg, n,
           avgKills:     n ? kills / n : 0,
@@ -899,6 +894,7 @@ function getDailySessions(matches) {
           avgPlacement: n ? plSum / n : 0,
           avgSurvival:  n ? survSum / n : 0,
           kd:           deaths > 0 ? kills / deaths : kills,
+          avgScore:     n ? scoreSum / n : 0,
         };
       }
       // Combined (used for "total" view)
@@ -912,6 +908,7 @@ function getDailySessions(matches) {
         avgPlacement: (d282.avgPlacement + s821.avgPlacement) / 2,
         avgSurvival:  (d282.avgSurvival + s821.avgSurvival) / 2,
         kd:           (d282.kd + s821.kd) / 2,
+        avgScore:     d282.avgScore + s821.avgScore,
       };
       return sess;
     })
@@ -929,6 +926,7 @@ const DAILY_METRICS = [
   { key: 'wins',         label: 'Wins',           fmt: v => Math.round(v),       unit: 'wins' },
   { key: 'top3',         label: 'Top 3',          fmt: v => Math.round(v),       unit: 'top3' },
   { key: 'avgDmg',       label: 'Avg Damage',     fmt: v => Math.round(v),       unit: 'dmg' },
+  { key: 'avgScore',     label: 'Avg Score',       fmt: v => Math.round(v),       unit: 'score' },
 ];
 
 function dmKey(sess, player, key) {
@@ -1554,7 +1552,7 @@ function renderMatchHistory(matches) {
   const table = document.getElementById('matchTable');
 
   if (matches.length === 0) {
-    table.innerHTML = '<tbody><tr><td class="empty" colspan="10">No matches for these filters.</td></tr></tbody>';
+    table.innerHTML = '<tbody><tr><td class="empty" colspan="12">No matches for these filters.</td></tr></tbody>';
     return;
   }
 
@@ -1566,6 +1564,10 @@ function renderMatchHistory(matches) {
   const kdCell = (p, col) =>
     `<span style="color:${col}">${p.kills ?? 0}</span>` +
     ` <span class="panel-note">(${f0(p.damage || 0)})</span>`;
+  const scoreCell = (p, col) => {
+    const s = computeMatchScore(p);
+    return `<span style="color:${col}">${s >= 0 ? '+' : ''}${Math.round(s)}</span>`;
+  };
 
   const body = matches.map(m => {
     const pD       = m.players['D282'] || {};
@@ -1580,7 +1582,9 @@ function renderMatchHistory(matches) {
       <td style="white-space:nowrap">${fmtDt(m.created_at)}</td>
       <td>${m.map || '—'}</td>
       <td>${kdCell(pD, 'var(--accent)')}</td>
+      <td>${scoreCell(pD, 'var(--accent)')}</td>
       <td>${kdCell(pS, 'var(--blue)')}</td>
+      <td>${scoreCell(pS, 'var(--blue)')}</td>
       <td>${revives}</td>
       <td>${bc}</td>
       <td>${throws}</td>
@@ -1595,7 +1599,9 @@ function renderMatchHistory(matches) {
       <th class="no-sort">Date/Time</th>
       <th class="no-sort">Map</th>
       <th class="no-sort" style="color:var(--accent)">D282 K (Dmg)</th>
+      <th class="no-sort" style="color:var(--accent)" title="Approx score (no solo bonus)">D282 Score</th>
       <th class="no-sort" style="color:var(--blue)">S821 K (Dmg)</th>
+      <th class="no-sort" style="color:var(--blue)" title="Approx score (no solo bonus)">S821 Score</th>
       <th class="no-sort" title="Revives given">Rev</th>
       <th class="no-sort" title="Blue chip revives">BC</th>
       <th class="no-sort" title="Throwables used">Throws</th>
@@ -1655,15 +1661,47 @@ function renderPlacementChart(matches) {
    RENDER — ROLLING TREND (configurable stat)
 ============================================================================ */
 
+// Keep SCORE_CFG in sync across stats.html / match.html / records.html
+const SCORE_CFG = {
+  kill:    { pts: 100, soloPts: 200 },
+  knock:   { pts: 25,  soloPts: 50  },
+  damage:  { pts: 1,   soloPts: 2   },
+  revive:  { pts: 50  },
+  bc:      { pts: 100 },
+  death:   { pts: -100 },
+  knocked: { pts: -50  },
+};
+
+function scoreDefHTML() {
+  const C = SCORE_CFG;
+  const s = (p) => (p >= 0 ? '+' : '') + p;
+  const c = (p) => p >= 0 ? 'var(--ok)' : 'var(--danger)';
+  return [
+    [C.kill.pts,    C.kill.soloPts,    'Kill',             ''],
+    [C.knock.pts,   C.knock.soloPts,   'Knockdown',        ''],
+    [C.damage.pts,  C.damage.soloPts,  'Damage dealt',     '/pt'],
+    [C.revive.pts,  null,              'Revive',           ''],
+    [C.bc.pts,      null,              'Blue chip revive', ''],
+    [C.death.pts,   null,              'Death',            ''],
+    [C.knocked.pts, null,              'Got knocked',      ''],
+  ].map(([pts, solo, label, unit]) => `
+    <tr>
+      <td style="padding:2px 8px">${label}</td>
+      <td style="padding:2px 8px;color:${c(pts)}">${s(pts)}${unit}</td>
+      <td style="padding:2px 8px;font-size:11px;${solo !== null ? `color:${c(solo)}` : ''}">${solo !== null ? `${s(solo)}${unit} if solo` : 'always'}</td>
+    </tr>`).join('');
+}
+
 function computeMatchScore(p) {
   if (!p) return 0;
-  return (p.kills        || 0) * 100
-       + (p.knockdowns   || 0) * 25
-       + (p.damage       || 0) * 1
-       + (p.revives      || 0) * 50
-       + (p.blue_chips   || 0) * 100
-       - ((p.placement   || 99) > 1 ? 100 : 0)
-       - (p.times_knocked|| 0) * 50;
+  const C = SCORE_CFG;
+  return (p.kills        || 0) * C.kill.pts
+       + (p.knockdowns   || 0) * C.knock.pts
+       + (p.damage       || 0) * C.damage.pts
+       + (p.revives      || 0) * C.revive.pts
+       + (p.blue_chips   || 0) * C.bc.pts
+       + ((p.placement   || 99) > 1 ? C.death.pts : 0)
+       + (p.times_knocked|| 0) * C.knocked.pts;
 }
 
 function setTrendStat(stat) {
@@ -2025,6 +2063,10 @@ function renderAll() {
 /* ============================================================================
    GO
 ============================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.querySelector('#trendScoreDefTable tbody');
+  if (el) el.innerHTML = scoreDefHTML();
+});
 boot();
 
 function toggleSiteNav() {
