@@ -484,7 +484,6 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <button class="map-ctrl-btn" onclick="zoomStep(1.3)" title="Zoom in">+</button>
           <button class="map-ctrl-btn" onclick="zoomStep(1/1.3)" title="Zoom out">−</button>
           <button class="map-ctrl-btn" onclick="resetView()" title="Fit map">⤢</button>
-          <button class="map-ctrl-btn" id="throwableBtn" onclick="toggleLayerMap('throwable')"   title="Throwables"    style="font-size:12px">💣</button>
           <button class="map-ctrl-btn" id="killfeedBtn"  onclick="toggleKillFeed()"            title="Kill feed"     style="font-size:12px">☰</button>
           <button class="map-ctrl-btn" id="teamNumBtn"  onclick="toggleLayerMap('enemy_teams')" title="Team Numbers"  style="font-size:11px;font-weight:700">T</button>
         </div>
@@ -658,8 +657,8 @@ const ctx    = canvas.getContext('2d');
 const mapImg = new Image();
 mapImg.onload  = () => draw();
 mapImg.onerror = () => {
-  if (MAP && MAP.cdn_url && mapImg.src !== MAP.cdn_url) {
-    mapImg.src = MAP.cdn_url;
+  if (MAP && MAP.image_url && mapImg.src !== MAP.image_url) {
+    mapImg.src = MAP.image_url;  // fallback to local High_Res
   } else {
     draw();
   }
@@ -1136,7 +1135,7 @@ async function boot() {
   sl.value = sl.max;
   sl.addEventListener('input', onTimeInput);
 
-  if (MAP) mapImg.src = MAP.image_url;
+  if (MAP) mapImg.src = MAP.cdn_url || MAP.image_url;  // CDN Low_Res has correct coord alignment
 
   window.addEventListener('resize', () => {
     resizeCanvas();
@@ -1601,12 +1600,11 @@ function drawMarker(ev, cx, cy) {
     const effectiveT = state.time === Infinity ? (MD.duration_s || 1800) : state.time;
     const isLooted   = lootTime != null && effectiveT >= lootTime;
     const icon       = isLooted ? CPICONS.open : CPICONS.normal;
-    const tinted     = getTintedIcon(icon, '#ffe44d');
-    if (tinted) {
-      const sz = 22 / view.scale;
+    if (icon && icon.complete && icon.naturalWidth > 0) {
+      const sz = 14 / view.scale;
       ctx.save();
       ctx.globalAlpha = 0.9;
-      ctx.drawImage(tinted, cx - sz / 2, cy - sz / 2, sz, sz);
+      ctx.drawImage(icon, cx - sz / 2, cy - sz / 2, sz, sz);
       ctx.restore();
       return;
     }
@@ -3050,21 +3048,22 @@ const CPICONS = {};
 
 /* ============================================================================
    THROWABLE ICON PRELOAD
+   Keys match the short weapon names used in match event data (ev.weapon).
 ============================================================================ */
 const _THROW_ICON_BASE = 'https://raw.githubusercontent.com/pubg/api-assets/32b13b51128b8d8909ae5e77f3b833e01230b24d/Assets/Icons/Item/Equipment/Throwable/';
 const THROW_ICONS = {};
 (function preloadThrowIcons() {
-  // Note: FlashBang filename uses lowercase 'c'
+  // [short weapon name in data, icon filename]
   const entries = [
-    ['Item_Weapon_Grenade_C',         'Item_Weapon_Grenade_C.png'],
-    ['Item_Weapon_SmokeBomb_C',       'Item_Weapon_SmokeBomb_C.png'],
-    ['Item_Weapon_Molotov_C',         'Item_Weapon_Molotov_C.png'],
-    ['Item_Weapon_FlashBang_C',       'Item_Weapon_FlashBang_c.png'],
-    ['Item_Weapon_StickyGrenade_C',   'Item_Weapon_StickyGrenade_C.png'],
-    ['Item_Weapon_C4_C',              'Item_Weapon_C4_C.png'],
-    ['Item_Weapon_BluezoneGrenade_C', 'Item_Weapon_BluezoneGrenade_C.png'],
-    ['Item_Weapon_DecoyGrenade_C',    'Item_Weapon_DecoyGrenade_C.png'],
-    ['Item_Weapon_SpikeTrap_C',       'Item_Weapon_SpikeTrap_C.png'],
+    ['Grenade',             'Item_Weapon_Grenade_C.png'],
+    ['Smoke Grenade',       'Item_Weapon_SmokeBomb_C.png'],
+    ['Sticky Grenade',      'Item_Weapon_StickyGrenade_C.png'],
+    ['Molotov Cocktail',    'Item_Weapon_Molotov_C.png'],
+    ['Flash Grenade',       'Item_Weapon_FlashBang_c.png'],
+    ['C4',                  'Item_Weapon_C4_C.png'],
+    ['Blue Zone Grenade',   'Item_Weapon_BluezoneGrenade_C.png'],
+    ['Decoy Grenade',       'Item_Weapon_DecoyGrenade_C.png'],
+    ['Spike Trap',          'Item_Weapon_SpikeTrap_C.png'],
   ];
   for (const [key, file] of entries) {
     const img = new Image();
