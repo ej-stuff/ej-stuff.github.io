@@ -2475,6 +2475,10 @@ function drawKillFeed(maxT) {
   ctx.textBaseline = 'top';
 
   const D = '#f4a300', S = '#4a9edd';
+  // Icon dims: 160×104 native → scale to font height
+  const ICON_H  = FONT_SIZE;
+  const ICON_W  = Math.round(ICON_H * 160 / 104);
+  const ICON_PAD = 4;
 
   entries.slice().reverse().forEach((entry, i) => {
     const y     = startY + i * LINE_H;
@@ -2487,16 +2491,17 @@ function drawKillFeed(maxT) {
       ? (entry.action === 'killed' ? '#7bc26a' : '#b2d97a')
       : (entry.action === 'killed' ? '#e05555' : '#e08040');
 
-    const parts = [
-      { text: entry.dealer,                col: dealerCol },
-      { text: ` ${entry.action} `,          col: actionCol },
-      { text: entry.victim,                 col: victimCol },
-    ];
-    if (entry.weapon) parts.push({ text: ` [${entry.weapon}]`, col: 'rgba(154,147,133,0.8)' });
+    const icon = KFICONS[entry.action];
+    const useIcon = icon && icon.complete && icon.naturalWidth > 0;
 
-    const totalTextW = parts.reduce((s, p) => s + ctx.measureText(p.text).width, 0);
-    const boxW       = totalTextW + PAD_X * 2;
-    const boxX       = W - boxW - PAD_RIGHT;
+    // Measure total box width
+    const dealerW  = ctx.measureText(entry.dealer).width;
+    const victimW  = ctx.measureText(entry.victim).width;
+    const weaponTxt = entry.weapon ? ` [${entry.weapon}]` : '';
+    const weaponW  = entry.weapon ? ctx.measureText(weaponTxt).width : 0;
+    const actionW  = useIcon ? (ICON_W + ICON_PAD * 2) : ctx.measureText(` ${entry.action} `).width;
+    const boxW     = dealerW + actionW + victimW + weaponW + PAD_X * 2;
+    const boxX     = W - boxW - PAD_RIGHT;
 
     ctx.globalAlpha = alpha * 0.55;
     ctx.fillStyle   = 'rgba(0,0,0,0.85)';
@@ -2504,10 +2509,28 @@ function drawKillFeed(maxT) {
 
     ctx.globalAlpha = alpha;
     let x = boxX + PAD_X;
-    for (const { text, col } of parts) {
-      ctx.fillStyle = col;
-      ctx.fillText(text, x, y);
-      x += ctx.measureText(text).width;
+
+    ctx.fillStyle = dealerCol;
+    ctx.fillText(entry.dealer, x, y);
+    x += dealerW;
+
+    if (useIcon) {
+      const iconY = y + (FONT_SIZE - ICON_H) / 2;
+      ctx.drawImage(icon, x + ICON_PAD, iconY, ICON_W, ICON_H);
+      x += ICON_W + ICON_PAD * 2;
+    } else {
+      ctx.fillStyle = actionCol;
+      ctx.fillText(` ${entry.action} `, x, y);
+      x += actionW;
+    }
+
+    ctx.fillStyle = victimCol;
+    ctx.fillText(entry.victim, x, y);
+    x += victimW;
+
+    if (entry.weapon) {
+      ctx.fillStyle = 'rgba(154,147,133,0.8)';
+      ctx.fillText(weaponTxt, x, y);
     }
   });
 
@@ -2928,6 +2951,20 @@ function toggleMatchList() {
   const row = document.getElementById(`mrow-${id}`);
   if (row) setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
 }
+
+/* ============================================================================
+   KILLFEED ICON PRELOAD
+============================================================================ */
+const _KFICON_BASE = 'https://raw.githubusercontent.com/pubg/api-assets/32b13b51128b8d8909ae5e77f3b833e01230b24d/Assets/Icons/Killfeed/';
+const KFICONS = {};
+(function preloadKfIcons() {
+  for (const [key, file] of [['killed','Death.png'],['knocked','Groggy.png'],['headshot','Headshot.png']]) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = _KFICON_BASE + file;
+    KFICONS[key] = img;
+  }
+})();
 
 /* ============================================================================
    GO
