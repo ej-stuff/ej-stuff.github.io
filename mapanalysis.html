@@ -200,6 +200,26 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
           <div class="phase-btns" id="phaseBtns"></div>
         </div>
 
+        <!-- Circle color legend -->
+        <div class="sub-control" id="circlesLegend">
+          <div id="legendPlacement" style="display:none">
+            <div class="sub-label">Placement Colors</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#FFD700"></div> 1st place</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#C8C8C8"></div> 2nd place</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#CD7F32"></div> 3rd place</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#66cc44"></div> Top 5 (4–5)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#4a9edd"></div> Top 10 (6–10)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#9975cc"></div> Top 20 (11–20)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#554488"></div> Below top 20</div>
+          </div>
+          <div id="legendSurvival" style="display:none">
+            <div class="sub-label">Survival Colors</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#FFD700"></div> Won (1st place)</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#44cc66"></div> Team alive</div>
+            <div class="eng-legend-row"><div class="eng-dot" style="background:#cc4444"></div> Team dead</div>
+          </div>
+        </div>
+
         <!-- Engagement grouping sub-control -->
         <div class="sub-control" id="engControl">
           <div class="sub-label">Group distance
@@ -241,6 +261,7 @@ const LAYER_DEFS = [
   { id:'drops',       label:'Landing Zones',     color:'#8fae5d', defaultOn:true  },
   { id:'circles',          label:'Circle Zones',           color:'#ccddee', defaultOn:false },
   { id:'circlesPlacement', label:'Circle Placement Colors', color:'#66cc44', defaultOn:false },
+  { id:'circlesSurvival',  label:'Circle Survival Colors',  color:'#44cc66', defaultOn:false },
   { id:'deaths',      label:'Deaths',            color:'#d7443e', defaultOn:true  },
   { id:'kills',       label:'Kills',             color:'#f4a300', defaultOn:true  },
   { id:'knocked',     label:'Got Knocked',       color:'#e07030', defaultOn:false },
@@ -403,8 +424,13 @@ function buildLayerList() {
 function toggleLayer(id) {
   state.layers[id] = !state.layers[id];
   document.getElementById(`lr_${id}`)?.classList.toggle('active', state.layers[id]);
-  document.getElementById('phaseControl').classList.toggle('visible', state.layers.circles||state.layers.circlesPlacement);
+  document.getElementById('phaseControl').classList.toggle('visible',
+    state.layers.circles||state.layers.circlesPlacement||state.layers.circlesSurvival);
   document.getElementById('engControl').classList.toggle('visible', state.layers.engagements);
+  const showPl=state.layers.circlesPlacement, showSu=state.layers.circlesSurvival;
+  document.getElementById('legendPlacement').style.display=showPl?'':'none';
+  document.getElementById('legendSurvival').style.display=showSu?'':'none';
+  document.getElementById('circlesLegend').classList.toggle('visible',showPl||showSu);
   scheduleRedraw();
 }
 
@@ -579,7 +605,7 @@ function extractCirclePhases(rawCircles,ws) {
     const wr=c.warn_r||0;
     if (!wr||wr>lastWarnR*0.88) continue;
     lastWarnR=wr;
-    phases.push({cx:(c.warn_x/ws)*CSZ, cy:(c.warn_y/ws)*CSZ, r:Math.max(1.5,(wr/ws)*CSZ), phaseNum:phases.length+1});
+    phases.push({cx:(c.warn_x/ws)*CSZ, cy:(c.warn_y/ws)*CSZ, r:Math.max(1.5,(wr/ws)*CSZ), phaseNum:phases.length+1, t:c.t||0});
     if (phases.length>=8) break;
   }
   return phases;
@@ -604,7 +630,11 @@ function aggregateLayers(matches) {
     }
     for (const k of Object.keys(L.events)) L.events[k].push(...(c.evData[k]||[]));
     const pl=m.players?.['D282']?.placement||m.players?.['S821']?.placement||99;
-    L.circlePhases.push({phases:c.circlePhases,matchId:m.match_id,date:c.date,placement:pl});
+    const deathTimes={};
+    for (const d of (c.evData.deaths||[])) {
+      deathTimes[d.player]=Math.min(deathTimes[d.player]??Infinity,d.t);
+    }
+    L.circlePhases.push({phases:c.circlePhases,matchId:m.match_id,date:c.date,placement:pl,deathTimes});
   }
   document.getElementById('matchCountBadge').innerHTML=
     `<strong>${matches.length}</strong> match${matches.length!==1?'es':''} · ${state.map}`;
@@ -791,6 +821,7 @@ function draw() {
   hitTargets=[];
   if (state.layers.circles)          drawCircles();
   if (state.layers.circlesPlacement) drawCirclesPlacement();
+  if (state.layers.circlesSurvival)  drawCirclesSurvival();
   if (state.layers.paths)       drawPaths();
   if (state.layers.engagements) drawEngagements();
   if (state.layers.drops)       drawDropZones();
@@ -812,22 +843,6 @@ function placementColor(p) {
   return '#554488';
 }
 
-function drawCircleSet(phases, col, alpha, phaseFilter) {
-  for (let i=0;i<phases.length;i++) {
-    if (phaseFilter!==null&&phaseFilter!==i) continue;
-    const c=phases[i];
-    const isLast=(i===phases.length-1);
-    ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
-    ctx.strokeStyle=col+(alpha||'cc'); ctx.lineWidth=(isLast?1.8:1)/view.scale; ctx.stroke();
-    if (isLast) {
-      const s=Math.max(3,c.r*0.25)/view.scale;
-      ctx.beginPath();
-      ctx.moveTo(c.cx-s,c.cy); ctx.lineTo(c.cx+s,c.cy);
-      ctx.moveTo(c.cx,c.cy-s); ctx.lineTo(c.cx,c.cy+s);
-      ctx.strokeStyle=col+'dd'; ctx.lineWidth=1.2/view.scale; ctx.stroke();
-    }
-  }
-}
 
 function drawCircles() {
   const phase=state.circlePhase;
@@ -863,15 +878,19 @@ function drawCircles() {
   }
 }
 
-function drawCirclesPlacement() {
+function drawColoredCircles(colFn) {
+  const phase=state.circlePhase;
   for (const mc of LAYER.circlePhases) {
     const phases=mc.phases; if(!phases.length) continue;
-    const col=placementColor(mc.placement||99);
-    phases.forEach((c,i)=>{
-      const isLast=(i===phases.length-1);
+    const toShow=phase===0?phases:[phases[Math.min(phase-1,phases.length-1)]].filter(Boolean);
+    for (let i=0;i<toShow.length;i++) {
+      const c=toShow[i];
+      const globalIdx=phase===0?i:Math.min(phase-1,phases.length-1);
+      const isLast=(globalIdx===phases.length-1);
+      const col=colFn(mc,c,globalIdx);
       ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
-      ctx.strokeStyle=col+(isLast?'cc':'44');
-      ctx.lineWidth=(isLast?1.8:0.8)/view.scale; ctx.stroke();
+      ctx.strokeStyle=col+(isLast?'cc':'55');
+      ctx.lineWidth=(isLast?1.8:0.9)/view.scale; ctx.stroke();
       if (isLast) {
         const s=Math.max(3,c.r*0.25)/view.scale;
         ctx.beginPath();
@@ -879,8 +898,22 @@ function drawCirclesPlacement() {
         ctx.moveTo(c.cx,c.cy-s); ctx.lineTo(c.cx,c.cy+s);
         ctx.strokeStyle=col+'dd'; ctx.lineWidth=1.2/view.scale; ctx.stroke();
       }
-    });
+    }
   }
+}
+
+function drawCirclesPlacement() {
+  drawColoredCircles((mc)=>placementColor(mc.placement||99));
+}
+
+function drawCirclesSurvival() {
+  drawColoredCircles((mc,c)=>{
+    if (mc.placement===1) return '#FFD700';
+    const dt=mc.deathTimes||{};
+    const aliveD=(dt.D282==null||dt.D282>c.t);
+    const aliveS=(dt.S821==null||dt.S821>c.t);
+    return (aliveD||aliveS)?'#44cc66':'#cc4444';
+  });
 }
 
 /* ── Paths ──────────────────────────────────────────────────────────────── */
