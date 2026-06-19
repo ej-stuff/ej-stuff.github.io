@@ -560,8 +560,8 @@ function processMatch(md, meta) {
     if (ev.type==='dmg_taken') evData.dmgTaken.push({...base,damage:ev.damage});
   }
 
-  // Circle phases: 8 time-bucket min-radius
-  const circlePhases=extractCirclePhases(md.circles||[],ws,dur);
+  // Circle phases: detect warn zone shrinks
+  const circlePhases=extractCirclePhases(md.circles||[],ws);
   MATCH_CACHE.set(mid,{posData,lootData,pathData,dropData,evData,circlePhases,date});
 }
 
@@ -570,15 +570,16 @@ function posAtTime(positions,t) {
   for (const p of positions) { if(p.t<=t) last=p; else break; }
   return last;
 }
-function extractCirclePhases(rawCircles,ws,dur) {
+function extractCirclePhases(rawCircles,ws) {
   if (!rawCircles.length) return [];
   const phases=[];
-  for (let i=0;i<8;i++) {
-    const t0=(i/8)*dur, t1=((i+1)/8)*dur;
-    const bucket=rawCircles.filter(c=>c.t>=t0&&c.t<t1);
-    if (!bucket.length) continue;
-    const c=bucket.reduce((mn,c)=>c.safe_r<mn.safe_r?c:mn);
-    phases.push({cx:(c.safe_x/ws)*CSZ, cy:(c.safe_y/ws)*CSZ, r:Math.max(1.5,(c.safe_r/ws)*CSZ), phaseNum:i+1});
+  let lastWarnR=Infinity;
+  for (const c of rawCircles) {
+    const wr=c.warn_r||0;
+    if (!wr||wr>lastWarnR*0.88) continue;
+    lastWarnR=wr;
+    phases.push({cx:(c.warn_x/ws)*CSZ, cy:(c.warn_y/ws)*CSZ, r:Math.max(1.5,(wr/ws)*CSZ), phaseNum:phases.length+1});
+    if (phases.length>=8) break;
   }
   return phases;
 }
@@ -812,7 +813,7 @@ function drawCircles() {
     } else {
       const c=phases[Math.min(phase-1,phases.length-1)]; if(!c) continue;
       ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
-      ctx.strokeStyle='#4a9eddbb'; ctx.lineWidth=Math.max(1,(1+(phase-1)*0.22))/view.scale; ctx.stroke();
+      ctx.strokeStyle='rgba(74,158,221,0.75)'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
       if (phase>=5) {
         const s=Math.max(3,c.r*0.3)/view.scale;
         ctx.beginPath();
