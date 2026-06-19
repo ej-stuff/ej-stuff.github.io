@@ -528,16 +528,16 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
       <div style="font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">Score Definition</div>
       <table style="border-collapse:collapse;width:100%;font-size:12px;color:var(--muted)">
         <tbody>
-          <tr><td style="padding:2px 8px">Kill</td>             <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px;font-size:11px">Solo (partner dead/knocked): +200</td></tr>
-          <tr><td style="padding:2px 8px">Knockdown</td>        <td style="padding:2px 8px;color:var(--ok)">+25</td>     <td style="padding:2px 8px;font-size:11px">Solo knock: +50</td></tr>
-          <tr><td style="padding:2px 8px">Damage dealt</td>     <td style="padding:2px 8px;color:var(--ok)">+1 /pt</td>  <td style="padding:2px 8px;font-size:11px">Solo damage: +2 /pt</td></tr>
-          <tr><td style="padding:2px 8px">Revive</td>           <td style="padding:2px 8px;color:var(--ok)">+50</td>     <td style="padding:2px 8px"></td></tr>
-          <tr><td style="padding:2px 8px">Blue chip revive</td> <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px"></td></tr>
-          <tr><td style="padding:2px 8px">Death</td>            <td style="padding:2px 8px;color:var(--danger)">−100</td><td style="padding:2px 8px"></td></tr>
-          <tr><td style="padding:2px 8px">Got knocked</td>      <td style="padding:2px 8px;color:var(--danger)">−50</td> <td style="padding:2px 8px"></td></tr>
+          <tr><td style="padding:2px 8px">Kill</td>             <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px;font-size:11px;color:var(--ok)">+200 if solo</td></tr>
+          <tr><td style="padding:2px 8px">Knockdown</td>        <td style="padding:2px 8px;color:var(--ok)">+25</td>     <td style="padding:2px 8px;font-size:11px;color:var(--ok)">+50 if solo</td></tr>
+          <tr><td style="padding:2px 8px">Damage dealt</td>     <td style="padding:2px 8px;color:var(--ok)">+1 /pt</td>  <td style="padding:2px 8px;font-size:11px;color:var(--ok)">+2 /pt if solo</td></tr>
+          <tr><td style="padding:2px 8px">Revive</td>           <td style="padding:2px 8px;color:var(--ok)">+50</td>     <td style="padding:2px 8px;font-size:11px">always</td></tr>
+          <tr><td style="padding:2px 8px">Blue chip revive</td> <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px;font-size:11px">always</td></tr>
+          <tr><td style="padding:2px 8px">Death</td>            <td style="padding:2px 8px;color:var(--danger)">−100</td><td style="padding:2px 8px;font-size:11px">always</td></tr>
+          <tr><td style="padding:2px 8px">Got knocked</td>      <td style="padding:2px 8px;color:var(--danger)">−50</td> <td style="padding:2px 8px;font-size:11px">always</td></tr>
         </tbody>
       </table>
-      <p style="font-size:11px;color:var(--muted);margin-top:8px">Scores here are approximate (solo bonuses require per-match event data). See Match Analysis for exact scores.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Solo = partner dead or knocked. Scores here are approximate (solo bonuses require per-match event data). See Match Analysis for exact scores.</p>
     </div>
   </div>
 
