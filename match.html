@@ -1786,7 +1786,8 @@ function buildScoreChart() {
   const plB = pl => !pl || pl > 10 ? 0 : pl<=1?C2.placement[1]:pl<=2?C2.placement[2]:pl<=3?C2.placement[3]:pl<=5?C2.placement[5]:C2.placement[10];
   s282 += Math.floor((ps282.survival_s||0)/60)*C2.survivalPerMin + plB(ps282.placement);
   s821 += Math.floor((ps821.survival_s||0)/60)*C2.survivalPerMin + plB(ps821.placement);
-  const tEnd = Math.max(ps282.survival_s||0, ps821.survival_s||0);
+  const lastT = relevant[relevant.length - 1].t;
+  const tEnd  = Math.max(ps282.survival_s||0, ps821.survival_s||0, lastT);
   data282.push({x: tEnd, y: s282});
   data821.push({x: tEnd, y: s821});
   dataDuo.push({x: tEnd, y: s282 + s821});
