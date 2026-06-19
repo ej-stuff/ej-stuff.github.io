@@ -1167,6 +1167,7 @@ async function boot() {
   }, { passive: false });
 
   resizeCanvas();
+  view.scale = 1; view.offsetX = 0; view.offsetY = 0;
   draw();
   initTimeline();
   initHpChart();
@@ -1567,6 +1568,7 @@ function onMouseMove(e) {
 }
 
 function clampView() {
+  if (view.scale <= 1) { view.scale = 1; view.offsetX = 0; view.offsetY = 0; return; }
   const sz = canvas.width;
   const minOff = sz * (1 - view.scale);
   view.offsetX = Math.max(minOff, Math.min(0, view.offsetX));
@@ -1574,7 +1576,7 @@ function clampView() {
 }
 
 function applyZoom(factor, cx, cy) {
-  const newScale = Math.max(0.8, Math.min(view.scale * factor, 24));
+  const newScale = Math.max(1.0, Math.min(view.scale * factor, 24));
   view.offsetX = cx - (cx - view.offsetX) * (newScale / view.scale);
   view.offsetY = cy - (cy - view.offsetY) * (newScale / view.scale);
   view.scale   = newScale;
