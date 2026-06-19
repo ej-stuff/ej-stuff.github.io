@@ -1695,20 +1695,22 @@ function toggleLayer(id) {
 ============================================================================ */
 // Keep SCORE_CFG in sync across stats.html / match.html / records.html
 const SCORE_CFG = {
-  kill:    { pts: 100, soloPts: 200 },
-  knock:   { pts: 25,  soloPts: 50  },
-  damage:  { pts: 1,   soloPts: 2   },
-  revive:  { pts: 50  },
-  bc:      { pts: 100 },
-  death:   { pts: -100 },
-  knocked: { pts: -50  },
+  kill:           { pts: 100, soloPts: 200 },
+  knock:          { pts: 50,  soloPts: 100 },
+  damage:         { pts: 1,   soloPts: 2   },
+  revive:         { pts: 50  },
+  bc:             { pts: 100 },
+  death:          { pts: -100 },
+  knocked:        { pts: -50  },
+  survivalPerMin: 2,
+  placement:      { 1: 150, 2: 100, 3: 50, 5: 40, 10: 20 },
 };
 
 function scoreDefHTML() {
   const C = SCORE_CFG;
   const s = (p) => (p >= 0 ? '+' : '') + p;
   const c = (p) => p >= 0 ? 'var(--ok)' : 'var(--danger)';
-  return [
+  const rows = [
     [C.kill.pts,    C.kill.soloPts,    'Kill',             ''],
     [C.knock.pts,   C.knock.soloPts,   'Knockdown',        ''],
     [C.damage.pts,  C.damage.soloPts,  'Damage dealt',     '/pt'],
@@ -1718,7 +1720,10 @@ function scoreDefHTML() {
     [C.knocked.pts, null,              'Got knocked',      ''],
   ].map(([pts, solo, label, unit]) =>
     `<span>${label}: <span style="color:${c(pts)}">${s(pts)}${unit}</span>${solo !== null ? ` <span style="color:${c(solo)};">(${s(solo)}${unit} if solo)</span>` : ' (always)'}</span>`
-  ).join('');
+  );
+  rows.push(`<span>Survival: <span style="color:var(--ok)">+${C.survivalPerMin}/min</span> (always)</span>`);
+  rows.push(`<span style="grid-column:1/-1">Placement bonus: <span style="color:var(--ok)">+150/#1, +100/#2, +50/#3, +40/#4-5, +20/top10</span> (always)</span>`);
+  return rows.join('');
 }
 
 let scoreChartInst = null;
@@ -1773,6 +1778,18 @@ function buildScoreChart() {
     data821.push({x: e.t, y: s821});
     dataDuo.push({x: e.t, y: s282 + s821});
   }
+
+  // Apply survival and placement bonuses at match end
+  const C2 = SCORE_CFG;
+  const ps282 = MD.match_stats?.['D282'] || {};
+  const ps821 = MD.match_stats?.['S821'] || {};
+  const plB = pl => !pl || pl > 10 ? 0 : pl<=1?C2.placement[1]:pl<=2?C2.placement[2]:pl<=3?C2.placement[3]:pl<=5?C2.placement[5]:C2.placement[10];
+  s282 += Math.floor((ps282.survival_s||0)/60)*C2.survivalPerMin + plB(ps282.placement);
+  s821 += Math.floor((ps821.survival_s||0)/60)*C2.survivalPerMin + plB(ps821.placement);
+  const tEnd = Math.max(ps282.survival_s||0, ps821.survival_s||0);
+  data282.push({x: tEnd, y: s282});
+  data821.push({x: tEnd, y: s821});
+  dataDuo.push({x: tEnd, y: s282 + s821});
 
   if (scoreChartInst) { scoreChartInst.destroy(); scoreChartInst = null; }
   scoreChartInst = new Chart(el.getContext('2d'), {
@@ -1870,6 +1887,9 @@ function buildPlayerCards() {
         case 'knocked':          matchScore += C.knocked.pts; break;
       }
     }
+    const plBonusPC = pl => !pl || pl > 10 ? 0 : pl<=1?C.placement[1]:pl<=2?C.placement[2]:pl<=3?C.placement[3]:pl<=5?C.placement[5]:C.placement[10];
+    matchScore += Math.floor((s.survival_s || 0) / 60) * C.survivalPerMin;
+    matchScore += plBonusPC(s.placement);
 
     const rows = [
       ['Place',        pl],

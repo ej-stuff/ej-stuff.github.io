@@ -527,7 +527,7 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <div id="trendScoreDef" style="display:none;margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
       <div style="font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">Score Definition</div>
       <table id="trendScoreDefTable" style="border-collapse:collapse;width:100%;font-size:12px;color:var(--muted)"><tbody></tbody></table>
-      <p style="font-size:11px;color:var(--muted);margin-top:8px">Solo = partner dead or knocked. Scores here are approximate (solo bonuses require per-match event data). See Match Analysis for exact scores.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Solo = partner dead or knocked. Exact scores (with solo bonuses) load in the background from per-match event data.</p>
     </div>
   </div>
 
@@ -640,6 +640,8 @@ const state = {
   chartCategory: 'Player stats',
   chartMetric:   'kills',
   trendStat:     'kd',
+  matchSortCol:  'date',
+  matchSortAsc:  false,
 };
 
 /* ============================================================================
@@ -654,7 +656,8 @@ const DATA = {
 
 const CHARTS = {};
 let lastMatches = [];
-let DATES = [];   // sorted unique date strings in dataset
+let DATES = [];
+let MATCH_SCORES = {};
 
 /* ============================================================================
    BOOT
@@ -692,6 +695,11 @@ async function boot() {
     DATA.ammoIdx  = Object.fromEntries(ammo_stats.map(r => [r.match_id, r]));
     DATA.healIdx  = Object.fromEntries(heal_stats.map(r => [r.match_id, r]));
 
+    // Inject score dimension into Chart Explorer
+    if (!DATA.dimensions.find(d => d.key === 'score')) {
+      DATA.dimensions.push({ key:'score', label:'Match Score', category:'Player stats', type:'score', unit:'pts' });
+    }
+
     // Build sorted unique dates from duo-only matches
     const duoMatches = matches.filter(m =>
       m.players['D282']?.placement != null && m.players['S821']?.placement != null);
@@ -702,6 +710,25 @@ async function boot() {
     const n = duoMatches.length;
     document.getElementById('mainSubtitle').textContent =
       `D282 & S821 — duo-fpp, ${n} shared matches`;
+
+    // Load individual match files for exact scores (parallel, then re-render)
+    Promise.all(
+      duoMatches.map(m => fetch(`stats-data/matches/${m.match_id}.json`)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null))
+    ).then(files => {
+      files.forEach((mf, i) => {
+        if (!mf?.events) return;
+        const m    = duoMatches[i];
+        const pd   = m.players['D282'], ps = m.players['S821'];
+        const ps282 = mf.match_stats?.['D282'] || pd || {};
+        const ps821 = mf.match_stats?.['S821'] || ps || {};
+        const s282  = computeExactScoreFromEvents(mf.events, 'D282', ps282);
+        const s821  = computeExactScoreFromEvents(mf.events, 'S821', ps821);
+        MATCH_SCORES[m.match_id] = { D282: s282, S821: s821, duo: s282 + s821 };
+      });
+      renderAll();
+    });
 
     buildMapButtons();
     buildChartDropdowns();
@@ -884,8 +911,8 @@ function getDailySessions(matches) {
         }
         let scoreSum = 0;
         for (const m of games) {
-          const p = m.players[player]; if (!p) continue;
-          scoreSum += computeMatchScore(p);
+          if (!m.players[player]) continue;
+          scoreSum += getMatchScore(m.match_id, player);
         }
         sess[player] = {
           kills, deaths, wins, top3, dmg, n,
@@ -1024,6 +1051,7 @@ function syncButtons() {
 ============================================================================ */
 function getMatchValue(dim, match, player) {
   if (dim.type === 'player_stat') return match.players[player]?.[dim.field] ?? 0;
+  if (dim.type === 'score') return getMatchScore(match.match_id, player);
   if (dim.type === 'throwable') {
     const row = DATA.throwIdx[match.match_id];
     return row?.players[player]?.[dim.throw_name]?.[dim.throw_field] ?? 0;
@@ -1548,28 +1576,63 @@ function renderDailyTable(sessions) {
 /* ============================================================================
    RENDER — MATCH HISTORY
 ============================================================================ */
+function sortMatchHistory(col) {
+  if (state.matchSortCol === col) {
+    state.matchSortAsc = !state.matchSortAsc;
+  } else {
+    state.matchSortCol = col;
+    state.matchSortAsc = (col !== 'date');
+  }
+  renderMatchHistory(lastMatches);
+}
+
 function renderMatchHistory(matches) {
   const table = document.getElementById('matchTable');
 
   if (matches.length === 0) {
-    table.innerHTML = '<tbody><tr><td class="empty" colspan="12">No matches for these filters.</td></tr></tbody>';
+    table.innerHTML = '<tbody><tr><td class="empty" colspan="13">No matches for these filters.</td></tr></tbody>';
     return;
   }
 
-  const fmtDt = iso => {
-    const d = new Date(iso);
-    return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')} `
-         + `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const getSortVal = m => {
+    switch (state.matchSortCol) {
+      case 'date':       return m.created_at;
+      case 'map':        return m.map || '';
+      case 'd282kills':  return m.players['D282']?.kills || 0;
+      case 'd282score':  return getMatchScore(m.match_id, 'D282');
+      case 's821kills':  return m.players['S821']?.kills || 0;
+      case 's821score':  return getMatchScore(m.match_id, 'S821');
+      case 'revives':    return (m.players['D282']?.revives||0)+(m.players['S821']?.revives||0);
+      case 'bc':         return (m.players['D282']?.blue_chips||0)+(m.players['S821']?.blue_chips||0);
+      case 'throws':     return (DATA.throwIdx?.[m.match_id]?.players?.D282?.['__total__']?.count||0)+(DATA.throwIdx?.[m.match_id]?.players?.S821?.['__total__']?.count||0);
+      case 'survival':   return m.duo_survival_s || 0;
+      case 'place':      return m.players['D282']?.placement || 99;
+      case 'totalscore': return getMatchScore(m.match_id, 'duo');
+      default:           return m.created_at;
+    }
   };
+
+  const sorted = [...matches].sort((a, b) => {
+    const va = getSortVal(a), vb = getSortVal(b);
+    const cmp = typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+    return state.matchSortAsc ? cmp : -cmp;
+  });
+
+  const th = (col, label, style = '') => {
+    const active = state.matchSortCol === col;
+    const ind    = active ? (state.matchSortAsc ? ' ▲' : ' ▼') : '';
+    return `<th onclick="sortMatchHistory('${col}')" style="cursor:pointer${style ? ';'+style : ''}" title="Sort by ${label}">${label}${ind}</th>`;
+  };
+
   const kdCell = (p, col) =>
     `<span style="color:${col}">${p.kills ?? 0}</span>` +
     ` <span class="panel-note">(${f0(p.damage || 0)})</span>`;
-  const scoreCell = (p, col) => {
-    const s = computeMatchScore(p);
+  const scoreCell = (matchId, player, col) => {
+    const s = getMatchScore(matchId, player);
     return `<span style="color:${col}">${s >= 0 ? '+' : ''}${Math.round(s)}</span>`;
   };
 
-  const body = matches.map(m => {
+  const body = sorted.map(m => {
     const pD       = m.players['D282'] || {};
     const pS       = m.players['S821'] || {};
     const throwRow = DATA.throwIdx?.[m.match_id];
@@ -1577,37 +1640,40 @@ function renderMatchHistory(matches) {
                    + (throwRow?.players?.S821?.['__total__']?.count || 0);
     const revives  = (pD.revives || 0) + (pS.revives || 0);
     const bc       = (pD.blue_chips || 0) + (pS.blue_chips || 0);
+    const total    = getMatchScore(m.match_id, 'duo');
 
     return `<tr class="match-row" onclick="location.href='match.html?id=${m.match_id}'">
-      <td style="white-space:nowrap">${fmtDt(m.created_at)}</td>
+      <td style="white-space:nowrap">${fmtMatchDate(m.created_at)}</td>
       <td>${m.map || '—'}</td>
       <td>${kdCell(pD, 'var(--accent)')}</td>
-      <td>${scoreCell(pD, 'var(--accent)')}</td>
+      <td>${scoreCell(m.match_id, 'D282', 'var(--accent)')}</td>
       <td>${kdCell(pS, 'var(--blue)')}</td>
-      <td>${scoreCell(pS, 'var(--blue)')}</td>
+      <td>${scoreCell(m.match_id, 'S821', 'var(--blue)')}</td>
       <td>${revives}</td>
       <td>${bc}</td>
       <td>${throws}</td>
       <td style="white-space:nowrap">${mmss(m.duo_survival_s)}</td>
       <td>${placeHTML(pD.placement)}</td>
+      <td><span style="color:var(--text)">${total >= 0 ? '+' : ''}${Math.round(total)}</span></td>
       <td><a href="match.html?id=${m.match_id}" onclick="event.stopPropagation()" class="match-link" title="Match Analysis">→</a></td>
     </tr>`;
   }).join('');
 
   table.innerHTML = `
     <thead><tr>
-      <th class="no-sort">Date/Time</th>
-      <th class="no-sort">Map</th>
-      <th class="no-sort" style="color:var(--accent)">D282 K (Dmg)</th>
-      <th class="no-sort" style="color:var(--accent)" title="Approx score (no solo bonus)">D282 Score</th>
-      <th class="no-sort" style="color:var(--blue)">S821 K (Dmg)</th>
-      <th class="no-sort" style="color:var(--blue)" title="Approx score (no solo bonus)">S821 Score</th>
-      <th class="no-sort" title="Revives given">Rev</th>
-      <th class="no-sort" title="Blue chip revives">BC</th>
-      <th class="no-sort" title="Throwables used">Throws</th>
-      <th class="no-sort">Survival</th>
-      <th class="no-sort">Place</th>
-      <th class="no-sort"></th>
+      ${th('date',       'Date/Time')}
+      ${th('map',        'Map')}
+      ${th('d282kills',  'D282 K (Dmg)',  'color:var(--accent)')}
+      ${th('d282score',  'D282 Score',    'color:var(--accent)')}
+      ${th('s821kills',  'S821 K (Dmg)',  'color:var(--blue)')}
+      ${th('s821score',  'S821 Score',    'color:var(--blue)')}
+      ${th('revives',    'Rev',           '')}
+      ${th('bc',         'BC',            '')}
+      ${th('throws',     'Throws',        '')}
+      ${th('survival',   'Survival',      '')}
+      ${th('place',      'Place',         '')}
+      ${th('totalscore', 'Total Score',   '')}
+      <th></th>
     </tr></thead>
     <tbody>${body}</tbody>`;
 }
@@ -1663,13 +1729,15 @@ function renderPlacementChart(matches) {
 
 // Keep SCORE_CFG in sync across stats.html / match.html / records.html
 const SCORE_CFG = {
-  kill:    { pts: 100, soloPts: 200 },
-  knock:   { pts: 25,  soloPts: 50  },
-  damage:  { pts: 1,   soloPts: 2   },
-  revive:  { pts: 50  },
-  bc:      { pts: 100 },
-  death:   { pts: -100 },
-  knocked: { pts: -50  },
+  kill:           { pts: 100, soloPts: 200 },
+  knock:          { pts: 50,  soloPts: 100 },
+  damage:         { pts: 1,   soloPts: 2   },
+  revive:         { pts: 50  },
+  bc:             { pts: 100 },
+  death:          { pts: -100 },
+  knocked:        { pts: -50  },
+  survivalPerMin: 2,
+  placement:      { 1: 150, 2: 100, 3: 50, 5: 40, 10: 20 },
 };
 
 function scoreDefHTML() {
@@ -1689,19 +1757,89 @@ function scoreDefHTML() {
       <td style="padding:2px 8px">${label}</td>
       <td style="padding:2px 8px;color:${c(pts)}">${s(pts)}${unit}</td>
       <td style="padding:2px 8px;font-size:11px;${solo !== null ? `color:${c(solo)}` : ''}">${solo !== null ? `${s(solo)}${unit} if solo` : 'always'}</td>
-    </tr>`).join('');
+    </tr>`).join('')
+  + `
+    <tr>
+      <td style="padding:2px 8px">Survival</td>
+      <td style="padding:2px 8px;color:var(--ok)">+${C.survivalPerMin}/min</td>
+      <td style="padding:2px 8px;font-size:11px">always</td>
+    </tr>
+    <tr>
+      <td style="padding:2px 8px">Placement bonus</td>
+      <td style="padding:2px 8px;color:var(--ok)">+150/#1, +100/#2, +50/#3, +40/#4-5, +20/top10</td>
+      <td style="padding:2px 8px;font-size:11px">always</td>
+    </tr>`;
+}
+
+function placementBonus(pl) {
+  if (!pl || pl > 10) return 0;
+  const C = SCORE_CFG.placement;
+  return pl <= 1 ? C[1] : pl <= 2 ? C[2] : pl <= 3 ? C[3] : pl <= 5 ? C[5] : C[10];
 }
 
 function computeMatchScore(p) {
   if (!p) return 0;
   const C = SCORE_CFG;
-  return (p.kills        || 0) * C.kill.pts
-       + (p.knockdowns   || 0) * C.knock.pts
-       + (p.damage       || 0) * C.damage.pts
-       + (p.revives      || 0) * C.revive.pts
-       + (p.blue_chips   || 0) * C.bc.pts
-       + ((p.placement   || 99) > 1 ? C.death.pts : 0)
-       + (p.times_knocked|| 0) * C.knocked.pts;
+  let s = (p.kills        || 0) * C.kill.pts
+        + (p.knockdowns   || 0) * C.knock.pts
+        + (p.damage       || 0) * C.damage.pts
+        + (p.revives      || 0) * C.revive.pts
+        + (p.blue_chips   || 0) * C.bc.pts
+        + ((p.placement   || 99) > 1 ? C.death.pts : 0)
+        + (p.times_knocked|| 0) * C.knocked.pts;
+  s += Math.floor((p.survival_s || 0) / 60) * C.survivalPerMin;
+  s += placementBonus(p.placement);
+  return s;
+}
+
+function computeExactScoreFromEvents(events, player, pStats) {
+  const partner = player === 'D282' ? 'S821' : 'D282';
+  const partnerKnocks  = events.filter(e => e.type === 'knocked' && e.player === partner);
+  const partnerRevives = events.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
+  const partnerDeath   = events.find(e => e.type === 'death' && e.player === partner);
+  function isSoloAt(t) {
+    if (partnerDeath && partnerDeath.t < t) return true;
+    const prev = partnerKnocks.filter(k => k.t < t);
+    if (!prev.length) return false;
+    const last = prev[prev.length - 1];
+    const revAfter  = partnerRevives.some(r => r.t > last.t && r.t < t);
+    const diedAfter = partnerDeath && partnerDeath.t > last.t && partnerDeath.t < t;
+    return !revAfter && !diedAfter;
+  }
+  const C = SCORE_CFG;
+  let score = 0;
+  for (const e of events) {
+    if (e.player !== player) continue;
+    const solo = ['kill','knockdown','dmg_dealt'].includes(e.type) && isSoloAt(e.t);
+    switch (e.type) {
+      case 'kill':             score += solo ? C.kill.soloPts    : C.kill.pts; break;
+      case 'knockdown':        score += solo ? C.knock.soloPts   : C.knock.pts; break;
+      case 'dmg_dealt':        score += (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts); break;
+      case 'revive':           score += C.revive.pts; break;
+      case 'blue_chip_revive': score += C.bc.pts; break;
+      case 'death':            score += C.death.pts; break;
+      case 'knocked':          score += C.knocked.pts; break;
+    }
+  }
+  if (pStats) {
+    score += Math.floor((pStats.survival_s || 0) / 60) * C.survivalPerMin;
+    score += placementBonus(pStats.placement);
+  }
+  return score;
+}
+
+function getMatchScore(matchId, player) {
+  const ms = MATCH_SCORES[matchId];
+  if (ms) return ms[player] ?? 0;
+  const m = (DATA.matches || []).find(x => x.match_id === matchId);
+  if (!m) return 0;
+  if (player === 'duo') return computeMatchScore(m.players['D282']) + computeMatchScore(m.players['S821']);
+  return computeMatchScore(m.players[player]);
+}
+
+function fmtMatchDate(iso) {
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getFullYear()).slice(-2)} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
 
 function setTrendStat(stat) {
@@ -1758,9 +1896,9 @@ const TREND_DEFS = {
   },
   score: {
     label: 'Score', yLabel: 'Avg Score',
-    p282: (w) => w.reduce((s,m)=>s+computeMatchScore(m.players['D282']),0)/w.length,
-    p821: (w) => w.reduce((s,m)=>s+computeMatchScore(m.players['S821']),0)/w.length,
-    duo:  (w) => w.reduce((s,m)=>s+computeMatchScore(m.players['D282'])+computeMatchScore(m.players['S821']),0)/w.length,
+    p282: (w) => w.reduce((s,m)=>s+getMatchScore(m.match_id,'D282'),0)/w.length,
+    p821: (w) => w.reduce((s,m)=>s+getMatchScore(m.match_id,'S821'),0)/w.length,
+    duo:  (w) => w.reduce((s,m)=>s+getMatchScore(m.match_id,'duo'),0)/w.length,
     fmt: v => Math.round(v).toLocaleString(),
   },
 };
@@ -1939,11 +2077,12 @@ function renderLifetimeRecords(matches) {
   const byDay = {};
 
   for (const m of sorted) {
-    const pd = m.players['D282'], ps = m.players['S821'];
-    const d = m.created_at.slice(0, 10);
-    byDay[d] = (byDay[d] || 0) + 1;
+    const pd     = m.players['D282'], ps = m.players['S821'];
+    const dayKey = m.created_at.slice(0, 10);
+    const d      = fmtMatchDate(m.created_at);
+    byDay[dayKey] = (byDay[dayKey] || 0) + 1;
 
-    if (pd?.placement === 1) { curStreak++; curEnd = d; }
+    if (pd?.placement === 1) { curStreak++; curEnd = dayKey; }
     else { if (curStreak > maxStreak.v) maxStreak = { v: curStreak, end: curEnd }; curStreak = 0; }
 
     const chk = (rec, val) => val > rec.v ? { v: val, date: d, id: m.match_id } : rec;

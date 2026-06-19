@@ -170,16 +170,23 @@ h1 {
 <script>
 // Keep SCORE_CFG in sync across stats.html / match.html / records.html
 const SCORE_CFG = {
-  kill:    { pts: 100, soloPts: 200 },
-  knock:   { pts: 25,  soloPts: 50  },
-  damage:  { pts: 1,   soloPts: 2   },
-  revive:  { pts: 50  },
-  bc:      { pts: 100 },
-  death:   { pts: -100 },
-  knocked: { pts: -50  },
+  kill:           { pts: 100, soloPts: 200 },
+  knock:          { pts: 50,  soloPts: 100 },
+  damage:         { pts: 1,   soloPts: 2   },
+  revive:         { pts: 50  },
+  bc:             { pts: 100 },
+  death:          { pts: -100 },
+  knocked:        { pts: -50  },
+  survivalPerMin: 2,
+  placement:      { 1: 150, 2: 100, 3: 50, 5: 40, 10: 20 },
 };
 
-function computeExactScore(events, player) {
+function fmtTs(iso) {
+  const d = new Date(iso);
+  return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getFullYear()).slice(-2)} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function computeExactScore(events, player, pStats) {
   const partner = player === 'D282' ? 'S821' : 'D282';
   const partnerKnocks  = events.filter(e => e.type === 'knocked' && e.player === partner);
   const partnerRevives = events.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
@@ -207,6 +214,11 @@ function computeExactScore(events, player) {
       case 'death':            score += C.death.pts; break;
       case 'knocked':          score += C.knocked.pts; break;
     }
+  }
+  if (pStats) {
+    score += Math.floor((pStats.survival_s || 0) / 60) * C.survivalPerMin;
+    const pl = pStats.placement || 99;
+    score += pl <= 1 ? C.placement[1] : pl <= 2 ? C.placement[2] : pl <= 3 ? C.placement[3] : pl <= 5 ? C.placement[5] : pl <= 10 ? C.placement[10] : 0;
   }
   return score;
 }
@@ -284,14 +296,15 @@ function computeRecords(matches, matchFiles) {
   const byDay = {};
 
   for (let i = 0; i < matches.length; i++) {
-    const m  = matches[i];
-    const mf = matchFiles?.[i];
-    const pd = m.players['D282'], ps = m.players['S821'];
-    const d  = m.created_at.slice(0, 10);
-    const id = m.match_id;
-    byDay[d] = (byDay[d] || 0) + 1;
+    const m      = matches[i];
+    const mf     = matchFiles?.[i];
+    const pd     = m.players['D282'], ps = m.players['S821'];
+    const dayKey = m.created_at.slice(0, 10);
+    const d      = fmtTs(m.created_at);
+    const id     = m.match_id;
+    byDay[dayKey] = (byDay[dayKey] || 0) + 1;
 
-    if (pd?.placement === 1) { curStreak++; if (curStreak > maxStreak) { maxStreak = curStreak; maxStreakEnd = d; } }
+    if (pd?.placement === 1) { curStreak++; if (curStreak > maxStreak) { maxStreak = curStreak; maxStreakEnd = dayKey; } }
     else curStreak = 0;
 
     if (pd) {
@@ -314,14 +327,16 @@ function computeRecords(matches, matchFiles) {
     }
 
     if (mf?.events) {
-      const sk282 = soloKillsFromEvents(mf.events, 'D282');
-      const sk821 = soloKillsFromEvents(mf.events, 'S821');
-      best282.solo  = chk(best282.solo,  sk282, d, id);
-      best821.solo  = chk(best821.solo,  sk821, d, id);
-      const sc282 = computeExactScore(mf.events, 'D282');
-      const sc821 = computeExactScore(mf.events, 'S821');
-      best282.score = chk(best282.score, sc282, d, id);
-      best821.score = chk(best821.score, sc821, d, id);
+      const sk282  = soloKillsFromEvents(mf.events, 'D282');
+      const sk821  = soloKillsFromEvents(mf.events, 'S821');
+      best282.solo = chk(best282.solo, sk282, d, id);
+      best821.solo = chk(best821.solo, sk821, d, id);
+      const ps282  = mf.match_stats?.['D282'] || pd || {};
+      const ps821  = mf.match_stats?.['S821'] || ps || {};
+      const sc282  = computeExactScore(mf.events, 'D282', ps282);
+      const sc821  = computeExactScore(mf.events, 'S821', ps821);
+      best282.score = chk(best282.score, sc282,        d, id);
+      best821.score = chk(best821.score, sc821,        d, id);
       bestDuo.score = chk(bestDuo.score, sc282 + sc821, d, id);
     }
   }
