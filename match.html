@@ -676,11 +676,13 @@ function drawEventIcon(c, cx, cy, r, lw, type, col) {
 
   switch (type) {
     case 'kill': {
-      const s = r * 0.82;
+      const s = r * 1.0;
+      c.lineWidth = lw * 1.5;
       c.beginPath();
       c.moveTo(cx-s, cy-s); c.lineTo(cx+s, cy+s);
       c.moveTo(cx+s, cy-s); c.lineTo(cx-s, cy+s);
       c.stroke();
+      c.lineWidth = lw;
       break;
     }
     case 'knockdown': {
@@ -700,12 +702,13 @@ function drawEventIcon(c, cx, cy, r, lw, type, col) {
       break;
     }
     case 'death': {
-      c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
-      const s = r*0.55;
+      const v = r * 0.9, h2 = r * 0.5;
+      c.lineWidth = lw * 1.2;
       c.beginPath();
-      c.moveTo(cx-s, cy-s); c.lineTo(cx+s, cy+s);
-      c.moveTo(cx+s, cy-s); c.lineTo(cx-s, cy+s);
+      c.moveTo(cx, cy - v); c.lineTo(cx, cy + v);
+      c.moveTo(cx - h2, cy - v * 0.2); c.lineTo(cx + h2, cy - v * 0.2);
       c.stroke();
+      c.lineWidth = lw;
       break;
     }
     case 'revive': {
@@ -734,19 +737,21 @@ function drawEventIcon(c, cx, cy, r, lw, type, col) {
       break;
     }
     case 'dmg_dealt': {
-      const s = r*0.8;
-      c.globalAlpha = 0.6;
+      const s = r * 0.7;
+      c.globalAlpha = 0.65;
       c.beginPath();
-      c.moveTo(cx-s, cy-s); c.lineTo(cx+s*0.5, cy); c.lineTo(cx-s, cy+s);
-      c.stroke();
+      c.moveTo(cx, cy - s); c.lineTo(cx + s, cy);
+      c.lineTo(cx, cy + s); c.lineTo(cx - s, cy);
+      c.closePath(); c.fill();
       break;
     }
     case 'dmg_taken': {
-      const s = r*0.8;
+      const s = r * 0.7;
       c.globalAlpha = 0.55;
       c.beginPath();
-      c.moveTo(cx+s, cy-s); c.lineTo(cx-s*0.5, cy); c.lineTo(cx+s, cy+s);
-      c.stroke();
+      c.moveTo(cx, cy - s); c.lineTo(cx + s, cy);
+      c.lineTo(cx, cy + s); c.lineTo(cx - s, cy);
+      c.closePath(); c.stroke();
       break;
     }
     case 'throwable': {
@@ -952,8 +957,9 @@ function drawTimeline() {
         const ev  = evs[i];
         const cy  = rowY + stackDir * i * TL_DOT_SEP;
         if (cy < TL_DOT_R + 1 || cy > h - TL_DOT_R - 1) break;
+        const usePCol = ['kill','death','dmg_dealt','dmg_taken'].includes(ev.type);
         const ld  = LAYER_DEFS.find(l => l.id === ev.type);
-        const col = (ld && ld.color) ? ld.color : PLAYER_COLOR[player];
+        const col = usePCol ? PLAYER_COLOR[player] : ((ld && ld.color) ? ld.color : PLAYER_COLOR[player]);
         tlCtx.save();
         drawEventIcon(tlCtx, cx, cy, TL_DOT_R, 1.5, ev.type, col);
         tlCtx.restore();
@@ -987,6 +993,7 @@ function onTlClick(e) {
   draw();
   drawTimeline();
   drawHpChart();
+  drawScoreChart();
   drawDistCharts();
 }
 
@@ -1113,9 +1120,11 @@ async function boot() {
     resizeTimeline();
     resizeHpChart();
     resizeDistCharts();
+    resizeScoreChart();
     draw();
     drawTimeline();
     drawHpChart();
+    drawScoreChart();
     drawDistCharts();
   });
   canvas.addEventListener('wheel',      onWheel,     { passive: false });
@@ -1511,11 +1520,14 @@ function drawEnemies(maxT) {
 const LAYER_COLOR = Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.color]));
 
 function markerColor(ev) {
+  if (['kill','death','dmg_dealt','dmg_taken'].includes(ev.type))
+    return PLAYER_COLOR[ev.player] || '#e8e3d8';
   return LAYER_COLOR[ev.type] || PLAYER_COLOR[ev.player] || '#e8e3d8';
 }
 
 function drawMarker(ev, cx, cy) {
-  drawEventIcon(ctx, cx, cy, 7 / view.scale, 2 / view.scale, ev.type, markerColor(ev));
+  const r = ev.type === 'kill' ? 9 / view.scale : 7 / view.scale;
+  drawEventIcon(ctx, cx, cy, r, 2 / view.scale, ev.type, markerColor(ev));
 }
 
 /* ============================================================================
@@ -1620,6 +1632,7 @@ function onTimeInput(e) {
   draw();
   drawTimeline();
   drawHpChart();
+  drawScoreChart();
   drawDistCharts();
 }
 
@@ -1631,6 +1644,7 @@ function resetTime() {
   draw();
   drawTimeline();
   drawHpChart();
+  drawScoreChart();
   drawDistCharts();
 }
 
@@ -1646,6 +1660,7 @@ function jumpTime(delta) {
   draw();
   drawTimeline();
   drawHpChart();
+  drawScoreChart();
   drawDistCharts();
 }
 
@@ -1703,11 +1718,12 @@ function scoreDefHTML() {
   return rows.join('');
 }
 
-let scoreChartInst = null;
+let _scoreData = null;
+let scoreCanvas = null, scoreCtx = null;
 
 function buildScoreChart() {
-  const el = document.getElementById('scoreCanvas');
-  if (!el || !MD) return;
+  scoreCanvas = document.getElementById('scoreCanvas');
+  if (!scoreCanvas || !MD) return;
 
   const allEvts = MD.events || [];
   const relevant = allEvts.filter(e =>
@@ -1756,7 +1772,6 @@ function buildScoreChart() {
     dataDuo.push({x: e.t, y: s282 + s821});
   }
 
-  // Apply survival and placement bonuses at match end
   const C2 = SCORE_CFG;
   const ps282 = MD.match_stats?.['D282'] || {};
   const ps821 = MD.match_stats?.['S821'] || {};
@@ -1769,39 +1784,116 @@ function buildScoreChart() {
   data821.push({x: tEnd, y: s821});
   dataDuo.push({x: tEnd, y: s282 + s821});
 
-  if (scoreChartInst) { scoreChartInst.destroy(); scoreChartInst = null; }
-  scoreChartInst = new Chart(el.getContext('2d'), {
-    type: 'line',
-    data: {
-      datasets: [
-        { label: 'D282', data: data282, borderColor: '#f4a300', backgroundColor: 'transparent', stepped: true, borderWidth: 2, pointRadius: 0, pointHoverRadius: 3 },
-        { label: 'S821', data: data821, borderColor: '#4a9edd', backgroundColor: 'transparent', stepped: true, borderWidth: 2, pointRadius: 0, pointHoverRadius: 3 },
-        { label: 'Duo',  data: dataDuo, borderColor: '#888888', backgroundColor: 'transparent', stepped: true, borderWidth: 1.5, borderDash: [5,4], pointRadius: 0, pointHoverRadius: 3 },
-      ],
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      parsing: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
-        tooltip: {
-          backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1,
-          titleColor: '#e8e3d8', bodyColor: '#9a9385',
-          callbacks: {
-            title: items => mmss(Math.round(items[0].parsed.x)),
-            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y > 0 ? '+' : ''}${Math.round(ctx.parsed.y)}`,
-          },
-        },
-      },
-      scales: {
-        x: { type: 'linear', min: 0, ticks: { color: '#9a9385', font: {size:11}, callback: v => mmss(v) }, grid: { color: 'rgba(56,52,44,0.5)' } },
-        y: { ticks: { color: '#9a9385', font: {size:11} }, grid: { color: 'rgba(56,52,44,0.4)' } },
-      },
-    },
-  });
+  const allY = [...data282, ...data821, ...dataDuo].map(p => p.y);
+  _scoreData = { data282, data821, dataDuo, minY: Math.min(...allY), maxY: Math.max(...allY) };
+
+  scoreCtx = scoreCanvas.getContext('2d');
+  resizeScoreChart();
+  drawScoreChart();
+
   const defGrid = document.getElementById('scoreDefGrid');
   if (defGrid) defGrid.innerHTML = scoreDefHTML();
+}
+
+function resizeScoreChart() {
+  if (!scoreCanvas) return;
+  const wrap = document.getElementById('scoreWrap');
+  if (!wrap) return;
+  const w = wrap.clientWidth;
+  const h = wrap.clientHeight || 180;
+  if (scoreCanvas.width !== w || scoreCanvas.height !== h) {
+    scoreCanvas.width  = w;
+    scoreCanvas.height = h;
+  }
+}
+
+function drawScoreChart() {
+  if (!scoreCanvas || !scoreCtx || !_scoreData || !MD) return;
+  const { data282, data821, dataDuo, minY, maxY } = _scoreData;
+  const c = scoreCtx;
+  const w = scoreCanvas.width, h = scoreCanvas.height;
+  c.clearRect(0, 0, w, h);
+
+  const PAD_L = TL_PAD_L, PAD_R = 6, PAD_T = 10, PAD_B = 18;
+  const dur   = MD.duration_s || 1800;
+  const plotW = w - PAD_L - PAD_R;
+  const plotH = h - PAD_T - PAD_B;
+
+  const yPad   = Math.max(50, (maxY - minY) * 0.08);
+  const yMin   = minY - yPad;
+  const yMax   = maxY + yPad;
+  const yRange = yMax - yMin || 1;
+
+  const tx = t => PAD_L + (Math.max(0, t) / dur) * plotW;
+  const ty = v => PAD_T + (1 - (v - yMin) / yRange) * plotH;
+
+  c.fillStyle = 'rgba(0,0,0,0.15)';
+  c.fillRect(PAD_L, PAD_T, plotW, plotH);
+
+  // Y grid + labels
+  const labelRange = yMax - yMin;
+  const tickSize = labelRange > 3000 ? 1000 : labelRange > 1500 ? 500 : labelRange > 600 ? 200 : labelRange > 250 ? 100 : 50;
+  c.font = '9px system-ui, sans-serif';
+  c.textAlign = 'right';
+  c.textBaseline = 'middle';
+  for (let t = Math.ceil(yMin / tickSize) * tickSize; t <= yMax; t += tickSize) {
+    const y = ty(t);
+    if (y < PAD_T || y > PAD_T + plotH) continue;
+    c.beginPath(); c.moveTo(PAD_L, y); c.lineTo(PAD_L + plotW, y);
+    c.strokeStyle = t === 0 ? 'rgba(232,227,216,0.3)' : 'rgba(56,52,44,0.35)';
+    c.lineWidth = t === 0 ? 1.5 : 1;
+    if (t !== 0) c.setLineDash([2, 4]);
+    c.stroke();
+    c.setLineDash([]);
+    c.fillStyle = t === 0 ? 'rgba(232,227,216,0.6)' : 'rgba(154,147,133,0.55)';
+    c.fillText(t === 0 ? '0' : (t > 0 ? `+${t}` : String(t)), PAD_L - 2, y);
+  }
+
+  // X time ticks
+  const tickInt = dur <= 600 ? 60 : dur <= 1200 ? 120 : 300;
+  c.textAlign = 'center';
+  c.textBaseline = 'top';
+  c.fillStyle = 'rgba(154,147,133,0.55)';
+  for (let t = tickInt; t < dur; t += tickInt) {
+    const x = tx(t);
+    c.fillText(mmss(t), x, PAD_T + plotH + 3);
+    c.beginPath(); c.moveTo(x, PAD_T); c.lineTo(x, PAD_T + plotH);
+    c.strokeStyle = 'rgba(56,52,44,0.25)';
+    c.lineWidth = 1;
+    c.stroke();
+  }
+
+  // Stepped lines
+  function drawStepped(data, col, dashed, lw) {
+    if (!data.length) return;
+    c.beginPath();
+    c.moveTo(tx(data[0].x), ty(data[0].y));
+    for (let i = 1; i < data.length; i++) {
+      c.lineTo(tx(data[i].x), ty(data[i-1].y));
+      c.lineTo(tx(data[i].x), ty(data[i].y));
+    }
+    if (dashed) c.setLineDash([5, 4]);
+    c.strokeStyle = col;
+    c.lineWidth = lw;
+    c.globalAlpha = 0.9;
+    c.stroke();
+    c.setLineDash([]);
+    c.globalAlpha = 1;
+  }
+
+  drawStepped(dataDuo, '#888888', true, 1.5);
+  drawStepped(data821, '#4a9edd', false, 2);
+  drawStepped(data282, '#f4a300', false, 2);
+
+  // Scrubber
+  if (state.time !== Infinity) {
+    const x = tx(state.time);
+    c.beginPath();
+    c.moveTo(x, PAD_T); c.lineTo(x, PAD_T + plotH);
+    c.strokeStyle = 'rgba(244,163,0,0.85)';
+    c.lineWidth = 1.5;
+    c.stroke();
+  }
 }
 
 function soloKillCount(events, player) {
