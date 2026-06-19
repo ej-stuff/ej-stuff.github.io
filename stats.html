@@ -458,6 +458,7 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <a href="stats.html" class="nav-cur">PUBG Stats</a>
     <a href="mapanalysis.html">Map Analysis</a>
     <a href="match.html">Match Analysis</a>
+    <a href="records.html">Personal Records</a>
     <a href="pubg.html">Loadout Planner</a>
   </div>
 </div>
@@ -501,6 +502,42 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
 
   <!-- ── SUMMARY CARDS ────────────────────────────────────────────────────── -->
   <div id="summarySection"><p class="loading">Loading…</p></div>
+
+  <!-- ── PLACEMENT HISTOGRAM ─────────────────────────────────────────────── -->
+  <div class="panel" id="placementPanel">
+    <div class="panel-title">Placement Distribution</div>
+    <div class="chart-wrap"><canvas id="placementChart"></canvas></div>
+  </div>
+
+  <!-- ── ROLLING K/D TREND ──────────────────────────────────────────────── -->
+  <div class="panel" id="kdTrendPanel">
+    <div class="panel-title">Rolling K/D (last 10 games)</div>
+    <div class="chart-wrap"><canvas id="kdTrendChart"></canvas></div>
+  </div>
+
+  <!-- ── PERFORMANCE BY MAP ─────────────────────────────────────────────── -->
+  <div class="panel" id="mapStatsPanel">
+    <div class="panel-title">Performance by Map</div>
+    <div id="mapStatsTable"></div>
+  </div>
+
+  <!-- ── DUO SYNERGY ────────────────────────────────────────────────────── -->
+  <div class="panel" id="duoChemPanel">
+    <div class="panel-title">Duo Chemistry</div>
+    <div id="duoChemContent"></div>
+  </div>
+
+  <!-- ── LIFETIME RECORDS ───────────────────────────────────────────────── -->
+  <div class="panel" id="recordsPanel">
+    <div class="panel-title">Lifetime Records</div>
+    <div id="recordsContent"></div>
+  </div>
+
+  <!-- ── WIN CONDITIONS ─────────────────────────────────────────────────── -->
+  <div class="panel" id="winCondPanel">
+    <div class="panel-title">Win Condition Analysis</div>
+    <div id="winCondContent"></div>
+  </div>
 
   <!-- ── CHART EXPLORER ───────────────────────────────────────────────────── -->
   <div class="panel">
@@ -1543,12 +1580,332 @@ function renderMatchHistory(matches) {
 }
 
 /* ============================================================================
+   RENDER — PLACEMENT HISTOGRAM
+============================================================================ */
+let placementChartInst = null;
+
+function renderPlacementChart(matches) {
+  const labels = ['#1 Win', '#2–5', '#6–10', '#11–20', '#21–50', '#51+'];
+  function buckets(player) {
+    const b = [0,0,0,0,0,0];
+    for (const m of matches) {
+      const pl = m.players[player]?.placement;
+      if (!pl) continue;
+      if (pl === 1)       b[0]++;
+      else if (pl <= 5)   b[1]++;
+      else if (pl <= 10)  b[2]++;
+      else if (pl <= 20)  b[3]++;
+      else if (pl <= 50)  b[4]++;
+      else                b[5]++;
+    }
+    return b;
+  }
+  if (placementChartInst) { placementChartInst.destroy(); placementChartInst = null; }
+  placementChartInst = new Chart(
+    document.getElementById('placementChart').getContext('2d'),
+    {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'D282', data: buckets('D282'), backgroundColor: '#f4a300aa', borderColor: '#f4a300', borderWidth: 1, borderRadius: 2 },
+          { label: 'S821', data: buckets('S821'), backgroundColor: '#4a9eddaa', borderColor: '#4a9edd', borderWidth: 1, borderRadius: 2 },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
+          tooltip: { backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1, titleColor: '#e8e3d8', bodyColor: '#9a9385' },
+        },
+        scales: {
+          x: { ticks: { color: '#9a9385', font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.5)' } },
+          y: { min: 0, ticks: { color: '#9a9385', font: { size: 11 }, stepSize: 1 }, grid: { color: 'rgba(56,52,44,0.4)' } },
+        },
+      },
+    }
+  );
+}
+
+/* ============================================================================
+   RENDER — ROLLING K/D TREND
+============================================================================ */
+let kdTrendChartInst = null;
+
+function renderKDTrendChart(matches) {
+  const sorted = [...matches].sort((a, b) => a.created_at.localeCompare(b.created_at));
+  const W = 10;
+  function series(player) {
+    return sorted.map((_, i) => {
+      const sl = sorted.slice(Math.max(0, i - W + 1), i + 1);
+      const kills  = sl.reduce((s, m) => s + (m.players[player]?.kills || 0), 0);
+      const deaths = sl.filter(m => (m.players[player]?.placement || 99) > 1).length;
+      return deaths ? kills / deaths : kills;
+    });
+  }
+  const labels = sorted.map(m => m.created_at.slice(0, 10));
+  if (kdTrendChartInst) { kdTrendChartInst.destroy(); kdTrendChartInst = null; }
+  kdTrendChartInst = new Chart(
+    document.getElementById('kdTrendChart').getContext('2d'),
+    {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'D282', data: series('D282'), borderColor: '#f4a300', backgroundColor: '#f4a30018', fill: false, tension: 0.3, borderWidth: 2, pointRadius: 2, pointHoverRadius: 4 },
+          { label: 'S821', data: series('S821'), borderColor: '#4a9edd', backgroundColor: '#4a9edd18', fill: false, tension: 0.3, borderWidth: 2, pointRadius: 2, pointHoverRadius: 4 },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
+          tooltip: { backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1, titleColor: '#e8e3d8', bodyColor: '#9a9385', callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} K/D` } },
+        },
+        scales: {
+          x: { ticks: { color: '#9a9385', maxRotation: 45, font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.5)' } },
+          y: { min: 0, ticks: { color: '#9a9385', font: { size: 11 } }, title: { display: true, text: 'K/D', color: '#9a9385', font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.4)' } },
+        },
+      },
+    }
+  );
+}
+
+/* ============================================================================
+   RENDER — PERFORMANCE BY MAP TABLE
+============================================================================ */
+function renderMapStats(matches) {
+  const el = document.getElementById('mapStatsTable');
+  if (!matches.length) { el.innerHTML = '<p class="empty">No data.</p>'; return; }
+
+  const maps = {};
+  for (const m of matches) {
+    const key = m.map || 'Unknown';
+    if (!maps[key]) maps[key] = { n:0, d282:{wins:0,kills:0,plSum:0}, s821:{wins:0,kills:0,plSum:0} };
+    const s = maps[key]; s.n++;
+    for (const [pid, ps] of [['D282', s.d282], ['S821', s.s821]]) {
+      const p = m.players[pid]; if (!p) continue;
+      ps.kills += p.kills || 0; ps.plSum += p.placement || 99;
+      if (p.placement === 1) ps.wins++;
+    }
+  }
+
+  const rows = Object.entries(maps).sort((a, b) => b[1].n - a[1].n);
+  const avgWin282 = rows.reduce((s, [, v]) => s + v.d282.wins, 0) / rows.reduce((s, [, v]) => s + v.n, 0);
+  const avgWin821 = rows.reduce((s, [, v]) => s + v.s821.wins, 0) / rows.reduce((s, [, v]) => s + v.n, 0);
+
+  const winCol = (pct, avg) => pct > avg ? 'var(--ok)' : pct < avg ? 'var(--danger)' : 'var(--text)';
+
+  const html = rows.map(([map, v]) => {
+    const w282 = v.d282.wins / v.n, w821 = v.s821.wins / v.n;
+    return `<tr>
+      <td>${map}</td>
+      <td style="text-align:center">${v.n}</td>
+      <td style="color:${winCol(w282, avgWin282)};text-align:right">${(w282*100).toFixed(1)}%</td>
+      <td style="text-align:right">${(v.d282.kills/v.n).toFixed(1)}</td>
+      <td style="text-align:right">#${(v.d282.plSum/v.n).toFixed(1)}</td>
+      <td style="color:${winCol(w821, avgWin821)};text-align:right">${(w821*100).toFixed(1)}%</td>
+      <td style="text-align:right">${(v.s821.kills/v.n).toFixed(1)}</td>
+      <td style="text-align:right">#${(v.s821.plSum/v.n).toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `<div class="tbl-wrap"><table>
+    <thead><tr>
+      <th class="no-sort">Map</th>
+      <th class="no-sort" style="text-align:center">Games</th>
+      <th class="no-sort" style="color:var(--accent);text-align:right">D282 Win%</th>
+      <th class="no-sort" style="color:var(--accent);text-align:right">D282 Avg K</th>
+      <th class="no-sort" style="color:var(--accent);text-align:right">D282 Avg #</th>
+      <th class="no-sort" style="color:var(--blue);text-align:right">S821 Win%</th>
+      <th class="no-sort" style="color:var(--blue);text-align:right">S821 Avg K</th>
+      <th class="no-sort" style="color:var(--blue);text-align:right">S821 Avg #</th>
+    </tr></thead>
+    <tbody>${html}</tbody>
+  </table></div>`;
+}
+
+/* ============================================================================
+   RENDER — DUO CHEMISTRY
+============================================================================ */
+function renderDuoChemistry(matches) {
+  const el = document.getElementById('duoChemContent');
+  if (!matches.length) { el.innerHTML = '<p class="empty">No data.</p>'; return; }
+
+  let both=0, onlyD=0, onlyS=0, neither=0;
+  let bothTop=0, oneTop=0, neitherTop=0;
+  let killDeltaSum=0;
+
+  for (const m of matches) {
+    const pd = m.players['D282'], ps = m.players['S821'];
+    if (!pd || !ps) continue;
+    const dK = pd.kills || 0, sK = ps.kills || 0;
+    if      (dK > 0 && sK > 0) both++;
+    else if (dK > 0)            onlyD++;
+    else if (sK > 0)            onlyS++;
+    else                        neither++;
+    const dT = (pd.placement || 99) <= 10, sT = (ps.placement || 99) <= 10;
+    if      (dT && sT)  bothTop++;
+    else if (dT || sT)  oneTop++;
+    else                neitherTop++;
+    killDeltaSum += dK - sK;
+  }
+
+  const n = matches.length;
+  const delta = (killDeltaSum / n).toFixed(2);
+  const deltaStr = +delta > 0 ? `+${delta} (D282 carries)` : +delta < 0 ? `${delta} (S821 carries)` : `${delta} (even)`;
+  const deltaCol = +delta > 0 ? 'var(--accent)' : +delta < 0 ? 'var(--blue)' : 'var(--text)';
+
+  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <tbody>
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:8px 10px;color:var(--muted)">Both got kills</td>
+        <td style="padding:8px 10px;text-align:right">${both} <span style="color:var(--muted);font-size:11px">(${(both/n*100).toFixed(0)}%)</span></td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:8px 10px;color:var(--muted)">Only <span style="color:var(--accent)">D282</span> got kills</td>
+        <td style="padding:8px 10px;text-align:right">${onlyD} <span style="color:var(--muted);font-size:11px">(${(onlyD/n*100).toFixed(0)}%)</span></td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:8px 10px;color:var(--muted)">Only <span style="color:var(--blue)">S821</span> got kills</td>
+        <td style="padding:8px 10px;text-align:right">${onlyS} <span style="color:var(--muted);font-size:11px">(${(onlyS/n*100).toFixed(0)}%)</span></td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:8px 10px;color:var(--muted)">Neither got kills</td>
+        <td style="padding:8px 10px;text-align:right">${neither} <span style="color:var(--muted);font-size:11px">(${(neither/n*100).toFixed(0)}%)</span></td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:8px 10px;color:var(--muted)">Both top-10</td>
+        <td style="padding:8px 10px;text-align:right">${bothTop}</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:8px 10px;color:var(--muted)">One top-10</td>
+        <td style="padding:8px 10px;text-align:right">${oneTop}</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:8px 10px;color:var(--muted)">Neither top-10</td>
+        <td style="padding:8px 10px;text-align:right">${neitherTop}</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;color:var(--muted)">Avg kill delta (D282 − S821)</td>
+        <td style="padding:8px 10px;text-align:right;color:${deltaCol}">${deltaStr}</td>
+      </tr>
+    </tbody>
+  </table>`;
+}
+
+/* ============================================================================
+   RENDER — LIFETIME RECORDS
+============================================================================ */
+function renderLifetimeRecords(matches) {
+  const el = document.getElementById('recordsContent');
+  if (!matches.length) { el.innerHTML = '<p class="empty">No data.</p>'; return; }
+
+  const sorted = [...matches].sort((a, b) => a.created_at.localeCompare(b.created_at));
+
+  let maxK282 = { v:-1, date:'', id:'' }, maxK821 = { v:-1, date:'', id:'' };
+  let maxStreak = { v:0, end:'' };
+  let curStreak = 0, curEnd = '';
+  const byDay = {};
+
+  for (const m of sorted) {
+    const pd = m.players['D282'], ps = m.players['S821'];
+    const d = m.created_at.slice(0, 10);
+    byDay[d] = (byDay[d] || 0) + 1;
+
+    if (pd) {
+      const k = pd.kills || 0;
+      if (k > maxK282.v) maxK282 = { v: k, date: d, id: m.match_id };
+      if (pd.placement === 1) { curStreak++; curEnd = d; } else { if (curStreak > maxStreak.v) maxStreak = { v: curStreak, end: curEnd }; curStreak = 0; }
+    }
+  }
+  if (curStreak > maxStreak.v) maxStreak = { v: curStreak, end: curEnd };
+
+  for (const m of sorted) {
+    const ps = m.players['S821'];
+    if (ps) { const k = ps.kills || 0; if (k > maxK821.v) maxK821 = { v: k, date: m.created_at.slice(0,10), id: m.match_id }; }
+  }
+
+  const mostGamesDay = Object.entries(byDay).sort((a, b) => b[1] - a[1])[0] || ['—', 0];
+
+  const row = (label, player, value, date, id) => `<tr style="border-bottom:1px solid var(--line)">
+    <td style="padding:8px 10px;color:var(--muted)">${label}</td>
+    <td style="padding:8px 10px;color:${player === 'D282' ? 'var(--accent)' : player === 'S821' ? 'var(--blue)' : 'var(--text)'};">${player}</td>
+    <td style="padding:8px 10px;font-family:Oswald,sans-serif;font-size:18px;color:var(--accent)">${value}</td>
+    <td style="padding:8px 10px;color:var(--muted);font-size:12px">${date}${id ? ` <a href="match.html?id=${id}" style="color:var(--muted);font-size:11px" title="Match Analysis">→</a>` : ''}</td>
+  </tr>`;
+
+  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr>
+      <th class="no-sort">Record</th><th class="no-sort">Player</th><th class="no-sort">Value</th><th class="no-sort">Date</th>
+    </tr></thead>
+    <tbody>
+      ${row('Most kills in one game', 'D282', maxK282.v, maxK282.date, maxK282.id)}
+      ${row('Most kills in one game', 'S821', maxK821.v, maxK821.date, maxK821.id)}
+      ${row('Highest win streak', 'Duo', maxStreak.v + ' wins', maxStreak.end, '')}
+      ${row('Most games in one day', 'Duo', mostGamesDay[1] + ' games', mostGamesDay[0], '')}
+    </tbody>
+  </table>`;
+}
+
+/* ============================================================================
+   RENDER — WIN CONDITIONS
+============================================================================ */
+function renderWinConditions(matches) {
+  const el = document.getElementById('winCondContent');
+  if (!matches.length) { el.innerHTML = '<p class="empty">No data.</p>'; return; }
+
+  const wins = matches.filter(m => m.players['D282']?.placement === 1);
+  const losses = matches.filter(m => m.players['D282']?.placement !== 1);
+
+  function avg(ms, fn) { if (!ms.length) return 0; return ms.reduce((s, m) => s + fn(m), 0) / ms.length; }
+  const cK  = m => (m.players['D282']?.kills || 0) + (m.players['S821']?.kills || 0);
+  const cD  = m => (m.players['D282']?.damage || 0) + (m.players['S821']?.damage || 0);
+  const cS  = m => Math.max(m.players['D282']?.survival_s || 0, m.players['S821']?.survival_s || 0);
+
+  const wK = avg(wins, cK),   lK = avg(losses, cK);
+  const wD = avg(wins, cD),   lD = avg(losses, cD);
+  const wS = avg(wins, cS),   lS = avg(losses, cS);
+
+  const hi = v => `style="color:var(--accent);font-weight:600"`;
+  const cell = (win, loss, fmt) => {
+    const wH = win >= loss, lH = loss > win;
+    return [`<td style="padding:8px 10px;text-align:right;${wH?'color:var(--accent);font-weight:600':''}">${fmt(win)}</td>`,
+            `<td style="padding:8px 10px;text-align:right;${lH?'color:var(--accent);font-weight:600':''}">${fmt(loss)}</td>`];
+  };
+  const [wKc, lKc] = cell(wK, lK, v => v.toFixed(1));
+  const [wDc, lDc] = cell(wD, lD, v => Math.round(v).toLocaleString());
+  const [wSc, lSc] = cell(wS, lS, v => mmss(v));
+
+  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr>
+      <th class="no-sort"></th>
+      <th class="no-sort" style="text-align:right;color:var(--ok)">When we win (${wins.length})</th>
+      <th class="no-sort" style="text-align:right;color:var(--danger)">When we lose (${losses.length})</th>
+    </tr></thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--line)"><td style="padding:8px 10px;color:var(--muted)">Avg combined kills</td>${wKc}${lKc}</tr>
+      <tr style="border-bottom:1px solid var(--line)"><td style="padding:8px 10px;color:var(--muted)">Avg combined damage</td>${wDc}${lDc}</tr>
+      <tr><td style="padding:8px 10px;color:var(--muted)">Avg survival time</td>${wSc}${lSc}</tr>
+    </tbody>
+  </table>`;
+}
+
+/* ============================================================================
    RENDER ALL
 ============================================================================ */
 function renderAll() {
   syncButtons();
   lastMatches = filtered();
   renderSummary(lastMatches);
+  renderPlacementChart(lastMatches);
+  renderKDTrendChart(lastMatches);
+  renderMapStats(lastMatches);
+  renderDuoChemistry(lastMatches);
+  renderLifetimeRecords(lastMatches);
+  renderWinConditions(lastMatches);
   renderChart(lastMatches);
   renderDailyStats(lastMatches);
   renderMatchHistory(lastMatches);

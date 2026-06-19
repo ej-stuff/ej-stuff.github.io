@@ -22,106 +22,27 @@ These were silent errors found during the review — already patched and pushed.
 
 ## 1. Stats Page (`stats.html`)
 
-### 1.1 — Placement Distribution Histogram
+### ~~1.1 — Placement Distribution Histogram~~ ✅ IMPLEMENTED
 
-**Why it matters:** K/D alone is misleading. PUBG rewards survival more than kills (2× the ranking weight). A histogram of placement finishes instantly reveals whether the duo are consistent survivors or aggressive early-exitters.
-
-**Exact plan:**
-- Add a Chart.js bar chart below the existing overview KPI cards.
-- Buckets: `#1 (Win)`, `#2–5`, `#6–10`, `#11–20`, `#21–50`, `#51+`
-- Data source: `filteredMatches()` → `m.players[p].placement` already in `matches.json`
-- Two datasets (D282 amber, S821 blue) grouped side by side.
-- Show count AND percentage on each bar (Chart.js `datalabels` plugin or manual rendering).
-- Update on every filter change — hook into existing `renderStats()`.
-- `<canvas id="placementChart">` inside a new `.panel` between the KPI row and the Sessions panel.
-
-```js
-// Core logic — runs inside renderStats()
-function buildPlacementBuckets(matches, player) {
-  const b = [0,0,0,0,0,0]; // win, 2-5, 6-10, 11-20, 21-50, 51+
-  for (const m of matches) {
-    const pl = m.players[player]?.placement;
-    if (!pl) continue;
-    if (pl === 1) b[0]++;
-    else if (pl <= 5) b[1]++;
-    else if (pl <= 10) b[2]++;
-    else if (pl <= 20) b[3]++;
-    else if (pl <= 50) b[4]++;
-    else b[5]++;
-  }
-  return b;
-}
-```
+Side-by-side bar chart showing placement buckets (Win, #2-5, #6-10, #11-20, #21-50, #51+) for both players. Updates on every filter change.
 
 ---
 
-### 1.2 — Rolling K/D and Win-Rate Trend Line
+### ~~1.2 — Rolling K/D and Win-Rate Trend Line~~ ✅ IMPLEMENTED
 
-**Why it matters:** The most-requested stat in every PUBG tracker community. Is the duo improving? Slumping? A rolling 10-game window smooths noise while capturing real trends.
-
-**Exact plan:**
-- Add two line charts (or one combined dual-axis chart) in the Charts tab of the existing Daily Sessions panel.
-- X-axis = match date (chronological). Y-axis = rolling 10-game K/D / win-rate.
-- Rolling window: iterate through `filteredMatches()` sorted by date, compute a trailing slice of 10.
-- Both players on same chart, D282 amber / S821 blue.
-- If fewer than 10 games exist, use whatever is available.
-
-```js
-function rollingKD(matches, player, window=10) {
-  const sorted = [...matches].sort((a,b) => a.created_at.localeCompare(b.created_at));
-  return sorted.map((_, i) => {
-    const slice = sorted.slice(Math.max(0, i-window+1), i+1);
-    const kills  = slice.reduce((s,m) => s + (m.players[player]?.kills||0), 0);
-    const deaths = slice.filter(m => m.players[player]?.placement > 1).length;
-    return { x: sorted[i].created_at.slice(0,10), y: deaths ? kills/deaths : kills };
-  });
-}
-```
+Rolling 10-game K/D line chart for both players, chronological order. Updates on every filter change.
 
 ---
 
-### 1.3 — Performance by Map Table
+### ~~1.3 — Performance by Map Table~~ ✅ IMPLEMENTED
 
-**Why it matters:** D282 and S821 probably have very different win rates on Erangel vs Miramar. This is instant actionable feedback ("stop queueing Miramar on weeknights").
-
-**Exact plan:**
-- Add a compact stats table inside the existing Stats panel (or new panel).
-- Columns: Map | Games | Win% | Avg Kills | Avg Placement | Avg Damage (if available)
-- Data entirely from `matches.json` — no individual match files needed.
-- Sort by Games descending.
-- Color-code Win% column green/red based on overall average.
-
-```js
-function buildMapStats(matches, player) {
-  const maps = {};
-  for (const m of matches) {
-    if (!maps[m.map]) maps[m.map] = { n:0, wins:0, kills:0, plSum:0 };
-    const s = maps[m.map], pd = m.players[player];
-    if (!pd) continue;
-    s.n++; s.kills += pd.kills||0; s.plSum += pd.placement||99;
-    if (pd.placement===1) s.wins++;
-  }
-  return Object.entries(maps)
-    .map(([map,s]) => ({ map, n:s.n, winPct: s.wins/s.n*100,
-                         avgKills: s.kills/s.n, avgPl: s.plSum/s.n }))
-    .sort((a,b) => b.n - a.n);
-}
-```
+Table showing per-map: Games, Win%, Avg Kills, Avg Placement for each player. Sorted by games desc. Win% colored green/red vs overall average.
 
 ---
 
-### 1.4 — Duo Synergy Panel
+### ~~1.4 — Duo Synergy Panel~~ ✅ IMPLEMENTED
 
-**Why it matters:** The unique selling point of this site is that it tracks two players together. No public tracker shows this. Questions answered: who carries more? Do they play similarly? Who survives when the other dies?
-
-**Exact plan:**
-- New panel: "Duo Chemistry"
-- Metrics computed from `filteredMatches()`:
-  - **Both got kills** vs **Only D282** vs **Only S821** vs **Neither** — donut chart
-  - **Both died** vs **One survived** — survival style breakdown
-  - **Kill delta** — D282 kills minus S821 kills per game; histogram of this delta (who dominates fights)
-  - **Games where they placed top-3 together** (both alive) vs one survived
-- All purely from `matches.json` summary fields — no telemetry fetch needed.
+"Duo Chemistry" panel with: kill distribution (both/only D282/only S821/neither), top-10 survival split, and avg kill delta.
 
 ---
 
@@ -138,32 +59,15 @@ function buildMapStats(matches, player) {
 
 ---
 
-### 1.6 — Session "PB Badges" — Personal Bests
+### ~~1.6 — Session "PB Badges" — Personal Bests~~ ✅ IMPLEMENTED (as Lifetime Records Card)
 
-**Why it matters:** Positive reinforcement. Shows when a session was the duo's best ever at something. Great for motivation.
-
-**Exact plan:**
-- Compute lifetime bests once per `filteredMatches()` call:
-  - Most kills in one game (per player)
-  - Most kills in one session
-  - Best avg placement session
-  - Longest top-3 streak
-  - Highest win streak
-- In the Sessions table, add small badge icons (`👑`, `⭐`, `🔥`) on the rows that are personal bests.
-- Show a "Lifetime Records" card at the top of the Stats panel with current holder of each record.
+"Lifetime Records" panel showing: most kills in one game (D282), most kills in one game (S821), highest win streak, most games in one day. Each with player, value, and date.
 
 ---
 
-### 1.7 — Win Condition Analysis
+### ~~1.7 — Win Condition Analysis~~ ✅ IMPLEMENTED
 
-**Why it matters:** Pro teams study "what are we doing differently when we win vs lose?" This does that automatically.
-
-**Exact plan:**
-- Split `filteredMatches()` into wins (placement=1) and non-wins.
-- Compute avg kills, avg damage (if available), avg survival time for each group.
-- Show as a side-by-side stat panel: "When we win" | "When we lose"
-- Highlight the biggest differences in amber.
-- The data is entirely in `matches.json`. No telemetry fetch needed.
+"Win Condition Analysis" panel comparing: avg combined kills, avg combined damage, avg survival time for wins vs losses. Higher value highlighted in amber.
 
 ---
 
@@ -260,43 +164,21 @@ function buildZoneScoreData(player) {
 
 ---
 
-### 2.5 — Damage Dealt Breakdown by Weapon
+### ~~2.5 — Damage Dealt Breakdown by Weapon~~ ✅ IMPLEMENTED
 
-**Why it matters:** "Did my AKM or M416 do more work this match?" Players constantly ask this. It validates attachment and ammo choices.
-
-**Exact plan:**
-- Aggregate `md.events.filter(ev => ev.type==='dmg_dealt')` by `ev.weapon`.
-- Show as a small horizontal bar chart in the sidebar, per player.
-- Each bar: weapon name + total damage value + count of hits.
-- Sort by total damage descending, top 5 weapons.
-- Uses data already in match JSON (no new processing needed).
-- Could also show headshot vs body breakdown if `ev.damage` distinguishes it.
+"Weapon Damage" sidebar panel showing top-5 weapons per player as horizontal bars with damage totals. Added in sidebar after engagements panel.
 
 ---
 
 ### 2.6 — Blue Zone Damage Indicator on Timeline
 
-**Why it matters:** Blue zone damage is invisible in the current timeline. Players can correlate "we were getting wrecked in blue" with their HP drop on the chart.
-
-**Exact plan:**
-- On the HP-over-time chart, add a shaded red background region for any period where `dmg_taken` events (from `source='bluezone'` if that field exists) are occurring.
-- Alternatively: scan position data for `p.blue === true` (which is already tracked in positions) and shade those time ranges on the chart.
-- Uses `_dist282` and `_dist821` already computed. No new data needed.
-- Add a thin `rgba(74, 158, 221, 0.15)` band on the HP chart during blue periods.
+**Status:** Implemented with fallback logic. Checks for `dmg_taken` events with attacker containing 'blue'/'zone'. If none found, uses `positions[player].blue` flag bands. If neither source yields data, nothing is drawn (data quality varies per match).
 
 ---
 
-### 2.7 — Enemy Encounter Table (enriched)
+### ~~2.7 — Enemy Encounter Table (enriched)~~ ✅ IMPLEMENTED
 
-**Why it matters:** The current engagement list shows enemy names but no summary stats. Players want to know "how much damage did we deal to each enemy team?"
-
-**Exact plan:**
-- Extend existing `buildEngagementSummary()`:
-  - Per enemy player encountered: total `dmg_dealt` to them, number of shots, whether we killed them.
-  - Sort by total damage dealt descending.
-  - Show: enemy name | damage in | damage out | outcome (killed/knocked/survived)
-- Group by inferred enemy team (players with same `ev.target_team_id` if available, or cluster by time).
-- Data source: `md.events` filtered to `dmg_dealt` + cross-reference with kill/knockdown events.
+Extended `buildEngagementSummary()` to track `killed` boolean per enemy. Each enemy row now shows "✓ Killed" (green) or "escaped" (muted) status.
 
 ---
 
@@ -340,16 +222,9 @@ LAYER.finalCircles = matches.flatMap(m => {
 
 ---
 
-### 3.3 — Landing Zone Outcome Scoring
+### ~~3.3 — Landing Zone Outcome Scoring~~ ✅ IMPLEMENTED
 
-**Why it matters:** "Is Pochinki worth it for us?" — This overlays our actual performance stats on top of the landing zone dots. Every drop location gets a color showing whether games from that area tend to end well.
-
-**Exact plan:**
-- For each drop location, look up the match result (`filteredMatches().find(m => m.match_id === drop.matchId)`).
-- Score = `(1 - placement/totalPlayers) * 100` to normalize across squad sizes.
-- Color the drop dot on a green→red gradient based on avg outcome score at that location cluster.
-- Show in hover: "Landed here X times, avg placement #Y, win rate Z%".
-- Data entirely from `MATCH_CACHE` (drops) + `DATA.matches` (placement). No new fetch needed.
+Drop dots now colored by match placement: gold=#1, green=top5, blue=top10, orange=top20, red=worse. Hover shows placement. At zoom>2, placement number drawn next to dot.
 
 ---
 
@@ -405,16 +280,9 @@ function drawCombatZones() {
 
 ---
 
-### 3.6 — Map Sector Survivability Grid
+### ~~3.6 — Map Sector Survivability Grid (Late Game Positions Layer)~~ ✅ IMPLEMENTED
 
-**Why it matters:** "Where do we die?" vs "Where do we survive late game?" shows which map areas are dangerous for this duo specifically — not just "popular drop" data, but their personal survival stats.
-
-**Exact plan:**
-- Two new computed layers that leverage existing data:
-  - **Death density**: heatmap built from `LAYER.events.deaths` positions (different color scheme — red, already planned but shown via existing Deaths layer; this would be a blended heatmap version).
-  - **Late-game presence**: heatmap built from positions filtered to `t > 1200` (late game phase). Shows where the duo tends to be when they make it to late game.
-- Toggle both together as a "Survival Zones" layer.
-- The contrast between the two maps reveals: "we're in the north-east late game when we survive, but we die in the south when we push early."
+New "Late Game Positions" layer (purple, default off) showing a heatmap of positions at t>1200s. Added to LAYER_DEFS, aggregated in aggregateLayers(), drawn with screen blend mode.
 
 ---
 
@@ -434,92 +302,27 @@ function drawCombatZones() {
 
 ## 4. Loadout Planner (`pubg.html`)
 
-### 4.1 — Saved Presets (localStorage)
+### ~~4.1 — Saved Presets (localStorage)~~ ✅ IMPLEMENTED
 
-**Why it matters:** The most-requested feature in any planner tool. Being able to save "my standard Erangel loadout" and load it with one click saves time and enables comparison.
-
-**Exact plan:**
-- Add a "Presets" panel above the bag panel.
-- "Save" button: prompt for name, `localStorage.setItem('preset_' + name, JSON.stringify(state.counts))`.
-- "Load" dropdown: `Object.keys(localStorage).filter(k => k.startsWith('preset_'))` → renders as options.
-- "Delete" button per preset.
-- Max 10 presets (soft limit), warn if exceeded.
-- No external dependencies — pure localStorage.
-
-```js
-function savePreset() {
-  const name = prompt('Preset name:');
-  if (!name?.trim()) return;
-  localStorage.setItem('pubg_preset_' + name.trim(), JSON.stringify(state.counts));
-  renderPresets();
-}
-function loadPreset(name) {
-  const saved = localStorage.getItem('pubg_preset_' + name);
-  if (saved) { state.counts = JSON.parse(saved); render(); }
-}
-```
+"Presets" panel above Capacity with Select/Load/Save/Delete. Saves `{backpack, vest, counts}` to localStorage under `pubg_preset_*` keys.
 
 ---
 
-### 4.2 — Shareable URL
+### ~~4.2 — Shareable URL~~ ✅ IMPLEMENTED
 
-**Why it matters:** "Check out the loadout I'm running" is a common duo conversation. Encoding the loadout in the URL means sharing = copy URL and paste.
-
-**Exact plan:**
-- On any state change (if share mode is on), update `history.replaceState` with query params:
-  `?bp=3&vest=1&c=Bandage:5,FirstAidKit:2,556mm:120,...` (abbreviated item names).
-- On page load, parse `URLSearchParams` and populate `state.counts`.
-- Add a "Copy Link" button that calls `navigator.clipboard.writeText(location.href)`.
-- URL-safe: use item index in `ITEMS` array as the key (shorter than full names).
-
-```js
-function encodeLoadout() {
-  const parts = [];
-  parts.push(`bp=${state.backpack}`, `vest=${state.vest?1:0}`);
-  for (let i=0; i<ITEMS.length; i++) {
-    const n = state.counts[ITEMS[i].name]||0;
-    if (n) parts.push(`i${i}=${n}`);
-  }
-  return parts.join('&');
-}
-function decodeLoadout(qs) {
-  const p = new URLSearchParams(qs);
-  state.backpack = +(p.get('bp') ?? 3);
-  state.vest     = p.get('vest') !== '0';
-  for (let i=0; i<ITEMS.length; i++) {
-    const n = p.get(`i${i}`);
-    if (n) state.counts[ITEMS[i].name] = +n;
-  }
-}
-```
+"Copy Link" button in Capacity panel. `encodeLoadout()` / `decodeLoadout()` using item indices. On page load, decodes URL params if present.
 
 ---
 
-### 4.3 — Capacity Breakdown Donut Chart
+### ~~4.3 — Capacity Breakdown Donut Chart~~ ✅ IMPLEMENTED
 
-**Why it matters:** "Where is my capacity going?" A visual donut/pie by category (Healing / Ammo / Throwables / Attachments) makes over-packing in one category instantly obvious.
-
-**Exact plan:**
-- Add a small Chart.js doughnut chart inside the Capacity panel, replacing or sitting beside the text breakdown.
-- Segments: one per category (Healing, Throwables, Ammo, Attachments, Tactical).
-- Colors: healing=green, ammo=amber, throwables=red, attachments=blue, tactical=purple.
-- Center label shows total used / total capacity.
-- Updates on every `render()` call.
-- ~30 lines of Chart.js config.
+Chart.js doughnut chart in Capacity panel showing used capacity by category. Center text shows used/total. Color-coded legend below chart. Updates on every render().
 
 ---
 
-### 4.4 — Ammo Smart Suggestion
+### ~~4.4 — Ammo Smart Suggestion~~ ✅ IMPLEMENTED
 
-**Why it matters:** "How much ammo should I carry?" is a constantly-asked question. The answer depends on weapon choice and how aggressive you play. This automates the math.
-
-**Exact plan:**
-- Detect current weapon choice from the Slot-only section: if user has added any rifle entries that use 5.56 / 7.62 etc., surface an ammo suggestion banner.
-- Rule-based formula: `suggested_rounds = base_mag_count * mag_size * safety_factor`
-  - Example: M416 (5.56) → default 3 mags = 90 rounds + 60 spare → suggest 150× 5.56
-  - AKM (7.62) → 120× 7.62
-- Show as a dim suggestion line under each ammo row: "Suggested: 150 for 1× AR" — clicking auto-fills the count.
-- This is static data tied to the ammo categories already in ITEMS. No API needed.
+Static `AMMO_SUGGEST` table for 6 ammo types. Shows "Suggest: N — fill" hint below each ammo item when current count < suggestion.
 
 ---
 
@@ -538,16 +341,9 @@ function decodeLoadout(qs) {
 
 ---
 
-### 4.6 — Item Search / Filter
+### ~~4.6 — Item Search / Filter~~ ✅ IMPLEMENTED
 
-**Why it matters:** The item list has 60+ entries. Scrolling categories works but a search bar is faster when you know what you want.
-
-**Exact plan:**
-- Add a `<input type="text" placeholder="Search items…">` above the category tabs.
-- On input: filter `ITEMS` by `name.toLowerCase().includes(query)` across ALL categories.
-- Show results in a flat list (bypassing category filter). Highlighting matching chars is optional.
-- Clear button (×) restores the category view.
-- ~20 lines of JS.
+Search input above category tabs. Filters across all categories by name match. Clear button (×) restores category view. Tab row hidden during search.
 
 ---
 
@@ -767,30 +563,55 @@ function extractPhaseCircles(matches, phaseIdx) {
 
 ## 7. Priority Matrix
 
-| # | Item | Impact | Effort | Do First? |
-|---|------|--------|--------|-----------|
-| 1.1 | Placement histogram | ★★★★★ | Low | ✅ Yes |
-| 1.2 | Rolling K/D trend | ★★★★★ | Low | ✅ Yes |
-| 1.3 | Per-map stats table | ★★★★☆ | Low | ✅ Yes |
-| 2.1 | Match playback | ★★★★★ | Low | ✅ Yes |
-| 2.3 | Export snapshot | ★★★★☆ | Low | ✅ Yes |
-| 3.1 | Wins-only filter | ★★★★★ | Very Low | ✅ Yes |
-| 3.2 | Final circle scatter | ★★★★☆ | Low | ✅ Yes |
-| 4.1 | Saved presets | ★★★★☆ | Low | ✅ Yes |
-| 4.2 | Shareable URL | ★★★☆☆ | Low | ✅ Yes |
-| 5.1 | Circle Predictor page | ★★★★★ | Medium | Next sprint |
-| 5.2 | Weapon Kill Log | ★★★★★ | Medium | Next sprint |
-| 5.3 | Duo Chemistry | ★★★★☆ | Medium | Next sprint |
-| 3.3 | Landing zone scoring | ★★★★☆ | Medium | Next sprint |
-| 3.4 | Combat choropleth | ★★★★☆ | Low | Next sprint |
-| 2.2 | Key moments list | ★★★★☆ | Low | Next sprint |
-| 5.6 | Landing Zone Analyzer | ★★★★☆ | Medium | Later |
-| 5.4 | Trophy Room | ★★★☆☆ | Medium | Later |
-| 4.3 | Capacity donut | ★★★☆☆ | Low | Later |
-| 6.4 | Mobile touch match.html | ★★★★☆ | Very Low | Later |
-| 5.5 | Session Goal Tracker | ★★★☆☆ | Medium | Later |
-| 5.7 | Rivals tracker | ★★☆☆☆ | Medium | Verify data first |
-| 6.1 | Shared components | ★★☆☆☆ | Medium | Maintenance |
+### Implemented (this sprint)
+
+| # | Item | Status |
+|---|------|--------|
+| 1.1 | Placement histogram | ✅ Done |
+| 1.2 | Rolling K/D trend | ✅ Done |
+| 1.3 | Per-map stats table | ✅ Done |
+| 1.4 | Duo Synergy Panel | ✅ Done |
+| 1.6 | Lifetime Records / PB Badges | ✅ Done |
+| 1.7 | Win Condition Analysis | ✅ Done |
+| 2.5 | Weapon Damage Breakdown | ✅ Done |
+| 2.6 | Blue Zone Indicator | ✅ Done (fallback logic) |
+| 2.7 | Enemy Encounter Table (killed badge) | ✅ Done |
+| 3.3 | Landing zone outcome scoring | ✅ Done |
+| 3.6 | Late Game Positions layer | ✅ Done |
+| 4.1 | Saved presets | ✅ Done |
+| 4.2 | Shareable URL | ✅ Done |
+| 4.3 | Capacity donut chart | ✅ Done |
+| 4.4 | Ammo smart suggestions | ✅ Done |
+| 4.6 | Item search / filter | ✅ Done |
+| 5.4 | Personal Records page (records.html) | ✅ Done |
+
+### Next Sprint
+
+| # | Item | Impact | Effort |
+|---|------|--------|--------|
+| 5.1 | Circle Predictor page | ★★★★★ | Medium |
+| 5.2 | Weapon Kill Log | ★★★★★ | Medium |
+| 2.1 | Match playback | ★★★★★ | Low |
+| 3.1 | Wins-only filter | ★★★★★ | Very Low |
+| 2.2 | Key moments list | ★★★★☆ | Low |
+| 3.4 | Combat choropleth | ★★★★☆ | Low |
+| 3.2 | Final circle scatter | ★★★★☆ | Low |
+| 6.4 | Mobile touch match.html | ★★★★☆ | Very Low |
+
+### Later
+
+| # | Item | Impact | Effort |
+|---|------|--------|--------|
+| 5.3 | Duo Chemistry page | ★★★★☆ | Medium |
+| 5.6 | Landing Zone Analyzer | ★★★★☆ | Medium |
+| 1.5 | Time-of-day heatmap | ★★★☆☆ | Low |
+| 3.5 | Rotation arrows | ★★★☆☆ | Medium |
+| 2.3 | Export map snapshot | ★★★★☆ | Low |
+| 2.4 | Zone position timeline | ★★★☆☆ | Low |
+| 5.5 | Session Goal Tracker | ★★★☆☆ | Medium |
+| 3.7 | Per-match mini replay (DO NOT IMPLEMENT — too complex) | — | Very High |
+| 5.7 | Rivals tracker (DO NOT IMPLEMENT — verify data first) | — | Medium |
+| 6.1 | Shared components | ★★☆☆☆ | Medium |
 
 ---
 

@@ -449,6 +449,7 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
     <a href="stats.html">PUBG Stats</a>
     <a href="mapanalysis.html">Map Analysis</a>
     <a href="match.html" class="nav-cur">Match Analysis</a>
+    <a href="records.html">Personal Records</a>
     <a href="pubg.html">Loadout Planner</a>
   </div>
 </div>
@@ -564,6 +565,11 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
       <div class="panel">
         <div class="panel-title">Engagements</div>
         <div id="engagementList"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
+      </div>
+
+      <div id="weaponBreakdown" class="panel">
+        <div class="panel-title">Weapon Damage</div>
+        <div id="weaponBreakdownContent"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
       </div>
 
     </div>
@@ -1175,6 +1181,7 @@ async function boot() {
   initDistCharts();
   // engagement lines rendered per-event in drawEngagements() — no precompute
   buildEngagementSummary();
+  buildWeaponBreakdown();
 
   renderMatchTable('matchListContainer', id);
   setTimeout(() => {
@@ -1815,6 +1822,31 @@ function drawHpChart() {
   hpCtx.fillStyle = 'rgba(0,0,0,0.15)';
   hpCtx.fillRect(PAD_L, PAD_T, plotW, plotH);
 
+  // Blue zone bands — check for blue zone damage in events
+  const blueEvs = (MD.events || []).filter(ev =>
+    ev.type === 'dmg_taken' && ev.attacker &&
+    /blue|zone/i.test(ev.attacker)
+  );
+  if (blueEvs.length) {
+    hpCtx.fillStyle = 'rgba(74,158,221,0.12)';
+    for (const ev of blueEvs) {
+      const x = tx(ev.t);
+      hpCtx.fillRect(x - 2, PAD_T, 4, plotH);
+    }
+  } else {
+    // fallback: use positions[player].blue flag
+    for (const player of ['D282', 'S821']) {
+      const pts = (MD.positions[player] || []).filter(p => p.blue && p.t >= 0);
+      if (!pts.length) continue;
+      hpCtx.fillStyle = 'rgba(74,158,221,0.12)';
+      for (let i = 0; i < pts.length; i++) {
+        const x1 = tx(pts[i].t);
+        const x2 = i + 1 < pts.length ? tx(pts[i+1].t) : x1 + 2;
+        hpCtx.fillRect(x1, PAD_T, Math.max(2, x2 - x1), plotH);
+      }
+    }
+  }
+
   for (const [player, col] of [['D282', '#f4a300'], ['S821', '#4a9edd']]) {
     const pts = (MD.positions[player] || []).filter(p => p.t >= 0 && p.hp != null);
     if (!pts.length) continue;
@@ -2147,6 +2179,45 @@ function drawDistChart(player, can, cx, data) {
 }
 
 /* ============================================================================
+   WEAPON DAMAGE BREAKDOWN
+============================================================================ */
+function buildWeaponBreakdown() {
+  const el = document.getElementById('weaponBreakdownContent');
+  if (!el || !MD) return;
+
+  function playerSection(player) {
+    const dmgByWeapon = {};
+    for (const ev of (MD.events || [])) {
+      if (ev.type !== 'dmg_dealt' || ev.player !== player) continue;
+      const w = ev.weapon || 'Unknown';
+      dmgByWeapon[w] = (dmgByWeapon[w] || 0) + (ev.damage || 0);
+    }
+    const top5 = Object.entries(dmgByWeapon).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    if (!top5.length) return `<div style="color:var(--muted);font-size:12px;margin-bottom:10px">No data for ${player}</div>`;
+    const maxDmg = top5[0][1];
+    const col = player === 'D282' ? '#f4a300' : '#4a9edd';
+    const bars = top5.map(([wpn, dmg]) => {
+      const pct = (dmg / maxDmg * 100).toFixed(1);
+      return `<div style="margin-bottom:5px">
+        <div style="position:relative;height:14px;border-radius:3px;background:var(--line);overflow:hidden">
+          <div style="width:${pct}%;height:100%;border-radius:3px;background:${col}88"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 6px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+            <span style="flex:1;overflow:hidden;text-overflow:ellipsis">${wpn}</span>
+            <span style="color:var(--text);font-weight:600">${Math.round(dmg)}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:12px">
+      <div style="font-size:11px;color:${col};font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${player}</div>
+      ${bars}
+    </div>`;
+  }
+
+  el.innerHTML = playerSection('D282') + playerSection('S821');
+}
+
+/* ============================================================================
    ENGAGEMENT SUMMARY
 ============================================================================ */
 function buildEngagementSummary() {
@@ -2156,7 +2227,7 @@ function buildEngagementSummary() {
   const D = 'var(--accent)', S = 'var(--blue)', R = 'var(--danger)';
   const eng = {};
   const get = name => {
-    if (!eng[name]) eng[name] = { d282:0, s821:0, tk282:0, tk821:0, killedBy:null, killedUs:[] };
+    if (!eng[name]) eng[name] = { d282:0, s821:0, tk282:0, tk821:0, killedBy:null, killedUs:[], killed:false };
     return eng[name];
   };
 
@@ -2169,7 +2240,7 @@ function buildEngagementSummary() {
       const e = get(ev.attacker);
       if (ev.player === 'D282') e.tk282 += ev.damage; else e.tk821 += ev.damage;
     }
-    if (ev.type === 'kill'      && ev.victim)  get(ev.victim).killedBy = ev.player;
+    if (ev.type === 'kill'      && ev.victim)  { get(ev.victim).killedBy = ev.player; get(ev.victim).killed = true; }
     if (ev.type === 'knockdown' && ev.victim && !get(ev.victim).killedBy) get(ev.victim).killedBy = ev.player + '_k';
     if (ev.type === 'death'     && ev.killer)  get(ev.killer).killedUs.push(ev.player);
     if (ev.type === 'knocked'   && ev.attacker && ev.attacker !== 'D282' && ev.attacker !== 'S821')
@@ -2212,8 +2283,11 @@ function buildEngagementSummary() {
     const borderStyle = idx === sorted.length - 1 ? 'border-bottom:none' : '';
     const dealtHtml = fmtSplit(e.d282, e.s821, false);
     const takenHtml = fmtSplit(e.tk282, e.tk821, true);
+    const killedBadge = e.killed
+      ? `<span style="color:var(--ok);font-size:10px;margin-left:3px">✓ Killed</span>`
+      : `<span style="color:var(--muted);font-size:10px;margin-left:3px">escaped</span>`;
     return `<div class="eng-row2" style="${borderStyle}">` +
-      `<div class="eng-name">${e.name}</div>` +
+      `<div class="eng-name">${e.name}${killedBadge}</div>` +
       `<div class="eng-icon">${icons || '<span style="color:var(--muted)">·</span>'}</div>` +
       `<div class="eng-dealt">${dealtHtml}</div>` +
       `<div class="eng-taken">${takenHtml}</div>` +

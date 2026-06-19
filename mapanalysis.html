@@ -121,6 +121,7 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
     <a href="stats.html">PUBG Stats</a>
     <a href="mapanalysis.html" class="nav-cur">Map Analysis</a>
     <a href="match.html">Match Analysis</a>
+    <a href="records.html">Personal Records</a>
     <a href="pubg.html">Loadout Planner</a>
   </div>
 </div>
@@ -269,6 +270,7 @@ const LAYER_DEFS = [
   { id:'kills',       label:'Kills',             color:'#f4a300', defaultOn:false },
   { id:'knocked',     label:'Got Knocked',       color:'#e07030', defaultOn:false },
   { id:'engagements', label:'Engagements',       color:'#66cc66', defaultOn:false },
+  { id:'lateGame',    label:'Late Game Positions', color:'#8855ff', defaultOn:false },
 ];
 
 const ENG_COLOR = {
@@ -315,6 +317,7 @@ const LAYER = {
   circlePhases: [],
   hmCanvas:   { D282:null, S821:null },
   lootCanvas: { D282:null, S821:null },
+  lateCanvas: null,
 };
 let hitTargets = [];
 
@@ -618,7 +621,7 @@ function extractCirclePhases(rawCircles,ws) {
 function aggregateLayers(matches) {
   const L=LAYER;
   L.positions={D282:[],S821:[]}; L.lootPos={D282:[],S821:[]};
-  L.drops=[]; L.paths=[]; L.circlePhases=[];
+  L.drops=[]; L.paths=[]; L.circlePhases=[]; L.lateCanvas=null;
   L.events={deaths:[],kills:[],knocked:[],knockdowns:[],dmgDealt:[],dmgTaken:[]};
 
   for (const m of matches) {
@@ -640,13 +643,27 @@ function aggregateLayers(matches) {
   document.getElementById('matchCountBadge').innerHTML=
     `<strong>${matches.length}</strong> match${matches.length!==1?'es':''} · ${state.map}`;
   computeEngagementClusters();
+
+  const latePts = [...(LAYER.positions.D282||[]), ...(LAYER.positions.S821||[])].filter(p => p.t > 1200);
+  if (latePts.length) {
+    const base = buildHeatmapCanvas(latePts, 'D282', false);
+    if (base) {
+      const off = document.createElement('canvas'); off.width=CSZ; off.height=CSZ;
+      const oc = off.getContext('2d');
+      oc.drawImage(base, 0, 0);
+      oc.globalCompositeOperation = 'source-in';
+      oc.fillStyle = '#8855ff';
+      oc.fillRect(0, 0, CSZ, CSZ);
+      LAYER.lateCanvas = off;
+    }
+  }
 }
 
 function clearLayers() {
   LAYER.positions={D282:[],S821:[]}; LAYER.lootPos={D282:[],S821:[]};
   LAYER.drops=[]; LAYER.paths=[]; LAYER.engClusters=[]; LAYER.circlePhases=[];
   LAYER.events={deaths:[],kills:[],knocked:[],knockdowns:[],dmgDealt:[],dmgTaken:[]};
-  LAYER.hmCanvas={D282:null,S821:null}; LAYER.lootCanvas={D282:null,S821:null};
+  LAYER.hmCanvas={D282:null,S821:null}; LAYER.lootCanvas={D282:null,S821:null}; LAYER.lateCanvas=null;
   document.getElementById('matchCountBadge').textContent='—';
 }
 
@@ -819,6 +836,8 @@ function draw() {
     ctx.restore();
   }
 
+  if (state.layers.lateGame && LAYER.lateCanvas) { ctx.save(); ctx.globalCompositeOperation='screen'; ctx.globalAlpha=0.8; ctx.drawImage(LAYER.lateCanvas,0,0,CSZ,CSZ); ctx.restore(); }
+
   hitTargets=[];
   if (state.layers.circles)          drawCircles();
   if (state.layers.paths)       drawPaths();
@@ -986,17 +1005,37 @@ function drawPieChart(cx,cy,r,outcomes,total) {
 }
 
 /* ── Drop zones ─────────────────────────────────────────────────────────── */
+function dropOutcomeColor(d) {
+  const m = DATA.matches?.find(x => x.match_id === d.matchId);
+  const pl = m?.players?.['D282']?.placement || m?.players?.['S821']?.placement || 99;
+  if (pl === 1)  return { col: '#FFD700', pl };
+  if (pl <= 5)   return { col: '#66dd44', pl };
+  if (pl <= 10)  return { col: '#4a9edd', pl };
+  if (pl <= 20)  return { col: '#cc8844', pl };
+  return { col: '#cc4444', pl };
+}
+
 function drawDropZones() {
   const players=state.player==='both'?['D282','S821']:[state.player];
   for (const d of LAYER.drops) {
     if (!players.includes(d.player)) continue;
     if (!inPhase(d.t)) continue;
-    const col=PLAYER_COLOR[d.player];
+    const { col, pl } = dropOutcomeColor(d);
     ctx.beginPath(); ctx.arc(d.cx,d.cy,8/view.scale,0,Math.PI*2);
     ctx.strokeStyle=col+'88'; ctx.lineWidth=1/view.scale; ctx.stroke();
     ctx.beginPath(); ctx.arc(d.cx,d.cy,4.5/view.scale,0,Math.PI*2);
     ctx.fillStyle=col+'cc'; ctx.fill();
-    hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',player:d.player,date:d.date});
+    if (view.scale > 2) {
+      ctx.save();
+      ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
+      ctx.fillStyle='rgba(255,255,255,0.9)';
+      ctx.font=`bold ${Math.round(8/view.scale*view.scale)}px system-ui`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('#'+pl, d.cx, d.cy - 10/view.scale);
+      ctx.restore();
+      ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
+    }
+    hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',player:d.player,date:d.date,pl});
   }
 }
 
@@ -1129,6 +1168,7 @@ function hoverMain(t){
 function hoverSub(t){
   if(t.type==='engagement') return`${t.kills}K / ${t.deaths}D / ${t.knocks} kd / ${t.knocked} kd'd · score ${t.score>0?'+':''}${t.score}${t.bothDied?' (BOTH DIED)':''} · ${t.date}`;
   if(t.type==='eng_group'){const parts=ENG_ORDER.filter(k=>t.outcomes[k]).map(k=>`${t.outcomes[k]}×${k.replace('_',' ')}`);return parts.join(' · ');}
+  if(t.type==='drop'){const parts=[t.date];if(t.pl!=null)parts.push(`Placement #${t.pl}`);return parts.join(' · ');}
   const parts=[];if(t.weapon)parts.push(t.weapon);if(t.t!=null)parts.push(mmss(t.t));if(t.date)parts.push(t.date);return parts.join(' · ');
 }
 function mmss(s){s=Math.round(s);return`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;}

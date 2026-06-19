@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal Records — PUBG</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:     #14130f;
+  --panel:  #1e1c17;
+  --line:   #38342c;
+  --text:   #e8e3d8;
+  --muted:  #9a9385;
+  --accent: #f4a300;
+  --blue:   #4a9edd;
+  --ok:     #8fae5d;
+  --danger: #d7443e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 24px 16px;
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; }
+
+h1 {
+  font-family: Oswald, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-size: 28px;
+  margin-bottom: 2px;
+}
+.subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+
+.loading { color: var(--muted); font-style: italic; padding: 20px 0; font-size: 13px; }
+
+.records-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.record-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.record-trophy {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.record-name {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.record-value {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.record-player {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.record-date {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.record-date a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color .15s;
+}
+.record-date a:hover { color: var(--accent); }
+
+/* ── Site nav ──────────────────────────────────────────────────────────── */
+#siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
+#siteNavBtn {
+  width: 34px; height: 34px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; color: var(--accent);
+  font-size: 17px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s;
+}
+#siteNavBtn:hover { border-color: var(--accent); }
+#siteNavMenu {
+  display: none; position: absolute; top: 40px; left: 0;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 10px; padding: 6px;
+  min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,.6);
+}
+#siteNavMenu.open { display: block; }
+#siteNavMenu a {
+  display: block; padding: 9px 14px;
+  color: var(--text); text-decoration: none;
+  border-radius: 7px; font-size: 13px;
+  font-family: Oswald, system-ui, sans-serif;
+  text-transform: uppercase; letter-spacing: .5px;
+  transition: background .1s, color .1s;
+}
+#siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
+#siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
+#siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+</style>
+</head>
+
+<body>
+<div id="siteNav">
+  <button id="siteNavBtn" onclick="toggleSiteNav()" title="Navigate">&#9776;</button>
+  <div id="siteNavMenu">
+    <a href="index.html">Home</a>
+    <div class="nav-sep"></div>
+    <a href="stats.html">PUBG Stats</a>
+    <a href="mapanalysis.html">Map Analysis</a>
+    <a href="match.html">Match Analysis</a>
+    <a href="records.html" class="nav-cur">Personal Records</a>
+    <a href="pubg.html">Loadout Planner</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h1>Personal Records</h1>
+  <p class="subtitle">D282 &amp; S821 — all-time bests across every match played</p>
+
+  <div id="recordsContainer"><p class="loading">Loading…</p></div>
+
+</div>
+
+<script>
+async function boot() {
+  if (location.protocol === 'file:') {
+    document.getElementById('recordsContainer').innerHTML =
+      `<p style="color:var(--danger);padding:20px 0;line-height:1.8">
+         <strong>Cannot load data when opened as a local file.</strong><br>
+         Run <code style="background:#2a2720;padding:2px 6px;border-radius:3px">serve.bat</code>
+         then open via <a href="http://localhost:8080/records.html" style="color:var(--accent)">http://localhost:8080/records.html</a>
+       </p>`;
+    return;
+  }
+
+  let matches;
+  try {
+    matches = await fetch('stats-data/matches.json').then(r => r.json());
+  } catch (err) {
+    document.getElementById('recordsContainer').innerHTML =
+      `<p style="color:var(--danger);padding:20px 0">Failed to load data. <small>${err.message}</small></p>`;
+    return;
+  }
+
+  const duo = matches.filter(m =>
+    m.players['D282']?.placement != null && m.players['S821']?.placement != null
+  ).sort((a, b) => a.created_at.localeCompare(b.created_at));
+
+  if (!duo.length) {
+    document.getElementById('recordsContainer').innerHTML = '<p style="color:var(--muted);padding:20px 0">No duo matches found.</p>';
+    return;
+  }
+
+  const records = computeRecords(duo);
+  render(records);
+}
+
+function computeRecords(matches) {
+  const recs = {};
+
+  // Most kills in one game — per player
+  for (const player of ['D282', 'S821']) {
+    let best = { v: -1, date: '', id: '' };
+    for (const m of matches) {
+      const k = m.players[player]?.kills || 0;
+      if (k > best.v) best = { v: k, date: m.created_at.slice(0, 10), id: m.match_id };
+    }
+    recs[`mostKills_${player}`] = { ...best, player, label: `Most kills — ${player}`, trophy: '🎯' };
+  }
+
+  // Highest damage in one game — per player
+  for (const player of ['D282', 'S821']) {
+    let best = { v: -1, date: '', id: '' };
+    for (const m of matches) {
+      const d = m.players[player]?.damage || 0;
+      if (d > best.v) best = { v: d, date: m.created_at.slice(0, 10), id: m.match_id };
+    }
+    recs[`mostDmg_${player}`] = { ...best, player, label: `Most damage — ${player}`, trophy: '💥', fmt: v => Math.round(v).toLocaleString() };
+  }
+
+  // Longest consecutive win streak (placement=1)
+  let curStreak = 0, maxStreak = 0, maxStreakEnd = '', curEnd = '';
+  for (const m of matches) {
+    if (m.players['D282']?.placement === 1) {
+      curStreak++;
+      curEnd = m.created_at.slice(0, 10);
+      if (curStreak > maxStreak) { maxStreak = curStreak; maxStreakEnd = curEnd; }
+    } else {
+      curStreak = 0;
+    }
+  }
+  recs.winStreak = { v: maxStreak, date: maxStreakEnd, id: '', player: 'Duo', label: 'Longest win streak', trophy: '🏆', fmt: v => v + ' wins' };
+
+  // Most games in one day
+  const byDay = {};
+  for (const m of matches) {
+    const d = m.created_at.slice(0, 10);
+    byDay[d] = (byDay[d] || 0) + 1;
+  }
+  const topDay = Object.entries(byDay).sort((a, b) => b[1] - a[1])[0] || ['—', 0];
+  recs.mostGamesDay = { v: topDay[1], date: topDay[0], id: '', player: 'Duo', label: 'Most games in one day', trophy: '📅', fmt: v => v + ' games' };
+
+  // Longest survival time — per player
+  for (const player of ['D282', 'S821']) {
+    let best = { v: -1, date: '', id: '' };
+    for (const m of matches) {
+      const s = m.players[player]?.survival_s || 0;
+      if (s > best.v) best = { v: s, date: m.created_at.slice(0, 10), id: m.match_id };
+    }
+    recs[`longestSurv_${player}`] = { ...best, player, label: `Longest survival — ${player}`, trophy: '⏱', fmt: v => mmss(v) };
+  }
+
+  // Best session avg placement — day with ≥3 games, lowest avg placement
+  const sessions = Object.entries(byDay)
+    .filter(([, n]) => n >= 3)
+    .map(([date, n]) => {
+      const ms = matches.filter(m => m.created_at.slice(0, 10) === date);
+      const avgPl = ms.reduce((s, m) => s + (m.players['D282']?.placement || 99), 0) / ms.length;
+      return { date, n, avgPl };
+    })
+    .sort((a, b) => a.avgPl - b.avgPl);
+  if (sessions.length) {
+    const s = sessions[0];
+    recs.bestSession = { v: s.avgPl, date: s.date, id: '', player: 'Duo', label: `Best session avg placement (≥3 games)`, trophy: '📈', fmt: v => '#' + v.toFixed(1) };
+  }
+
+  return recs;
+}
+
+function mmss(s) {
+  if (s == null || s < 0) return '—';
+  s = Math.round(s);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function render(records) {
+  const el = document.getElementById('recordsContainer');
+  const cards = Object.values(records).map(r => {
+    const value = r.fmt ? r.fmt(r.v) : r.v;
+    const playerCol = r.player === 'D282' ? 'var(--accent)' : r.player === 'S821' ? 'var(--blue)' : 'var(--text)';
+    const matchLink = r.id
+      ? `<a href="match.html?id=${r.id}" title="View match">→ match</a>`
+      : '';
+    return `<div class="record-card">
+      <div class="record-trophy">${r.trophy}</div>
+      <div class="record-name">${r.label}</div>
+      <div class="record-value">${value}</div>
+      <div class="record-player" style="color:${playerCol}">${r.player}</div>
+      <div class="record-date">${r.date}${matchLink ? ' ' + matchLink : ''}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class="records-grid">${cards}</div>`;
+}
+
+function toggleSiteNav() {
+  document.getElementById('siteNavMenu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('siteNav').contains(e.target))
+    document.getElementById('siteNavMenu').classList.remove('open');
+});
+
+boot();
+</script>
+</body>
+</html>

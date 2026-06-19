@@ -284,6 +284,9 @@
   .legend { color: var(--muted); font-size: 12px; margin-top: 14px; }
   .legend .est { color: var(--accent); }
 
+  .ammo-hint { color: var(--muted); font-size: 11px; padding: 0 4px 6px; cursor: default; }
+  .ammo-hint span { cursor: pointer; color: var(--accent); }
+
   /* ── Site nav ──────────────────────────────────────────────────────────── */
   #siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
   #siteNavBtn {
@@ -314,6 +317,7 @@
   #siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
   #siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
@@ -325,6 +329,7 @@
     <a href="stats.html">PUBG Stats</a>
     <a href="mapanalysis.html">Map Analysis</a>
     <a href="match.html">Match Analysis</a>
+    <a href="records.html">Personal Records</a>
     <a href="pubg.html" class="nav-cur">Loadout Planner</a>
   </div>
 </div>
@@ -343,16 +348,38 @@
     <div class="row" id="vestRow"></div>
   </div>
 
+  <!-- PRESETS -->
+  <div class="panel" id="presetsPanel">
+    <h2>Presets</h2>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <select id="presetSelect" style="background:#2a2720;color:var(--text);border:1px solid var(--line);padding:7px 30px 7px 11px;border-radius:6px;font-size:13px;font-family:inherit;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M.5.5 5 5.5 9.5.5' stroke='%239a9385' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 9px center;min-width:160px"><option value="">— Select preset —</option></select>
+      <button class="clear" onclick="loadPreset()">Load</button>
+      <button class="clear" onclick="savePreset()">Save</button>
+      <button class="clear" onclick="deletePreset()">Delete</button>
+    </div>
+  </div>
+
   <!-- CAPACITY GAUGE -->
   <div class="panel">
     <h2>Capacity</h2>
-    <div class="readout">
-      <span class="used" id="usedReadout">0.0</span>
-      <span id="totalReadout">/ 0</span>
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px">
+        <div class="readout">
+          <span class="used" id="usedReadout">0.0</span>
+          <span id="totalReadout">/ 0</span>
+        </div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeFill"></div></div>
+        <div class="breakdown" id="breakdown"></div>
+        <div class="warning" id="warning"></div>
+        <div style="margin-top:10px">
+          <button class="clear" id="copyLinkBtn" onclick="copyLink(this)">Copy Link</button>
+        </div>
+      </div>
+      <div style="flex-shrink:0">
+        <canvas id="capacityDonut" width="200" height="200" style="max-width:200px;display:block"></canvas>
+        <div id="donutLegend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;font-size:11px;color:var(--muted)"></div>
+      </div>
     </div>
-    <div class="gauge-track"><div class="gauge-fill" id="gaugeFill"></div></div>
-    <div class="breakdown" id="breakdown"></div>
-    <div class="warning" id="warning"></div>
   </div>
 
   <!-- YOUR BAG -->
@@ -369,6 +396,7 @@
   <!-- ITEMS -->
   <div class="panel">
     <h2>Items</h2>
+    <div style="position:relative;margin-bottom:10px"><input type="text" id="itemSearch" placeholder="Search items…" oninput="onItemSearch(this.value)" style="width:100%;background:#0d0c09;border:1px solid var(--line);color:var(--text);padding:6px 30px 6px 10px;border-radius:6px;font-size:13px;font-family:inherit"><button id="searchClear" onclick="clearSearch()" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;display:none">×</button></div>
     <div class="row" id="tabRow" style="margin-bottom:14px;"></div>
     <div class="cat-note" id="catNote"></div>
     <div id="itemList"></div>
@@ -510,7 +538,8 @@ const state = {
   vest: true,
   activeCat: "Healing",
   counts: {},
-  brokenImgs: {}   // remembers which icon files are missing, so we fall back
+  brokenImgs: {},
+  searchQuery: '',
 };
 
 /* =========================================================================
@@ -741,11 +770,20 @@ function render() {
 
   renderBag();
 
-  document.getElementById("catNote").textContent = CATEGORY_NOTES[state.activeCat] || "";
+  if (state.searchQuery) {
+    document.getElementById("tabRow").style.display = "none";
+    document.getElementById("catNote").textContent = "";
+  } else {
+    document.getElementById("tabRow").style.display = "";
+    document.getElementById("catNote").textContent = CATEGORY_NOTES[state.activeCat] || "";
+  }
 
   const list = document.getElementById("itemList");
   list.innerHTML = "";
-  ITEMS.filter(i => i.cat === state.activeCat).forEach(item => {
+  const itemsToShow = state.searchQuery
+    ? ITEMS.filter(i => i.name.toLowerCase().includes(state.searchQuery.toLowerCase()))
+    : ITEMS.filter(i => i.cat === state.activeCat);
+  itemsToShow.forEach(item => {
     const qty = state.counts[item.name] || 0;
     const row = document.createElement("div");
     row.className = "item";
@@ -802,11 +840,186 @@ function render() {
 
     row.appendChild(stepper);
     list.appendChild(row);
+
+    if (item.cat === 'Ammo' && AMMO_SUGGEST[item.name] != null) {
+      const cur = state.counts[item.name] || 0;
+      if (cur < AMMO_SUGGEST[item.name]) {
+        const hint = document.createElement('div');
+        hint.className = 'ammo-hint';
+        hint.innerHTML = `Suggest: ${AMMO_SUGGEST[item.name]} — <span onclick="setCount('${item.name}', ${AMMO_SUGGEST[item.name]})">fill</span>`;
+        list.appendChild(hint);
+      }
+    }
   });
+
+  renderDonutChart();
+}
+
+/* =========================================================================
+   AMMO SUGGESTIONS
+   ========================================================================= */
+const AMMO_SUGGEST = {
+  '9mm': 90, '.45 ACP': 90, '5.56mm': 150, '7.62mm': 120,
+  '.300 Magnum': 50, '12 Gauge': 40,
+};
+
+/* =========================================================================
+   PRESETS
+   ========================================================================= */
+function savePreset() {
+  const name = prompt('Preset name:');
+  if (!name?.trim()) return;
+  localStorage.setItem('pubg_preset_' + name.trim(),
+    JSON.stringify({ backpack: state.backpack, vest: state.vest, counts: state.counts }));
+  renderPresets();
+}
+
+function loadPreset() {
+  const sel = document.getElementById('presetSelect');
+  const key = sel.value; if (!key) return;
+  const saved = localStorage.getItem(key);
+  if (!saved) return;
+  const data = JSON.parse(saved);
+  state.backpack = data.backpack ?? 3;
+  state.vest     = data.vest    ?? true;
+  state.counts   = data.counts  || {};
+  render();
+}
+
+function deletePreset() {
+  const sel = document.getElementById('presetSelect');
+  const key = sel.value; if (!key) return;
+  localStorage.removeItem(key);
+  renderPresets();
+}
+
+function renderPresets() {
+  const sel = document.getElementById('presetSelect');
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('pubg_preset_')).sort();
+  sel.innerHTML = '<option value="">— Select preset —</option>' +
+    keys.map(k => `<option value="${k}">${k.replace('pubg_preset_', '')}</option>`).join('');
+}
+
+/* =========================================================================
+   SHAREABLE URL
+   ========================================================================= */
+function encodeLoadout() {
+  const parts = [`bp=${state.backpack}`, `vest=${state.vest ? 1 : 0}`];
+  for (let i = 0; i < ITEMS.length; i++) {
+    const n = state.counts[ITEMS[i].name] || 0;
+    if (n) parts.push(`i${i}=${n}`);
+  }
+  return parts.join('&');
+}
+
+function decodeLoadout(search) {
+  const p = new URLSearchParams(search);
+  state.backpack = +(p.get('bp') ?? 3);
+  state.vest     = p.get('vest') !== '0';
+  for (let i = 0; i < ITEMS.length; i++) {
+    const n = p.get(`i${i}`);
+    if (n != null) state.counts[ITEMS[i].name] = +n;
+  }
+}
+
+function copyLink(btn) {
+  history.replaceState(null, '', '?' + encodeLoadout());
+  navigator.clipboard.writeText(location.href).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy Link'; }, 1500);
+  });
+}
+
+/* =========================================================================
+   DONUT CHART
+   ========================================================================= */
+let capacityDonutInst = null;
+
+const DONUT_CATS = [
+  { cat: 'Healing',     color: '#8fae5d' },
+  { cat: 'Throwables',  color: '#d7443e' },
+  { cat: 'Ammo',        color: '#f4a300' },
+  { cat: 'Attachments', color: '#4a9edd' },
+  { cat: 'Tactical',    color: '#9975cc' },
+];
+
+function renderDonutChart() {
+  const catUsed = DONUT_CATS.map(dc => {
+    const used = ITEMS.filter(i => i.cat === dc.cat)
+      .reduce((s, i) => s + (state.counts[i.name] || 0) * i.cap, 0);
+    return { ...dc, used };
+  });
+  const total = totalCapacity();
+  const used  = usedCapacity();
+  const data  = catUsed.map(c => c.used);
+  const colors = catUsed.map(c => c.color);
+
+  if (capacityDonutInst) { capacityDonutInst.destroy(); capacityDonutInst = null; }
+  capacityDonutInst = new Chart(
+    document.getElementById('capacityDonut').getContext('2d'),
+    {
+      type: 'doughnut',
+      data: {
+        labels: catUsed.map(c => c.cat),
+        datasets: [{ data, backgroundColor: colors, borderColor: '#1e1c17', borderWidth: 2 }],
+      },
+      options: {
+        cutout: '65%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1, titleColor: '#e8e3d8', bodyColor: '#9a9385' },
+        },
+      },
+      plugins: [{
+        id: 'centerText',
+        afterDraw(chart) {
+          const { ctx, chartArea: { left, top, right, bottom } } = chart;
+          const cx = (left + right) / 2, cy = (top + bottom) / 2;
+          ctx.save();
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillStyle = '#f4a300';
+          ctx.font = 'bold 18px Oswald,system-ui,sans-serif';
+          ctx.fillText(used.toFixed(1), cx, cy - 8);
+          ctx.fillStyle = '#9a9385';
+          ctx.font = '12px system-ui,sans-serif';
+          ctx.fillText('/ ' + total, cx, cy + 10);
+          ctx.restore();
+        },
+      }],
+    }
+  );
+
+  document.getElementById('donutLegend').innerHTML = catUsed
+    .filter(c => c.used > 0)
+    .map(c => `<span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};flex-shrink:0"></span>${c.cat} ${c.used.toFixed(1)}</span>`)
+    .join('');
+}
+
+/* =========================================================================
+   ITEM SEARCH
+   ========================================================================= */
+function onItemSearch(q) {
+  state.searchQuery = q;
+  if (q) {
+    document.getElementById('searchClear').style.display = '';
+  } else {
+    document.getElementById('searchClear').style.display = 'none';
+  }
+  render();
+}
+
+function clearSearch() {
+  document.getElementById('itemSearch').value = '';
+  state.searchQuery = '';
+  document.getElementById('searchClear').style.display = 'none';
+  document.getElementById('tabRow').style.display = '';
+  render();
 }
 
 buildGearButtons();
 buildTabs();
+renderPresets();
+if (location.search) { decodeLoadout(location.search); }
 render();
 
 function toggleSiteNav() {
