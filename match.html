@@ -484,7 +484,9 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <button class="map-ctrl-btn" onclick="zoomStep(1.3)" title="Zoom in">+</button>
           <button class="map-ctrl-btn" onclick="zoomStep(1/1.3)" title="Zoom out">−</button>
           <button class="map-ctrl-btn" onclick="resetView()" title="Fit map">⤢</button>
-          <button class="map-ctrl-btn" id="killfeedBtn" onclick="toggleKillFeed()" title="Kill feed" style="font-size:12px">☰</button>
+          <button class="map-ctrl-btn" id="throwableBtn" onclick="toggleLayerMap('throwable')"   title="Throwables"    style="font-size:12px">💣</button>
+          <button class="map-ctrl-btn" id="killfeedBtn"  onclick="toggleKillFeed()"            title="Kill feed"     style="font-size:12px">☰</button>
+          <button class="map-ctrl-btn" id="teamNumBtn"  onclick="toggleLayerMap('enemy_teams')" title="Team Numbers"  style="font-size:11px;font-weight:700">T</button>
         </div>
         <div id="tooltip" class="tooltip" style="display:none"></div>
       </div>
@@ -966,10 +968,22 @@ function drawTimeline() {
         const ev  = evs[i];
         const cy  = rowY + stackDir * i * TL_DOT_SEP;
         if (cy < TL_DOT_R + 1 || cy > h - TL_DOT_R - 1) break;
-        const usePCol = ['kill','death','dmg_dealt','dmg_taken'].includes(ev.type);
+        const usePCol = ['kill','death','dmg_dealt','dmg_taken','throwable'].includes(ev.type);
         const ld  = LAYER_DEFS.find(l => l.id === ev.type);
         const col = usePCol ? PLAYER_COLOR[player] : ((ld && ld.color) ? ld.color : PLAYER_COLOR[player]);
         tlCtx.save();
+        if (ev.type === 'throwable') {
+          const icon   = THROW_ICONS[ev.weapon];
+          const tinted = getTintedIcon(icon, col);
+          if (tinted) {
+            const sz = TL_DOT_R * 2.2;
+            tlCtx.globalAlpha = 0.85;
+            tlCtx.drawImage(tinted, cx - sz / 2, cy - sz / 2, sz, sz);
+            tlCtx.restore();
+            tlMarkers.push({ cx, cy, ev });
+            continue;
+          }
+        }
         drawEventIcon(tlCtx, cx, cy, TL_DOT_R, 1.5, ev.type, col);
         tlCtx.restore();
         tlMarkers.push({ cx, cy, ev });
@@ -1490,10 +1504,11 @@ function drawEnemies(maxT) {
   const showTeams  = state.layers.enemy_teams;
 
   for (const en of enemies) {
-    if (en.death_t != null && effectiveT >= en.death_t) continue;
-
     const pos = en.pos;
     if (!pos || !pos.length) continue;
+    // Skip if dead — but only if no positions exist after death_t (blue-chip revived enemies have later positions)
+    const lastPosT = pos[pos.length - 1][0];
+    if (en.death_t != null && effectiveT >= en.death_t && lastPosT <= en.death_t + 10) continue;
     let lo = 0, hi = pos.length - 1, idx = -1;
     while (lo <= hi) {
       const mid = (lo + hi) >> 1;
@@ -1561,12 +1576,41 @@ function isEnemyKnockedAt(name, T) {
 const LAYER_COLOR = Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.color]));
 
 function markerColor(ev) {
-  if (['kill','death','dmg_dealt','dmg_taken'].includes(ev.type))
+  if (['kill','death','dmg_dealt','dmg_taken','throwable'].includes(ev.type))
     return PLAYER_COLOR[ev.player] || '#e8e3d8';
   return LAYER_COLOR[ev.type] || PLAYER_COLOR[ev.player] || '#e8e3d8';
 }
 
 function drawMarker(ev, cx, cy) {
+  if (ev.type === 'throwable') {
+    const icon   = THROW_ICONS[ev.weapon];
+    const col    = markerColor(ev);
+    const tinted = getTintedIcon(icon, col);
+    if (tinted) {
+      const sz = 16 / view.scale;
+      ctx.save();
+      ctx.globalAlpha = 0.85;
+      ctx.drawImage(tinted, cx - sz / 2, cy - sz / 2, sz, sz);
+      ctx.restore();
+      return;
+    }
+  }
+  if (ev.type === 'crate_land') {
+    const crateKey   = `${ev.x}_${ev.y}_${ev.t}`;
+    const lootTime   = _lootedCrateTime[crateKey];
+    const effectiveT = state.time === Infinity ? (MD.duration_s || 1800) : state.time;
+    const isLooted   = lootTime != null && effectiveT >= lootTime;
+    const icon       = isLooted ? CPICONS.open : CPICONS.normal;
+    const tinted     = getTintedIcon(icon, '#ffe44d');
+    if (tinted) {
+      const sz = 22 / view.scale;
+      ctx.save();
+      ctx.globalAlpha = 0.9;
+      ctx.drawImage(tinted, cx - sz / 2, cy - sz / 2, sz, sz);
+      ctx.restore();
+      return;
+    }
+  }
   const r = ev.type === 'kill' ? 9 / view.scale : 7 / view.scale;
   drawEventIcon(ctx, cx, cy, r, 2 / view.scale, ev.type, markerColor(ev));
 }
@@ -2417,11 +2461,25 @@ function buildWeaponBreakdown() {
 ============================================================================ */
 let _enemyKnockIntervals = {};
 let _killFeed = [];
+let _lootedCrateTime = {};
 
 function precomputeMatchData() {
   if (!MD) return;
 
   _enemyKnockIntervals = {};
+  _lootedCrateTime = {};
+  const crateEvents    = MD.events.filter(e => e.type === 'crate_land');
+  const carepackEvents = MD.events.filter(e => e.type === 'carepack');
+  for (const crate of crateEvents) {
+    let earliest = Infinity;
+    for (const loot of carepackEvents) {
+      if (loot.t >= crate.t) {
+        const dist = Math.hypot(loot.x - crate.x, loot.y - crate.y);
+        if (dist < 3000 && loot.t < earliest) earliest = loot.t;
+      }
+    }
+    if (earliest < Infinity) _lootedCrateTime[`${crate.x}_${crate.y}_${crate.t}`] = earliest;
+  }
   for (const ev of MD.events) {
     if (ev.type === 'knockdown' && ev.victim) {
       if (!_enemyKnockIntervals[ev.victim]) _enemyKnockIntervals[ev.victim] = [];
@@ -2467,7 +2525,7 @@ function drawKillFeed(maxT) {
   const FONT_SIZE = Math.round(Math.max(10, Math.min(14, W * 0.03)));
   const LINE_H    = FONT_SIZE + 6;
   const PAD_X     = 8;
-  const PAD_RIGHT = 6;
+  const PAD_RIGHT = 46; // stay left of the 40px-wide map-controls column
   const startY    = 10;
 
   ctx.save();
@@ -2542,6 +2600,16 @@ function toggleKillFeed() {
   document.getElementById('killfeedBtn').classList.toggle('active', state.layers.killfeed);
   const sb = document.querySelector('.layer-btn[data-layer="killfeed"]');
   if (sb) sb.classList.toggle('active', state.layers.killfeed);
+  draw();
+}
+
+function toggleLayerMap(id) {
+  state.layers[id] = !state.layers[id];
+  const btnIds = { enemy_teams: 'teamNumBtn', throwable: 'throwableBtn', killfeed: 'killfeedBtn' };
+  const btn = document.getElementById(btnIds[id] || (id + 'Btn'));
+  if (btn) btn.classList.toggle('active', state.layers[id]);
+  const sb = document.querySelector(`.layer-btn[data-layer="${id}"]`);
+  if (sb) sb.classList.toggle('active', state.layers[id]);
   draw();
 }
 
@@ -2965,6 +3033,65 @@ const KFICONS = {};
     KFICONS[key] = img;
   }
 })();
+
+/* ============================================================================
+   CARE PACKAGE ICON PRELOAD
+============================================================================ */
+const _CP_BASE = 'https://raw.githubusercontent.com/pubg/api-assets/32b13b51128b8d8909ae5e77f3b833e01230b24d/Assets/Icons/CarePackage/';
+const CPICONS = {};
+(function preloadCpIcons() {
+  for (const [key, file] of [['normal','CarePackage_Normal.png'],['open','CarePackage_Open.png']]) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = _CP_BASE + file;
+    CPICONS[key] = img;
+  }
+})();
+
+/* ============================================================================
+   THROWABLE ICON PRELOAD
+============================================================================ */
+const _THROW_ICON_BASE = 'https://raw.githubusercontent.com/pubg/api-assets/32b13b51128b8d8909ae5e77f3b833e01230b24d/Assets/Icons/Item/Equipment/Throwable/';
+const THROW_ICONS = {};
+(function preloadThrowIcons() {
+  // Note: FlashBang filename uses lowercase 'c'
+  const entries = [
+    ['Item_Weapon_Grenade_C',         'Item_Weapon_Grenade_C.png'],
+    ['Item_Weapon_SmokeBomb_C',       'Item_Weapon_SmokeBomb_C.png'],
+    ['Item_Weapon_Molotov_C',         'Item_Weapon_Molotov_C.png'],
+    ['Item_Weapon_FlashBang_C',       'Item_Weapon_FlashBang_c.png'],
+    ['Item_Weapon_StickyGrenade_C',   'Item_Weapon_StickyGrenade_C.png'],
+    ['Item_Weapon_C4_C',              'Item_Weapon_C4_C.png'],
+    ['Item_Weapon_BluezoneGrenade_C', 'Item_Weapon_BluezoneGrenade_C.png'],
+    ['Item_Weapon_DecoyGrenade_C',    'Item_Weapon_DecoyGrenade_C.png'],
+    ['Item_Weapon_SpikeTrap_C',       'Item_Weapon_SpikeTrap_C.png'],
+  ];
+  for (const [key, file] of entries) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = _THROW_ICON_BASE + file;
+    THROW_ICONS[key] = img;
+  }
+})();
+
+/* ============================================================================
+   ICON TINT HELPER
+============================================================================ */
+const _tintCache = new Map();
+function getTintedIcon(img, color) {
+  if (!img || !img.complete || !img.naturalWidth) return null;
+  const key = img.src + ':' + color;
+  if (_tintCache.has(key)) return _tintCache.get(key);
+  const size = 64;
+  const oc   = new OffscreenCanvas(size, size);
+  const oc2  = oc.getContext('2d');
+  oc2.fillStyle = color;
+  oc2.fillRect(0, 0, size, size);
+  oc2.globalCompositeOperation = 'destination-in';
+  oc2.drawImage(img, 0, 0, size, size);
+  _tintCache.set(key, oc);
+  return oc;
+}
 
 /* ============================================================================
    GO
