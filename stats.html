@@ -509,34 +509,36 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <div class="chart-wrap"><canvas id="placementChart"></canvas></div>
   </div>
 
-  <!-- ── ROLLING K/D TREND ──────────────────────────────────────────────── -->
+  <!-- ── ROLLING TREND ──────────────────────────────────────────────── -->
   <div class="panel" id="kdTrendPanel">
-    <div class="panel-title">Rolling K/D (last 10 games)</div>
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div class="panel-title" style="margin-bottom:0">Rolling 10-Game Trend</div>
+      <div class="btn-group" id="trendStatBtns">
+        <button class="btn active" data-ts="kd"       onclick="setTrendStat('kd')">K/D</button>
+        <button class="btn"        data-ts="position" onclick="setTrendStat('position')">Position</button>
+        <button class="btn"        data-ts="kills"    onclick="setTrendStat('kills')">Kills</button>
+        <button class="btn"        data-ts="knocks"   onclick="setTrendStat('knocks')">Knocks</button>
+        <button class="btn"        data-ts="damage"   onclick="setTrendStat('damage')">Damage</button>
+        <button class="btn"        data-ts="survival" onclick="setTrendStat('survival')">Survival</button>
+        <button class="btn"        data-ts="score"    onclick="setTrendStat('score')">Score</button>
+      </div>
+    </div>
     <div class="chart-wrap"><canvas id="kdTrendChart"></canvas></div>
-  </div>
-
-  <!-- ── PERFORMANCE BY MAP ─────────────────────────────────────────────── -->
-  <div class="panel" id="mapStatsPanel">
-    <div class="panel-title">Performance by Map</div>
-    <div id="mapStatsTable"></div>
-  </div>
-
-  <!-- ── DUO SYNERGY ────────────────────────────────────────────────────── -->
-  <div class="panel" id="duoChemPanel">
-    <div class="panel-title">Duo Chemistry</div>
-    <div id="duoChemContent"></div>
-  </div>
-
-  <!-- ── LIFETIME RECORDS ───────────────────────────────────────────────── -->
-  <div class="panel" id="recordsPanel">
-    <div class="panel-title">Lifetime Records</div>
-    <div id="recordsContent"></div>
-  </div>
-
-  <!-- ── WIN CONDITIONS ─────────────────────────────────────────────────── -->
-  <div class="panel" id="winCondPanel">
-    <div class="panel-title">Win Condition Analysis</div>
-    <div id="winCondContent"></div>
+    <div id="trendScoreDef" style="display:none;margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
+      <div style="font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:8px">Score Definition</div>
+      <table style="border-collapse:collapse;width:100%;font-size:12px;color:var(--muted)">
+        <tbody>
+          <tr><td style="padding:2px 8px">Kill</td>             <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px;font-size:11px">Solo (partner dead/knocked): +200</td></tr>
+          <tr><td style="padding:2px 8px">Knockdown</td>        <td style="padding:2px 8px;color:var(--ok)">+25</td>     <td style="padding:2px 8px;font-size:11px">Solo knock: +50</td></tr>
+          <tr><td style="padding:2px 8px">Damage dealt</td>     <td style="padding:2px 8px;color:var(--ok)">+1 /pt</td>  <td style="padding:2px 8px;font-size:11px">Solo damage: +2 /pt</td></tr>
+          <tr><td style="padding:2px 8px">Revive</td>           <td style="padding:2px 8px;color:var(--ok)">+50</td>     <td style="padding:2px 8px"></td></tr>
+          <tr><td style="padding:2px 8px">Blue chip revive</td> <td style="padding:2px 8px;color:var(--ok)">+100</td>    <td style="padding:2px 8px"></td></tr>
+          <tr><td style="padding:2px 8px">Death</td>            <td style="padding:2px 8px;color:var(--danger)">−100</td><td style="padding:2px 8px"></td></tr>
+          <tr><td style="padding:2px 8px">Got knocked</td>      <td style="padding:2px 8px;color:var(--danger)">−50</td> <td style="padding:2px 8px"></td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Scores here are approximate (solo bonuses require per-match event data). See Match Analysis for exact scores.</p>
+    </div>
   </div>
 
   <!-- ── CHART EXPLORER ───────────────────────────────────────────────────── -->
@@ -566,6 +568,12 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
   </div>
 
+  <!-- ── PERFORMANCE BY MAP ─────────────────────────────────────────────── -->
+  <div class="panel" id="mapStatsPanel">
+    <div class="panel-title">Performance by Map</div>
+    <div id="mapStatsTable"></div>
+  </div>
+
   <!-- ── DAILY SESSION STATS ───────────────────────────────────────────────── -->
   <div class="panel">
     <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px">
@@ -585,6 +593,24 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
       </div>
     </div>
     <div id="dailyContent"><p class="loading">Loading…</p></div>
+  </div>
+
+  <!-- ── DUO SYNERGY ────────────────────────────────────────────────────── -->
+  <div class="panel" id="duoChemPanel">
+    <div class="panel-title">Duo Chemistry</div>
+    <div id="duoChemContent"></div>
+  </div>
+
+  <!-- ── LIFETIME RECORDS ───────────────────────────────────────────────── -->
+  <div class="panel" id="recordsPanel">
+    <div class="panel-title">Lifetime Records</div>
+    <div id="recordsContent"></div>
+  </div>
+
+  <!-- ── WIN CONDITIONS ─────────────────────────────────────────────────── -->
+  <div class="panel" id="winCondPanel">
+    <div class="panel-title">Win Condition Analysis</div>
+    <div id="winCondContent"></div>
   </div>
 
   <!-- ── MATCH HISTORY ─────────────────────────────────────────────────────── -->
@@ -623,6 +649,7 @@ const state = {
   chartType:     'timeline',
   chartCategory: 'Player stats',
   chartMetric:   'kills',
+  trendStat:     'kd',
 };
 
 /* ============================================================================
@@ -1625,22 +1652,90 @@ function renderPlacementChart(matches) {
 }
 
 /* ============================================================================
-   RENDER — ROLLING K/D TREND
+   RENDER — ROLLING TREND (configurable stat)
 ============================================================================ */
+
+function computeMatchScore(p) {
+  if (!p) return 0;
+  return (p.kills        || 0) * 100
+       + (p.knockdowns   || 0) * 25
+       + (p.damage       || 0) * 1
+       + (p.revives      || 0) * 50
+       + (p.blue_chips   || 0) * 100
+       - ((p.placement   || 99) > 1 ? 100 : 0)
+       - (p.times_knocked|| 0) * 50;
+}
+
+function setTrendStat(stat) {
+  state.trendStat = stat;
+  document.querySelectorAll('#trendStatBtns .btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.ts === stat)
+  );
+  document.getElementById('trendScoreDef').style.display = stat === 'score' ? 'block' : 'none';
+  renderTrendChart(lastMatches);
+}
+
+const TREND_DEFS = {
+  kd: {
+    label: 'K/D',  yLabel: 'K/D',
+    p282: (w) => { const k = w.reduce((s,m)=>s+(m.players['D282']?.kills||0),0); const d = w.filter(m=>(m.players['D282']?.placement||99)>1).length; return d?k/d:k; },
+    p821: (w) => { const k = w.reduce((s,m)=>s+(m.players['S821']?.kills||0),0); const d = w.filter(m=>(m.players['S821']?.placement||99)>1).length; return d?k/d:k; },
+    duo:  (w) => { const k = w.reduce((s,m)=>s+(m.players['D282']?.kills||0)+(m.players['S821']?.kills||0),0); const d = w.filter(m=>(m.players['D282']?.placement||99)>1).length + w.filter(m=>(m.players['S821']?.placement||99)>1).length; return d?k/d:k; },
+    fmt: v => v.toFixed(2),
+  },
+  position: {
+    label: 'Position', yLabel: 'Avg Placement',
+    p282: (w) => w.reduce((s,m)=>s+(m.players['D282']?.placement||99),0)/w.length,
+    p821: (w) => w.reduce((s,m)=>s+(m.players['S821']?.placement||99),0)/w.length,
+    duo:  (w) => w.reduce((s,m)=>s+(m.players['D282']?.placement||99),0)/w.length,
+    fmt: v => '#' + v.toFixed(1),
+  },
+  kills: {
+    label: 'Kills', yLabel: 'Avg Kills',
+    p282: (w) => w.reduce((s,m)=>s+(m.players['D282']?.kills||0),0)/w.length,
+    p821: (w) => w.reduce((s,m)=>s+(m.players['S821']?.kills||0),0)/w.length,
+    duo:  (w) => w.reduce((s,m)=>s+(m.players['D282']?.kills||0)+(m.players['S821']?.kills||0),0)/w.length,
+    fmt: v => v.toFixed(2),
+  },
+  knocks: {
+    label: 'Knocks', yLabel: 'Avg Knocks',
+    p282: (w) => w.reduce((s,m)=>s+(m.players['D282']?.knockdowns||0),0)/w.length,
+    p821: (w) => w.reduce((s,m)=>s+(m.players['S821']?.knockdowns||0),0)/w.length,
+    duo:  (w) => w.reduce((s,m)=>s+(m.players['D282']?.knockdowns||0)+(m.players['S821']?.knockdowns||0),0)/w.length,
+    fmt: v => v.toFixed(2),
+  },
+  damage: {
+    label: 'Damage', yLabel: 'Avg Damage',
+    p282: (w) => w.reduce((s,m)=>s+(m.players['D282']?.damage||0),0)/w.length,
+    p821: (w) => w.reduce((s,m)=>s+(m.players['S821']?.damage||0),0)/w.length,
+    duo:  (w) => w.reduce((s,m)=>s+(m.players['D282']?.damage||0)+(m.players['S821']?.damage||0),0)/w.length,
+    fmt: v => Math.round(v).toLocaleString(),
+  },
+  survival: {
+    label: 'Survival', yLabel: 'Avg Survival',
+    p282: (w) => w.reduce((s,m)=>s+(m.players['D282']?.survival_s||0),0)/w.length,
+    p821: (w) => w.reduce((s,m)=>s+(m.players['S821']?.survival_s||0),0)/w.length,
+    duo:  (w) => w.reduce((s,m)=>s+Math.max(m.players['D282']?.survival_s||0,m.players['S821']?.survival_s||0),0)/w.length,
+    fmt: v => mmss(v),
+  },
+  score: {
+    label: 'Score', yLabel: 'Avg Score',
+    p282: (w) => w.reduce((s,m)=>s+computeMatchScore(m.players['D282']),0)/w.length,
+    p821: (w) => w.reduce((s,m)=>s+computeMatchScore(m.players['S821']),0)/w.length,
+    duo:  (w) => w.reduce((s,m)=>s+computeMatchScore(m.players['D282'])+computeMatchScore(m.players['S821']),0)/w.length,
+    fmt: v => Math.round(v).toLocaleString(),
+  },
+};
+
 let kdTrendChartInst = null;
 
-function renderKDTrendChart(matches) {
+function renderTrendChart(matches) {
+  const def = TREND_DEFS[state.trendStat] || TREND_DEFS.kd;
   const sorted = [...matches].sort((a, b) => a.created_at.localeCompare(b.created_at));
   const W = 10;
-  function series(player) {
-    return sorted.map((_, i) => {
-      const sl = sorted.slice(Math.max(0, i - W + 1), i + 1);
-      const kills  = sl.reduce((s, m) => s + (m.players[player]?.kills || 0), 0);
-      const deaths = sl.filter(m => (m.players[player]?.placement || 99) > 1).length;
-      return deaths ? kills / deaths : kills;
-    });
-  }
   const labels = sorted.map(m => m.created_at.slice(0, 10));
+  const series = fn => sorted.map((_, i) => fn(sorted.slice(Math.max(0, i - W + 1), i + 1)));
+
   if (kdTrendChartInst) { kdTrendChartInst.destroy(); kdTrendChartInst = null; }
   kdTrendChartInst = new Chart(
     document.getElementById('kdTrendChart').getContext('2d'),
@@ -1649,8 +1744,9 @@ function renderKDTrendChart(matches) {
       data: {
         labels,
         datasets: [
-          { label: 'D282', data: series('D282'), borderColor: '#f4a300', backgroundColor: '#f4a30018', fill: false, tension: 0.3, borderWidth: 2, pointRadius: 2, pointHoverRadius: 4 },
-          { label: 'S821', data: series('S821'), borderColor: '#4a9edd', backgroundColor: '#4a9edd18', fill: false, tension: 0.3, borderWidth: 2, pointRadius: 2, pointHoverRadius: 4 },
+          { label: 'D282', data: series(def.p282), borderColor: '#f4a300', backgroundColor: '#f4a30018', fill: false, tension: 0.3, borderWidth: 2, pointRadius: 2, pointHoverRadius: 4 },
+          { label: 'S821', data: series(def.p821), borderColor: '#4a9edd', backgroundColor: '#4a9edd18', fill: false, tension: 0.3, borderWidth: 2, pointRadius: 2, pointHoverRadius: 4 },
+          { label: 'Duo',  data: series(def.duo),  borderColor: '#888888', backgroundColor: 'transparent', fill: false, tension: 0.3, borderWidth: 1.5, borderDash: [5,4], pointRadius: 1, pointHoverRadius: 3 },
         ],
       },
       options: {
@@ -1658,11 +1754,11 @@ function renderKDTrendChart(matches) {
         interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
-          tooltip: { backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1, titleColor: '#e8e3d8', bodyColor: '#9a9385', callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} K/D` } },
+          tooltip: { backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1, titleColor: '#e8e3d8', bodyColor: '#9a9385', callbacks: { label: ctx => `${ctx.dataset.label}: ${def.fmt(ctx.parsed.y)}` } },
         },
         scales: {
           x: { ticks: { color: '#9a9385', maxRotation: 45, font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.5)' } },
-          y: { min: 0, ticks: { color: '#9a9385', font: { size: 11 } }, title: { display: true, text: 'K/D', color: '#9a9385', font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.4)' } },
+          y: { ticks: { color: '#9a9385', font: { size: 11 }, callback: v => def.fmt(v) }, title: { display: true, text: def.yLabel, color: '#9a9385', font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.4)' } },
         },
       },
     }
@@ -1700,10 +1796,9 @@ function renderMapStats(matches) {
       <td>${map}</td>
       <td style="text-align:center">${v.n}</td>
       <td style="color:${winCol(w, avgWin)};text-align:right">${(w*100).toFixed(1)}%</td>
+      <td style="text-align:right">#${(v.d282.plSum/v.n).toFixed(1)}</td>
       <td style="color:var(--accent);text-align:right">${(v.d282.kills/v.n).toFixed(1)}</td>
-      <td style="color:var(--accent);text-align:right">#${(v.d282.plSum/v.n).toFixed(1)}</td>
       <td style="color:var(--blue);text-align:right">${(v.s821.kills/v.n).toFixed(1)}</td>
-      <td style="color:var(--blue);text-align:right">#${(v.s821.plSum/v.n).toFixed(1)}</td>
     </tr>`;
   }).join('');
 
@@ -1712,10 +1807,9 @@ function renderMapStats(matches) {
       <th class="no-sort">Map</th>
       <th class="no-sort" style="text-align:center">Games</th>
       <th class="no-sort" style="text-align:right">Win%</th>
+      <th class="no-sort" style="text-align:right">Avg #</th>
       <th class="no-sort" style="color:var(--accent);text-align:right">D282 Avg K</th>
-      <th class="no-sort" style="color:var(--accent);text-align:right">D282 Avg #</th>
       <th class="no-sort" style="color:var(--blue);text-align:right">S821 Avg K</th>
-      <th class="no-sort" style="color:var(--blue);text-align:right">S821 Avg #</th>
     </tr></thead>
     <tbody>${html}</tbody>
   </table></div>`;
@@ -1918,7 +2012,7 @@ function renderAll() {
   lastMatches = filtered();
   renderSummary(lastMatches);
   renderPlacementChart(lastMatches);
-  renderKDTrendChart(lastMatches);
+  renderTrendChart(lastMatches);
   renderMapStats(lastMatches);
   renderDuoChemistry(lastMatches);
   renderLifetimeRecords(lastMatches);

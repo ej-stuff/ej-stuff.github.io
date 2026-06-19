@@ -524,6 +524,24 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <span style="color:var(--muted);font-size:10px">— 100 m ref</span>
         </div>
         <div id="proxWrap"><canvas id="proxCanvas"></canvas></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;margin-bottom:6px">
+          <span class="panel-title" style="margin-bottom:0">Performance Score</span>
+          <div class="chart-legend">
+            <span style="color:var(--accent)">▬ D282</span>
+            <span style="color:var(--blue)">▬ S821</span>
+            <span style="color:#888888">▬ Duo</span>
+          </div>
+        </div>
+        <div id="scoreWrap"><canvas id="scoreCanvas"></canvas></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:3px;margin-top:6px;font-size:11px;color:var(--muted)">
+          <span>Kill: <span style="color:var(--ok)">+100</span> (solo: +200)</span>
+          <span>Knockdown: <span style="color:var(--ok)">+25</span> (solo: +50)</span>
+          <span>Damage: <span style="color:var(--ok)">+1/pt</span> (solo: +2/pt)</span>
+          <span>Revive: <span style="color:var(--ok)">+50</span></span>
+          <span>BC Revive: <span style="color:var(--ok)">+100</span></span>
+          <span>Death: <span style="color:var(--danger)">−100</span></span>
+          <span>Knocked: <span style="color:var(--danger)">−50</span></span>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
           <div>
             <div style="font-size:10px;color:var(--accent);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">D282 Travel /30s</div>
@@ -1181,6 +1199,7 @@ async function boot() {
   initDistCharts();
   // engagement lines rendered per-event in drawEngagements() — no precompute
   buildEngagementSummary();
+  buildScoreChart();
   buildWeaponBreakdown();
 
   renderMatchTable('matchListContainer', id);
@@ -1679,6 +1698,94 @@ function toggleLayer(id) {
 /* ============================================================================
    UI BUILDERS
 ============================================================================ */
+/* ============================================================================
+   PERFORMANCE SCORE CHART
+============================================================================ */
+let scoreChartInst = null;
+
+function buildScoreChart() {
+  const el = document.getElementById('scoreCanvas');
+  if (!el || !MD) return;
+
+  const allEvts = MD.events || [];
+  const relevant = allEvts.filter(e =>
+    ['kill','knockdown','dmg_dealt','revive','blue_chip_revive','death','knocked'].includes(e.type) &&
+    ['D282','S821'].includes(e.player)
+  ).sort((a, b) => a.t - b.t);
+
+  if (!relevant.length) { document.getElementById('scoreWrap').style.display = 'none'; return; }
+
+  function partnerStateAt(player, t) {
+    const partner = player === 'D282' ? 'S821' : 'D282';
+    const knocks  = allEvts.filter(e => e.type === 'knocked' && e.player === partner && e.t < t);
+    const revives = allEvts.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
+    const death   = allEvts.find(e => e.type === 'death' && e.player === partner);
+    if (death && death.t < t) return 'dead';
+    if (!knocks.length) return 'alive';
+    const lastKnock = knocks[knocks.length - 1];
+    const revAfter  = revives.some(r => r.t > lastKnock.t && r.t < t);
+    const diedAfter = death && death.t > lastKnock.t && death.t < t;
+    return (!revAfter && !diedAfter) ? 'knocked' : 'alive';
+  }
+
+  function evtScore(e) {
+    const ps = partnerStateAt(e.player, e.t);
+    const solo = (ps === 'dead' || ps === 'knocked');
+    switch (e.type) {
+      case 'kill':             return solo ? 200 : 100;
+      case 'knockdown':        return solo ? 50  : 25;
+      case 'dmg_dealt':        return (e.damage || 0) * (solo ? 2 : 1);
+      case 'revive':           return 50;
+      case 'blue_chip_revive': return 100;
+      case 'death':            return -100;
+      case 'knocked':          return -50;
+      default:                 return 0;
+    }
+  }
+
+  let s282 = 0, s821 = 0;
+  const data282 = [{x:0, y:0}], data821 = [{x:0, y:0}], dataDuo = [{x:0, y:0}];
+  for (const e of relevant) {
+    if (e.player === 'D282') s282 += evtScore(e);
+    else                     s821 += evtScore(e);
+    data282.push({x: e.t, y: s282});
+    data821.push({x: e.t, y: s821});
+    dataDuo.push({x: e.t, y: s282 + s821});
+  }
+
+  if (scoreChartInst) { scoreChartInst.destroy(); scoreChartInst = null; }
+  scoreChartInst = new Chart(el.getContext('2d'), {
+    type: 'line',
+    data: {
+      datasets: [
+        { label: 'D282', data: data282, borderColor: '#f4a300', backgroundColor: 'transparent', stepped: true, borderWidth: 2, pointRadius: 0, pointHoverRadius: 3 },
+        { label: 'S821', data: data821, borderColor: '#4a9edd', backgroundColor: 'transparent', stepped: true, borderWidth: 2, pointRadius: 0, pointHoverRadius: 3 },
+        { label: 'Duo',  data: dataDuo, borderColor: '#888888', backgroundColor: 'transparent', stepped: true, borderWidth: 1.5, borderDash: [5,4], pointRadius: 0, pointHoverRadius: 3 },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      parsing: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
+        tooltip: {
+          backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1,
+          titleColor: '#e8e3d8', bodyColor: '#9a9385',
+          callbacks: {
+            title: items => mmss(Math.round(items[0].parsed.x)),
+            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y > 0 ? '+' : ''}${Math.round(ctx.parsed.y)}`,
+          },
+        },
+      },
+      scales: {
+        x: { type: 'linear', min: 0, ticks: { color: '#9a9385', font: {size:11}, callback: v => mmss(v) }, grid: { color: 'rgba(56,52,44,0.5)' } },
+        y: { ticks: { color: '#9a9385', font: {size:11} }, grid: { color: 'rgba(56,52,44,0.4)' } },
+      },
+    },
+  });
+}
+
 function soloKillCount(events, player) {
   const partner = player === 'D282' ? 'S821' : 'D282';
   const partnerKnocks  = events.filter(e => e.type === 'knocked' && e.player === partner);
