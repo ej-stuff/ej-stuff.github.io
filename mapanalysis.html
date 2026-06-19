@@ -198,6 +198,11 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
         <div class="sub-control" id="phaseControl">
           <div class="sub-label">Phase (1=early, 8=final)</div>
           <div class="phase-btns" id="phaseBtns"></div>
+          <div class="sub-label" style="margin-top:8px">Color mode</div>
+          <div class="phase-btns">
+            <button class="phase-btn" id="ccb_placement" onclick="setCircleColorMode('placement')">Placement</button>
+            <button class="phase-btn" id="ccb_survival"  onclick="setCircleColorMode('survival')">Survival</button>
+          </div>
         </div>
 
         <!-- Circle color legend -->
@@ -255,15 +260,13 @@ const PLAYER_COLOR = { D282:'#f4a300', S821:'#4a9edd' };
 const CSZ = 720;
 
 const LAYER_DEFS = [
-  { id:'heatmap',     label:'Position Heatmap',  color:'#ff7040', defaultOn:true  },
+  { id:'heatmap',     label:'Position Heatmap',  color:'#ff7040', defaultOn:false },
   { id:'lootHeatmap', label:'Loot Heatmap',       color:'#88cc44', defaultOn:false },
   { id:'paths',       label:'Rotation Paths',    color:'#aaaaaa', defaultOn:false },
   { id:'drops',       label:'Landing Zones',     color:'#8fae5d', defaultOn:true  },
-  { id:'circles',          label:'Circle Zones',           color:'#ccddee', defaultOn:false },
-  { id:'circlesPlacement', label:'Circle Placement Colors', color:'#66cc44', defaultOn:false },
-  { id:'circlesSurvival',  label:'Circle Survival Colors',  color:'#44cc66', defaultOn:false },
-  { id:'deaths',      label:'Deaths',            color:'#d7443e', defaultOn:true  },
-  { id:'kills',       label:'Kills',             color:'#f4a300', defaultOn:true  },
+  { id:'circles',     label:'Circle Zones',      color:'#ccddee', defaultOn:false },
+  { id:'deaths',      label:'Deaths',            color:'#d7443e', defaultOn:false },
+  { id:'kills',       label:'Kills',             color:'#f4a300', defaultOn:false },
   { id:'knocked',     label:'Got Knocked',       color:'#e07030', defaultOn:false },
   { id:'engagements', label:'Engagements',       color:'#66cc66', defaultOn:false },
 ];
@@ -292,6 +295,7 @@ const state = {
   dateIdxMin: 0, dateIdxMax: 0,
   layers: Object.fromEntries(LAYER_DEFS.map(l=>[l.id,l.defaultOn])),
   circlePhase: 3,
+  circleColorMode: 'white',
   engGroupSlider: 0,
   phases: { early:true, mid:true, late:true },
 };
@@ -424,13 +428,10 @@ function buildLayerList() {
 function toggleLayer(id) {
   state.layers[id] = !state.layers[id];
   document.getElementById(`lr_${id}`)?.classList.toggle('active', state.layers[id]);
-  document.getElementById('phaseControl').classList.toggle('visible',
-    state.layers.circles||state.layers.circlesPlacement||state.layers.circlesSurvival);
+  document.getElementById('phaseControl').classList.toggle('visible', state.layers.circles);
   document.getElementById('engControl').classList.toggle('visible', state.layers.engagements);
-  const showPl=state.layers.circlesPlacement, showSu=state.layers.circlesSurvival;
-  document.getElementById('legendPlacement').style.display=showPl?'':'none';
-  document.getElementById('legendSurvival').style.display=showSu?'':'none';
-  document.getElementById('circlesLegend').classList.toggle('visible',showPl||showSu);
+  const on=state.layers.circles, m=state.circleColorMode;
+  document.getElementById('circlesLegend').classList.toggle('visible', on&&m!=='white');
   scheduleRedraw();
 }
 
@@ -820,8 +821,6 @@ function draw() {
 
   hitTargets=[];
   if (state.layers.circles)          drawCircles();
-  if (state.layers.circlesPlacement) drawCirclesPlacement();
-  if (state.layers.circlesSurvival)  drawCirclesSurvival();
   if (state.layers.paths)       drawPaths();
   if (state.layers.engagements) drawEngagements();
   if (state.layers.drops)       drawDropZones();
@@ -835,85 +834,67 @@ function draw() {
 /* ── Circles ────────────────────────────────────────────────────────────── */
 function placementColor(p) {
   if (p===1)  return '#FFD700';
-  if (p===2)  return '#C8C8C8';
-  if (p===3)  return '#CD7F32';
-  if (p<=5)   return '#66cc44';
-  if (p<=10)  return '#4a9edd';
-  if (p<=20)  return '#9975cc';
-  return '#554488';
+  if (p===2)  return '#D8D8D8';
+  if (p===3)  return '#E0923A';
+  if (p<=5)   return '#66dd44';
+  if (p<=10)  return '#4ab8ff';
+  if (p<=20)  return '#bb88ff';
+  return '#7755bb';
 }
 
+function survivalColor(mc, c) {
+  if (mc.placement===1) return '#FFD700';
+  const dt=mc.deathTimes||{};
+  return (dt.D282==null||dt.D282>c.t)||(dt.S821==null||dt.S821>c.t)?'#44ee66':'#ff4444';
+}
+
+function drawCircleArc(c, col, alpha, lw, isLast) {
+  ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
+  ctx.strokeStyle=col+alpha; ctx.lineWidth=lw/view.scale; ctx.stroke();
+  if (isLast) {
+    const s=Math.max(3,c.r*0.25)/view.scale;
+    ctx.beginPath();
+    ctx.moveTo(c.cx-s,c.cy); ctx.lineTo(c.cx+s,c.cy);
+    ctx.moveTo(c.cx,c.cy-s); ctx.lineTo(c.cx,c.cy+s);
+    ctx.strokeStyle=col+'ff'; ctx.lineWidth=1.2/view.scale; ctx.stroke();
+  }
+}
 
 function drawCircles() {
   const phase=state.circlePhase;
+  const mode=state.circleColorMode;
+  const colFn=mode==='placement'?(mc)=>placementColor(mc.placement||99)
+              :mode==='survival' ?(mc,c)=>survivalColor(mc,c)
+              :null;
   for (const mc of LAYER.circlePhases) {
     const phases=mc.phases; if(!phases.length) continue;
     if (phase===0) {
       phases.forEach((c,i)=>{
         const isLast=(i===phases.length-1);
-        ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
-        ctx.strokeStyle=isLast?'rgba(255,255,255,0.55)':'rgba(255,255,255,0.15)';
-        ctx.lineWidth=(isLast?1.5:0.8)/view.scale; ctx.stroke();
-        if (isLast) {
-          const s=Math.max(3,c.r*0.25)/view.scale;
-          ctx.beginPath();
-          ctx.moveTo(c.cx-s,c.cy); ctx.lineTo(c.cx+s,c.cy);
-          ctx.moveTo(c.cx,c.cy-s); ctx.lineTo(c.cx,c.cy+s);
-          ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.lineWidth=1/view.scale; ctx.stroke();
-        }
+        const col=colFn?colFn(mc,c):'#ffffff';
+        const alpha=isLast?(colFn?'ee':'cc'):(colFn?'66':'33');
+        drawCircleArc(c,col,alpha,(isLast?1.8:0.9),isLast);
       });
     } else {
-      const c=phases[Math.min(phase-1,phases.length-1)]; if(!c) continue;
-      const isLast=(Math.min(phase-1,phases.length-1)===phases.length-1);
-      ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
-      ctx.strokeStyle='rgba(255,255,255,0.75)'; ctx.lineWidth=1.5/view.scale; ctx.stroke();
-      if (isLast) {
-        const s=Math.max(3,c.r*0.25)/view.scale;
-        ctx.beginPath();
-        ctx.moveTo(c.cx-s,c.cy); ctx.lineTo(c.cx+s,c.cy);
-        ctx.moveTo(c.cx,c.cy-s); ctx.lineTo(c.cx,c.cy+s);
-        ctx.strokeStyle='rgba(255,255,255,0.8)'; ctx.lineWidth=1.2/view.scale; ctx.stroke();
-      }
+      const idx=phase-1;
+      if (idx>=phases.length) continue; // match doesn't have this many phases
+      const c=phases[idx];
+      const isLast=(idx===phases.length-1);
+      const col=colFn?colFn(mc,c):'#ffffff';
+      drawCircleArc(c,col,'ee',1.8,isLast);
     }
   }
 }
 
-function drawColoredCircles(colFn) {
-  const phase=state.circlePhase;
-  for (const mc of LAYER.circlePhases) {
-    const phases=mc.phases; if(!phases.length) continue;
-    const toShow=phase===0?phases:[phases[Math.min(phase-1,phases.length-1)]].filter(Boolean);
-    for (let i=0;i<toShow.length;i++) {
-      const c=toShow[i];
-      const globalIdx=phase===0?i:Math.min(phase-1,phases.length-1);
-      const isLast=(globalIdx===phases.length-1);
-      const col=colFn(mc,c,globalIdx);
-      ctx.beginPath(); ctx.arc(c.cx,c.cy,c.r,0,Math.PI*2);
-      ctx.strokeStyle=col+(isLast?'cc':'55');
-      ctx.lineWidth=(isLast?1.8:0.9)/view.scale; ctx.stroke();
-      if (isLast) {
-        const s=Math.max(3,c.r*0.25)/view.scale;
-        ctx.beginPath();
-        ctx.moveTo(c.cx-s,c.cy); ctx.lineTo(c.cx+s,c.cy);
-        ctx.moveTo(c.cx,c.cy-s); ctx.lineTo(c.cx,c.cy+s);
-        ctx.strokeStyle=col+'dd'; ctx.lineWidth=1.2/view.scale; ctx.stroke();
-      }
-    }
-  }
-}
-
-function drawCirclesPlacement() {
-  drawColoredCircles((mc)=>placementColor(mc.placement||99));
-}
-
-function drawCirclesSurvival() {
-  drawColoredCircles((mc,c)=>{
-    if (mc.placement===1) return '#FFD700';
-    const dt=mc.deathTimes||{};
-    const aliveD=(dt.D282==null||dt.D282>c.t);
-    const aliveS=(dt.S821==null||dt.S821>c.t);
-    return (aliveD||aliveS)?'#44cc66':'#cc4444';
-  });
+function setCircleColorMode(mode) {
+  state.circleColorMode=state.circleColorMode===mode?'white':mode;
+  document.getElementById('ccb_placement').classList.toggle('active',state.circleColorMode==='placement');
+  document.getElementById('ccb_survival').classList.toggle('active',state.circleColorMode==='survival');
+  const showPl=state.circleColorMode==='placement', showSu=state.circleColorMode==='survival';
+  document.getElementById('legendPlacement').style.display=showPl?'':'none';
+  document.getElementById('legendSurvival').style.display=showSu?'':'none';
+  document.getElementById('circlesLegend').classList.toggle('visible',(showPl||showSu)&&state.layers.circles);
+  scheduleRedraw();
 }
 
 /* ── Paths ──────────────────────────────────────────────────────────────── */
