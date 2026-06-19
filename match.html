@@ -143,7 +143,8 @@ h1 {
   transition: color .15s, border-color .15s;
   line-height: 1;
 }
-.map-ctrl-btn:hover { color: var(--accent); border-color: var(--accent); }
+.map-ctrl-btn:hover  { color: var(--accent); border-color: var(--accent); }
+.map-ctrl-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(244,163,0,0.12); }
 
 .tooltip {
   position: fixed;
@@ -483,6 +484,7 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <button class="map-ctrl-btn" onclick="zoomStep(1.3)" title="Zoom in">+</button>
           <button class="map-ctrl-btn" onclick="zoomStep(1/1.3)" title="Zoom out">−</button>
           <button class="map-ctrl-btn" onclick="resetView()" title="Fit map">⤢</button>
+          <button class="map-ctrl-btn" id="killfeedBtn" onclick="toggleKillFeed()" title="Kill feed" style="font-size:12px">☰</button>
         </div>
         <div id="tooltip" class="tooltip" style="display:none"></div>
       </div>
@@ -624,6 +626,8 @@ const LAYER_DEFS = [
   { id: 'vehicle_in',       label: 'Vehicle Entry',     color: '#aaddff', default: false },
   { id: 'vehicle_out',      label: 'Vehicle Exit',      color: '#aaddff', default: false },
   { id: 'armor_break',      label: 'Armor Break',       color: '#ff9944', default: false },
+  { id: 'enemy_teams',      label: 'Team Numbers',      color: '#ff8888', default: false },
+  { id: 'killfeed',         label: 'Kill Feed',         color: '#7bc26a', default: false },
 ];
 
 /* ============================================================================
@@ -702,13 +706,18 @@ function drawEventIcon(c, cx, cy, r, lw, type, col) {
       break;
     }
     case 'death': {
-      const v = r * 0.9, h2 = r * 0.5;
-      c.lineWidth = lw * 1.2;
+      // Red border circle
+      c.strokeStyle = '#d7443e';
+      c.lineWidth   = lw * 1.1;
+      c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
+      // Player-colored X inside
+      c.strokeStyle = col;
+      c.lineWidth   = lw;
+      const s = r * 0.6;
       c.beginPath();
-      c.moveTo(cx, cy - v); c.lineTo(cx, cy + v);
-      c.moveTo(cx - h2, cy - v * 0.2); c.lineTo(cx + h2, cy - v * 0.2);
+      c.moveTo(cx-s, cy-s); c.lineTo(cx+s, cy+s);
+      c.moveTo(cx+s, cy-s); c.lineTo(cx-s, cy+s);
       c.stroke();
-      c.lineWidth = lw;
       break;
     }
     case 'revive': {
@@ -1181,7 +1190,7 @@ async function boot() {
   initTimeline();
   initHpChart();
   initDistCharts();
-  // engagement lines rendered per-event in drawEngagements() — no precompute
+  precomputeMatchData();
   buildEngagementSummary();
   buildScoreChart();
   buildWeaponBreakdown();
@@ -1297,6 +1306,7 @@ function draw() {
   }
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+  drawKillFeed(maxT);
   updateLoadout(maxT);
 }
 
@@ -1475,15 +1485,13 @@ function drawEnemies(maxT) {
   const enemies = MD.enemies;
   if (!enemies || !enemies.length) return;
 
-  // When time is Infinity use the match end as the reference
   const effectiveT = maxT === Infinity ? (MD.duration_s || 1800) : maxT;
   const MEDAL_COL  = { 1: '#ffd700', 2: '#c0c0c0', 3: '#cd7f32' };
+  const showTeams  = state.layers.enemy_teams;
 
   for (const en of enemies) {
-    // Hide if dead before current time
     if (en.death_t != null && effectiveT >= en.death_t) continue;
 
-    // Binary search: last position at or before effectiveT
     const pos = en.pos;
     if (!pos || !pos.length) continue;
     let lo = 0, hi = pos.length - 1, idx = -1;
@@ -1495,25 +1503,58 @@ function drawEnemies(maxT) {
     if (idx < 0) continue;
 
     const { cx, cy } = w2c(pos[idx][1], pos[idx][2]);
-    const r = (en.medal ? 3 : 2) / view.scale;
+    const r          = (en.medal ? 6 : 4) / view.scale;
+    const isKnocked  = isEnemyKnockedAt(en.name, effectiveT);
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle   = '#ff4444';
-    ctx.globalAlpha = 0.7;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-
-    if (en.medal) {
+    if (isKnocked) {
+      // Downward triangle for knocked enemies
       ctx.beginPath();
-      ctx.arc(cx, cy, r * 2.1, 0, Math.PI * 2);
-      ctx.strokeStyle = MEDAL_COL[en.medal] || '#fff';
-      ctx.lineWidth   = 1.2 / view.scale;
-      ctx.globalAlpha = 0.92;
-      ctx.stroke();
+      ctx.moveTo(cx,     cy + r);
+      ctx.lineTo(cx + r, cy - r * 0.7);
+      ctx.lineTo(cx - r, cy - r * 0.7);
+      ctx.closePath();
+      ctx.fillStyle   = '#ff4444';
+      ctx.globalAlpha = 0.9;
+      ctx.fill();
       ctx.globalAlpha = 1;
+    } else {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle   = '#ff4444';
+      ctx.globalAlpha = 0.7;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      if (en.medal) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 1.8, 0, Math.PI * 2);
+        ctx.strokeStyle = MEDAL_COL[en.medal] || '#fff';
+        ctx.lineWidth   = 1.2 / view.scale;
+        ctx.globalAlpha = 0.92;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    if (showTeams && en.team != null) {
+      ctx.font         = `bold ${9 / view.scale}px system-ui, sans-serif`;
+      ctx.fillStyle    = '#ffbbbb';
+      ctx.textAlign    = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.globalAlpha  = 0.95;
+      ctx.fillText(String(en.team), cx + r + 2 / view.scale, cy);
+      ctx.globalAlpha  = 1;
     }
   }
+}
+
+function isEnemyKnockedAt(name, T) {
+  const intervals = _enemyKnockIntervals[name];
+  if (!intervals) return false;
+  for (const { knockT, killT } of intervals) {
+    if (T >= knockT && T < knockT + 90 && (killT == null || T < killT)) return true;
+  }
+  return false;
 }
 
 /* ── Event markers (use unified icon function) ──────────────────────────── */
@@ -1674,8 +1715,12 @@ function setPlayerFilter(p) {
 
 function toggleLayer(id) {
   state.layers[id] = !state.layers[id];
-  document.querySelector(`.layer-btn[data-layer="${id}"]`)
-    .classList.toggle('active', state.layers[id]);
+  const sb = document.querySelector(`.layer-btn[data-layer="${id}"]`);
+  if (sb) sb.classList.toggle('active', state.layers[id]);
+  if (id === 'killfeed') {
+    const btn = document.getElementById('killfeedBtn');
+    if (btn) btn.classList.toggle('active', state.layers[id]);
+  }
   draw();
 }
 
@@ -2365,6 +2410,116 @@ function buildWeaponBreakdown() {
   }
 
   el.innerHTML = playerSection('D282') + playerSection('S821');
+}
+
+/* ============================================================================
+   PRECOMPUTED MATCH DATA  (knock intervals, kill feed)
+============================================================================ */
+let _enemyKnockIntervals = {};
+let _killFeed = [];
+
+function precomputeMatchData() {
+  if (!MD) return;
+
+  _enemyKnockIntervals = {};
+  for (const ev of MD.events) {
+    if (ev.type === 'knockdown' && ev.victim) {
+      if (!_enemyKnockIntervals[ev.victim]) _enemyKnockIntervals[ev.victim] = [];
+      _enemyKnockIntervals[ev.victim].push({ knockT: ev.t, killT: null });
+    }
+    if (ev.type === 'kill' && ev.victim) {
+      const arr = _enemyKnockIntervals[ev.victim];
+      if (arr && arr.length) {
+        const last = arr[arr.length - 1];
+        if (!last.killT) last.killT = ev.t;
+      }
+    }
+  }
+
+  _killFeed = [];
+  for (const ev of MD.events) {
+    if (ev.type === 'kill') {
+      _killFeed.push({ t: ev.t, dealer: ev.player, victim: ev.victim || '?', weapon: ev.weapon, action: 'killed', positive: true });
+    } else if (ev.type === 'knockdown') {
+      _killFeed.push({ t: ev.t, dealer: ev.player, victim: ev.victim || '?', weapon: ev.weapon, action: 'knocked', positive: true });
+    } else if (ev.type === 'death') {
+      _killFeed.push({ t: ev.t, dealer: ev.killer || '?', victim: ev.player, weapon: ev.weapon, action: 'killed', positive: false });
+    } else if (ev.type === 'knocked') {
+      _killFeed.push({ t: ev.t, dealer: ev.attacker || '?', victim: ev.player, weapon: null, action: 'knocked', positive: false });
+    }
+  }
+  _killFeed.sort((a, b) => a.t - b.t);
+}
+
+function drawKillFeed(maxT) {
+  if (!state.layers.killfeed || !_killFeed.length) return;
+
+  const effectiveT = maxT === Infinity ? (MD.duration_s || 1800) : maxT;
+  const WINDOW     = maxT === Infinity ? Infinity : 60;
+  const MAX_ROWS   = 8;
+
+  const entries = _killFeed
+    .filter(e => e.t <= effectiveT && (WINDOW === Infinity || e.t >= effectiveT - WINDOW))
+    .slice(-MAX_ROWS);
+  if (!entries.length) return;
+
+  const W         = canvas.width;
+  const FONT_SIZE = Math.round(Math.max(10, Math.min(14, W * 0.03)));
+  const LINE_H    = FONT_SIZE + 6;
+  const PAD_X     = 8;
+  const PAD_RIGHT = 6;
+  const startY    = 10;
+
+  ctx.save();
+  ctx.font         = `${FONT_SIZE}px 'Oswald', system-ui, sans-serif`;
+  ctx.textBaseline = 'top';
+
+  const D = '#f4a300', S = '#4a9edd';
+
+  entries.slice().reverse().forEach((entry, i) => {
+    const y     = startY + i * LINE_H;
+    const age   = maxT === Infinity ? 0 : effectiveT - entry.t;
+    const alpha = maxT === Infinity ? 0.92 : Math.max(0.18, 0.92 - age / WINDOW * 0.78);
+
+    const dealerCol = entry.dealer === 'D282' ? D : entry.dealer === 'S821' ? S : '#ff8888';
+    const victimCol = entry.victim === 'D282' ? D : entry.victim === 'S821' ? S : 'rgba(232,227,216,0.9)';
+    const actionCol = entry.positive
+      ? (entry.action === 'killed' ? '#7bc26a' : '#b2d97a')
+      : (entry.action === 'killed' ? '#e05555' : '#e08040');
+
+    const parts = [
+      { text: entry.dealer,                col: dealerCol },
+      { text: ` ${entry.action} `,          col: actionCol },
+      { text: entry.victim,                 col: victimCol },
+    ];
+    if (entry.weapon) parts.push({ text: ` [${entry.weapon}]`, col: 'rgba(154,147,133,0.8)' });
+
+    const totalTextW = parts.reduce((s, p) => s + ctx.measureText(p.text).width, 0);
+    const boxW       = totalTextW + PAD_X * 2;
+    const boxX       = W - boxW - PAD_RIGHT;
+
+    ctx.globalAlpha = alpha * 0.55;
+    ctx.fillStyle   = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(boxX, y - 2, boxW, LINE_H);
+
+    ctx.globalAlpha = alpha;
+    let x = boxX + PAD_X;
+    for (const { text, col } of parts) {
+      ctx.fillStyle = col;
+      ctx.fillText(text, x, y);
+      x += ctx.measureText(text).width;
+    }
+  });
+
+  ctx.restore();
+}
+
+function toggleKillFeed() {
+  state.layers.killfeed = !state.layers.killfeed;
+  document.getElementById('killfeedBtn').classList.toggle('active', state.layers.killfeed);
+  const sb = document.querySelector('.layer-btn[data-layer="killfeed"]');
+  if (sb) sb.classList.toggle('active', state.layers.killfeed);
+  draw();
 }
 
 /* ============================================================================
