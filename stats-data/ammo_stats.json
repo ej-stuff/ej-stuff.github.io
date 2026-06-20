@@ -4734,5 +4734,375 @@
         }
       }
     }
+  },
+  {
+    "match_id": "a38ee71b-1fbb-488d-952a-5e054c9dd770",
+    "created_at": "2026-06-20T12:06:02Z",
+    "players": {
+      "D282": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 3,
+          "picked_up": 270
+        },
+        "7.62mm Ammo": {
+          "reloads": 1,
+          "picked_up": 10
+        },
+        "9mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "reloads": 4,
+          "picked_up": 280
+        }
+      },
+      "S821": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "7.62mm Ammo": {
+          "reloads": 7,
+          "picked_up": 291
+        },
+        "9mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "reloads": 7,
+          "picked_up": 291
+        }
+      }
+    }
+  },
+  {
+    "match_id": "73d92c3b-275d-4136-99e7-99eacb18807e",
+    "created_at": "2026-06-20T12:13:22Z",
+    "players": {
+      "D282": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "7.62mm Ammo": {
+          "reloads": 1,
+          "picked_up": 30
+        },
+        "9mm Ammo": {
+          "reloads": 2,
+          "picked_up": 60
+        },
+        "__total__": {
+          "reloads": 3,
+          "picked_up": 90
+        }
+      },
+      "S821": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 1,
+          "picked_up": 30
+        },
+        "7.62mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "9mm Ammo": {
+          "reloads": 0,
+          "picked_up": 30
+        },
+        "__total__": {
+          "reloads": 1,
+          "picked_up": 60
+        }
+      }
+    }
+  },
+  {
+    "match_id": "f0f3505e-e9e6-4a8d-bf90-2a6b099dd121",
+    "created_at": "2026-06-20T12:16:50Z",
+    "players": {
+      "D282": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 4,
+          "picked_up": 150
+        },
+        "7.62mm Ammo": {
+          "reloads": 0,
+          "picked_up": 30
+        },
+        "9mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "reloads": 4,
+          "picked_up": 180
+        }
+      },
+      "S821": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 2,
+          "picked_up": 176
+        },
+        "7.62mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "9mm Ammo": {
+          "reloads": 1,
+          "picked_up": 0
+        },
+        "__total__": {
+          "reloads": 3,
+          "picked_up": 176
+        }
+      }
+    }
+  },
+  {
+    "match_id": "b4601152-31fd-4f40-a482-cb7e6a7fbe76",
+    "created_at": "2026-06-20T12:25:30Z",
+    "players": {
+      "D282": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 5,
+          "picked_up": 362
+        },
+        "7.62mm Ammo": {
+          "reloads": 1,
+          "picked_up": 0
+        },
+        "9mm Ammo": {
+          "reloads": 3,
+          "picked_up": 18
+        },
+        "__total__": {
+          "reloads": 9,
+          "picked_up": 380
+        }
+      },
+      "S821": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 12,
+          "picked_up": 396
+        },
+        "7.62mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "9mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "reloads": 12,
+          "picked_up": 396
+        }
+      }
+    }
+  },
+  {
+    "match_id": "637b491e-ce74-4598-85db-1af0359d1137",
+    "created_at": "2026-06-20T12:40:49Z",
+    "players": {
+      "D282": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 2,
+          "picked_up": 150
+        },
+        "7.62mm Ammo": {
+          "reloads": 2,
+          "picked_up": 0
+        },
+        "9mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "reloads": 4,
+          "picked_up": 150
+        }
+      },
+      "S821": {
+        ".300 Magnum Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        ".45 ACP Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "12 Gauge Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "40mm Grenade": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "5.56mm Ammo": {
+          "reloads": 0,
+          "picked_up": 90
+        },
+        "7.62mm Ammo": {
+          "reloads": 0,
+          "picked_up": 0
+        },
+        "9mm Ammo": {
+          "reloads": 1,
+          "picked_up": 90
+        },
+        "__total__": {
+          "reloads": 1,
+          "picked_up": 180
+        }
+      }
+    }
   }
 ]

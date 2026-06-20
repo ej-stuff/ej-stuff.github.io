@@ -6,9 +6,9 @@
       "kills": 8,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.125,
-      "hits": 73,
-      "total_damage": 1022.2,
-      "avg_damage_per_hit": 14.0
+      "hits": 74,
+      "total_damage": 1040.7,
+      "avg_damage_per_hit": 14.1
     },
     {
       "weapon": "HK416",
@@ -16,9 +16,9 @@
       "kills": 7,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 38,
-      "total_damage": 754.0,
-      "avg_damage_per_hit": 19.8
+      "hits": 46,
+      "total_damage": 875.6,
+      "avg_damage_per_hit": 19.0
     },
     {
       "weapon": "Mini 14",
@@ -76,9 +76,9 @@
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 14,
-      "total_damage": 255.7,
-      "avg_damage_per_hit": 18.3
+      "hits": 15,
+      "total_damage": 293.7,
+      "avg_damage_per_hit": 19.6
     },
     {
       "weapon": "MP5K",
@@ -89,6 +89,16 @@
       "hits": 6,
       "total_damage": 24.1,
       "avg_damage_per_hit": 4.0
+    },
+    {
+      "weapon": "AUG A3",
+      "category": "AR",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 16,
+      "total_damage": 196.6,
+      "avg_damage_per_hit": 12.3
     },
     {
       "weapon": "ACE32",
@@ -121,6 +131,16 @@
       "avg_damage_per_hit": 34.8
     },
     {
+      "weapon": "Dragunov",
+      "category": "DMR",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 3,
+      "total_damage": 135.4,
+      "avg_damage_per_hit": 45.1
+    },
+    {
       "weapon": "G36C",
       "category": "AR",
       "kills": 0,
@@ -151,16 +171,6 @@
       "avg_damage_per_hit": 7.7
     },
     {
-      "weapon": "Dragunov",
-      "category": "DMR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 2,
-      "total_damage": 82.5,
-      "avg_damage_per_hit": 41.2
-    },
-    {
       "weapon": "Mk47 Mutant",
       "category": "SR",
       "kills": 0,
@@ -181,14 +191,14 @@
       "avg_damage_per_hit": 4.3
     },
     {
-      "weapon": "AUG A3",
-      "category": "AR",
+      "weapon": "Micro UZI",
+      "category": "SMG",
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
       "hits": 2,
-      "total_damage": 42.6,
-      "avg_damage_per_hit": 21.3
+      "total_damage": 31.0,
+      "avg_damage_per_hit": 15.5
     }
   ],
   "S821": [
@@ -205,12 +215,22 @@
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 6,
-      "headshot_kills": 2,
-      "headshot_kill_pct": 0.333,
-      "hits": 37,
-      "total_damage": 530.8,
-      "avg_damage_per_hit": 14.3
+      "kills": 8,
+      "headshot_kills": 3,
+      "headshot_kill_pct": 0.375,
+      "hits": 44,
+      "total_damage": 644.1,
+      "avg_damage_per_hit": 14.6
+    },
+    {
+      "weapon": "M249",
+      "category": "LMG",
+      "kills": 5,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 25,
+      "total_damage": 392.5,
+      "avg_damage_per_hit": 15.7
     },
     {
       "weapon": "Mk12 SPR",
@@ -218,9 +238,9 @@
       "kills": 4,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 40,
-      "total_damage": 682.8,
-      "avg_damage_per_hit": 17.1
+      "hits": 41,
+      "total_damage": 706.9,
+      "avg_damage_per_hit": 17.2
     },
     {
       "weapon": "Mini 14",
@@ -231,16 +251,6 @@
       "hits": 40,
       "total_damage": 872.2,
       "avg_damage_per_hit": 21.8
-    },
-    {
-      "weapon": "M249",
-      "category": "LMG",
-      "kills": 3,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 19,
-      "total_damage": 274.5,
-      "avg_damage_per_hit": 14.4
     },
     {
       "weapon": "SLR",
@@ -261,6 +271,16 @@
       "hits": 28,
       "total_damage": 677.6,
       "avg_damage_per_hit": 24.2
+    },
+    {
+      "weapon": "K2",
+      "category": "AR",
+      "kills": 2,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.5,
+      "hits": 14,
+      "total_damage": 301.7,
+      "avg_damage_per_hit": 21.6
     },
     {
       "weapon": "Vector",
@@ -391,16 +411,6 @@
       "hits": 5,
       "total_damage": 104.6,
       "avg_damage_per_hit": 20.9
-    },
-    {
-      "weapon": "K2",
-      "category": "AR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 4,
-      "total_damage": 101.7,
-      "avg_damage_per_hit": 25.4
     },
     {
       "weapon": "Micro UZI",
