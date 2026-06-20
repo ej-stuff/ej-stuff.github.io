@@ -16,9 +16,9 @@
       "kills": 7,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 46,
+      "hits": 50,
       "total_damage": 875.6,
-      "avg_damage_per_hit": 19.0
+      "avg_damage_per_hit": 17.5
     },
     {
       "weapon": "Mini 14",
@@ -66,9 +66,9 @@
       "kills": 2,
       "headshot_kills": 2,
       "headshot_kill_pct": 1.0,
-      "hits": 28,
-      "total_damage": 662.1,
-      "avg_damage_per_hit": 23.6
+      "hits": 29,
+      "total_damage": 690.9,
+      "avg_damage_per_hit": 23.8
     },
     {
       "weapon": "SKS",
@@ -76,9 +76,19 @@
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
+      "hits": 16,
+      "total_damage": 343.0,
+      "avg_damage_per_hit": 21.4
+    },
+    {
+      "weapon": "ACE32",
+      "category": "AR",
+      "kills": 2,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
       "hits": 15,
-      "total_damage": 293.7,
-      "avg_damage_per_hit": 19.6
+      "total_damage": 210.6,
+      "avg_damage_per_hit": 14.0
     },
     {
       "weapon": "MP5K",
@@ -99,16 +109,6 @@
       "hits": 16,
       "total_damage": 196.6,
       "avg_damage_per_hit": 12.3
-    },
-    {
-      "weapon": "ACE32",
-      "category": "AR",
-      "kills": 1,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 12,
-      "total_damage": 110.6,
-      "avg_damage_per_hit": 9.2
     },
     {
       "weapon": "Grenade",
@@ -208,9 +208,9 @@
       "kills": 9,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.111,
-      "hits": 73,
-      "total_damage": 911.0,
-      "avg_damage_per_hit": 12.5
+      "hits": 75,
+      "total_damage": 951.6,
+      "avg_damage_per_hit": 12.7
     },
     {
       "weapon": "ACE32",
@@ -233,6 +233,16 @@
       "avg_damage_per_hit": 15.7
     },
     {
+      "weapon": "Mini 14",
+      "category": "DMR",
+      "kills": 4,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.25,
+      "hits": 47,
+      "total_damage": 1165.2,
+      "avg_damage_per_hit": 24.8
+    },
+    {
       "weapon": "Mk12 SPR",
       "category": "DMR",
       "kills": 4,
@@ -241,16 +251,6 @@
       "hits": 48,
       "total_damage": 896.3,
       "avg_damage_per_hit": 18.7
-    },
-    {
-      "weapon": "Mini 14",
-      "category": "DMR",
-      "kills": 3,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 40,
-      "total_damage": 872.2,
-      "avg_damage_per_hit": 21.8
     },
     {
       "weapon": "SLR",
@@ -358,9 +358,9 @@
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
-      "hits": 6,
-      "total_damage": 175.0,
-      "avg_damage_per_hit": 29.2
+      "hits": 7,
+      "total_damage": 198.8,
+      "avg_damage_per_hit": 28.4
     },
     {
       "weapon": "Dragunov",
@@ -421,6 +421,16 @@
       "hits": 4,
       "total_damage": 94.9,
       "avg_damage_per_hit": 23.7
+    },
+    {
+      "weapon": "S686",
+      "category": "SG",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 9,
+      "total_damage": 75.0,
+      "avg_damage_per_hit": 8.3
     }
   ]
 }
