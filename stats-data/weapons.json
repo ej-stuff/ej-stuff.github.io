@@ -6,9 +6,9 @@
       "kills": 8,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.125,
-      "hits": 74,
-      "total_damage": 1040.7,
-      "avg_damage_per_hit": 14.1
+      "hits": 77,
+      "total_damage": 1097.0,
+      "avg_damage_per_hit": 14.2
     },
     {
       "weapon": "HK416",
@@ -36,9 +36,9 @@
       "kills": 3,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.333,
-      "hits": 40,
-      "total_damage": 942.2,
-      "avg_damage_per_hit": 23.6
+      "hits": 43,
+      "total_damage": 1007.2,
+      "avg_damage_per_hit": 23.4
     },
     {
       "weapon": "SCAR-L",
@@ -238,9 +238,9 @@
       "kills": 4,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 41,
-      "total_damage": 706.9,
-      "avg_damage_per_hit": 17.2
+      "hits": 48,
+      "total_damage": 896.3,
+      "avg_damage_per_hit": 18.7
     },
     {
       "weapon": "Mini 14",

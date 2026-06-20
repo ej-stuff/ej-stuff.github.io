@@ -1,5 +1,53 @@
 [
   {
+    "match_id": "d9c645b6-1f83-4ff4-81ec-3c14c3da6f36",
+    "created_at": "2026-06-20T12:45:29Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1918,
+    "duo_survival_s": 1632,
+    "players": {
+      "D282": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 121.2,
+        "placement": 2,
+        "survival_s": 1632,
+        "revives": 1,
+        "heals": 5,
+        "boosts": 3,
+        "blue_chips": 0,
+        "damage_taken": 402.5,
+        "times_knocked": 2,
+        "shots_fired": 320,
+        "parachute_dist": 302.0,
+        "throwables": 5,
+        "revive_response_s": 23.9
+      },
+      "S821": {
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 189.5,
+        "placement": 2,
+        "survival_s": 1509,
+        "revives": 2,
+        "heals": 4,
+        "boosts": 6,
+        "blue_chips": 0,
+        "damage_taken": 347.7,
+        "times_knocked": 2,
+        "shots_fired": 210,
+        "parachute_dist": 332.0,
+        "throwables": 4,
+        "revive_response_s": 19.7
+      }
+    }
+  },
+  {
     "match_id": "637b491e-ce74-4598-85db-1af0359d1137",
     "created_at": "2026-06-20T12:40:49Z",
     "map": "Erangel",
