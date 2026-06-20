@@ -4,56 +4,58 @@
     "image_url": "map-images/Erangel.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Erangel_Main_Low_Res.png",
     "world_size": 816000,
-    "image_px": 4096
+    "image_px": 8192,
+    "x_off": 5000,
+    "y_off": 5000
   },
   "Desert_Main": {
     "name": "Miramar",
     "image_url": "map-images/Miramar.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Miramar_Main_Low_Res.png",
     "world_size": 816000,
-    "image_px": 4096
+    "image_px": 8192
   },
   "Savage_Main": {
     "name": "Sanhok",
     "image_url": "map-images/Sanhok.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Sanhok_Main_Low_Res.png",
     "world_size": 408000,
-    "image_px": 4096
+    "image_px": 8192
   },
   "Summerland_Main": {
     "name": "Karakin",
     "image_url": "map-images/Karakin.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Karakin_Main_Low_Res.png",
     "world_size": 204000,
-    "image_px": 4096
+    "image_px": 8192
   },
   "DihorOtok_Main": {
     "name": "Vikendi",
     "image_url": "map-images/Vikendi.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Vikendi_Main_Low_Res.png",
     "world_size": 816000,
-    "image_px": 4096
+    "image_px": 8192
   },
   "Tiger_Main": {
     "name": "Taego",
     "image_url": "map-images/Taego.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Taego_Main_Low_Res.png",
     "world_size": 816000,
-    "image_px": 4096
+    "image_px": 8192
   },
   "Kiki_Main": {
     "name": "Deston",
     "image_url": "map-images/Deston.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Deston_Main_Low_Res.png",
     "world_size": 816000,
-    "image_px": 4096
+    "image_px": 8192
   },
   "Neon_Main": {
     "name": "Rondo",
     "image_url": "map-images/Rondo.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Rondo_Main_Low_Res.png",
     "world_size": 816000,
-    "image_px": 4096
+    "image_px": 8192
   },
   "Heaven_Main": {
     "name": "Haven",
@@ -61,5 +63,12 @@
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Haven_Main_Low_Res.png",
     "world_size": 102000,
     "image_px": 4096
+  },
+  "Paramo_Main": {
+    "name": "Paramo",
+    "image_url": "map-images/Paramo.jpg",
+    "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Paramo_Main_Low_Res.png",
+    "world_size": 306000,
+    "image_px": 8192
   }
 }

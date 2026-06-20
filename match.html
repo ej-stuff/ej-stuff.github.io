@@ -1240,7 +1240,9 @@ function w2c(x, y) {
   const dpr = window.devicePixelRatio || 1;
   const sz  = canvas.width / dpr;  // logical CSS size
   const ws  = MAP ? MAP.world_size : 816000;
-  return { cx: (x / ws) * sz, cy: (y / ws) * sz };
+  const xoff = MAP ? (MAP.x_off || 0) : 0;
+  const yoff = MAP ? (MAP.y_off || 0) : 0;
+  return { cx: ((x - xoff) / ws) * sz, cy: ((y - yoff) / ws) * sz };
 }
 
 function screenToCanvasPx(clientX, clientY) {
