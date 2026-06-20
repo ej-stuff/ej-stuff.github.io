@@ -657,8 +657,8 @@ const ctx    = canvas.getContext('2d');
 const mapImg = new Image();
 mapImg.onload  = () => draw();
 mapImg.onerror = () => {
-  if (MAP && MAP.image_url && mapImg.src !== MAP.image_url) {
-    mapImg.src = MAP.image_url;  // fallback to local High_Res
+  if (MAP && MAP.cdn_url && mapImg.src !== MAP.cdn_url) {
+    mapImg.src = MAP.cdn_url;  // fallback to CDN Low_Res
   } else {
     draw();
   }
@@ -1135,7 +1135,7 @@ async function boot() {
   sl.value = sl.max;
   sl.addEventListener('input', onTimeInput);
 
-  if (MAP) mapImg.src = MAP.cdn_url || MAP.image_url;  // CDN Low_Res has correct coord alignment
+  if (MAP) mapImg.src = MAP.image_url;
 
   window.addEventListener('resize', () => {
     resizeCanvas();
@@ -1220,11 +1220,15 @@ async function boot() {
 ============================================================================ */
 function resizeCanvas() {
   const wrap = document.getElementById('mapWrap');
-  const sz   = wrap.clientWidth;
-  if (canvas.width !== sz) {
-    canvas.width  = sz;
-    canvas.height = sz;
+  const cssS = wrap.clientWidth;
+  const dpr  = window.devicePixelRatio || 1;
+  const phys = Math.round(cssS * dpr);
+  if (canvas.width !== phys || canvas.height !== phys) {
+    canvas.width  = phys;
+    canvas.height = phys;
   }
+  canvas.style.width  = cssS + 'px';
+  canvas.style.height = cssS + 'px';
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
 }
@@ -1233,16 +1237,17 @@ function resizeCanvas() {
    COORDINATE TRANSFORMS
 ============================================================================ */
 function w2c(x, y) {
-  const sz = canvas.width;
-  const ws = MAP ? MAP.world_size : 816000;
+  const dpr = window.devicePixelRatio || 1;
+  const sz  = canvas.width / dpr;  // logical CSS size
+  const ws  = MAP ? MAP.world_size : 816000;
   return { cx: (x / ws) * sz, cy: (y / ws) * sz };
 }
 
 function screenToCanvasPx(clientX, clientY) {
   const rect = canvas.getBoundingClientRect();
   return {
-    cx: (clientX - rect.left) * (canvas.width  / rect.width),
-    cy: (clientY - rect.top)  * (canvas.height / rect.height),
+    cx: clientX - rect.left,  // already in CSS logical pixels
+    cy: clientY - rect.top,
   };
 }
 
@@ -1258,13 +1263,15 @@ function canvasToWorldPx(canvasPxX, canvasPxY) {
 ============================================================================ */
 function draw() {
   if (!MD) return;
-  const sz = canvas.width;
+  const dpr = window.devicePixelRatio || 1;
+  const sz  = canvas.width / dpr;  // logical CSS size used for all coordinates
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, sz, sz);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);  // clear physical canvas
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
-  ctx.setTransform(view.scale, 0, 0, view.scale, view.offsetX, view.offsetY);
+  ctx.setTransform(view.scale * dpr, 0, 0, view.scale * dpr,
+                   view.offsetX * dpr, view.offsetY * dpr);
 
   if (mapImg.complete && mapImg.naturalWidth > 0) {
     ctx.drawImage(mapImg, 0, 0, sz, sz);
@@ -1318,7 +1325,7 @@ function draw() {
     ctx.globalAlpha  = 1;
   }
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);  // HUD in logical CSS pixels
   drawKillFeed(maxT);
   updateLoadout(maxT);
 }
@@ -1468,9 +1475,10 @@ function drawCircles(maxT) {
   if (!MAP || !MD.circles.length) return;
   const cs = MD.circles.filter(c => c.t <= maxT);
   if (!cs.length) return;
-  const c  = cs[cs.length - 1];
-  const sz = canvas.width;
-  const ws = MAP.world_size;
+  const c   = cs[cs.length - 1];
+  const dpr = window.devicePixelRatio || 1;
+  const sz  = canvas.width / dpr;
+  const ws  = MAP.world_size;
   const lw = 1.5 / view.scale;
 
   if (c.safe_r > 500) {
@@ -1665,7 +1673,7 @@ function onMouseMove(e) {
 
 function clampView() {
   if (view.scale <= 1) { view.scale = 1; view.offsetX = 0; view.offsetY = 0; return; }
-  const sz = canvas.width;
+  const sz = canvas.width / (window.devicePixelRatio || 1);
   const minOff = sz * (1 - view.scale);
   view.offsetX = Math.max(minOff, Math.min(0, view.offsetX));
   view.offsetY = Math.max(minOff, Math.min(0, view.offsetY));
@@ -1681,7 +1689,7 @@ function applyZoom(factor, cx, cy) {
 }
 
 function zoomStep(factor) {
-  const sz = canvas.width;
+  const sz = canvas.width / (window.devicePixelRatio || 1);
   applyZoom(factor, sz / 2, sz / 2);
 }
 
@@ -2519,7 +2527,7 @@ function drawKillFeed(maxT) {
     .slice(-MAX_ROWS);
   if (!entries.length) return;
 
-  const W         = canvas.width;
+  const W         = canvas.width / (window.devicePixelRatio || 1);  // logical CSS size
   const FONT_SIZE = Math.round(Math.max(10, Math.min(14, W * 0.03)));
   const LINE_H    = FONT_SIZE + 6;
   const PAD_X     = 8;
