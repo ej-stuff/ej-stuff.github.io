@@ -194,7 +194,10 @@ h1 {
   transition: color .15s, border-color .15s;
   white-space: nowrap;
 }
-.tl-btn:hover { color: var(--accent); border-color: var(--accent); }
+.tl-btn:hover  { color: var(--accent); border-color: var(--accent); }
+.tl-btn.active { color: var(--accent); border-color: var(--accent); }
+.tl-play-row   { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+.play-btn      { font-size: 14px; padding: 2px 11px; min-width: 34px; text-align: center; }
 
 #tlCanvas {
   display: block;
@@ -504,6 +507,13 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
             <button class="tl-btn" onclick="jumpTime(10)"  title="Forward 10s">+10s</button>
             <button class="tl-btn" onclick="resetTime()">All</button>
           </div>
+        </div>
+        <div class="tl-play-row">
+          <button class="tl-btn play-btn" id="playBtn" onclick="playToggle()" title="Play / Pause (Space)">▶</button>
+          <button class="tl-btn speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1×</button>
+          <button class="tl-btn speed-btn" data-speed="2" onclick="setPlaybackSpeed(2)">2×</button>
+          <button class="tl-btn speed-btn" data-speed="4" onclick="setPlaybackSpeed(4)">4×</button>
+          <button class="tl-btn speed-btn" data-speed="8" onclick="setPlaybackSpeed(8)">8×</button>
         </div>
         <div class="tl-slider-row">
           <input type="range" id="timeSlider" min="0" value="99999" step="1">
@@ -1718,6 +1728,7 @@ function resetView() {
    INTERACTIONS
 ============================================================================ */
 function onTimeInput(e) {
+  pausePlayback();
   const val  = parseInt(e.target.value, 10);
   const max  = parseInt(e.target.max,   10);
   state.time = val >= max ? Infinity : val;
@@ -1731,6 +1742,7 @@ function onTimeInput(e) {
 }
 
 function resetTime() {
+  pausePlayback();
   const sl   = document.getElementById('timeSlider');
   sl.value   = sl.max;
   state.time = Infinity;
@@ -1743,6 +1755,7 @@ function resetTime() {
 }
 
 function jumpTime(delta) {
+  pausePlayback();
   const sl  = document.getElementById('timeSlider');
   const max = parseInt(sl.max, 10);
   const cur = state.time === Infinity ? max : state.time;
@@ -1757,6 +1770,87 @@ function jumpTime(delta) {
   drawScoreChart();
   drawDistCharts();
 }
+
+/* ============================================================================
+   PLAYBACK
+============================================================================ */
+const playback = { playing: false, speed: 1, rafId: null, lastTs: null };
+let _lastChartSec = -1;
+
+function playToggle() {
+  playback.playing ? pausePlayback() : startPlayback();
+}
+
+function startPlayback() {
+  const sl  = document.getElementById('timeSlider');
+  const max = parseInt(sl.max, 10);
+  // Restart from beginning if already at end
+  if (state.time === Infinity || (typeof state.time === 'number' && state.time >= max)) {
+    state.time = 0;
+    sl.value   = 0;
+    document.getElementById('timeDisplay').textContent = mmss(0);
+  }
+  playback.playing = true;
+  playback.lastTs  = null;
+  _lastChartSec    = -1;
+  document.getElementById('playBtn').textContent = '⏸';
+  playback.rafId = requestAnimationFrame(playTick);
+}
+
+function pausePlayback() {
+  if (!playback.playing) return;
+  playback.playing = false;
+  if (playback.rafId) { cancelAnimationFrame(playback.rafId); playback.rafId = null; }
+  document.getElementById('playBtn').textContent = '▶';
+  draw(); drawTimeline(); drawHpChart(); drawScoreChart(); drawDistCharts();
+}
+
+function playTick(ts) {
+  if (!playback.playing) return;
+  if (playback.lastTs !== null) {
+    const dt  = (ts - playback.lastTs) / 1000;
+    const sl  = document.getElementById('timeSlider');
+    const max = parseInt(sl.max, 10);
+    const cur = (state.time === Infinity || state.time >= max) ? 0 : state.time;
+    const nxt = cur + dt * playback.speed;
+
+    if (nxt >= max) {
+      state.time = Infinity;
+      sl.value   = max;
+      document.getElementById('timeDisplay').textContent = 'Full match';
+      playback.playing = false;
+      playback.rafId   = null;
+      document.getElementById('playBtn').textContent = '▶';
+      draw(); drawTimeline(); drawHpChart(); drawScoreChart(); drawDistCharts();
+      return;
+    }
+
+    state.time = nxt;
+    const sec  = Math.floor(nxt);
+    sl.value   = sec;
+    document.getElementById('timeDisplay').textContent = mmss(sec);
+    draw();
+    drawTimeline();
+    if (sec !== _lastChartSec) {
+      drawHpChart(); drawScoreChart(); drawDistCharts();
+      _lastChartSec = sec;
+    }
+  }
+  playback.lastTs = ts;
+  playback.rafId  = requestAnimationFrame(playTick);
+}
+
+function setPlaybackSpeed(s) {
+  playback.speed = s;
+  document.querySelectorAll('.speed-btn').forEach(b =>
+    b.classList.toggle('active', +b.dataset.speed === s)
+  );
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === ' ') { e.preventDefault(); playToggle(); }
+});
 
 function setPlayerFilter(p) {
   state.player = p;
