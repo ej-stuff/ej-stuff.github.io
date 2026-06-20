@@ -6,9 +6,9 @@
       "kills": 8,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.125,
-      "hits": 77,
-      "total_damage": 1097.0,
-      "avg_damage_per_hit": 14.2
+      "hits": 85,
+      "total_damage": 1326.2,
+      "avg_damage_per_hit": 15.6
     },
     {
       "weapon": "HK416",
@@ -21,6 +21,16 @@
       "avg_damage_per_hit": 17.5
     },
     {
+      "weapon": "Mk12 SPR",
+      "category": "DMR",
+      "kills": 4,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.25,
+      "hits": 51,
+      "total_damage": 1127.9,
+      "avg_damage_per_hit": 22.1
+    },
+    {
       "weapon": "Mini 14",
       "category": "DMR",
       "kills": 4,
@@ -29,16 +39,6 @@
       "hits": 38,
       "total_damage": 470.9,
       "avg_damage_per_hit": 12.4
-    },
-    {
-      "weapon": "Mk12 SPR",
-      "category": "DMR",
-      "kills": 3,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.333,
-      "hits": 43,
-      "total_damage": 1007.2,
-      "avg_damage_per_hit": 23.4
     },
     {
       "weapon": "SCAR-L",
@@ -66,8 +66,8 @@
       "kills": 2,
       "headshot_kills": 2,
       "headshot_kill_pct": 1.0,
-      "hits": 29,
-      "total_damage": 690.9,
+      "hits": 30,
+      "total_damage": 714.6,
       "avg_damage_per_hit": 23.8
     },
     {
@@ -109,6 +109,16 @@
       "hits": 16,
       "total_damage": 196.6,
       "avg_damage_per_hit": 12.3
+    },
+    {
+      "weapon": "Winchester",
+      "category": "SR",
+      "kills": 1,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 1.0,
+      "hits": 5,
+      "total_damage": 100.0,
+      "avg_damage_per_hit": 20.0
     },
     {
       "weapon": "Grenade",
@@ -208,9 +218,9 @@
       "kills": 9,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.111,
-      "hits": 75,
-      "total_damage": 951.6,
-      "avg_damage_per_hit": 12.7
+      "hits": 77,
+      "total_damage": 1029.5,
+      "avg_damage_per_hit": 13.4
     },
     {
       "weapon": "ACE32",
@@ -225,12 +235,22 @@
     {
       "weapon": "M249",
       "category": "LMG",
-      "kills": 5,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 25,
-      "total_damage": 392.5,
-      "avg_damage_per_hit": 15.7
+      "kills": 7,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.143,
+      "hits": 46,
+      "total_damage": 562.7,
+      "avg_damage_per_hit": 12.2
+    },
+    {
+      "weapon": "Mk12 SPR",
+      "category": "DMR",
+      "kills": 6,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.333,
+      "hits": 58,
+      "total_damage": 1222.1,
+      "avg_damage_per_hit": 21.1
     },
     {
       "weapon": "Mini 14",
@@ -238,19 +258,9 @@
       "kills": 4,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.25,
-      "hits": 47,
+      "hits": 49,
       "total_damage": 1165.2,
-      "avg_damage_per_hit": 24.8
-    },
-    {
-      "weapon": "Mk12 SPR",
-      "category": "DMR",
-      "kills": 4,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 48,
-      "total_damage": 896.3,
-      "avg_damage_per_hit": 18.7
+      "avg_damage_per_hit": 23.8
     },
     {
       "weapon": "SLR",
