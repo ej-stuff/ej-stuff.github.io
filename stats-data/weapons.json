@@ -36,9 +36,9 @@
       "kills": 4,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 38,
-      "total_damage": 470.9,
-      "avg_damage_per_hit": 12.4
+      "hits": 40,
+      "total_damage": 567.9,
+      "avg_damage_per_hit": 14.2
     },
     {
       "weapon": "SCAR-L",
@@ -66,9 +66,9 @@
       "kills": 2,
       "headshot_kills": 2,
       "headshot_kill_pct": 1.0,
-      "hits": 30,
-      "total_damage": 714.6,
-      "avg_damage_per_hit": 23.8
+      "hits": 32,
+      "total_damage": 765.0,
+      "avg_damage_per_hit": 23.9
     },
     {
       "weapon": "SKS",
@@ -255,12 +255,12 @@
     {
       "weapon": "Mini 14",
       "category": "DMR",
-      "kills": 4,
+      "kills": 5,
       "headshot_kills": 1,
-      "headshot_kill_pct": 0.25,
-      "hits": 49,
-      "total_damage": 1165.2,
-      "avg_damage_per_hit": 23.8
+      "headshot_kill_pct": 0.2,
+      "hits": 58,
+      "total_damage": 1208.1,
+      "avg_damage_per_hit": 20.8
     },
     {
       "weapon": "SLR",
@@ -318,9 +318,9 @@
       "kills": 1,
       "headshot_kills": 1,
       "headshot_kill_pct": 1.0,
-      "hits": 5,
-      "total_damage": 368.8,
-      "avg_damage_per_hit": 73.8
+      "hits": 7,
+      "total_damage": 470.1,
+      "avg_damage_per_hit": 67.2
     },
     {
       "weapon": "Tommy Gun",
