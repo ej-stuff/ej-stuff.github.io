@@ -5,8 +5,8 @@
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Erangel_Main_Low_Res.png",
     "world_size": 816000,
     "image_px": 8192,
-    "x_off": 1700,
-    "y_off": 1700
+    "kx": 0.002467,
+    "ky": 0.001203
   },
   "Desert_Main": {
     "name": "Miramar",
