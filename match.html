@@ -602,7 +602,10 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
   <div class="panel" id="matchListPanel">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <span class="panel-title" style="margin-bottom:0">Match History</span>
-      <button class="nav-btn" onclick="toggleMatchList()">✕ Close</button>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="nav-btn active solo-filter-btn" id="soloFilterBtn" onclick="toggleSoloFilter()" title="Excluding solo matches — click to show all">Excl. Solo</button>
+        <button class="nav-btn" onclick="toggleMatchList()">✕ Close</button>
+      </div>
     </div>
     <div style="max-height:360px;overflow-y:auto" id="matchListContainer"></div>
   </div>
@@ -669,6 +672,7 @@ let MD  = null;
 let MAP = null;
 let ALL_MATCHES       = null;  // matches.json array (newest-first)
 let CURRENT_MATCH_IDX = -1;    // index of current match in ALL_MATCHES
+let excludeSolo       = true;  // hide solo-mode matches from the list by default
 
 const canvas = document.getElementById('mapCanvas');
 const ctx    = canvas.getContext('2d');
@@ -3200,6 +3204,9 @@ function showMatchSelector() {
       <div class="subtitle">Select a match to open the interactive map</div>
     </div>
     <div class="panel">
+      <div style="margin-bottom:10px">
+        <button class="nav-btn${excludeSolo ? ' active' : ''} solo-filter-btn" onclick="toggleSoloFilter()" title="${excludeSolo ? 'Excluding solo matches — click to show all' : 'Showing all matches — click to exclude solo'}">Excl. Solo</button>
+      </div>
       <div id="matchSelectorContainer"></div>
     </div>`;
   renderMatchTable('matchSelectorContainer', null);
@@ -3231,19 +3238,30 @@ function renderMatchTable(containerId, currentId) {
   const kdCell = (p, col) =>
     `<span style="color:${col}">${p.kills ?? 0}</span> <span style="color:var(--muted);font-size:11px">(${f0(p.damage || 0)})</span>`;
 
-  const rows = ALL_MATCHES.map(m => {
+  const matches = excludeSolo
+    ? ALL_MATCHES.filter(m => !m.game_mode?.startsWith('solo'))
+    : ALL_MATCHES;
+
+  const rows = matches.map(m => {
+    const isSolo  = m.game_mode?.startsWith('solo');
     const pD      = m.players['D282'] || {};
     const pS      = m.players['S821'] || {};
     const revives = (pD.revives || 0) + (pS.revives || 0);
     const bc      = (pD.blue_chips || 0) + (pS.blue_chips || 0);
     const throws  = (pD.throwables || 0) + (pS.throwables || 0);
     const cls     = m.match_id === currentId ? 'match-row current' : 'match-row';
+    const mapCell = isSolo
+      ? `${m.map || '—'} <span style="font-size:10px;color:var(--muted);opacity:.7">solo</span>`
+      : (m.map || '—');
+    const s821Cell = isSolo
+      ? `<td style="color:var(--muted)">—</td>`
+      : `<td>${kdCell(pS, 'var(--blue)')}</td>`;
     return `<tr class="${cls}" id="mrow-${m.match_id}"
                onclick="location.href='match.html?id=${m.match_id}'">
       <td style="white-space:nowrap">${fmtDt(m.created_at)}</td>
-      <td>${m.map || '—'}</td>
+      <td>${mapCell}</td>
       <td>${kdCell(pD, 'var(--accent)')}</td>
-      <td>${kdCell(pS, 'var(--blue)')}</td>
+      ${s821Cell}
       <td>${revives}</td>
       <td>${bc}</td>
       <td>${throws}</td>
@@ -3267,6 +3285,20 @@ function renderMatchTable(containerId, currentId) {
         <tbody>${rows}</tbody>
       </table>
     </div>`;
+}
+
+function toggleSoloFilter() {
+  excludeSolo = !excludeSolo;
+  document.querySelectorAll('.solo-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', excludeSolo);
+    btn.title = excludeSolo
+      ? 'Excluding solo matches — click to show all'
+      : 'Showing all matches — click to exclude solo';
+  });
+  const id = new URLSearchParams(location.search).get('id');
+  const containerId = document.getElementById('matchListContainer')
+    ? 'matchListContainer' : 'matchSelectorContainer';
+  renderMatchTable(containerId, id);
 }
 
 /* ============================================================================
