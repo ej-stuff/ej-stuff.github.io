@@ -5,7 +5,7 @@
         "item": "Painkiller",
         "category": "Boost",
         "total": 47,
-        "per_match": 0.54
+        "per_match": 0.53
       },
       {
         "item": "Energy Drink",
@@ -42,12 +42,12 @@
       {
         "item": "Snowball",
         "total": 67,
-        "per_match": 0.77
+        "per_match": 0.76
       },
       {
         "item": "Smoke Grenade",
         "total": 32,
-        "per_match": 0.37
+        "per_match": 0.36
       },
       {
         "item": "Grenade",
