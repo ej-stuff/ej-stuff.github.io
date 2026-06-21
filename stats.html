@@ -1627,9 +1627,10 @@ function renderMatchHistory(matches) {
   const kdCell = (p, col) =>
     `<span style="color:${col}">${p.kills ?? 0}</span>` +
     ` <span class="panel-note">(${f0(p.damage || 0)})</span>`;
-  const scoreCell = (matchId, player, col) => {
+  const scoreCell = (matchId, player, col, pStats) => {
     const s = getMatchScore(matchId, player);
-    return `<span style="color:${col}">${s >= 0 ? '+' : ''}${Math.round(s)}</span>`;
+    const tip = scoreBreakdownTip(pStats);
+    return `<span style="color:${col}" title="${tip}">${s >= 0 ? '+' : ''}${Math.round(s)}</span>`;
   };
 
   const body = sorted.map(m => {
@@ -1646,9 +1647,9 @@ function renderMatchHistory(matches) {
       <td style="white-space:nowrap">${fmtMatchDate(m.created_at)}</td>
       <td>${m.map || '—'}</td>
       <td>${kdCell(pD, 'var(--accent)')}</td>
-      <td>${scoreCell(m.match_id, 'D282', 'var(--accent)')}</td>
+      <td>${scoreCell(m.match_id, 'D282', 'var(--accent)', pD)}</td>
       <td>${kdCell(pS, 'var(--blue)')}</td>
-      <td>${scoreCell(m.match_id, 'S821', 'var(--blue)')}</td>
+      <td>${scoreCell(m.match_id, 'S821', 'var(--blue)', pS)}</td>
       <td>${revives}</td>
       <td>${bc}</td>
       <td>${throws}</td>
@@ -1732,6 +1733,7 @@ const SCORE_CFG = {
   kill:           { pts: 100, soloPts: 200 },
   knock:          { pts: 50,  soloPts: 100 },
   damage:         { pts: 1,   soloPts: 2   },
+  damageTaken:    { pts: -1  },
   revive:         { pts: 50  },
   bc:             { pts: 100 },
   death:          { pts: -100 },
@@ -1745,13 +1747,14 @@ function scoreDefHTML() {
   const s = (p) => (p >= 0 ? '+' : '') + p;
   const c = (p) => p >= 0 ? 'var(--ok)' : 'var(--danger)';
   return [
-    [C.kill.pts,    C.kill.soloPts,    'Kill',             ''],
-    [C.knock.pts,   C.knock.soloPts,   'Knockdown',        ''],
-    [C.damage.pts,  C.damage.soloPts,  'Damage dealt',     '/pt'],
-    [C.revive.pts,  null,              'Revive',           ''],
-    [C.bc.pts,      null,              'Blue chip revive', ''],
-    [C.death.pts,   null,              'Death',            ''],
-    [C.knocked.pts, null,              'Got knocked',      ''],
+    [C.kill.pts,          C.kill.soloPts,    'Kill',             ''],
+    [C.knock.pts,         C.knock.soloPts,   'Knockdown',        ''],
+    [C.damage.pts,        C.damage.soloPts,  'Damage dealt',     '/pt'],
+    [C.damageTaken.pts,   null,              'Damage taken',     '/pt'],
+    [C.revive.pts,        null,              'Revive',           ''],
+    [C.bc.pts,            null,              'Blue chip revive', ''],
+    [C.death.pts,         null,              'Death',            ''],
+    [C.knocked.pts,       null,              'Got knocked',      ''],
   ].map(([pts, solo, label, unit]) => `
     <tr>
       <td style="padding:2px 8px">${label}</td>
@@ -1783,6 +1786,7 @@ function computeMatchScore(p) {
   let s = (p.kills        || 0) * C.kill.pts
         + (p.knockdowns   || 0) * C.knock.pts
         + (p.damage       || 0) * C.damage.pts
+        + (p.damage_taken || 0) * C.damageTaken.pts
         + (p.revives      || 0) * C.revive.pts
         + (p.blue_chips   || 0) * C.bc.pts
         + ((p.placement   || 99) > 1 ? C.death.pts : 0)
@@ -1815,6 +1819,7 @@ function computeExactScoreFromEvents(events, player, pStats) {
       case 'kill':             score += solo ? C.kill.soloPts    : C.kill.pts; break;
       case 'knockdown':        score += solo ? C.knock.soloPts   : C.knock.pts; break;
       case 'dmg_dealt':        score += (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts); break;
+      case 'dmg_taken':        score += (e.damage || 0) * C.damageTaken.pts; break;
       case 'revive':           score += C.revive.pts; break;
       case 'blue_chip_revive': score += C.bc.pts; break;
       case 'death':            score += C.death.pts; break;
@@ -1826,6 +1831,27 @@ function computeExactScoreFromEvents(events, player, pStats) {
     score += placementBonus(pStats.placement);
   }
   return score;
+}
+
+function scoreBreakdownTip(p) {
+  if (!p) return '';
+  const C = SCORE_CFG;
+  const fp = v => (v >= 0 ? '+' : '') + Math.round(v);
+  const lines = [];
+  if (p.kills)         lines.push(`Kills: ${p.kills}×${C.kill.pts} = ${fp(p.kills*C.kill.pts)}`);
+  if (p.knockdowns)    lines.push(`Knocks: ${p.knockdowns}×${C.knock.pts} = ${fp(p.knockdowns*C.knock.pts)}`);
+  if (p.damage)        lines.push(`Damage: ${Math.round(p.damage)}×${C.damage.pts} = ${fp(p.damage*C.damage.pts)}`);
+  if (p.damage_taken)  lines.push(`DmgTkn: ${Math.round(p.damage_taken)}×${C.damageTaken.pts} = ${fp(p.damage_taken*C.damageTaken.pts)}`);
+  if (p.revives)       lines.push(`Revives: ${p.revives}×${C.revive.pts} = ${fp(p.revives*C.revive.pts)}`);
+  if (p.blue_chips)    lines.push(`BC Rev: ${p.blue_chips}×${C.bc.pts} = ${fp(p.blue_chips*C.bc.pts)}`);
+  const died = (p.placement || 99) > 1;
+  lines.push(`Death: ${fp(died ? C.death.pts : 0)}`);
+  if (p.times_knocked) lines.push(`Knocked: ${p.times_knocked}×${C.knocked.pts} = ${fp(p.times_knocked*C.knocked.pts)}`);
+  const survMins = Math.floor((p.survival_s || 0) / 60);
+  if (survMins) lines.push(`Survival: ${survMins}min × ${C.survivalPerMin} = ${fp(survMins*C.survivalPerMin)}`);
+  const pb = placementBonus(p.placement);
+  if (pb) lines.push(`Placement #${p.placement}: ${fp(pb)}`);
+  return lines.join('&#10;');
 }
 
 function getMatchScore(matchId, player) {
@@ -1906,11 +1932,50 @@ const TREND_DEFS = {
 let kdTrendChartInst = null;
 
 function renderTrendChart(matches) {
-  const def = TREND_DEFS[state.trendStat] || TREND_DEFS.kd;
+  const def    = TREND_DEFS[state.trendStat] || TREND_DEFS.kd;
   const sorted = [...matches].sort((a, b) => a.created_at.localeCompare(b.created_at));
-  const W = 10;
+  const W      = 10;
   const labels = sorted.map(m => m.created_at.slice(0, 10));
   const series = fn => sorted.map((_, i) => fn(sorted.slice(Math.max(0, i - W + 1), i + 1)));
+  const isScore = state.trendStat === 'score';
+
+  function scoreFooter(items) {
+    if (!items.length) return [];
+    const idx = items[0].dataIndex;
+    const w   = sorted.slice(Math.max(0, idx - W + 1), idx + 1);
+    const n   = w.length;
+    const C   = SCORE_CFG;
+    const fp  = v => (v >= 0 ? '+' : '') + Math.round(v);
+    const lines = [];
+    for (const player of ['D282', 'S821']) {
+      const avg = key => w.reduce((s,m) => s + (m.players[player]?.[key] || 0), 0) / n;
+      const k   = avg('kills');
+      const kn  = avg('knockdowns');
+      const dmg = avg('damage');
+      const dmt = avg('damage_taken');
+      const rev = avg('revives');
+      const bc  = avg('blue_chips');
+      const tkn = avg('times_knocked');
+      const srv = avg('survival_s');
+      const plb = w.reduce((s,m) => s + placementBonus(m.players[player]?.placement), 0) / n;
+      const dth = w.filter(m => (m.players[player]?.placement || 99) > 1).length / n;
+      const tot = w.reduce((s,m) => s + getMatchScore(m.match_id, player), 0) / n;
+      lines.push(`${player} avg ${Math.round(tot)} pts:`);
+      if (k)   lines.push(`  Kills ${k.toFixed(1)}×${C.kill.pts} = ${fp(k*C.kill.pts)}`);
+      if (kn)  lines.push(`  Knocks ${kn.toFixed(1)}×${C.knock.pts} = ${fp(kn*C.knock.pts)}`);
+      lines.push(`  Damage ${Math.round(dmg)}×${C.damage.pts} = ${fp(dmg*C.damage.pts)}`);
+      lines.push(`  DmgTkn ${Math.round(dmt)}×${C.damageTaken.pts} = ${fp(dmt*C.damageTaken.pts)}`);
+      if (rev) lines.push(`  Revives ${rev.toFixed(1)}×${C.revive.pts} = ${fp(rev*C.revive.pts)}`);
+      if (bc)  lines.push(`  BC ${bc.toFixed(1)}×${C.bc.pts} = ${fp(bc*C.bc.pts)}`);
+      lines.push(`  Deaths ${dth.toFixed(1)}×${C.death.pts} = ${fp(dth*C.death.pts)}`);
+      if (tkn) lines.push(`  Knocked ${tkn.toFixed(1)}×${C.knocked.pts} = ${fp(tkn*C.knocked.pts)}`);
+      lines.push(`  Survival +${Math.round(srv/60*C.survivalPerMin)} avg`);
+      lines.push(`  Placement +${Math.round(plb)} avg`);
+    }
+    const duoTot = w.reduce((s,m) => s + getMatchScore(m.match_id, 'duo'), 0) / n;
+    lines.push(`Duo avg ${Math.round(duoTot)} pts (${n} games)`);
+    return lines;
+  }
 
   if (kdTrendChartInst) { kdTrendChartInst.destroy(); kdTrendChartInst = null; }
   kdTrendChartInst = new Chart(
@@ -1930,7 +1995,15 @@ function renderTrendChart(matches) {
         interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: { labels: { color: '#9a9385', font: { size: 12 }, boxWidth: 20 } },
-          tooltip: { backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1, titleColor: '#e8e3d8', bodyColor: '#9a9385', callbacks: { label: ctx => `${ctx.dataset.label}: ${def.fmt(ctx.parsed.y)}` } },
+          tooltip: {
+            backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1,
+            titleColor: '#e8e3d8', bodyColor: '#9a9385', footerColor: '#9a9385',
+            footerFont: { size: 10, family: 'monospace' },
+            callbacks: {
+              label:  ctx => `${ctx.dataset.label}: ${def.fmt(ctx.parsed.y)}`,
+              footer: isScore ? scoreFooter : undefined,
+            },
+          },
         },
         scales: {
           x: { ticks: { color: '#9a9385', maxRotation: 45, font: { size: 11 } }, grid: { color: 'rgba(56,52,44,0.5)' } },

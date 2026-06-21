@@ -173,6 +173,7 @@ const SCORE_CFG = {
   kill:           { pts: 100, soloPts: 200 },
   knock:          { pts: 50,  soloPts: 100 },
   damage:         { pts: 1,   soloPts: 2   },
+  damageTaken:    { pts: -1  },
   revive:         { pts: 50  },
   bc:             { pts: 100 },
   death:          { pts: -100 },
@@ -209,6 +210,7 @@ function computeExactScore(events, player, pStats) {
       case 'kill':             score += solo ? C.kill.soloPts    : C.kill.pts; break;
       case 'knockdown':        score += solo ? C.knock.soloPts   : C.knock.pts; break;
       case 'dmg_dealt':        score += (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts); break;
+      case 'dmg_taken':        score += (e.damage || 0) * C.damageTaken.pts; break;
       case 'revive':           score += C.revive.pts; break;
       case 'blue_chip_revive': score += C.bc.pts; break;
       case 'death':            score += C.death.pts; break;

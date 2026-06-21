@@ -303,8 +303,8 @@ h1 {
 /* ── Engagement summary ──────────────────────────────────────────────────── */
 .eng-row2 {
   display: grid;
-  grid-template-columns: 1fr 28px 56px 50px;
-  column-gap: 3px;
+  grid-template-columns: minmax(0,1fr) 22px 28px 9px 28px 26px 9px 26px;
+  column-gap: 1px;
   align-items: center;
   font-size: 11px;
   padding: 3px 0;
@@ -315,11 +315,12 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--muted);
+  cursor: default;
 }
-.eng-icon  { text-align: center; font-size: 10px; white-space: nowrap; }
-.eng-dealt { text-align: right; white-space: nowrap; }
-.eng-taken { text-align: right; white-space: nowrap; font-size: 10px; }
+.eng-icon { text-align: center; font-size: 10px; white-space: nowrap; }
+.eng-num-r { text-align: right; }
+.eng-num-l { text-align: left; }
+.eng-slash  { text-align: center; opacity: .7; }
 
 /* ── Loadout boxes ───────────────────────────────────────────────────────── */
 .loadout-box {
@@ -638,7 +639,7 @@ const LAYER_DEFS = [
   { id: 'vehicle_out',      label: 'Vehicle Exit',      color: '#aaddff', default: false },
   { id: 'armor_break',      label: 'Armor Break',       color: '#ff9944', default: false },
   { id: 'enemy_teams',      label: 'Team Numbers',      color: '#ff8888', default: false },
-  { id: 'killfeed',         label: 'Kill Feed',         color: '#7bc26a', default: false },
+  { id: 'killfeed',         label: 'Kill Feed',         color: '#7bc26a', default: true  },
 ];
 
 /* ============================================================================
@@ -649,6 +650,13 @@ const state = {
   player: 'both',
   layers: Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.default])),
 };
+
+// 0 = off, 1 = our players only, 2 = all kills
+let killFeedMode = 1;
+
+// short-trip threshold: vehicle markers hidden when bounding box < this (world units)
+const VEHICLE_SHORT_DIST = 3000;
+let _shortVehicleOuts = new Set(); // "player:t" keys for vehicle_out events to skip
 
 const view = { scale: 1, offsetX: 0, offsetY: 0 };
 let isDragging = false, dragStart = null;
@@ -962,10 +970,41 @@ function drawTimeline() {
   const BUCKET = TL_DOT_SEP;
 
   for (const [player, rowY, stackDir] of [['D282', TL_D282_Y, -1], ['S821', TL_S821_Y, 1]]) {
+    // Draw vehicle bars for long trips
+    for (const ev of MD.events) {
+      if (ev.type !== 'vehicle_in' || ev.player !== player || ev.exit_t == null) continue;
+      const dx = Math.abs((ev.exit_x || 0) - ev.x);
+      const dy = Math.abs((ev.exit_y || 0) - ev.y);
+      if (dx < VEHICLE_SHORT_DIST && dy < VEHICLE_SHORT_DIST) continue;
+      const x1 = tlX(ev.t), x2 = tlX(ev.exit_t);
+      if (x1 >= tlCanvas.width - 2 || x2 <= TL_PAD_L) continue;
+      const barH = 7;
+      tlCtx.save();
+      tlCtx.fillStyle   = '#aaddff';
+      tlCtx.globalAlpha = 0.55;
+      tlCtx.fillRect(Math.max(x1, TL_PAD_L), rowY - barH / 2, Math.min(x2, tlCanvas.width - 2) - Math.max(x1, TL_PAD_L), barH);
+      tlCtx.strokeStyle = '#aaddff';
+      tlCtx.lineWidth   = 1;
+      tlCtx.globalAlpha = 0.85;
+      tlCtx.strokeRect(Math.max(x1, TL_PAD_L), rowY - barH / 2, Math.min(x2, tlCanvas.width - 2) - Math.max(x1, TL_PAD_L), barH);
+      tlCtx.restore();
+      tlMarkers.push({ cx: (x1 + x2) / 2, cy: rowY, ev });
+    }
+
     const buckets = {};
     for (const ev of MD.events) {
       if (ev.player !== player || ev.t < 0) continue;
       if (ev.type === 'heal' || ev.type === 'boost' || ev.type === 'equip' || ev.type === 'unequip') continue;
+      // Skip vehicle_out (drawn as part of vehicle_in bar) and short vehicle trips
+      if (ev.type === 'vehicle_out') continue;
+      if (ev.type === 'vehicle_in') {
+        if (ev.exit_t != null) {
+          const dx = Math.abs((ev.exit_x || 0) - ev.x);
+          const dy = Math.abs((ev.exit_y || 0) - ev.y);
+          if (dx < VEHICLE_SHORT_DIST && dy < VEHICLE_SHORT_DIST) continue;
+        }
+        continue; // vehicle_in shown as bar, not dot
+      }
       const bx = Math.round(tlX(ev.t) / BUCKET);
       if (!buckets[bx]) buckets[bx] = [];
       buckets[bx].push(ev);
@@ -1230,7 +1269,8 @@ async function boot() {
 ============================================================================ */
 function resizeCanvas() {
   const wrap = document.getElementById('mapWrap');
-  const cssS = wrap.clientWidth;
+  // Use the smaller of width/height so the canvas fits inside max-height: 78vh
+  const cssS = Math.min(wrap.clientWidth, wrap.clientHeight || wrap.clientWidth);
   const dpr  = window.devicePixelRatio || 1;
   const phys = Math.round(cssS * dpr);
   if (canvas.width !== phys || canvas.height !== phys) {
@@ -1314,6 +1354,13 @@ function draw() {
     if (!state.layers[ev.type]) continue;
     // Timed markers (throwables etc.) disappear after their duration
     if (ev.duration_s != null && maxT !== Infinity && maxT > ev.t + ev.duration_s) continue;
+    // Skip vehicle markers for short trips
+    if (ev.type === 'vehicle_in' && ev.exit_t != null) {
+      const dx = Math.abs((ev.exit_x || 0) - ev.x);
+      const dy = Math.abs((ev.exit_y || 0) - ev.y);
+      if (dx < VEHICLE_SHORT_DIST && dy < VEHICLE_SHORT_DIST) continue;
+    }
+    if (ev.type === 'vehicle_out' && _shortVehicleOuts.has(`${ev.player}:${ev.t}`)) continue;
     const mp = _markerPos(ev);
     const { cx, cy } = w2c(mp.x, mp.y);
     drawMarker(ev, cx, cy);
@@ -1861,13 +1908,10 @@ function setPlayerFilter(p) {
 }
 
 function toggleLayer(id) {
+  if (id === 'killfeed') { toggleKillFeed(); return; }
   state.layers[id] = !state.layers[id];
   const sb = document.querySelector(`.layer-btn[data-layer="${id}"]`);
   if (sb) sb.classList.toggle('active', state.layers[id]);
-  if (id === 'killfeed') {
-    const btn = document.getElementById('killfeedBtn');
-    if (btn) btn.classList.toggle('active', state.layers[id]);
-  }
   draw();
 }
 
@@ -1882,6 +1926,7 @@ const SCORE_CFG = {
   kill:           { pts: 100, soloPts: 200 },
   knock:          { pts: 50,  soloPts: 100 },
   damage:         { pts: 1,   soloPts: 2   },
+  damageTaken:    { pts: -1  },
   revive:         { pts: 50  },
   bc:             { pts: 100 },
   death:          { pts: -100 },
@@ -1895,13 +1940,14 @@ function scoreDefHTML() {
   const s = (p) => (p >= 0 ? '+' : '') + p;
   const c = (p) => p >= 0 ? 'var(--ok)' : 'var(--danger)';
   const rows = [
-    [C.kill.pts,    C.kill.soloPts,    'Kill',             ''],
-    [C.knock.pts,   C.knock.soloPts,   'Knockdown',        ''],
-    [C.damage.pts,  C.damage.soloPts,  'Damage dealt',     '/pt'],
-    [C.revive.pts,  null,              'Revive',           ''],
-    [C.bc.pts,      null,              'Blue chip revive', ''],
-    [C.death.pts,   null,              'Death',            ''],
-    [C.knocked.pts, null,              'Got knocked',      ''],
+    [C.kill.pts,          C.kill.soloPts,    'Kill',             ''],
+    [C.knock.pts,         C.knock.soloPts,   'Knockdown',        ''],
+    [C.damage.pts,        C.damage.soloPts,  'Damage dealt',     '/pt'],
+    [C.damageTaken.pts,   null,              'Damage taken',     '/pt'],
+    [C.revive.pts,        null,              'Revive',           ''],
+    [C.bc.pts,            null,              'Blue chip revive', ''],
+    [C.death.pts,         null,              'Death',            ''],
+    [C.knocked.pts,       null,              'Got knocked',      ''],
   ].map(([pts, solo, label, unit]) =>
     `<span>${label}: <span style="color:${c(pts)}">${s(pts)}${unit}</span>${solo !== null ? ` <span style="color:${c(solo)};">(${s(solo)}${unit} if solo)</span>` : ' (always)'}</span>`
   );
@@ -1919,7 +1965,7 @@ function buildScoreChart() {
 
   const allEvts = MD.events || [];
   const relevant = allEvts.filter(e =>
-    ['kill','knockdown','dmg_dealt','revive','blue_chip_revive','death','knocked'].includes(e.type) &&
+    ['kill','knockdown','dmg_dealt','dmg_taken','revive','blue_chip_revive','death','knocked'].includes(e.type) &&
     ['D282','S821'].includes(e.player)
   ).sort((a, b) => a.t - b.t);
 
@@ -1946,6 +1992,7 @@ function buildScoreChart() {
       case 'kill':             return solo ? C.kill.soloPts    : C.kill.pts;
       case 'knockdown':        return solo ? C.knock.soloPts   : C.knock.pts;
       case 'dmg_dealt':        return (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts);
+      case 'dmg_taken':        return (e.damage || 0) * C.damageTaken.pts;
       case 'revive':           return C.revive.pts;
       case 'blue_chip_revive': return C.bc.pts;
       case 'death':            return C.death.pts;
@@ -1985,7 +2032,84 @@ function buildScoreChart() {
 
   const defGrid = document.getElementById('scoreDefGrid');
   if (defGrid) defGrid.innerHTML = scoreDefHTML();
+
+  scoreCanvas.addEventListener('mousemove', onScoreHover);
+  scoreCanvas.addEventListener('mouseleave', () => {
+    const tip = document.getElementById('tooltip');
+    tip.style.display = 'none';
+  });
 }
+
+function onScoreHover(e) {
+  if (!_scoreData || !MD) return;
+  const rect = scoreCanvas.getBoundingClientRect();
+  const mx   = (e.clientX - rect.left) * (scoreCanvas.width / rect.width);
+  const PAD_L = TL_PAD_L, PAD_R = 6, PAD_T = 10, PAD_B = 18;
+  const dur   = MD.duration_s || 1800;
+  const plotW = scoreCanvas.width - PAD_L - PAD_R;
+  const tip   = document.getElementById('tooltip');
+  if (mx < PAD_L || mx > PAD_L + plotW) { tip.style.display = 'none'; return; }
+  const t = (mx - PAD_L) / plotW * dur;
+
+  const allEvts = MD.events || [];
+  const C = SCORE_CFG;
+  const plB = pl => !pl || pl > 10 ? 0 : pl<=1?C.placement[1]:pl<=2?C.placement[2]:pl<=3?C.placement[3]:pl<=5?C.placement[5]:C.placement[10];
+
+  function partnerStateAtT(player, curT) {
+    const partner = player === 'D282' ? 'S821' : 'D282';
+    const knocks  = allEvts.filter(ev => ev.type === 'knocked' && ev.player === partner && ev.t < curT);
+    const revives = allEvts.filter(ev => (ev.type === 'revive' || ev.type === 'blue_chip_revive') && ev.target === partner);
+    const death   = allEvts.find(ev => ev.type === 'death' && ev.player === partner);
+    if (death && death.t < curT) return 'dead';
+    if (!knocks.length) return 'alive';
+    const lk = knocks[knocks.length - 1];
+    return (!revives.some(r => r.t > lk.t && r.t < curT) && !(death && death.t > lk.t && death.t < curT)) ? 'knocked' : 'alive';
+  }
+
+  const lines = [mmss(Math.round(t))];
+  let duoTotal = 0;
+  for (const player of ['D282', 'S821']) {
+    const ps = MD.match_stats?.[player] || {};
+    let pts = 0;
+    const parts = [];
+    const cnt = { kills:0, soloK:0, knocks:0, soloKn:0, dmg:0, dmgTkn:0, revives:0, bc:0, deaths:0, knocked:0 };
+    for (const ev of allEvts) {
+      if (ev.player !== player || ev.t > t) continue;
+      const solo = ['kill','knockdown','dmg_dealt'].includes(ev.type) && (() => { const ps2 = partnerStateAtT(player, ev.t); return ps2 === 'dead' || ps2 === 'knocked'; })();
+      switch (ev.type) {
+        case 'kill':             pts += solo ? C.kill.soloPts    : C.kill.pts; cnt.kills++; if (solo) cnt.soloK++; break;
+        case 'knockdown':        pts += solo ? C.knock.soloPts   : C.knock.pts; cnt.knocks++; if (solo) cnt.soloKn++; break;
+        case 'dmg_dealt':        pts += (ev.damage||0)*(solo?C.damage.soloPts:C.damage.pts); cnt.dmg += ev.damage||0; break;
+        case 'dmg_taken':        pts += (ev.damage||0)*C.damageTaken.pts; cnt.dmgTkn += ev.damage||0; break;
+        case 'revive':           pts += C.revive.pts; cnt.revives++; break;
+        case 'blue_chip_revive': pts += C.bc.pts; cnt.bc++; break;
+        case 'death':            pts += C.death.pts; cnt.deaths++; break;
+        case 'knocked':          pts += C.knocked.pts; cnt.knocked++; break;
+      }
+    }
+    const survT = Math.min(t, ps.survival_s || 0);
+    const survMins = Math.floor(survT / 60);
+    pts += survMins * C.survivalPerMin;
+    if (t >= (ps.survival_s || 99999)) pts += plB(ps.placement);
+    duoTotal += pts;
+    const parts2 = [];
+    if (cnt.kills)    parts2.push(`${cnt.kills}K×${cnt.soloK?`${C.kill.soloPts}(solo)`:C.kill.pts}=${cnt.kills*(cnt.soloK?C.kill.soloPts:C.kill.pts)}`);
+    if (cnt.knocks)   parts2.push(`${cnt.knocks}Kn=${cnt.knocks*(cnt.soloKn?C.knock.soloPts:C.knock.pts)}`);
+    if (cnt.dmg)      parts2.push(`Dmg ${Math.round(cnt.dmg)}×${C.damage.pts}=${Math.round(cnt.dmg*C.damage.pts)}`);
+    if (cnt.dmgTkn)   parts2.push(`Tkn ${Math.round(cnt.dmgTkn)}×${C.damageTaken.pts}=${Math.round(cnt.dmgTkn*C.damageTaken.pts)}`);
+    if (cnt.revives)  parts2.push(`Rev×${C.revive.pts}`);
+    if (cnt.bc)       parts2.push(`BC×${C.bc.pts}`);
+    if (cnt.deaths)   parts2.push(`Death×${C.death.pts}`);
+    if (cnt.knocked)  parts2.push(`Kd×${C.knocked.pts}`);
+    if (survMins)     parts2.push(`${survMins}m×${C.survivalPerMin}`);
+    lines.push(`${player}: ${parts2.join(', ')} → ${Math.round(pts)>0?'+':''}${Math.round(pts)}`);
+  }
+  lines.push(`Duo total: ${Math.round(duoTotal)>0?'+':''}${Math.round(duoTotal)}`);
+
+  tip.style.cssText = 'display:block;white-space:pre;font-size:11px;position:fixed;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:6px 10px;border-radius:6px;pointer-events:none;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,0.5)';
+  tip.textContent   = lines.join('\n');
+  tip.style.left    = (e.clientX + 14) + 'px';
+  tip.style.top     = (e.clientY - 12) + 'px';
 
 function resizeScoreChart() {
   if (!scoreCanvas) return;
@@ -2143,6 +2267,7 @@ function buildPlayerCards() {
         case 'kill':             matchScore += solo ? C.kill.soloPts    : C.kill.pts; break;
         case 'knockdown':        matchScore += solo ? C.knock.soloPts   : C.knock.pts; break;
         case 'dmg_dealt':        matchScore += (e.damage || 0) * (solo ? C.damage.soloPts : C.damage.pts); break;
+        case 'dmg_taken':        matchScore += (e.damage || 0) * C.damageTaken.pts; break;
         case 'revive':           matchScore += C.revive.pts; break;
         case 'blue_chip_revive': matchScore += C.bc.pts; break;
         case 'death':            matchScore += C.death.pts; break;
@@ -2570,6 +2695,7 @@ function precomputeMatchData() {
   if (!MD) return;
 
   _enemyKnockIntervals = {};
+  _shortVehicleOuts    = new Set();
   _lootedCrateTime = {};
   const crateEvents    = MD.events.filter(e => e.type === 'crate_land');
   const carepackEvents = MD.events.filter(e => e.type === 'carepack');
@@ -2583,43 +2709,93 @@ function precomputeMatchData() {
     }
     if (earliest < Infinity) _lootedCrateTime[`${crate.x}_${crate.y}_${crate.t}`] = earliest;
   }
+
+  // Build short-vehicle-out lookup for map filtering
   for (const ev of MD.events) {
-    if (ev.type === 'knockdown' && ev.victim) {
-      if (!_enemyKnockIntervals[ev.victim]) _enemyKnockIntervals[ev.victim] = [];
-      _enemyKnockIntervals[ev.victim].push({ knockT: ev.t, killT: null });
-    }
-    if (ev.type === 'kill' && ev.victim) {
-      const arr = _enemyKnockIntervals[ev.victim];
-      if (arr && arr.length) {
-        const last = arr[arr.length - 1];
-        if (!last.killT) last.killT = ev.t;
+    if (ev.type === 'vehicle_in' && ev.exit_t != null) {
+      const dx = Math.abs((ev.exit_x || 0) - ev.x);
+      const dy = Math.abs((ev.exit_y || 0) - ev.y);
+      if (dx < VEHICLE_SHORT_DIST && dy < VEHICLE_SHORT_DIST) {
+        _shortVehicleOuts.add(`${ev.player}:${ev.exit_t}`);
       }
     }
   }
 
+  // Enemy knock intervals — use full killfeed when available for complete tracking
+  if (MD.killfeed && MD.killfeed.length) {
+    for (const kf of MD.killfeed) {
+      if (!kf.is_knock) continue;
+      if (kf.victim === 'D282' || kf.victim === 'S821') continue;
+      if (!_enemyKnockIntervals[kf.victim]) _enemyKnockIntervals[kf.victim] = [];
+      _enemyKnockIntervals[kf.victim].push({ knockT: kf.t, killT: null });
+    }
+    for (const kf of MD.killfeed) {
+      if (kf.is_knock) continue;
+      if (kf.victim === 'D282' || kf.victim === 'S821') continue;
+      const arr = _enemyKnockIntervals[kf.victim];
+      if (arr && arr.length) {
+        const last = arr[arr.length - 1];
+        if (!last.killT) last.killT = kf.t;
+      }
+    }
+  } else {
+    for (const ev of MD.events) {
+      if (ev.type === 'knockdown' && ev.victim) {
+        if (!_enemyKnockIntervals[ev.victim]) _enemyKnockIntervals[ev.victim] = [];
+        _enemyKnockIntervals[ev.victim].push({ knockT: ev.t, killT: null });
+      }
+      if (ev.type === 'kill' && ev.victim) {
+        const arr = _enemyKnockIntervals[ev.victim];
+        if (arr && arr.length) {
+          const last = arr[arr.length - 1];
+          if (!last.killT) last.killT = ev.t;
+        }
+      }
+    }
+  }
+
+  // Build kill feed — from MD.killfeed if available, else fallback to MD.events
   _killFeed = [];
-  for (const ev of MD.events) {
-    if (ev.type === 'kill') {
-      _killFeed.push({ t: ev.t, dealer: ev.player, victim: ev.victim || '?', weapon: ev.weapon, action: 'killed', positive: true });
-    } else if (ev.type === 'knockdown') {
-      _killFeed.push({ t: ev.t, dealer: ev.player, victim: ev.victim || '?', weapon: ev.weapon, action: 'knocked', positive: true });
-    } else if (ev.type === 'death') {
-      _killFeed.push({ t: ev.t, dealer: ev.killer || '?', victim: ev.player, weapon: ev.weapon, action: 'killed', positive: false });
-    } else if (ev.type === 'knocked') {
-      _killFeed.push({ t: ev.t, dealer: ev.attacker || '?', victim: ev.player, weapon: null, action: 'knocked', positive: false });
+  if (MD.killfeed && MD.killfeed.length) {
+    for (const kf of MD.killfeed) {
+      const action   = kf.is_knock ? 'knocked' : 'killed';
+      const positive = kf.killer === 'D282' || kf.killer === 'S821';
+      _killFeed.push({
+        t:        kf.t,
+        dealer:   kf.killer,
+        victim:   kf.victim,
+        weapon:   kf.weapon,
+        action,
+        positive,
+        our:      kf.our,
+        hs:       kf.hs || false,
+      });
+    }
+  } else {
+    for (const ev of MD.events) {
+      if (ev.type === 'kill') {
+        _killFeed.push({ t: ev.t, dealer: ev.player, victim: ev.victim || '?', weapon: ev.weapon, action: 'killed', positive: true, our: true });
+      } else if (ev.type === 'knockdown') {
+        _killFeed.push({ t: ev.t, dealer: ev.player, victim: ev.victim || '?', weapon: ev.weapon, action: 'knocked', positive: true, our: true });
+      } else if (ev.type === 'death') {
+        _killFeed.push({ t: ev.t, dealer: ev.killer || '?', victim: ev.player, weapon: ev.weapon, action: 'killed', positive: false, our: true });
+      } else if (ev.type === 'knocked') {
+        _killFeed.push({ t: ev.t, dealer: ev.attacker || '?', victim: ev.player, weapon: null, action: 'knocked', positive: false, our: true });
+      }
     }
   }
   _killFeed.sort((a, b) => a.t - b.t);
 }
 
 function drawKillFeed(maxT) {
-  if (!state.layers.killfeed || !_killFeed.length) return;
+  if (killFeedMode === 0 || !_killFeed.length) return;
+  const feed = killFeedMode === 1 ? _killFeed.filter(e => e.our) : _killFeed;
 
   const effectiveT = maxT === Infinity ? (MD.duration_s || 1800) : maxT;
   const WINDOW     = maxT === Infinity ? Infinity : 60;
   const MAX_ROWS   = 8;
 
-  const entries = _killFeed
+  const entries = feed
     .filter(e => e.t <= effectiveT && (WINDOW === Infinity || e.t >= effectiveT - WINDOW))
     .slice(-MAX_ROWS);
   if (!entries.length) return;
@@ -2699,10 +2875,15 @@ function drawKillFeed(maxT) {
 }
 
 function toggleKillFeed() {
-  state.layers.killfeed = !state.layers.killfeed;
-  document.getElementById('killfeedBtn').classList.toggle('active', state.layers.killfeed);
+  killFeedMode = (killFeedMode + 1) % 3;
+  state.layers.killfeed = killFeedMode > 0;
+  const btn = document.getElementById('killfeedBtn');
+  if (btn) {
+    btn.classList.toggle('active', killFeedMode > 0);
+    btn.title = ['Kill feed (off)', 'Kill feed: our players', 'Kill feed: all'][killFeedMode];
+  }
   const sb = document.querySelector('.layer-btn[data-layer="killfeed"]');
-  if (sb) sb.classList.toggle('active', state.layers.killfeed);
+  if (sb) sb.classList.toggle('active', killFeedMode > 0);
   draw();
 }
 
@@ -2723,7 +2904,7 @@ function buildEngagementSummary() {
   const el = document.getElementById('engagementList');
   if (!el || !MD) return;
 
-  const D = 'var(--accent)', S = 'var(--blue)', R = 'var(--danger)';
+  const D = 'var(--accent)', S = 'var(--blue)';
   const eng = {};
   const get = name => {
     if (!eng[name]) eng[name] = { d282:0, s821:0, tk282:0, tk821:0, killedBy:null, killedUs:[], killed:false };
@@ -2756,52 +2937,51 @@ function buildEngagementSummary() {
     return;
   }
 
-  const fmtSplit = (dVal, sVal, dimDmg) => {
-    const dTxt = dVal > 0 ? Math.round(dVal) : '·';
-    const sTxt = sVal > 0 ? Math.round(sVal) : '·';
-    const dCol = dVal > 0 ? D : 'var(--muted)';
-    const sCol = sVal > 0 ? S : 'var(--muted)';
-    const style = dimDmg ? 'opacity:.75;' : '';
-    return `<span style="${style}color:${dCol}">${dTxt}</span><span style="color:rgba(56,52,44,.8)">/</span><span style="${style}color:${sCol}">${sTxt}</span>`;
-  };
+  const fmtN = v => v > 0 ? Math.round(v) : '·';
+  const numCol = (v, c) => v > 0 ? c : 'var(--muted)';
 
   const rowsHtml = sorted.map((e, idx) => {
-    // Icon: what WE did (kill/knock them)
+    // Icons: what WE did (kill/knock them)
     let icons = '';
     if      (e.killedBy === 'D282')   icons += `<span style="color:${D}">✕</span>`;
     else if (e.killedBy === 'S821')   icons += `<span style="color:${S}">✕</span>`;
-    else if (e.killedBy === 'D282_k') icons += `<span style="color:${D};opacity:.5">∼</span>`;
-    else if (e.killedBy === 'S821_k') icons += `<span style="color:${S};opacity:.5">∼</span>`;
-    // Icon: what THEY did (killed/knocked us) — one symbol per event
+    else if (e.killedBy === 'D282_k') icons += `<span style="color:${D};opacity:.6">↓</span>`;
+    else if (e.killedBy === 'S821_k') icons += `<span style="color:${S};opacity:.6">↓</span>`;
+    // Icons: what THEY did (killed/knocked us)
     for (const p of e.killedUs) {
       const isKnock = p.endsWith('_k');
-      const pCol    = (isKnock ? p.slice(0,-2) : p) === 'D282' ? D : S;
+      const pCol = (isKnock ? p.slice(0,-2) : p) === 'D282' ? D : S;
       icons += `<span style="color:${pCol}">${isKnock ? '↓' : '†'}</span>`;
     }
 
+    // Name color: green=killed, red=killed us, muted=neither
+    const theyKilledUs = e.killedUs.some(p => !p.endsWith('_k'));
+    const nameCol = e.killed ? 'var(--ok)' : theyKilledUs ? 'var(--danger)' : 'rgba(154,147,133,0.85)';
+
     const borderStyle = idx === sorted.length - 1 ? 'border-bottom:none' : '';
-    const dealtHtml = fmtSplit(e.d282, e.s821, false);
-    const takenHtml = fmtSplit(e.tk282, e.tk821, true);
-    const killedBadge = e.killed
-      ? `<span style="color:var(--ok);font-size:10px;margin-left:3px">✓ Killed</span>`
-      : `<span style="color:var(--muted);font-size:10px;margin-left:3px">escaped</span>`;
-    return `<div class="eng-row2" style="${borderStyle}">` +
-      `<div class="eng-name">${e.name}${killedBadge}</div>` +
+    const tip = `${e.name}\nDealt: ${Math.round(e.d282+e.s821)} (D:${Math.round(e.d282)} S:${Math.round(e.s821)})\nTaken: ${Math.round(e.tk282+e.tk821)} (D:${Math.round(e.tk282)} S:${Math.round(e.tk821)})`;
+
+    return `<div class="eng-row2" style="${borderStyle}" title="${tip}">` +
+      `<div class="eng-name" style="color:${nameCol}">${e.name}</div>` +
       `<div class="eng-icon">${icons || '<span style="color:var(--muted)">·</span>'}</div>` +
-      `<div class="eng-dealt">${dealtHtml}</div>` +
-      `<div class="eng-taken">${takenHtml}</div>` +
+      `<div class="eng-num-r" style="color:${numCol(e.d282,D)}">${fmtN(e.d282)}</div>` +
+      `<div class="eng-slash" style="color:var(--ok)">/</div>` +
+      `<div class="eng-num-l" style="color:${numCol(e.s821,S)}">${fmtN(e.s821)}</div>` +
+      `<div class="eng-num-r" style="color:${numCol(e.tk282,D)}">${fmtN(e.tk282)}</div>` +
+      `<div class="eng-slash" style="color:var(--danger)">/</div>` +
+      `<div class="eng-num-l" style="color:${numCol(e.tk821,S)}">${fmtN(e.tk821)}</div>` +
       `</div>`;
   }).join('');
 
-  el.innerHTML =
-    `<div class="eng-row2" style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding-bottom:4px;border-bottom:1px solid rgba(56,52,44,.55);">` +
-      `<div class="eng-name">Enemy</div>` +
-      `<div class="eng-icon"></div>` +
-      `<div class="eng-dealt" style="text-align:right">` +
-        `<span style="color:var(--accent)">D</span><span style="color:rgba(56,52,44,.8)">/</span><span style="color:var(--blue)">S</span>` +
-      `</div>` +
-      `<div class="eng-taken" style="text-align:right;color:var(--muted)">←D/S</div>` +
-    `</div>` + rowsHtml;
+  const header =
+    `<div class="eng-row2" style="font-size:9px;text-transform:uppercase;letter-spacing:.4px;padding-bottom:4px;border-bottom:1px solid rgba(56,52,44,.55);">` +
+      `<div style="color:var(--muted)">Enemy</div>` +
+      `<div></div>` +
+      `<div style="grid-column:span 3;text-align:center;color:var(--ok)">Dealt</div>` +
+      `<div style="grid-column:span 3;text-align:center;color:var(--danger)">Taken</div>` +
+    `</div>`;
+
+  el.innerHTML = header + rowsHtml;
 }
 
 /* ============================================================================
