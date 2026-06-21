@@ -617,14 +617,14 @@ const PLAYER_COLOR = { D282: '#f4a300', S821: '#4a9edd' };
 
 // Layer ids MUST match event.type strings from the match JSON exactly
 const LAYER_DEFS = [
-  { id: 'paths',            label: 'Movement Paths',    color: null,      default: true  },
+  { id: 'paths',            label: 'Movement Paths',    color: null,      default: false },
   { id: 'enemies',          label: 'Enemy Positions',   color: '#ff4444', default: true  },
   { id: 'circles',          label: 'Blue Zone',         color: '#4a9edd', default: true  },
   { id: 'kill',             label: 'Kills',             color: '#f4a300', default: true  },
-  { id: 'knockdown',        label: 'Knocks Out',        color: '#f4a300', default: true  },
-  { id: 'knocked',          label: 'Knocked Down',      color: '#d7443e', default: true  },
+  { id: 'knockdown',        label: 'Knocks Out',        color: '#f4a300', default: false },
+  { id: 'knocked',          label: 'Knocked Down',      color: '#d7443e', default: false },
   { id: 'death',            label: 'Deaths',            color: '#d7443e', default: true  },
-  { id: 'revive',           label: 'Revives',           color: '#c080ff', default: true  },
+  { id: 'revive',           label: 'Revives',           color: '#c080ff', default: false },
   { id: 'blue_chip_revive', label: 'Blue Chip Revives', color: '#ff66ff', default: true  },
   { id: 'dmg_dealt',        label: 'Damage Dealt',      color: '#f4a300', default: false },
   { id: 'dmg_taken',        label: 'Damage Taken',      color: '#d7443e', default: false },
@@ -634,7 +634,7 @@ const LAYER_DEFS = [
   { id: 'carepack',         label: 'Care Package',      color: '#ffe44d', default: false },
   { id: 'crate_land',       label: 'Care Packages',     color: '#ffe44d', default: true  },
   { id: 'transport',        label: 'Transport Mode',    color: null,      default: false },
-  { id: 'engagement',       label: 'Engagement Lines',  color: '#44ff88', default: false },
+  { id: 'engagement',       label: 'Engagement Lines',  color: '#44ff88', default: true  },
   { id: 'vehicle_in',       label: 'Vehicle Entry',     color: '#aaddff', default: false },
   { id: 'vehicle_out',      label: 'Vehicle Exit',      color: '#aaddff', default: false },
   { id: 'armor_break',      label: 'Armor Break',       color: '#ff9944', default: false },
@@ -1061,6 +1061,8 @@ function onTlClick(e) {
   state.time    = clamped >= max ? Infinity : clamped;
   document.getElementById('timeDisplay').textContent =
     state.time === Infinity ? 'Full match' : mmss(clamped);
+  if (state.time === Infinity && playback.playing) { pausePlayback(); return; }
+  playback.lastTs = null;
   draw();
   drawTimeline();
   drawHpChart();
@@ -1775,12 +1777,13 @@ function resetView() {
    INTERACTIONS
 ============================================================================ */
 function onTimeInput(e) {
-  pausePlayback();
-  const val  = parseInt(e.target.value, 10);
-  const max  = parseInt(e.target.max,   10);
+  const val = parseInt(e.target.value, 10);
+  const max = parseInt(e.target.max,   10);
   state.time = val >= max ? Infinity : val;
   document.getElementById('timeDisplay').textContent =
     state.time === Infinity ? 'Full match' : mmss(val);
+  if (state.time === Infinity && playback.playing) { pausePlayback(); return; }
+  playback.lastTs = null; // prevent time-jump on next RAF tick after scrub
   draw();
   drawTimeline();
   drawHpChart();
@@ -1802,7 +1805,6 @@ function resetTime() {
 }
 
 function jumpTime(delta) {
-  pausePlayback();
   const sl  = document.getElementById('timeSlider');
   const max = parseInt(sl.max, 10);
   const cur = state.time === Infinity ? max : state.time;
@@ -1811,6 +1813,8 @@ function jumpTime(delta) {
   state.time = nv >= max ? Infinity : nv;
   document.getElementById('timeDisplay').textContent =
     state.time === Infinity ? 'Full match' : mmss(nv);
+  if (state.time === Infinity && playback.playing) { pausePlayback(); return; }
+  playback.lastTs = null;
   draw();
   drawTimeline();
   drawHpChart();
@@ -2042,9 +2046,9 @@ function buildScoreChart() {
 
 function onScoreHover(e) {
   if (!_scoreData || !MD) return;
-  const rect = scoreCanvas.getBoundingClientRect();
-  const mx   = (e.clientX - rect.left) * (scoreCanvas.width / rect.width);
-  const PAD_L = TL_PAD_L, PAD_R = 6, PAD_T = 10, PAD_B = 18;
+  const rect  = scoreCanvas.getBoundingClientRect();
+  const mx    = (e.clientX - rect.left) * (scoreCanvas.width / rect.width);
+  const PAD_L = TL_PAD_L, PAD_R = 6;
   const dur   = MD.duration_s || 1800;
   const plotW = scoreCanvas.width - PAD_L - PAD_R;
   const tip   = document.getElementById('tooltip');
@@ -2066,50 +2070,79 @@ function onScoreHover(e) {
     return (!revives.some(r => r.t > lk.t && r.t < curT) && !(death && death.t > lk.t && death.t < curT)) ? 'knocked' : 'alive';
   }
 
-  const lines = [mmss(Math.round(t))];
-  let duoTotal = 0;
-  for (const player of ['D282', 'S821']) {
-    const ps = MD.match_stats?.[player] || {};
-    let pts = 0;
-    const parts = [];
-    const cnt = { kills:0, soloK:0, knocks:0, soloKn:0, dmg:0, dmgTkn:0, revives:0, bc:0, deaths:0, knocked:0 };
-    for (const ev of allEvts) {
-      if (ev.player !== player || ev.t > t) continue;
-      const solo = ['kill','knockdown','dmg_dealt'].includes(ev.type) && (() => { const ps2 = partnerStateAtT(player, ev.t); return ps2 === 'dead' || ps2 === 'knocked'; })();
-      switch (ev.type) {
-        case 'kill':             pts += solo ? C.kill.soloPts    : C.kill.pts; cnt.kills++; if (solo) cnt.soloK++; break;
-        case 'knockdown':        pts += solo ? C.knock.soloPts   : C.knock.pts; cnt.knocks++; if (solo) cnt.soloKn++; break;
-        case 'dmg_dealt':        pts += (ev.damage||0)*(solo?C.damage.soloPts:C.damage.pts); cnt.dmg += ev.damage||0; break;
-        case 'dmg_taken':        pts += (ev.damage||0)*C.damageTaken.pts; cnt.dmgTkn += ev.damage||0; break;
-        case 'revive':           pts += C.revive.pts; cnt.revives++; break;
-        case 'blue_chip_revive': pts += C.bc.pts; cnt.bc++; break;
-        case 'death':            pts += C.death.pts; cnt.deaths++; break;
-        case 'knocked':          pts += C.knocked.pts; cnt.knocked++; break;
-      }
+  // Per-player component accumulators
+  const comp = {
+    D282: { kills:0, knocks:0, dmg:0, dmgTkn:0, rev:0, bc:0, death:0, knocked:0 },
+    S821: { kills:0, knocks:0, dmg:0, dmgTkn:0, rev:0, bc:0, death:0, knocked:0 },
+  };
+  for (const ev of allEvts) {
+    if (!comp[ev.player] || ev.t > t) continue;
+    const c    = comp[ev.player];
+    const solo = ['kill','knockdown','dmg_dealt'].includes(ev.type) &&
+                 (() => { const s = partnerStateAtT(ev.player, ev.t); return s==='dead'||s==='knocked'; })();
+    switch (ev.type) {
+      case 'kill':             c.kills   += solo ? C.kill.soloPts    : C.kill.pts; break;
+      case 'knockdown':        c.knocks  += solo ? C.knock.soloPts   : C.knock.pts; break;
+      case 'dmg_dealt':        c.dmg     += (ev.damage||0)*(solo?C.damage.soloPts:C.damage.pts); break;
+      case 'dmg_taken':        c.dmgTkn  += (ev.damage||0)*C.damageTaken.pts; break;
+      case 'revive':           c.rev     += C.revive.pts; break;
+      case 'blue_chip_revive': c.bc      += C.bc.pts; break;
+      case 'death':            c.death   += C.death.pts; break;
+      case 'knocked':          c.knocked += C.knocked.pts; break;
     }
-    const survT = Math.min(t, ps.survival_s || 0);
-    const survMins = Math.floor(survT / 60);
-    pts += survMins * C.survivalPerMin;
-    if (t >= (ps.survival_s || 99999)) pts += plB(ps.placement);
-    duoTotal += pts;
-    const parts2 = [];
-    if (cnt.kills)    parts2.push(`${cnt.kills}K×${cnt.soloK?`${C.kill.soloPts}(solo)`:C.kill.pts}=${cnt.kills*(cnt.soloK?C.kill.soloPts:C.kill.pts)}`);
-    if (cnt.knocks)   parts2.push(`${cnt.knocks}Kn=${cnt.knocks*(cnt.soloKn?C.knock.soloPts:C.knock.pts)}`);
-    if (cnt.dmg)      parts2.push(`Dmg ${Math.round(cnt.dmg)}×${C.damage.pts}=${Math.round(cnt.dmg*C.damage.pts)}`);
-    if (cnt.dmgTkn)   parts2.push(`Tkn ${Math.round(cnt.dmgTkn)}×${C.damageTaken.pts}=${Math.round(cnt.dmgTkn*C.damageTaken.pts)}`);
-    if (cnt.revives)  parts2.push(`Rev×${C.revive.pts}`);
-    if (cnt.bc)       parts2.push(`BC×${C.bc.pts}`);
-    if (cnt.deaths)   parts2.push(`Death×${C.death.pts}`);
-    if (cnt.knocked)  parts2.push(`Kd×${C.knocked.pts}`);
-    if (survMins)     parts2.push(`${survMins}m×${C.survivalPerMin}`);
-    lines.push(`${player}: ${parts2.join(', ')} → ${Math.round(pts)>0?'+':''}${Math.round(pts)}`);
   }
-  lines.push(`Duo total: ${Math.round(duoTotal)>0?'+':''}${Math.round(duoTotal)}`);
+  const survD  = Math.floor(Math.min(t, MD.match_stats?.D282?.survival_s||0) / 60) * C.survivalPerMin;
+  const survS  = Math.floor(Math.min(t, MD.match_stats?.S821?.survival_s||0) / 60) * C.survivalPerMin;
+  const plD    = t >= (MD.match_stats?.D282?.survival_s||99999) ? plB(MD.match_stats?.D282?.placement) : 0;
+  const plS    = t >= (MD.match_stats?.S821?.survival_s||99999) ? plB(MD.match_stats?.S821?.placement) : 0;
+  const totD   = Object.values(comp.D282).reduce((s,v)=>s+v,0) + survD + plD;
+  const totS   = Object.values(comp.S821).reduce((s,v)=>s+v,0) + survS + plS;
+  const totDuo = totD + totS;
 
-  tip.style.cssText = 'display:block;white-space:pre;font-size:11px;position:fixed;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:6px 10px;border-radius:6px;pointer-events:none;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,0.5)';
-  tip.textContent   = lines.join('\n');
-  tip.style.left    = (e.clientX + 14) + 'px';
-  tip.style.top     = (e.clientY - 12) + 'px';
+  const cv = v => v > 0 ? '#7bc26a' : v < 0 ? '#d7443e' : 'rgba(154,147,133,0.4)';
+  const fv = v => v === 0 ? '·' : (v > 0 ? `+${Math.round(v)}` : String(Math.round(v)));
+
+  const rows = [
+    ['Kills',     comp.D282.kills,   comp.S821.kills,   comp.D282.kills   + comp.S821.kills  ],
+    ['Knocks',    comp.D282.knocks,  comp.S821.knocks,  comp.D282.knocks  + comp.S821.knocks ],
+    ['Damage',    comp.D282.dmg,     comp.S821.dmg,     comp.D282.dmg     + comp.S821.dmg    ],
+    ['DmgTaken',  comp.D282.dmgTkn,  comp.S821.dmgTkn,  comp.D282.dmgTkn  + comp.S821.dmgTkn],
+    ['Revives',   comp.D282.rev,     comp.S821.rev,     comp.D282.rev     + comp.S821.rev    ],
+    ['BC Rev',    comp.D282.bc,      comp.S821.bc,      comp.D282.bc      + comp.S821.bc     ],
+    ['Deaths',    comp.D282.death,   comp.S821.death,   comp.D282.death   + comp.S821.death  ],
+    ['Knocked',   comp.D282.knocked, comp.S821.knocked, comp.D282.knocked  + comp.S821.knocked],
+    ['Survival',  survD,             survS,             survD             + survS             ],
+    ['Placement', plD,               plS,               plD               + plS              ],
+  ].filter(([,d,s]) => d !== 0 || s !== 0);
+
+  const cell = (v, bold) =>
+    `<td style="text-align:right;padding:1px 5px;color:${cv(v)}${bold?';font-weight:700':''}">${fv(v)}</td>`;
+
+  const bodyHtml = rows.map(([label, d, s, duo]) =>
+    `<tr>
+      <td style="color:rgba(154,147,133,0.7);padding:1px 10px 1px 0;white-space:nowrap">${label}</td>
+      ${cell(d,false)}${cell(s,false)}${cell(duo,false)}
+    </tr>`
+  ).join('');
+
+  tip.style.cssText = 'display:block;position:fixed;background:var(--panel);border:1px solid var(--line);padding:8px 10px;border-radius:6px;pointer-events:none;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,0.5)';
+  tip.innerHTML = `
+    <div style="text-align:center;font-size:11px;color:rgba(232,227,216,0.6);margin-bottom:6px">${mmss(Math.round(t))}</div>
+    <table style="border-collapse:collapse;font-size:11px;font-family:monospace">
+      <thead><tr>
+        <th style="font-weight:normal;color:rgba(154,147,133,0.5);font-size:10px;padding:0 10px 4px 0;text-align:left"></th>
+        <th style="font-weight:normal;color:#f4a300;font-size:10px;padding:0 5px 4px;text-align:right">D282</th>
+        <th style="font-weight:normal;color:#4a9edd;font-size:10px;padding:0 5px 4px;text-align:right">S821</th>
+        <th style="font-weight:normal;color:rgba(232,227,216,0.45);font-size:10px;padding:0 0 4px 5px;text-align:right">Duo</th>
+      </tr></thead>
+      <tbody>${bodyHtml}</tbody>
+      <tfoot><tr style="border-top:1px solid rgba(56,52,44,0.6)">
+        <td style="color:rgba(232,227,216,0.85);font-weight:700;padding:4px 10px 1px 0">Total</td>
+        ${cell(totD,true)}${cell(totS,true)}${cell(totDuo,true)}
+      </tr></tfoot>
+    </table>`;
+  tip.style.left = (e.clientX + 14) + 'px';
+  tip.style.top  = (e.clientY - 12) + 'px';
 }
 
 function resizeScoreChart() {
