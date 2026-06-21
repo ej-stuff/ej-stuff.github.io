@@ -760,7 +760,6 @@ function buildDateSlider() {
   // Labels: show all dates (or every other if too many)
   const labelsEl = document.getElementById('sliderLabels');
   labelsEl.style.height = '16px';
-  const step = n === 1 ? 1 : 1;
   const pct  = i => (n === 1 ? 50 : (i / (n - 1)) * 100);
 
   labelsEl.innerHTML = DATES.map((d, i) => {
@@ -2230,7 +2229,6 @@ function renderWinConditions(matches) {
   const wD = avg(wins, cD),   lD = avg(losses, cD);
   const wS = avg(wins, cS),   lS = avg(losses, cS);
 
-  const hi = v => `style="color:var(--accent);font-weight:600"`;
   const cell = (win, loss, fmt) => {
     const wH = win >= loss, lH = loss > win;
     return [`<td style="padding:8px 10px;text-align:right;${wH?'color:var(--accent);font-weight:600':''}">${fmt(win)}</td>`,

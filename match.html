@@ -1514,24 +1514,6 @@ function _strokeSegments(pts, color, lw, alpha, dashed) {
   ctx.globalAlpha = 1;
 }
 
-function _strokePath(player, pts, lw, alpha, dashed) {
-  if (pts.length < 2) return;
-  const f = w2c(pts[0].x, pts[0].y);
-  ctx.beginPath();
-  ctx.moveTo(f.cx, f.cy);
-  for (let i = 1; i < pts.length; i++) {
-    const { cx, cy } = w2c(pts[i].x, pts[i].y);
-    ctx.lineTo(cx, cy);
-  }
-  ctx.strokeStyle = PLAYER_COLOR[player];
-  ctx.lineWidth   = lw / view.scale;
-  ctx.globalAlpha = alpha;
-  if (dashed) ctx.setLineDash([6 / view.scale, 4 / view.scale]);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.globalAlpha = 1;
-}
-
 /* ── Blue zone circles ──────────────────────────────────────────────────── */
 function drawCircles(maxT) {
   if (!MAP || !MD.circles.length) return;
@@ -2278,13 +2260,11 @@ function buildPlayerCards() {
 
     const soloK = soloKillCount(evts, p);
 
-    // Compute exact match score from events using SCORE_CFG
-    const allEvts = evts;
     const partner = p === 'D282' ? 'S821' : 'D282';
     function partnerStateAtT(t) {
-      const pKnocks  = allEvts.filter(e => e.type === 'knocked' && e.player === partner && e.t < t);
-      const pRevives = allEvts.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
-      const pDeath   = allEvts.find(e => e.type === 'death' && e.player === partner);
+      const pKnocks  = evts.filter(e => e.type === 'knocked' && e.player === partner && e.t < t);
+      const pRevives = evts.filter(e => (e.type === 'revive' || e.type === 'blue_chip_revive') && e.target === partner);
+      const pDeath   = evts.find(e => e.type === 'death' && e.player === partner);
       if (pDeath && pDeath.t < t) return 'dead';
       if (!pKnocks.length) return 'alive';
       const lastK = pKnocks[pKnocks.length - 1];
@@ -2294,7 +2274,7 @@ function buildPlayerCards() {
     }
     const C = SCORE_CFG;
     let matchScore = 0;
-    for (const e of allEvts) {
+    for (const e of evts) {
       if (e.player !== p) continue;
       const solo = ['kill','knockdown','dmg_dealt'].includes(e.type) && (() => { const ps = partnerStateAtT(e.t); return ps === 'dead' || ps === 'knocked'; })();
       switch (e.type) {
