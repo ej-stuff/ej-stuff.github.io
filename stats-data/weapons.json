@@ -6,8 +6,8 @@
       "kills": 10,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.1,
-      "hits": 69,
-      "total_damage": 1304.8,
+      "hits": 76,
+      "total_damage": 1439.1,
       "avg_damage_per_hit": 18.9
     },
     {
@@ -16,9 +16,9 @@
       "kills": 8,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.125,
-      "hits": 85,
-      "total_damage": 1326.2,
-      "avg_damage_per_hit": 15.6
+      "hits": 94,
+      "total_damage": 1426.2,
+      "avg_damage_per_hit": 15.2
     },
     {
       "weapon": "Mk12 SPR",
@@ -26,8 +26,8 @@
       "kills": 6,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.167,
-      "hits": 78,
-      "total_damage": 1623.4,
+      "hits": 79,
+      "total_damage": 1643.0,
       "avg_damage_per_hit": 20.8
     },
     {
@@ -36,9 +36,9 @@
       "kills": 5,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 47,
-      "total_damage": 766.4,
-      "avg_damage_per_hit": 16.3
+      "hits": 57,
+      "total_damage": 866.4,
+      "avg_damage_per_hit": 15.2
     },
     {
       "weapon": "AK-M",
@@ -81,6 +81,16 @@
       "avg_damage_per_hit": 21.4
     },
     {
+      "weapon": "UMP45",
+      "category": "SMG",
+      "kills": 2,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 23,
+      "total_damage": 308.2,
+      "avg_damage_per_hit": 13.4
+    },
+    {
       "weapon": "ACE32",
       "category": "AR",
       "kills": 2,
@@ -91,24 +101,14 @@
       "avg_damage_per_hit": 14.0
     },
     {
-      "weapon": "UMP45",
-      "category": "SMG",
-      "kills": 2,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 14,
-      "total_damage": 208.2,
-      "avg_damage_per_hit": 14.9
-    },
-    {
       "weapon": "MP5K",
       "category": "SMG",
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 6,
-      "total_damage": 24.1,
-      "avg_damage_per_hit": 4.0
+      "hits": 11,
+      "total_damage": 124.1,
+      "avg_damage_per_hit": 11.3
     },
     {
       "weapon": "AUG A3",
@@ -209,6 +209,16 @@
       "hits": 2,
       "total_damage": 31.0,
       "avg_damage_per_hit": 15.5
+    },
+    {
+      "weapon": "Panzerfaust",
+      "category": "GL",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 1,
+      "total_damage": 19.8,
+      "avg_damage_per_hit": 19.8
     }
   ],
   "S821": [
@@ -228,9 +238,9 @@
       "kills": 9,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.333,
-      "hits": 52,
-      "total_damage": 818.1,
-      "avg_damage_per_hit": 15.7
+      "hits": 54,
+      "total_damage": 864.6,
+      "avg_damage_per_hit": 16.0
     },
     {
       "weapon": "Mk12 SPR",
@@ -338,9 +348,9 @@
       "kills": 1,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 4,
-      "total_damage": 100.0,
-      "avg_damage_per_hit": 25.0
+      "hits": 5,
+      "total_damage": 165.8,
+      "avg_damage_per_hit": 33.2
     },
     {
       "weapon": "Grenade",
@@ -428,9 +438,9 @@
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
-      "hits": 5,
+      "hits": 7,
       "total_damage": 104.6,
-      "avg_damage_per_hit": 20.9
+      "avg_damage_per_hit": 14.9
     },
     {
       "weapon": "S686",
