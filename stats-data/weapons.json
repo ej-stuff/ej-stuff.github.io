@@ -21,6 +21,16 @@
       "avg_damage_per_hit": 17.5
     },
     {
+      "weapon": "Mini 14",
+      "category": "DMR",
+      "kills": 5,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 47,
+      "total_damage": 766.4,
+      "avg_damage_per_hit": 16.3
+    },
+    {
       "weapon": "Mk12 SPR",
       "category": "DMR",
       "kills": 4,
@@ -29,16 +39,6 @@
       "hits": 51,
       "total_damage": 1127.9,
       "avg_damage_per_hit": 22.1
-    },
-    {
-      "weapon": "Mini 14",
-      "category": "DMR",
-      "kills": 4,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 40,
-      "total_damage": 567.9,
-      "avg_damage_per_hit": 14.2
     },
     {
       "weapon": "SCAR-L",
@@ -218,19 +218,19 @@
       "kills": 9,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.111,
-      "hits": 77,
-      "total_damage": 1029.5,
-      "avg_damage_per_hit": 13.4
+      "hits": 79,
+      "total_damage": 1066.4,
+      "avg_damage_per_hit": 13.5
     },
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 8,
+      "kills": 9,
       "headshot_kills": 3,
-      "headshot_kill_pct": 0.375,
-      "hits": 44,
-      "total_damage": 644.1,
-      "avg_damage_per_hit": 14.6
+      "headshot_kill_pct": 0.333,
+      "hits": 52,
+      "total_damage": 818.1,
+      "avg_damage_per_hit": 15.7
     },
     {
       "weapon": "M249",
@@ -248,9 +248,9 @@
       "kills": 6,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.333,
-      "hits": 58,
-      "total_damage": 1222.1,
-      "avg_damage_per_hit": 21.1
+      "hits": 59,
+      "total_damage": 1248.3,
+      "avg_damage_per_hit": 21.2
     },
     {
       "weapon": "Mini 14",

@@ -1,5 +1,55 @@
 [
   {
+    "match_id": "efdf9cc8-32cd-4308-b9c8-e1c2b4ed4665",
+    "created_at": "2026-06-22T14:28:51Z",
+    "map": "Sanhok",
+    "game_mode": "duo-fpp",
+    "duration_s": 1380,
+    "duo_survival_s": 1356,
+    "players": {
+      "D282": {
+        "present": true,
+        "kills": 2,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 295.3,
+        "placement": 3,
+        "survival_s": 1356,
+        "revives": 0,
+        "heals": 0,
+        "boosts": 2,
+        "blue_chips": 0,
+        "damage_taken": 119.4,
+        "times_knocked": 1,
+        "shots_fired": 510,
+        "parachute_dist": 343.0,
+        "throwables": 2,
+        "revive_response_s": null
+      },
+      "S821": {
+        "present": true,
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 1,
+        "damage": 237.1,
+        "placement": 3,
+        "survival_s": 1356,
+        "revives": 0,
+        "heals": 6,
+        "boosts": 3,
+        "blue_chips": 0,
+        "damage_taken": 216.3,
+        "times_knocked": 0,
+        "shots_fired": 190,
+        "parachute_dist": 363.0,
+        "throwables": 0,
+        "revive_response_s": null
+      }
+    }
+  },
+  {
     "match_id": "688042ae-abc5-4319-8fa9-35ea2d4dbbaa",
     "created_at": "2026-06-21T19:11:17Z",
     "map": "Erangel",
