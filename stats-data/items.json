@@ -4,60 +4,60 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 49,
-        "per_match": 0.55
+        "total": 55,
+        "per_match": 0.57
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 29,
-        "per_match": 0.33
+        "total": 33,
+        "per_match": 0.34
       },
       {
         "item": "Adrenaline Syringe",
         "category": "Boost",
-        "total": 6,
+        "total": 7,
         "per_match": 0.07
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 43,
-        "per_match": 0.48
+        "total": 48,
+        "per_match": 0.5
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 29,
-        "per_match": 0.33
+        "total": 37,
+        "per_match": 0.39
       },
       {
         "item": "Med Kit",
         "category": "Heal",
-        "total": 4,
-        "per_match": 0.04
+        "total": 5,
+        "per_match": 0.05
       }
     ],
     "throwables": [
       {
         "item": "Snowball",
         "total": 67,
-        "per_match": 0.75
+        "per_match": 0.7
       },
       {
         "item": "Smoke Grenade",
-        "total": 32,
-        "per_match": 0.36
+        "total": 37,
+        "per_match": 0.39
       },
       {
         "item": "Grenade",
-        "total": 22,
+        "total": 24,
         "per_match": 0.25
       },
       {
         "item": "Rock",
         "total": 15,
-        "per_match": 0.17
+        "per_match": 0.16
       },
       {
         "item": "Sticky Grenade",
@@ -71,50 +71,50 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 49,
-        "per_match": 0.6
+        "total": 56,
+        "per_match": 0.63
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 36,
-        "per_match": 0.44
+        "total": 41,
+        "per_match": 0.46
       },
       {
         "item": "Adrenaline Syringe",
         "category": "Boost",
-        "total": 5,
-        "per_match": 0.06
+        "total": 10,
+        "per_match": 0.11
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 44,
-        "per_match": 0.54
+        "total": 50,
+        "per_match": 0.56
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 31,
-        "per_match": 0.38
+        "total": 38,
+        "per_match": 0.43
       },
       {
         "item": "Med Kit",
         "category": "Heal",
-        "total": 6,
-        "per_match": 0.07
+        "total": 8,
+        "per_match": 0.09
       }
     ],
     "throwables": [
       {
         "item": "Smoke Grenade",
-        "total": 26,
-        "per_match": 0.32
+        "total": 33,
+        "per_match": 0.37
       },
       {
         "item": "Grenade",
         "total": 23,
-        "per_match": 0.28
+        "per_match": 0.26
       },
       {
         "item": "Snowball",

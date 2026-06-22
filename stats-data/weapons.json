@@ -1,6 +1,16 @@
 {
   "D282": [
     {
+      "weapon": "HK416",
+      "category": "AR",
+      "kills": 10,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.1,
+      "hits": 66,
+      "total_damage": 1220.5,
+      "avg_damage_per_hit": 18.5
+    },
+    {
       "weapon": "M249",
       "category": "LMG",
       "kills": 8,
@@ -11,14 +21,14 @@
       "avg_damage_per_hit": 15.6
     },
     {
-      "weapon": "HK416",
-      "category": "AR",
-      "kills": 7,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 50,
-      "total_damage": 875.6,
-      "avg_damage_per_hit": 17.5
+      "weapon": "Mk12 SPR",
+      "category": "DMR",
+      "kills": 5,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.2,
+      "hits": 62,
+      "total_damage": 1308.3,
+      "avg_damage_per_hit": 21.1
     },
     {
       "weapon": "Mini 14",
@@ -31,14 +41,14 @@
       "avg_damage_per_hit": 16.3
     },
     {
-      "weapon": "Mk12 SPR",
-      "category": "DMR",
-      "kills": 4,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.25,
-      "hits": 51,
-      "total_damage": 1127.9,
-      "avg_damage_per_hit": 22.1
+      "weapon": "AK-M",
+      "category": "AR",
+      "kills": 3,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.667,
+      "hits": 40,
+      "total_damage": 952.7,
+      "avg_damage_per_hit": 23.8
     },
     {
       "weapon": "SCAR-L",
@@ -61,16 +71,6 @@
       "avg_damage_per_hit": 14.9
     },
     {
-      "weapon": "AK-M",
-      "category": "AR",
-      "kills": 2,
-      "headshot_kills": 2,
-      "headshot_kill_pct": 1.0,
-      "hits": 32,
-      "total_damage": 765.0,
-      "avg_damage_per_hit": 23.9
-    },
-    {
       "weapon": "SKS",
       "category": "DMR",
       "kills": 2,
@@ -89,6 +89,16 @@
       "hits": 15,
       "total_damage": 210.6,
       "avg_damage_per_hit": 14.0
+    },
+    {
+      "weapon": "UMP45",
+      "category": "SMG",
+      "kills": 2,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 14,
+      "total_damage": 208.2,
+      "avg_damage_per_hit": 14.9
     },
     {
       "weapon": "MP5K",
@@ -136,9 +146,9 @@
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
-      "hits": 6,
-      "total_damage": 208.5,
-      "avg_damage_per_hit": 34.8
+      "hits": 10,
+      "total_damage": 332.1,
+      "avg_damage_per_hit": 33.2
     },
     {
       "weapon": "Dragunov",
@@ -159,16 +169,6 @@
       "hits": 10,
       "total_damage": 124.6,
       "avg_damage_per_hit": 12.5
-    },
-    {
-      "weapon": "UMP45",
-      "category": "SMG",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 5,
-      "total_damage": 102.0,
-      "avg_damage_per_hit": 20.4
     },
     {
       "weapon": "PP-19 Bizon",
@@ -215,12 +215,12 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 9,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.111,
-      "hits": 79,
-      "total_damage": 1066.4,
-      "avg_damage_per_hit": 13.5
+      "kills": 13,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.154,
+      "hits": 123,
+      "total_damage": 1413.8,
+      "avg_damage_per_hit": 11.5
     },
     {
       "weapon": "ACE32",
@@ -248,9 +248,9 @@
       "kills": 6,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.333,
-      "hits": 59,
-      "total_damage": 1248.3,
-      "avg_damage_per_hit": 21.2
+      "hits": 71,
+      "total_damage": 1581.4,
+      "avg_damage_per_hit": 22.3
     },
     {
       "weapon": "Mini 14",
@@ -263,6 +263,16 @@
       "avg_damage_per_hit": 20.8
     },
     {
+      "weapon": "AK-M",
+      "category": "AR",
+      "kills": 3,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 40,
+      "total_damage": 777.6,
+      "avg_damage_per_hit": 19.4
+    },
+    {
       "weapon": "SLR",
       "category": "DMR",
       "kills": 2,
@@ -271,16 +281,6 @@
       "hits": 21,
       "total_damage": 721.6,
       "avg_damage_per_hit": 34.4
-    },
-    {
-      "weapon": "AK-M",
-      "category": "AR",
-      "kills": 2,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 28,
-      "total_damage": 677.6,
-      "avg_damage_per_hit": 24.2
     },
     {
       "weapon": "K2",
@@ -308,9 +308,9 @@
       "kills": 1,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 47,
-      "total_damage": 520.3,
-      "avg_damage_per_hit": 11.1
+      "hits": 48,
+      "total_damage": 540.4,
+      "avg_damage_per_hit": 11.3
     },
     {
       "weapon": "M24",
@@ -373,6 +373,16 @@
       "avg_damage_per_hit": 28.4
     },
     {
+      "weapon": "Micro UZI",
+      "category": "SMG",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 8,
+      "total_damage": 188.7,
+      "avg_damage_per_hit": 23.6
+    },
+    {
       "weapon": "Dragunov",
       "category": "DMR",
       "kills": 0,
@@ -421,16 +431,6 @@
       "hits": 5,
       "total_damage": 104.6,
       "avg_damage_per_hit": 20.9
-    },
-    {
-      "weapon": "Micro UZI",
-      "category": "SMG",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 4,
-      "total_damage": 94.9,
-      "avg_damage_per_hit": 23.7
     },
     {
       "weapon": "S686",
