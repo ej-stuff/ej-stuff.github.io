@@ -6334,5 +6334,203 @@
         }
       }
     }
+  },
+  {
+    "match_id": "bde72039-7213-4413-89bb-f0fb2cf31e92",
+    "created_at": "2026-06-22T16:45:18Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 4
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 2
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 10
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 17
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 2,
+          "picked_up": 8
+        },
+        "Painkiller": {
+          "used": 1,
+          "picked_up": 4
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 5,
+          "picked_up": 2
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 8,
+          "picked_up": 14
+        }
+      }
+    }
+  },
+  {
+    "match_id": "1970ffa0-aa88-4eeb-b0f4-9a9288e8dfe9",
+    "created_at": "2026-06-22T16:56:22Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 0
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 0
+        }
+      }
+    }
+  },
+  {
+    "match_id": "62522b5b-1007-4cef-a483-816a03ff0ea2",
+    "created_at": "2026-06-22T16:59:51Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 1,
+          "picked_up": 4
+        },
+        "Painkiller": {
+          "used": 5,
+          "picked_up": 5
+        },
+        "Bandage": {
+          "used": 12,
+          "picked_up": 5
+        },
+        "First Aid Kit": {
+          "used": 2,
+          "picked_up": 6
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 20,
+          "picked_up": 20
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "Energy Drink": {
+          "used": 2,
+          "picked_up": 4
+        },
+        "Painkiller": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "Bandage": {
+          "used": 3,
+          "picked_up": 5
+        },
+        "First Aid Kit": {
+          "used": 10,
+          "picked_up": 6
+        },
+        "Med Kit": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "__total__": {
+          "used": 18,
+          "picked_up": 18
+        }
+      }
+    }
   }
 ]

@@ -6,9 +6,9 @@
       "kills": 10,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.1,
-      "hits": 66,
-      "total_damage": 1220.5,
-      "avg_damage_per_hit": 18.5
+      "hits": 69,
+      "total_damage": 1304.8,
+      "avg_damage_per_hit": 18.9
     },
     {
       "weapon": "M249",
@@ -23,12 +23,12 @@
     {
       "weapon": "Mk12 SPR",
       "category": "DMR",
-      "kills": 5,
+      "kills": 6,
       "headshot_kills": 1,
-      "headshot_kill_pct": 0.2,
-      "hits": 62,
-      "total_damage": 1308.3,
-      "avg_damage_per_hit": 21.1
+      "headshot_kill_pct": 0.167,
+      "hits": 78,
+      "total_damage": 1623.4,
+      "avg_damage_per_hit": 20.8
     },
     {
       "weapon": "Mini 14",
@@ -218,9 +218,9 @@
       "kills": 13,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.154,
-      "hits": 123,
-      "total_damage": 1413.8,
-      "avg_damage_per_hit": 11.5
+      "hits": 126,
+      "total_damage": 1485.8,
+      "avg_damage_per_hit": 11.8
     },
     {
       "weapon": "ACE32",
@@ -233,24 +233,24 @@
       "avg_damage_per_hit": 15.7
     },
     {
+      "weapon": "Mk12 SPR",
+      "category": "DMR",
+      "kills": 7,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.286,
+      "hits": 81,
+      "total_damage": 1807.4,
+      "avg_damage_per_hit": 22.3
+    },
+    {
       "weapon": "M249",
       "category": "LMG",
       "kills": 7,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.143,
-      "hits": 46,
-      "total_damage": 562.7,
-      "avg_damage_per_hit": 12.2
-    },
-    {
-      "weapon": "Mk12 SPR",
-      "category": "DMR",
-      "kills": 6,
-      "headshot_kills": 2,
-      "headshot_kill_pct": 0.333,
-      "hits": 71,
-      "total_damage": 1581.4,
-      "avg_damage_per_hit": 22.3
+      "hits": 48,
+      "total_damage": 609.4,
+      "avg_damage_per_hit": 12.7
     },
     {
       "weapon": "Mini 14",
@@ -348,9 +348,9 @@
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
-      "hits": 9,
-      "total_damage": 264.6,
-      "avg_damage_per_hit": 29.4
+      "hits": 10,
+      "total_damage": 291.3,
+      "avg_damage_per_hit": 29.1
     },
     {
       "weapon": "UMP45",
