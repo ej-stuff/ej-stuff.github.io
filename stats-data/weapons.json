@@ -16,9 +16,9 @@
       "kills": 8,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.125,
-      "hits": 94,
-      "total_damage": 1426.2,
-      "avg_damage_per_hit": 15.2
+      "hits": 97,
+      "total_damage": 1501.3,
+      "avg_damage_per_hit": 15.5
     },
     {
       "weapon": "Mk12 SPR",
@@ -36,9 +36,9 @@
       "kills": 5,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 57,
-      "total_damage": 866.4,
-      "avg_damage_per_hit": 15.2
+      "hits": 66,
+      "total_damage": 970.5,
+      "avg_damage_per_hit": 14.7
     },
     {
       "weapon": "AK-M",
@@ -121,6 +121,16 @@
       "avg_damage_per_hit": 12.3
     },
     {
+      "weapon": "Vector",
+      "category": "SMG",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 13,
+      "total_damage": 102.5,
+      "avg_damage_per_hit": 7.9
+    },
+    {
       "weapon": "Winchester",
       "category": "SR",
       "kills": 1,
@@ -151,6 +161,16 @@
       "avg_damage_per_hit": 33.2
     },
     {
+      "weapon": "G36C",
+      "category": "AR",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 13,
+      "total_damage": 178.5,
+      "avg_damage_per_hit": 13.7
+    },
+    {
       "weapon": "Dragunov",
       "category": "DMR",
       "kills": 0,
@@ -159,16 +179,6 @@
       "hits": 3,
       "total_damage": 135.4,
       "avg_damage_per_hit": 45.1
-    },
-    {
-      "weapon": "G36C",
-      "category": "AR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 10,
-      "total_damage": 124.6,
-      "avg_damage_per_hit": 12.5
     },
     {
       "weapon": "PP-19 Bizon",
@@ -235,12 +245,12 @@
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 9,
+      "kills": 12,
       "headshot_kills": 3,
-      "headshot_kill_pct": 0.333,
-      "hits": 54,
-      "total_damage": 864.6,
-      "avg_damage_per_hit": 16.0
+      "headshot_kill_pct": 0.25,
+      "hits": 76,
+      "total_damage": 1159.5,
+      "avg_damage_per_hit": 15.3
     },
     {
       "weapon": "Mk12 SPR",
@@ -441,6 +451,16 @@
       "hits": 7,
       "total_damage": 104.6,
       "avg_damage_per_hit": 14.9
+    },
+    {
+      "weapon": "VSS",
+      "category": "DMR",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 4,
+      "total_damage": 86.2,
+      "avg_damage_per_hit": 21.6
     },
     {
       "weapon": "S686",
