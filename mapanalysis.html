@@ -128,7 +128,7 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
 
 <div class="wrap">
   <h1>Map Analysis</h1>
-  <p class="subtitle">Aggregate patterns — heatmaps, routes, circles &amp; combat across all sessions</p>
+  <p class="subtitle">Aggregate patterns — routes, circles, combat &amp; landing zones across all sessions</p>
 
   <div class="panel">
     <div class="panel-title">Select Map</div>
@@ -261,8 +261,6 @@ const PLAYER_COLOR = { D282:'#f4a300', S821:'#4a9edd' };
 const CSZ = 720;
 
 const LAYER_DEFS = [
-  { id:'heatmap',     label:'Position Heatmap',  color:'#ff7040', defaultOn:false },
-  { id:'lootHeatmap', label:'Loot Heatmap',       color:'#88cc44', defaultOn:false },
   { id:'paths',       label:'Rotation Paths',    color:'#aaaaaa', defaultOn:false },
   { id:'drops',       label:'Landing Zones',     color:'#8fae5d', defaultOn:true  },
   { id:'circles',     label:'Circle Zones',      color:'#ccddee', defaultOn:false },
@@ -743,11 +741,7 @@ function computeEngagementClusters() {
    HEATMAP BUILD
 ============================================================================ */
 function rebuildHeatmaps() {
-  const players=state.player==='both'?['D282','S821']:[state.player];
-  for (const p of ['D282','S821']) {
-    LAYER.hmCanvas[p]   = players.includes(p)&&LAYER.positions[p].length ? buildHeatmapCanvas(LAYER.positions[p],p,false) : null;
-    LAYER.lootCanvas[p] = players.includes(p)&&LAYER.lootPos[p].length   ? buildHeatmapCanvas(LAYER.lootPos[p],  p,true)  : null;
-  }
+  // heatmap and lootHeatmap layers removed; nothing to rebuild
 }
 
 function buildHeatmapCanvas(points,player,isLoot) {
@@ -823,17 +817,6 @@ function draw() {
     ctx.fillStyle='rgba(0,0,0,0.28)'; ctx.fillRect(0,0,CSZ,CSZ);
   } else {
     ctx.fillStyle='#0a0906'; ctx.fillRect(0,0,CSZ,CSZ);
-  }
-
-  // Heatmaps (screen blend)
-  if (state.layers.heatmap||state.layers.lootHeatmap) {
-    ctx.save(); ctx.globalCompositeOperation='screen';
-    const players=state.player==='both'?['D282','S821']:[state.player];
-    for (const p of players) {
-      if (state.layers.heatmap&&LAYER.hmCanvas[p])   {ctx.globalAlpha=0.82;ctx.drawImage(LAYER.hmCanvas[p],0,0,CSZ,CSZ);}
-      if (state.layers.lootHeatmap&&LAYER.lootCanvas[p]) {ctx.globalAlpha=0.78;ctx.drawImage(LAYER.lootCanvas[p],0,0,CSZ,CSZ);}
-    }
-    ctx.restore();
   }
 
   if (state.layers.lateGame && LAYER.lateCanvas) { ctx.save(); ctx.globalCompositeOperation='screen'; ctx.globalAlpha=0.8; ctx.drawImage(LAYER.lateCanvas,0,0,CSZ,CSZ); ctx.restore(); }
@@ -1025,16 +1008,6 @@ function drawDropZones() {
     ctx.strokeStyle=col+'88'; ctx.lineWidth=1/view.scale; ctx.stroke();
     ctx.beginPath(); ctx.arc(d.cx,d.cy,4.5/view.scale,0,Math.PI*2);
     ctx.fillStyle=col+'cc'; ctx.fill();
-    if (view.scale > 2) {
-      ctx.save();
-      ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
-      ctx.fillStyle='rgba(255,255,255,0.9)';
-      ctx.font=`bold ${Math.round(8/view.scale*view.scale)}px system-ui`;
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText('#'+pl, d.cx, d.cy - 10/view.scale);
-      ctx.restore();
-      ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
-    }
     hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',player:d.player,date:d.date,pl});
   }
 }
