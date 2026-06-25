@@ -109,6 +109,12 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
 #siteNavMenu a:hover{background:rgba(244,163,0,.12);color:var(--accent)}
 #siteNavMenu a.nav-cur{color:var(--accent);pointer-events:none}
 #siteNavMenu .nav-sep{height:1px;background:var(--line);margin:5px 8px}
+.canvas-btn.active{border-color:var(--accent);color:var(--accent)}
+.hi-tbl{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0 2px}
+.hi-tbl th,.hi-tbl td{padding:2px 5px;text-align:center}
+.hi-tbl .hi-tl{text-align:left;color:var(--muted);white-space:nowrap}
+.hi-pos{color:#66cc66}.hi-neg{color:#cc4444}
+.hi-weap{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -178,6 +184,7 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
         <button class="canvas-btn" onclick="zoomStep(1.35)">+</button>
         <button class="canvas-btn" onclick="zoomStep(1/1.35)">−</button>
         <button class="canvas-btn" onclick="resetView()">⊡</button>
+        <button class="canvas-btn" id="gridBtn" onclick="toggleGrid()" title="Toggle grid">⊞</button>
       </div>
       <div id="canvasLoading" class="canvas-loading">
         <div class="load-text" id="loadText">Loading…</div>
@@ -187,6 +194,7 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
         <div class="hi-type" id="hiType"></div>
         <div class="hi-main" id="hiMain"></div>
         <div class="hi-sub"  id="hiSub"></div>
+        <div id="hiDetail"></div>
       </div>
     </div>
 
@@ -226,9 +234,9 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
           </div>
         </div>
 
-        <!-- Engagement grouping sub-control -->
+        <!-- Shared group-distance slider (drops + engagements) -->
         <div class="sub-control" id="engControl">
-          <div class="sub-label">Group distance
+          <div class="sub-label">Group distance — drops &amp; engagements
             <span id="engGroupLabel" style="float:right;color:var(--text);font-weight:600">Off</span>
           </div>
           <div class="eng-slider-wrap">
@@ -236,12 +244,23 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
                    oninput="setEngGrouping(+this.value)">
           </div>
           <div style="margin-top:6px">
+            <div class="sub-label" style="margin-bottom:3px">Engagements</div>
             <div class="eng-legend-row"><div class="eng-dot" style="background:#1aaa44"></div> Decisive win (≥150 pts)</div>
             <div class="eng-legend-row"><div class="eng-dot" style="background:#88cc44"></div> Win (50–149 pts)</div>
             <div class="eng-legend-row"><div class="eng-dot" style="background:#4488cc"></div> Neutral (−49 to 49)</div>
             <div class="eng-legend-row"><div class="eng-dot" style="background:#cc6633"></div> Loss (−50 to −199)</div>
             <div class="eng-legend-row"><div class="eng-dot" style="background:#cc1111"></div> Decisive loss (≤−200)</div>
           </div>
+        </div>
+
+        <!-- Drop zone color legend -->
+        <div class="sub-control" id="dropsControl">
+          <div class="sub-label">Landing zone colors</div>
+          <div class="eng-legend-row"><div class="eng-dot" style="background:#FFD700"></div> 1st (Win)</div>
+          <div class="eng-legend-row"><div class="eng-dot" style="background:#66dd44"></div> Top 5 (2–5)</div>
+          <div class="eng-legend-row"><div class="eng-dot" style="background:#4a9edd"></div> Top 10 (6–10)</div>
+          <div class="eng-legend-row"><div class="eng-dot" style="background:#cc8844"></div> Top 20 (11–20)</div>
+          <div class="eng-legend-row"><div class="eng-dot" style="background:#cc4444"></div> Below Top 20</div>
         </div>
       </div>
 
@@ -280,6 +299,17 @@ const ENG_COLOR = {
 };
 const ENG_ORDER = ['dark_green','light_green','neutral','light_red','dark_red'];
 
+const DROP_OUTCOMES = ['win','top5','top10','top20','below'];
+const DROP_COLORS   = { win:'#FFD700', top5:'#66dd44', top10:'#4a9edd', top20:'#cc8844', below:'#cc4444' };
+const DROP_LABELS   = { win:'1st (Win)', top5:'Top 5 (2–5)', top10:'Top 10 (6–10)', top20:'Top 20 (11–20)', below:'Below Top 20' };
+function dropCategory(pl) {
+  if (pl===1)  return 'win';
+  if (pl<=5)   return 'top5';
+  if (pl<=10)  return 'top10';
+  if (pl<=20)  return 'top20';
+  return 'below';
+}
+
 // Absolute-time phase buckets (seconds). Drops are always <120s → early.
 const PHASE_RANGES = [
   { id:'early', label:'Early', sub:'0–8 min',  tMin:0,    tMax:480  },
@@ -297,6 +327,7 @@ const state = {
   circlePhase: 3,
   circleColorMode: 'white',
   engGroupSlider: 0,
+  showGrid: false,
   phases: { early:true, mid:true, late:true },
 };
 
@@ -425,12 +456,15 @@ function buildLayerList() {
        <span class="layer-name">${l.label}</span>
      </div>`
   ).join('');
+  document.getElementById('engControl').classList.toggle('visible', state.layers.engagements || state.layers.drops);
+  document.getElementById('dropsControl').classList.toggle('visible', state.layers.drops);
 }
 function toggleLayer(id) {
   state.layers[id] = !state.layers[id];
   document.getElementById(`lr_${id}`)?.classList.toggle('active', state.layers[id]);
   document.getElementById('phaseControl').classList.toggle('visible', state.layers.circles);
-  document.getElementById('engControl').classList.toggle('visible', state.layers.engagements);
+  document.getElementById('engControl').classList.toggle('visible', state.layers.engagements || state.layers.drops);
+  document.getElementById('dropsControl').classList.toggle('visible', state.layers.drops);
   const on=state.layers.circles, m=state.circleColorMode;
   document.getElementById('circlesLegend').classList.toggle('visible', on&&m!=='white');
   scheduleRedraw();
@@ -717,20 +751,44 @@ function computeEngagementClusters() {
       const tMin=group[0].t-5;
       const tMax=group[group.length-1].t+TEMPORAL_W;
 
-      // Score the whole duo together (both players) not per-player
-      const ev=k=>LAYER.events[k].filter(e=>e.matchId===matchId&&e.t>=tMin&&e.t<=tMax);
-      const kills      = ev('kills').length;
-      const deaths     = ev('deaths').length;
-      const knocks     = ev('knockdowns').length;
-      const knocked    = ev('knocked').length;
-      const d282died   = LAYER.events.deaths.some(e=>e.matchId===matchId&&e.player==='D282'&&e.t>=tMin&&e.t<=tMax);
-      const s821died   = LAYER.events.deaths.some(e=>e.matchId===matchId&&e.player==='S821'&&e.t>=tMin&&e.t<=tMax);
-      const bothDied   = d282died && s821died;
+      const ev  = k => LAYER.events[k].filter(e=>e.matchId===matchId&&e.t>=tMin&&e.t<=tMax);
+      const evP = (k,p) => LAYER.events[k].filter(e=>e.matchId===matchId&&e.t>=tMin&&e.t<=tMax&&e.player===p);
+
+      const kills   = ev('kills').length;
+      const deaths  = ev('deaths').length;
+      const knocks  = ev('knockdowns').length;
+      const knocked = ev('knocked').length;
+
+      const d282_kills   = evP('kills','D282').length;
+      const d282_deaths  = evP('deaths','D282').length;
+      const d282_knocks  = evP('knockdowns','D282').length;
+      const d282_knocked = evP('knocked','D282').length;
+      const s821_kills   = evP('kills','S821').length;
+      const s821_deaths  = evP('deaths','S821').length;
+      const s821_knocks  = evP('knockdowns','S821').length;
+      const s821_knocked = evP('knocked','S821').length;
+
+      const d282died = LAYER.events.deaths.some(e=>e.matchId===matchId&&e.player==='D282'&&e.t>=tMin&&e.t<=tMax);
+      const s821died = LAYER.events.deaths.some(e=>e.matchId===matchId&&e.player==='S821'&&e.t>=tMin&&e.t<=tMax);
+      const bothDied = d282died && s821died;
+
+      // Weapon damage per player
+      const wdmg = { D282:{}, S821:{} };
+      for (const e of ev('dmgDealt')) {
+        const p=e.player; if (!wdmg[p]) continue;
+        const w=e.weapon||'Unknown';
+        wdmg[p][w]=(wdmg[p][w]||0)+Math.round(e.damage||0);
+      }
+      const weapD282=Object.entries(wdmg.D282).sort((a,b)=>b[1]-a[1]);
+      const weapS821=Object.entries(wdmg.S821).sort((a,b)=>b[1]-a[1]);
 
       const score  = kills*100 - deaths*100 + knocks*50 - knocked*50 - (bothDied?1000:0);
       const outcome= scoreToOutcome(score);
 
       clusters.push({cx,cy,score,outcome,kills,deaths,knocks,knocked,bothDied,
+                     d282_kills,d282_deaths,d282_knocks,d282_knocked,
+                     s821_kills,s821_deaths,s821_knocks,s821_knocked,
+                     weapD282,weapS821,
                      matchId,date:group[0].date,t:group[0].t});
     }
   }
@@ -820,6 +878,7 @@ function draw() {
   }
 
   if (state.layers.lateGame && LAYER.lateCanvas) { ctx.save(); ctx.globalCompositeOperation='screen'; ctx.globalAlpha=0.8; ctx.drawImage(LAYER.lateCanvas,0,0,CSZ,CSZ); ctx.restore(); }
+  if (state.showGrid) drawGrid();
 
   hitTargets=[];
   if (state.layers.circles)          drawCircles();
@@ -925,6 +984,9 @@ function drawEngagements() {
       hitTargets.push({cx:cl.cx,cy:cl.cy,r:r+4/view.scale,type:'engagement',
         outcome:cl.outcome,score:cl.score,
         kills:cl.kills,deaths:cl.deaths,knocks:cl.knocks,knocked:cl.knocked,
+        d282_kills:cl.d282_kills,d282_deaths:cl.d282_deaths,d282_knocks:cl.d282_knocks,d282_knocked:cl.d282_knocked,
+        s821_kills:cl.s821_kills,s821_deaths:cl.s821_deaths,s821_knocks:cl.s821_knocks,s821_knocked:cl.s821_knocked,
+        weapD282:cl.weapD282,weapS821:cl.weapS821,
         bothDied:cl.bothDied,date:cl.date,t:cl.t});
     }
   } else {
@@ -934,20 +996,7 @@ function drawEngagements() {
   }
 }
 
-function groupEngagementsByDistance(engs,dist) {
-  const n=engs.length; if(!n) return [];
-  const parent=Array.from({length:n},(_,i)=>i);
-  const d2=dist*dist;
-  function find(x){return parent[x]===x?x:(parent[x]=find(parent[x]));}
-  function union(a,b){parent[find(a)]=find(b);}
-  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
-    const dx=engs[i].cx-engs[j].cx,dy=engs[i].cy-engs[j].cy;
-    if(dx*dx+dy*dy<=d2) union(i,j);
-  }
-  const gm={};
-  for(let i=0;i<n;i++){const r=find(i);if(!gm[r])gm[r]=[];gm[r].push(engs[i]);}
-  return Object.values(gm);
-}
+function groupEngagementsByDistance(engs,dist) { return groupByDistance(engs,dist); }
 
 function drawEngagementPies(groups) {
   for (const group of groups) {
@@ -1000,15 +1049,69 @@ function dropOutcomeColor(d) {
 
 function drawDropZones() {
   const players=state.player==='both'?['D282','S821']:[state.player];
-  for (const d of LAYER.drops) {
-    if (!players.includes(d.player)) continue;
-    if (!inPhase(d.t)) continue;
-    const { col, pl } = dropOutcomeColor(d);
-    ctx.beginPath(); ctx.arc(d.cx,d.cy,8/view.scale,0,Math.PI*2);
-    ctx.strokeStyle=col+'88'; ctx.lineWidth=1/view.scale; ctx.stroke();
-    ctx.beginPath(); ctx.arc(d.cx,d.cy,4.5/view.scale,0,Math.PI*2);
-    ctx.fillStyle=col+'cc'; ctx.fill();
-    hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',player:d.player,date:d.date,pl});
+  const active=LAYER.drops.filter(d=>players.includes(d.player)&&inPhase(d.t));
+  const slider=state.engGroupSlider;
+
+  if (slider===0) {
+    for (const d of active) {
+      const { col, pl } = dropOutcomeColor(d);
+      ctx.beginPath(); ctx.arc(d.cx,d.cy,8/view.scale,0,Math.PI*2);
+      ctx.strokeStyle=col+'88'; ctx.lineWidth=1/view.scale; ctx.stroke();
+      ctx.beginPath(); ctx.arc(d.cx,d.cy,4.5/view.scale,0,Math.PI*2);
+      ctx.fillStyle=col+'cc'; ctx.fill();
+      hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',player:d.player,date:d.date,pl});
+    }
+  } else {
+    const distThreshold=5*Math.pow((CSZ*1.5)/5,slider/100);
+    const groups=groupByDistance(active,distThreshold);
+    drawDropPies(groups);
+  }
+}
+
+function groupByDistance(items,dist) {
+  const n=items.length; if(!n) return [];
+  const parent=Array.from({length:n},(_,i)=>i);
+  const d2=dist*dist;
+  function find(x){return parent[x]===x?x:(parent[x]=find(parent[x]));}
+  function union(a,b){parent[find(a)]=find(b);}
+  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
+    const dx=items[i].cx-items[j].cx,dy=items[i].cy-items[j].cy;
+    if(dx*dx+dy*dy<=d2) union(i,j);
+  }
+  const gm={};
+  for(let i=0;i<n;i++){const r=find(i);if(!gm[r])gm[r]=[];gm[r].push(items[i]);}
+  return Object.values(gm);
+}
+
+function drawDropPies(groups) {
+  for (const group of groups) {
+    const cx=group.reduce((s,d)=>s+d.cx,0)/group.length;
+    const cy=group.reduce((s,d)=>s+d.cy,0)/group.length;
+    const outcomes=Object.fromEntries(DROP_OUTCOMES.map(k=>[k,0]));
+    for (const d of group) { const {pl}=dropOutcomeColor(d); outcomes[dropCategory(pl)]++; }
+    const n=group.length;
+    const r=Math.max(6,Math.min(28,3+Math.sqrt(n)*5));
+    let angle=-Math.PI/2;
+    ctx.setLineDash([]);
+    for (const key of DROP_OUTCOMES) {
+      const count=outcomes[key]||0; if(!count) continue;
+      const slice=(count/n)*Math.PI*2;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,angle,angle+slice); ctx.closePath();
+      ctx.fillStyle=DROP_COLORS[key]+'cc'; ctx.fill();
+      ctx.strokeStyle='rgba(0,0,0,0.25)'; ctx.lineWidth=0.5/view.scale; ctx.stroke();
+      angle+=slice;
+    }
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1/view.scale; ctx.stroke();
+    if (r*view.scale>14&&n>1) {
+      ctx.save(); ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
+      ctx.fillStyle='rgba(255,255,255,0.9)';
+      ctx.font=`bold ${Math.round(Math.min(10,r*view.scale*0.55))}px system-ui`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(n,cx,cy); ctx.restore();
+      ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
+    }
+    hitTargets.push({cx,cy,r:r+3,type:'drop_group',outcomes,n});
   }
 }
 
@@ -1121,9 +1224,11 @@ canvas.addEventListener('mousemove', e=>{
   const inf=document.getElementById('hoverInfo');
   if (best){
     inf.classList.add('visible');
+    inf.style.maxWidth = best.type==='engagement' ? '340px' : '260px';
     document.getElementById('hiType').textContent=best.type.toUpperCase().replace('_',' ');
     document.getElementById('hiMain').innerHTML=hoverMain(best);
     document.getElementById('hiSub').innerHTML=hoverSub(best);
+    document.getElementById('hiDetail').innerHTML=hoverDetail(best);
   } else inf.classList.remove('visible');
 });
 canvas.addEventListener('mouseleave',()=>document.getElementById('hoverInfo').classList.remove('visible'));
@@ -1136,15 +1241,49 @@ function hoverMain(t){
   if(t.type==='knocked')    return`${pc(t.player)} knocked down`;
   if(t.type==='engagement') return`Duo engagement — <span style="color:${ENG_COLOR[t.outcome]}">${t.outcome.replace('_',' ')}</span>`;
   if(t.type==='eng_group')  return`${t.n} engagement${t.n!==1?'s':''}`;
+  if(t.type==='drop_group') return`${t.n} landing${t.n!==1?'s':''}`;
   return t.player?pc(t.player):'';
 }
 function hoverSub(t){
-  if(t.type==='engagement') return`${t.kills}K / ${t.deaths}D / ${t.knocks} kd / ${t.knocked} kd'd · score ${t.score>0?'+':''}${t.score}${t.bothDied?' (BOTH DIED)':''} · ${t.date}`;
+  if(t.type==='engagement') return`Score ${t.score>0?'+':''}${t.score} · ${t.date} · ${mmss(t.t)}`;
   if(t.type==='eng_group'){const parts=ENG_ORDER.filter(k=>t.outcomes[k]).map(k=>`${t.outcomes[k]}×${k.replace('_',' ')}`);return parts.join(' · ');}
   if(t.type==='drop'){const parts=[t.date];if(t.pl!=null)parts.push(`Placement #${t.pl}`);return parts.join(' · ');}
+  if(t.type==='drop_group'){const parts=DROP_OUTCOMES.filter(k=>t.outcomes[k]).map(k=>`${t.outcomes[k]}×${DROP_LABELS[k]}`);return parts.join(' · ');}
   const parts=[];if(t.weapon)parts.push(t.weapon);if(t.t!=null)parts.push(mmss(t.t));if(t.date)parts.push(t.date);return parts.join(' · ');
 }
 function mmss(s){s=Math.round(s);return`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;}
+function fmtWeapon(w){return(w||'?').replace(/^(Item_Weapon_|Weap)/i,'').replace(/_C$/i,'').replace(/_/g,' ');}
+
+function hoverDetail(t) {
+  if (t.type==='engagement') {
+    const sc = v => `<span class="${v>0?'hi-pos':v<0?'hi-neg':''}">${v>0?'+':''}${v}</span>`;
+    const row = (lbl,d,s,duo) =>
+      `<tr><td class="hi-tl">${lbl}</td><td>${d}</td><td>${s}</td><td>${duo}</td></tr>`;
+    const d282s = t.d282_kills*100 - t.d282_deaths*100 + t.d282_knocks*50 - t.d282_knocked*50;
+    const s821s = t.s821_kills*100 - t.s821_deaths*100 + t.s821_knocks*50 - t.s821_knocked*50;
+    let html = `<table class="hi-tbl">
+      <tr><th></th>
+          <th style="color:${PLAYER_COLOR.D282}">D282</th>
+          <th style="color:${PLAYER_COLOR.S821}">S821</th>
+          <th style="color:var(--muted)">Duo</th></tr>
+      ${row('Kills',    t.d282_kills,   t.s821_kills,   t.kills)}
+      ${row('Deaths',   t.d282_deaths,  t.s821_deaths,  t.deaths)}
+      ${row('Knocks',   t.d282_knocks,  t.s821_knocks,  t.knocks)}
+      ${row('Knocked',  t.d282_knocked, t.s821_knocked, t.knocked)}
+      <tr><td class="hi-tl">Score</td><td>${sc(d282s)}</td><td>${sc(s821s)}</td><td>${sc(t.score)}</td></tr>
+    </table>`;
+    if (t.bothDied) html+=`<div style="font-size:10px;color:#cc4444;margin-top:3px">⚠ Both died (−1000 duo penalty)</div>`;
+    const fmtArr = arr => arr.map(([w,d])=>`${fmtWeapon(w)} <b>${d}</b>`).join(', ');
+    if (t.weapD282?.length||t.weapS821?.length) {
+      html+=`<div class="hi-weap">`;
+      if(t.weapD282?.length) html+=`<div><span style="color:${PLAYER_COLOR.D282}">D282</span>: ${fmtArr(t.weapD282)}</div>`;
+      if(t.weapS821?.length) html+=`<div><span style="color:${PLAYER_COLOR.S821}">S821</span>: ${fmtArr(t.weapS821)}</div>`;
+      html+=`</div>`;
+    }
+    return html;
+  }
+  return '';
+}
 
 /* ============================================================================
    PAN + ZOOM (mouse + touch with pinch)
@@ -1242,6 +1381,39 @@ function clampView(){
   view.offsetY=Math.max(CSZ*(1-s)-pad,Math.min(view.offsetY,pad));
 }
 function resetView(){view.scale=1;view.offsetX=0;view.offsetY=0;scheduleRedraw();}
+
+/* ============================================================================
+   GRID OVERLAY
+============================================================================ */
+function toggleGrid() {
+  state.showGrid = !state.showGrid;
+  document.getElementById('gridBtn').classList.toggle('active', state.showGrid);
+  scheduleRedraw();
+}
+
+function drawGrid() {
+  const n = 8;
+  const step = CSZ / n;
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,0.13)';
+  ctx.lineWidth = 0.6 / view.scale;
+  ctx.setLineDash([]);
+  for (let i = 1; i < n; i++) {
+    ctx.beginPath(); ctx.moveTo(i*step, 0); ctx.lineTo(i*step, CSZ); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i*step); ctx.lineTo(CSZ, i*step); ctx.stroke();
+  }
+  // Cell labels (letter = row A–H top-to-bottom, number = col 1–8 left-to-right)
+  const fs = Math.max(6, Math.min(11, step * 0.17)) / view.scale;
+  ctx.fillStyle = 'rgba(255,255,255,0.30)';
+  ctx.font = `${fs}px system-ui`;
+  ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+  for (let col = 0; col < n; col++) {
+    for (let row = 0; row < n; row++) {
+      ctx.fillText(String.fromCharCode(65+row) + (col+1), col*step + 3/view.scale, row*step + 3/view.scale);
+    }
+  }
+  ctx.restore();
+}
 
 /* ============================================================================
    SITE NAV
