@@ -662,8 +662,15 @@ function aggregateLayers(matches) {
       L.positions[p].push(...(c.posData[p]||[]));
       L.lootPos[p].push(...(c.lootData[p]||[]));
       if (c.pathData[p]?.length) L.paths.push({pts:c.pathData[p],player:p,matchId:m.match_id,date:c.date});
-      if (c.dropData[p]) L.drops.push(c.dropData[p]);
     }
+    // One duo drop per match at the midpoint of both players' landing spots
+    const dpts=[c.dropData['D282'],c.dropData['S821']].filter(Boolean);
+    if (dpts.length) L.drops.push({
+      cx:dpts.reduce((s,d)=>s+d.cx,0)/dpts.length,
+      cy:dpts.reduce((s,d)=>s+d.cy,0)/dpts.length,
+      matchId:m.match_id, date:c.date,
+      t:Math.min(...dpts.map(d=>d.t)),
+    });
     for (const k of Object.keys(L.events)) L.events[k].push(...(c.evData[k]||[]));
     const pl=m.players?.['D282']?.placement||m.players?.['S821']?.placement||99;
     const deathTimes={};
@@ -781,6 +788,10 @@ function computeEngagementClusters() {
       }
       const weapD282=Object.entries(wdmg.D282).sort((a,b)=>b[1]-a[1]);
       const weapS821=Object.entries(wdmg.S821).sort((a,b)=>b[1]-a[1]);
+      const d282_dealt=weapD282.reduce((s,[,d])=>s+d,0);
+      const s821_dealt=weapS821.reduce((s,[,d])=>s+d,0);
+      const d282_taken=evP('dmgTaken','D282').reduce((s,e)=>s+Math.round(e.damage||0),0);
+      const s821_taken=evP('dmgTaken','S821').reduce((s,e)=>s+Math.round(e.damage||0),0);
 
       const score  = kills*100 - deaths*100 + knocks*50 - knocked*50 - (bothDied?1000:0);
       const outcome= scoreToOutcome(score);
@@ -788,6 +799,7 @@ function computeEngagementClusters() {
       clusters.push({cx,cy,score,outcome,kills,deaths,knocks,knocked,bothDied,
                      d282_kills,d282_deaths,d282_knocks,d282_knocked,
                      s821_kills,s821_deaths,s821_knocks,s821_knocked,
+                     d282_dealt,s821_dealt,d282_taken,s821_taken,
                      weapD282,weapS821,
                      matchId,date:group[0].date,t:group[0].t});
     }
@@ -986,6 +998,7 @@ function drawEngagements() {
         kills:cl.kills,deaths:cl.deaths,knocks:cl.knocks,knocked:cl.knocked,
         d282_kills:cl.d282_kills,d282_deaths:cl.d282_deaths,d282_knocks:cl.d282_knocks,d282_knocked:cl.d282_knocked,
         s821_kills:cl.s821_kills,s821_deaths:cl.s821_deaths,s821_knocks:cl.s821_knocks,s821_knocked:cl.s821_knocked,
+        d282_dealt:cl.d282_dealt,s821_dealt:cl.s821_dealt,d282_taken:cl.d282_taken,s821_taken:cl.s821_taken,
         weapD282:cl.weapD282,weapS821:cl.weapS821,
         bothDied:cl.bothDied,date:cl.date,t:cl.t});
     }
@@ -1048,8 +1061,7 @@ function dropOutcomeColor(d) {
 }
 
 function drawDropZones() {
-  const players=state.player==='both'?['D282','S821']:[state.player];
-  const active=LAYER.drops.filter(d=>players.includes(d.player)&&inPhase(d.t));
+  const active=LAYER.drops.filter(d=>inPhase(d.t));
   const slider=state.engGroupSlider;
 
   if (slider===0) {
@@ -1059,7 +1071,7 @@ function drawDropZones() {
       ctx.strokeStyle=col+'88'; ctx.lineWidth=1/view.scale; ctx.stroke();
       ctx.beginPath(); ctx.arc(d.cx,d.cy,4.5/view.scale,0,Math.PI*2);
       ctx.fillStyle=col+'cc'; ctx.fill();
-      hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',player:d.player,date:d.date,pl});
+      hitTargets.push({cx:d.cx,cy:d.cy,r:9/view.scale,type:'drop',date:d.date,pl});
     }
   } else {
     const distThreshold=5*Math.pow((CSZ*1.5)/5,slider/100);
@@ -1189,20 +1201,19 @@ function renderStats() {
       <div class="stat-row"><span class="stat-key">Avg Placement</span><span class="stat-val ${col}">${n?'#'+(plSum/n).toFixed(1):'—'}</span></div>
     </div>`;
   }
-  // Top drop clusters
-  const drops=LAYER.drops.filter(d=>players.includes(d.player));
-  if (drops.length) {
+  // Top drop clusters (duo drops, no per-player split)
+  if (LAYER.drops.length) {
     const cells={};
-    for (const d of drops){const k=`${Math.floor(d.cx/CSZ*16)},${Math.floor(d.cy/CSZ*16)}`;if(!cells[k])cells[k]={count:0,D282:0,S821:0};cells[k].count++;cells[k][d.player]++;}
-    const top=Object.entries(cells).sort((a,b)=>b[1].count-a[1].count).slice(0,5);
-    const mx=top[0]?.[1].count||1;
+    for (const d of LAYER.drops){const k=`${Math.floor(d.cx/CSZ*16)},${Math.floor(d.cy/CSZ*16)}`;cells[k]=(cells[k]||0)+1;}
+    const top=Object.entries(cells).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const mx=top[0]?.[1]||1;
     html+=`<div style="font-family:Oswald,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:8px;margin-bottom:6px">Top Drop Zones</div>`;
-    for (const [k,v] of top){
+    for (const [k,count] of top){
       const[gx,gy]=k.split(',').map(Number);
       html+=`<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px">
-        <span style="width:22px;text-align:right;color:var(--muted)">${v.count}×</span>
-        <div style="flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden;display:flex">
-          ${players.map(p=>v[p]?`<div style="flex:${v[p]};background:${PLAYER_COLOR[p]};height:100%"></div>`:'').join('')}
+        <span style="width:22px;text-align:right;color:var(--muted)">${count}×</span>
+        <div style="flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden">
+          <div style="width:${Math.round(count/mx*100)}%;background:var(--ok);height:100%"></div>
         </div>
         <span style="color:var(--muted);width:30px">${String.fromCharCode(65+gy)}${gx+1}</span>
       </div>`;
@@ -1237,7 +1248,7 @@ function pc(p){return`<span style="color:${PLAYER_COLOR[p]}">${p}</span>`;}
 function hoverMain(t){
   if(t.type==='kill')       return`${pc(t.player)} killed ${t.target||'?'}`;
   if(t.type==='death')      return`${pc(t.player)} died`;
-  if(t.type==='drop')       return`${pc(t.player)} landed`;
+  if(t.type==='drop')       return`Duo landed`;
   if(t.type==='knocked')    return`${pc(t.player)} knocked down`;
   if(t.type==='engagement') return`Duo engagement — <span style="color:${ENG_COLOR[t.outcome]}">${t.outcome.replace('_',' ')}</span>`;
   if(t.type==='eng_group')  return`${t.n} engagement${t.n!==1?'s':''}`;
@@ -1256,7 +1267,9 @@ function fmtWeapon(w){return(w||'?').replace(/^(Item_Weapon_|Weap)/i,'').replace
 
 function hoverDetail(t) {
   if (t.type==='engagement') {
-    const sc = v => `<span class="${v>0?'hi-pos':v<0?'hi-neg':''}">${v>0?'+':''}${v}</span>`;
+    const pos = v => v>0 ? `<span class="hi-pos">${v}</span>` : `${v}`;
+    const neg = v => v>0 ? `<span class="hi-neg">${v}</span>` : `${v}`;
+    const sc  = v => `<span class="${v>0?'hi-pos':v<0?'hi-neg':''}">${v>0?'+':''}${v}</span>`;
     const row = (lbl,d,s,duo) =>
       `<tr><td class="hi-tl">${lbl}</td><td>${d}</td><td>${s}</td><td>${duo}</td></tr>`;
     const d282s = t.d282_kills*100 - t.d282_deaths*100 + t.d282_knocks*50 - t.d282_knocked*50;
@@ -1266,13 +1279,19 @@ function hoverDetail(t) {
           <th style="color:${PLAYER_COLOR.D282}">D282</th>
           <th style="color:${PLAYER_COLOR.S821}">S821</th>
           <th style="color:var(--muted)">Duo</th></tr>
-      ${row('Kills',    t.d282_kills,   t.s821_kills,   t.kills)}
-      ${row('Deaths',   t.d282_deaths,  t.s821_deaths,  t.deaths)}
-      ${row('Knocks',   t.d282_knocks,  t.s821_knocks,  t.knocks)}
-      ${row('Knocked',  t.d282_knocked, t.s821_knocked, t.knocked)}
-      <tr><td class="hi-tl">Score</td><td>${sc(d282s)}</td><td>${sc(s821s)}</td><td>${sc(t.score)}</td></tr>
+      ${row('Kills (+100)',  pos(t.d282_kills),   pos(t.s821_kills),   pos(t.kills))}
+      ${row('Knocks (+50)',  pos(t.d282_knocks),  pos(t.s821_knocks),  pos(t.knocks))}
+      ${row('Deaths (−100)', neg(t.d282_deaths),  neg(t.s821_deaths),  neg(t.deaths))}
+      ${row('Knocked (−50)', neg(t.d282_knocked), neg(t.s821_knocked), neg(t.knocked))}
+      ${row('Dmg dealt',     pos(t.d282_dealt),   pos(t.s821_dealt),   pos((t.d282_dealt||0)+(t.s821_dealt||0)))}
+      ${row('Dmg taken',     neg(t.d282_taken),   neg(t.s821_taken),   neg((t.d282_taken||0)+(t.s821_taken||0)))}
+      <tr style="border-top:1px solid rgba(56,52,44,.5)">
+        <td class="hi-tl" style="padding-top:4px">Score</td>
+        <td style="padding-top:4px">${sc(d282s)}</td>
+        <td style="padding-top:4px">${sc(s821s)}</td>
+        <td style="padding-top:4px">${sc(t.score)}</td></tr>
     </table>`;
-    if (t.bothDied) html+=`<div style="font-size:10px;color:#cc4444;margin-top:3px">⚠ Both died (−1000 duo penalty)</div>`;
+    if (t.bothDied) html+=`<div style="font-size:10px;color:#cc4444;margin-top:3px">&#9888; Both died (−1000 duo penalty)</div>`;
     const fmtArr = arr => arr.map(([w,d])=>`${fmtWeapon(w)} <b>${d}</b>`).join(', ');
     if (t.weapD282?.length||t.weapS821?.length) {
       html+=`<div class="hi-weap">`;
