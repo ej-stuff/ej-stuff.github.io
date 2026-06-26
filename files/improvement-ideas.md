@@ -1,618 +1,571 @@
 # PUBG Site Improvement Ideas & New Page Concepts
 
-> Written June 2026. Based on: full code review of all five pages, knowledge of what the
-> telemetry data contains, and research into what PUBG players actually care about
-> (PUBGLookup, OP.GG, community trackers, pro-team meta guides).
-> 
-> Every suggestion includes an exact implementation plan. Estimated difficulty uses the
-> same vanilla JS + Canvas + Chart.js stack already in use — no build tools, no npm.
-
----
-
-## Bugs Fixed In This Commit
-
-These were silent errors found during the review — already patched and pushed.
-
-| File | Bug | Fix |
-|------|-----|-----|
-| `index.html` | Map Analysis page was absent from nav menu AND no card on landing page | Added nav link + card with description |
-| `pubg.html` | Map Analysis absent from nav menu | Added nav link |
+> Last updated: 2026-06-26 (after session 9).
+> Every suggestion is grounded in what the current code actually has. Estimated difficulty uses
+> the same vanilla JS + Canvas + Chart.js stack already in use — no build tools, no npm.
 
 ---
 
 ## 1. Stats Page (`stats.html`)
 
-### ~~1.1 — Placement Distribution Histogram~~ ✅ IMPLEMENTED
-
-Side-by-side bar chart showing placement buckets (Win, #2-5, #6-10, #11-20, #21-50, #51+) for both players. Updates on every filter change.
-
----
-
-### ~~1.2 — Rolling K/D and Win-Rate Trend Line~~ ✅ IMPLEMENTED
-
-Rolling 10-game K/D line chart for both players, chronological order. Updates on every filter change.
-
----
-
-### ~~1.3 — Performance by Map Table~~ ✅ IMPLEMENTED
-
-Table showing per-map: Games, Win%, Avg Kills, Avg Placement for each player. Sorted by games desc. Win% colored green/red vs overall average.
-
----
-
-### ~~1.4 — Duo Synergy Panel~~ ✅ IMPLEMENTED
-
-"Duo Chemistry" panel with: kill distribution (both/only D282/only S821/neither), top-10 survival split, and avg kill delta.
+### ~~1.1 — Placement Distribution Histogram~~ ✅ Done
+### ~~1.2 — Rolling K/D and Win-Rate Trend Line~~ ✅ Done
+### ~~1.3 — Performance by Map Table~~ ✅ Done
+### ~~1.4 — Duo Synergy Panel~~ ✅ Done
+### ~~1.6 — Lifetime Records Card~~ ✅ Done
+### ~~1.7 — Win Condition Analysis Panel~~ ✅ Done
 
 ---
 
 ### 1.5 — Time-of-Day Performance Heatmap
 
-**Why it matters:** PUBG performance degrades late at night. Even just seeing "we always play poorly after 23:00" is actionable.
-
-**Exact plan:**
-- Parse `m.created_at` hour (`new Date(m.created_at).getHours()`).
-- Build a 24-column bar chart or a 7×24 calendar heatmap (days × hours).
-- Color-code by avg placement (green = good). Use `.setHours()` with local time.
-- If date range is short and hours sparse, fall back to just a bar chart by hour-of-day.
-- The implementation is pure JS, no new data needed.
+Parse `m.created_at` hour. Build a 24-column bar chart showing avg placement and avg kills by
+hour of day (local time). Even "we play badly after 23:00" is actionable.
+Pure JS — no new data needed, just `new Date(m.created_at).getHours()`.
 
 ---
 
-### ~~1.6 — Session "PB Badges" — Personal Bests~~ ✅ IMPLEMENTED (as Lifetime Records Card)
+### 1.8 — Kill Distribution Histogram
 
-"Lifetime Records" panel showing: most kills in one game (D282), most kills in one game (S821), highest win streak, most games in one day. Each with player, value, and date.
+How often do we finish with 0 kills? 1? 5+? A frequency chart (bar per kill count) for each
+player side-by-side reveals consistency vs boom-or-bust patterns. Computed entirely from
+`matches.json` `players[p].kills`.
 
 ---
 
-### ~~1.7 — Win Condition Analysis~~ ✅ IMPLEMENTED
+### 1.9 — Damage vs Placement Scatter Plot
 
-"Win Condition Analysis" panel comparing: avg combined kills, avg combined damage, avg survival time for wins vs losses. Higher value highlighted in amber.
+For each match: X = D282 damage dealt, Y = placement (inverted so higher = better). Does
+dealing more damage actually correlate with better finish? One dot per match, color by player,
+trend line overlay. Uses `Chart.js` scatter type. Damage needs match JSON files but is worth the
+fetch — or use the `kills` proxy if damage isn't in `matches.json` summary.
+
+---
+
+### 1.10 — "Hot Hand" Form Badge
+
+Compare last-5-game averages to overall averages for each player. Show a colored badge
+(🔥 Hot / ❄ Cold / — Neutral) next to each player name in the summary panel.
+Threshold: last-5 placement avg is ≥15% better than career avg = Hot.
+Zero new data — pure filter on already-loaded `matches.json`.
+
+---
+
+### 1.11 — Damage Dealt per Kill (Efficiency Metric)
+
+`damage_dealt / kills` per game, averaged. Low = clean efficient kills. High = lots of damage
+but enemies survive (traded shots poorly). Show as a stat row in the Summary panel alongside
+K/D. Needs per-match damage data — check if `matches.json` has it or fallback to match JSONs.
+
+---
+
+### 1.12 — Weapon Category Breakdown (Kills by Type)
+
+Across all filtered matches, what % of kills come from AR / SR / SMG / SG / Pistol / Melee?
+Chart.js doughnut in a new "Weapon Mix" panel. Data from `events[type==='kill']` in match JSONs
+(uses MATCH_CACHE already loaded by mapanalysis). If loading match JSONs is too heavy, add
+weapon category summary to `matches.json` during export.
+
+---
+
+### 1.13 — Session Grouping in Match History
+
+The stats page currently shows all matches in a flat table. Add an optional "Group by day" toggle
+that inserts day-header rows with a mini session summary (games played, wins, avg placement).
+`getDailySessions()` is already written — just adapt the match history render.
+
+---
+
+### 1.14 — Score Trend vs Moving Average Dual Line
+
+The trend chart currently shows rolling-10 score. Add a second line: simple 20-game moving
+average, always visible as a thin dashed line. Shows both short-term swings and long-term
+trajectory simultaneously. One extra dataset in the existing Chart.js config.
 
 ---
 
 ## 2. Match Analysis (`match.html`)
 
-### 2.1 — Match Playback Mode (Auto-Play)
+### ~~2.1 — Match Playback Mode (Auto-Play)~~ ✅ Done
+(`playToggle`, `startPlayback`, `pausePlayback`, `playTick`, `setPlaybackSpeed` all implemented.)
 
-**Why it matters:** The #1 feature request in PUBG replay tools. Watching a match "live" is much more intuitive than scrubbing manually. Equivalent to a mini-killcam replay.
-
-**Exact plan:**
-- Add a play/pause button (▶ / ⏸) and speed selector (0.5×, 1×, 2×, 5×, 10×) next to the time slider.
-- Use `setInterval` (cleared on pause) calling `jumpTime(speedMultiplier * 0.5)` every 500ms.
-  - Speed 1× = real time (steps 0.5s every 500ms)
-  - Speed 10× = 5s every 500ms = finishes 30-min match in 3 min
-- Auto-pause at match end or when user drags the slider.
-- Loop option: restart from t=0.
-- Implementation: ~40 lines of JS. Two new `<button>` elements in `.tl-hdr`.
-
-```js
-let playInterval = null;
-function togglePlay() {
-  if (playInterval) { clearInterval(playInterval); playInterval = null; updatePlayBtn(); return; }
-  const speed = +document.getElementById('playSpeed').value || 1;
-  playInterval = setInterval(() => {
-    if (state.time >= (MD.duration_s||1800)) { togglePlay(); return; }
-    jumpTime(speed * 0.5);
-  }, 500);
-  updatePlayBtn();
-}
-```
+### ~~2.5 — Weapon Damage Breakdown Panel~~ ✅ Done
+### ~~2.6 — Blue Zone Damage Indicator~~ ✅ Done (fallback logic)
+### ~~2.7 — Enemy Encounter Table (enriched)~~ ✅ Done
 
 ---
 
 ### 2.2 — Key Moments Jump List
 
-**Why it matters:** Matches are 20–30 minutes. Nobody wants to scrub through the entire thing to find when they got knocked. Auto-generate a "highlight reel" of significant events.
-
-**Exact plan:**
-- After loading match data, compute `keyMoments`:
-  - All kills (label: "D282 killed [target]")
-  - All deaths/knocks
-  - Any revive
-  - Blue zone damage spikes (> 30 damage in one tick, if tracked)
-  - Airdrop lands (`crate_land` events)
-- Render as a vertical scrollable list in the sidebar, below the Engagements panel.
-- Each row: icon + label + timestamp. Clicking sets `state.time` and scrolls map to event.
-- Sort chronologically. Group nearby events (within 5s) into "combat burst" labels.
+After loading match data, build a chronological list of significant events: kills, knocks, deaths,
+revives, vehicle entries, blue zone entry. Render as a scrollable sidebar panel. Each row: icon +
+label + timestamp. Clicking jumps `state.time` to that moment.
 
 ```js
 function buildKeyMoments(md) {
-  const SIGNIFICANT = new Set(['kill','knockdown','knocked','death','revive','blue_chip_revive','crate_land']);
-  return md.events
-    .filter(ev => SIGNIFICANT.has(ev.type) && ['D282','S821'].includes(ev.player))
-    .sort((a,b) => a.t - b.t)
-    .map(ev => ({ t: ev.t, label: fmtEvent(ev), type: ev.type, player: ev.player }));
+  const SIG = new Set(['kill','knockdown','knocked','death','revive','vehicle_in']);
+  return (md.events||[])
+    .filter(ev => SIG.has(ev.type) && ['D282','S821'].includes(ev.player))
+    .sort((a,b) => a.t - b.t);
 }
 ```
+
+Estimated: ~60 lines. High impact for match review.
 
 ---
 
 ### 2.3 — Export Map Snapshot
 
-**Why it matters:** Players love sharing "look at this insane play" screenshots. One click to get the current map view as a PNG.
-
-**Exact plan:**
-- Add a camera icon button to `.map-controls`.
-- On click: `canvas.toDataURL('image/png')` → create `<a download="match-snapshot.png" href=...>` → `.click()` → remove.
-- Optionally overlay timestamp watermark using `ctx.fillText(mmss(state.time), ...)` before export.
-- **Caution:** canvas must be same-origin for `toDataURL` to work. The map image from `image_url` (local `map-images/`) is same-origin on GitHub Pages — this works. The `cdn_url` fallback from `raw.githubusercontent.com` would be cross-origin and block `toDataURL`. Ensure local images are used first (they already are).
+Camera icon button in map controls. `canvas.toDataURL('image/png')` → auto-download as
+`match-YYYYMMDD-t{time}.png`. Optionally draw `mmss(state.time)` watermark before export.
+Local `map-images/` are same-origin so `toDataURL` works fine. The CDN fallback would block it —
+already handled by preferring local images first.
 
 ---
 
-### 2.4 — Circle Position Score Timeline
+### 2.4 — Zone Position Timeline Chart
 
-**Why it matters:** "Were we inside the circle?" is the most important survival question. Players know they take blue damage but don't easily see *how inside* or *outside* they were over time.
-
-**Exact plan:**
-- Compute per-timestep: for each player, `dist_to_center / safe_r` (0 = at center, 1 = on edge, >1 = outside).
-- Add a new mini-chart panel below the HP chart: "Zone Position" — two lines (D282, S821), red zone above 1.0.
-- Use the existing Chart.js chart rendering pattern already used for HP/proximity charts.
-- Data computed entirely from `MD.positions` + `MD.circles` already loaded.
+New mini-chart panel alongside HP/proximity: "Zone Position" — per player, compute
+`dist_to_safe_center / safe_r` at each timestep (0 = center, 1 = edge, >1 = outside/dead).
+Red reference line at 1.0. Shows whether they were rotating correctly.
 
 ```js
 function buildZoneScoreData(player) {
   return (MD.positions[player]||[]).map(p => {
     const c = MD.circles.filter(ci => ci.t <= p.t).slice(-1)[0];
-    if (!c || !c.safe_r) return { x: p.t, y: null };
+    if (!c?.safe_r) return { x: p.t, y: null };
     const dx = p.x - c.safe_x, dy = p.y - c.safe_y;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    return { x: p.t, y: +(dist / c.safe_r).toFixed(3) };
+    return { x: p.t, y: +(Math.sqrt(dx*dx+dy*dy)/c.safe_r).toFixed(3) };
   });
 }
 ```
 
 ---
 
-### ~~2.5 — Damage Dealt Breakdown by Weapon~~ ✅ IMPLEMENTED
+### 2.8 — "Follow Mode" During Playback
 
-"Weapon Damage" sidebar panel showing top-5 weapons per player as horizontal bars with damage totals. Added in sidebar after engagements panel.
-
----
-
-### 2.6 — Blue Zone Damage Indicator on Timeline
-
-**Status:** Implemented with fallback logic. Checks for `dmg_taken` events with attacker containing 'blue'/'zone'. If none found, uses `positions[player].blue` flag bands. If neither source yields data, nothing is drawn (data quality varies per match).
+During auto-play, auto-pan the map canvas to keep the selected player's current position
+centered. Toggle button next to the play controls: "Follow D282 / Follow S821 / Off".
+When active, after each `jumpTime()` call: compute player's `cx/cy` via `getPositionAt()`,
+then set `view.offsetX = CSZ/2 - px * view.scale` (same formula as a manual pan-to-point).
+Zero new data. Makes the playback feel like a live spectator cam.
 
 ---
 
-### ~~2.7 — Enemy Encounter Table (enriched)~~ ✅ IMPLEMENTED
+### 2.9 — Loot Acquisition Timeline (Inventory Layer)
 
-Extended `buildEngagementSummary()` to track `killed` boolean per enemy. Each enemy row now shows "✓ Killed" (green) or "escaped" (muted) status.
+`MD.inventory` is already loaded (added session 7). Add a "Loot" layer toggle that renders
+item pick-up events as small icons on the map at the time they happened. Group by 10s buckets
+to avoid icon clutter. In the sidebar, show a per-phase item category breakdown:
+"Early: 2× FAK, 1× vest. Mid: 3× 7.62. Late: 1× adrenaline."
+
+---
+
+### 2.10 — Throwable Throw-Location Markers
+
+`LogPlayerUseThrowable` events are already tracked in `MD.events` with `type:'throwable'`.
+Add a new Throwables layer (currently they appear in the timeline but not on the map).
+Draw grenade icon at throw location. Sub-type by throwable type (frag = red, smoke = grey,
+stun = yellow, molotov = orange). Hover: weapon name, timestamp.
+
+---
+
+### 2.11 — Damage Phase Breakdown Bar
+
+In the Match Summary sidebar panel: a horizontal stacked bar showing total damage dealt in
+Early / Mid / Late phases. Same split as the mapanalysis phase filter.
+`dmgDealt` events have `t` — filter by PHASE_RANGES thresholds. One bar per player.
+Shows: "D282 dealt 400 early, 120 mid, 0 late" — reveals at-a-glance when most combat happened.
+
+---
+
+### 2.12 — Match Notes (localStorage)
+
+A small textarea in the sidebar (below Match Summary) that saves free-text notes per match
+to `localStorage`. Key: `match_note_{match_id}`. Pre-fill with empty string. Auto-save on blur.
+Shows a "📝" icon in the match history table for matches that have notes.
+Zero backend — purely client-side. Useful for "remember this match, crazy final circle".
+
+---
+
+### 2.13 — Enemy Approach Direction Indicator
+
+For each `dmg_taken` event cluster (the engagements): compute the compass direction of the
+enemy relative to the player at time of damage. Render as a small directional arc overlay on
+the map near the engagement dot: "took damage mostly from the east". Uses `dmgTaken`
+`{x,y}` vs player position at same `t`. Approximate — but useful for "we always get flanked from behind".
+
+---
+
+### 2.14 — Pinch-to-Zoom Touch Support
+
+`mapanalysis.html` already has a full pinch-zoom + touch-pan implementation (touchstart,
+touchmove, touchend, pinchDist, pinchMidRaw, applyZoom). The canvas/view model in `match.html`
+is identical. Direct port: copy the touch handler block (~60 lines) and the `lastPinchDist` /
+`lastPinchMidRaw` vars. Estimated: 30 minutes. Fixes mobile completely.
 
 ---
 
 ## 3. Map Analysis (`mapanalysis.html`)
 
-### 3.1 — Wins-Only Filter Toggle
-
-**Why it matters:** The most important question in self-coaching: "What do we do differently when we win?" A single toggle that restricts all layers to winning games only reveals drop patterns, rotation habits, and engagement locations that correlate with victory.
-
-**Exact plan:**
-- Add a "Wins Only" toggle button to the filter row (styled same as the player/phase buttons).
-- `state.winsOnly = false` by default.
-- In `filteredMatches()`, add: `&& (!state.winsOnly || m.players['D282']?.placement===1)`.
-- Triggers full `loadAndRender()` on toggle (same as date change).
-- Heatmaps, drops, deaths, kills, engagements — everything instantly reflects winning patterns.
-- 3 lines of state + filter change + one button in HTML.
+### ~~3.3 — Landing Zone Outcome Coloring~~ ✅ Done
+### ~~3.6 — Late Game Positions Layer~~ ✅ Done
+### ~~Session 9: Grid Overlay (⊞ button, A1–H8 labels)~~ ✅ Done
+### ~~Session 9: Landing Zone Pie Charts (shared group-distance slider)~~ ✅ Done
+### ~~Session 9: Duo Drop Midpoint (one marker per match)~~ ✅ Done
+### ~~Session 9: Engagement Hover Score Table + Weapon Breakdown~~ ✅ Done
+### ~~Session 9: Dmg Dealt / Taken in Engagement Hover + Color Coding~~ ✅ Done
+### ~~Removed: Position Heatmap + Loot Heatmap layers~~ ✅ Done
 
 ---
 
-### 3.2 — Final Circle Center Scatter / Heatmap
+### 3.1 — Wins-Only Filter Toggle ⭐ Very Low Effort
 
-**Why it matters:** Experienced PUBG players know that circles are NOT random — they have terrain and map-center biases. Seeing where your circles have actually ended lets you develop better "circle read" intuition backed by personal data.
-
-**Exact plan:**
-- New layer toggle: "Final Circle Centers" (color: `#ff88ff`).
-- In `aggregateLayers()`, extract the phase-8 (or last available phase) circle center from each match's `circlePhases`.
-- Store as `LAYER.finalCircles = [{cx, cy, matchId, date}, ...]`.
-- Draw as small magenta `×` markers with a subtle glow on the canvas.
-- Also offer a density heatmap version (use `buildHeatmapCanvas()` with these points).
-- In the sidebar stats, show the most common map quadrant (divide map into 3×3 grid, count which cell appears most often as final circle).
-
-```js
-// In aggregateLayers():
-LAYER.finalCircles = matches.flatMap(m => {
-  const c = MATCH_CACHE.get(m.match_id);
-  if (!c?.circlePhases?.length) return [];
-  const last = c.circlePhases[c.circlePhases.length - 1];
-  return [{ cx: last.cx, cy: last.cy, matchId: m.match_id, date: c.date }];
-});
-```
+Add a "Wins Only" toggle button in the filter row. `state.winsOnly = false` default.
+In `filteredMatches()`, add `&& (!state.winsOnly || m.players['D282']?.placement===1)`.
+Triggers full `loadAndRender()` on toggle. Heatmaps, drops, deaths, kills, engagements —
+everything instantly shows only winning-game patterns. 3 lines of state + 1 button.
 
 ---
 
-### ~~3.3 — Landing Zone Outcome Scoring~~ ✅ IMPLEMENTED
+### 3.2 — Final Circle Centers Scatter
 
-Drop dots now colored by match placement: gold=#1, green=top5, blue=top10, orange=top20, red=worse. Hover shows placement. At zoom>2, placement number drawn next to dot.
+New layer: "Final Circles" (magenta). In `aggregateLayers()`, extract phase-8 (or last available)
+circle center from each match's `circlePhases`. Store as `LAYER.finalCircles`. Draw as small `×`
+markers. Shows where final circles tend to land — valuable for "should we rotate center or edge?"
+Also add to sidebar: which map quadrant (3×3 grid) the final circle lands in most often.
 
 ---
 
-### 3.4 — Engagement Outcome Choropleth
+### 3.4 — Combat Zone Choropleth (Win/Loss Areas)
 
-**Why it matters:** A heatmap of "where do we win fights vs lose fights" is more useful than individual dots. This is the kind of insight pro coaches use — "we always lose fights in the south-east quadrant, let's avoid it".
-
-**Exact plan:**
-- New layer toggle: "Combat Zones" (distinct from Engagements layer).
-- Divide the map into a 16×16 grid (45px cells at CSZ=720).
-- For each cell, compute: avg engagement score of all clusters whose `cx/cy` falls in that cell.
-- Color each cell from dark-red (avg < -100) → transparent (few engagements) → dark-green (avg > 100).
-- Render as a semi-transparent overlay (`ctx.globalAlpha = 0.45`).
-- Only show cells with ≥ 3 engagements (suppress noise).
-- This layer uses the already-computed `LAYER.engClusters`.
+New layer: "Combat Zones". Divide map into 16×16 grid. For each cell, compute avg engagement
+score across all clusters in that cell. Color cells green (avg > 100) → transparent (sparse) →
+red (avg < -100). Only draw cells with ≥3 engagements. Semi-transparent overlay (alpha 0.42).
+Reveals: "we always lose fights in the south-east quadrant". Uses existing `LAYER.engClusters`.
 
 ```js
 function drawCombatZones() {
-  const GRID = 16, CELL = CSZ / GRID;
+  const CELL = CSZ / 16;
   const cells = {};
   for (const cl of LAYER.engClusters.filter(c => inPhase(c.t))) {
-    const gx = Math.floor(cl.cx / CELL), gy = Math.floor(cl.cy / CELL);
-    const k = `${gx},${gy}`;
+    const k = `${Math.floor(cl.cx/CELL)},${Math.floor(cl.cy/CELL)}`;
     if (!cells[k]) cells[k] = { sum:0, n:0 };
     cells[k].sum += cl.score; cells[k].n++;
   }
-  ctx.globalAlpha = 0.42;
-  for (const [k, v] of Object.entries(cells)) {
+  ctx.save(); ctx.globalAlpha = 0.42;
+  for (const [k,v] of Object.entries(cells)) {
     if (v.n < 3) continue;
-    const [gx, gy] = k.split(',').map(Number);
-    const avg = v.sum / v.n;
-    const t = Math.max(-1, Math.min(1, avg / 200));
-    const col = t > 0 ? `rgba(26,170,68,${t})` : `rgba(204,17,17,${-t})`;
-    ctx.fillStyle = col;
-    ctx.fillRect(gx * CELL, gy * CELL, CELL, CELL);
+    const [gx,gy] = k.split(',').map(Number);
+    const t = Math.max(-1, Math.min(1, v.sum/v.n/200));
+    ctx.fillStyle = t>0 ? `rgba(26,170,68,${t})` : `rgba(204,17,17,${-t})`;
+    ctx.fillRect(gx*CELL, gy*CELL, CELL, CELL);
   }
-  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 ```
 
 ---
 
-### 3.5 — Route Direction Arrows (Rotation Tendency)
+### 3.5 — Rotation Arrows Layer
 
-**Why it matters:** Rotation patterns are one of the highest-value strategic insights. "We always rotate west" becomes visible as a cluster of arrows, revealing whether the duo has predictable (exploitable) or varied rotation habits.
-
-**Exact plan:**
-- Process path data: for each path segment between consecutive positions that are > 50px apart, compute the direction vector.
-- Bin into 8 directions (N/NE/E/SE/S/SW/W/NW) per 3×3 map grid cell.
-- Draw an arrow in each cell pointing in the dominant direction. Arrow length scales with frequency. Color by player (amber D282, blue S821).
-- New layer toggle: "Rotation Arrows".
-- Implementation uses existing `LAYER.paths` data — no new fetch.
+Process `LAYER.paths`: for each path segment > 50px, compute compass direction. Bin into 8
+directions per 3×3 grid cell. Draw an arrow in each cell pointing dominant direction, length
+scales with frequency. Color by player (amber D282, blue S821). New layer toggle: "Rotation Arrows".
+No new data fetch — uses existing path data.
 
 ---
 
-### ~~3.6 — Map Sector Survivability Grid (Late Game Positions Layer)~~ ✅ IMPLEMENTED
+### 3.8 — "Danger Zones" Death Density Layer
 
-New "Late Game Positions" layer (purple, default off) showing a heatmap of positions at t>1200s. Added to LAYER_DEFS, aggregated in aggregateLayers(), drawn with screen blend mode.
+New layer: "Danger Zones". For each death in `LAYER.events.deaths`, accumulate a 2D density
+grid (same 16×16 as combat zones). Draw cells with ≥2 deaths as semi-transparent red circles
+or squares. Reveals: the map areas where you most often die — avoid or prepare better.
+Filtered by player and phase like all other layers.
 
 ---
 
-### 3.7 — Per-Match Replay Scrubber (Mini Mode)
+### 3.9 — Vehicle Usage Layer
 
-**Why it matters:** Sometimes you want to understand one specific match's movement directly in the map analysis view, without switching to match.html. A single-match overlay mode with a time slider would let you review a specific game while keeping the aggregate context.
+New layer: "Vehicle Routes". Draw path segments that are tagged `tr:'vehicle'` in a distinct
+colour (teal). Add entry/exit dot markers. Shows: where the duo drives and how far.
+Data already exists in `pathData[player]` — positions tagged with `tr` field. Just filter by
+`p.tr === 'vehicle'` when drawing paths and colour them differently.
 
-**Exact plan:**
-- Add a "Single Match" toggle in the filter row. When active, a match selector dropdown appears (showing matches for the current map/date range).
-- Selecting a match loads just that match's full JSON (from MATCH_CACHE or fetch).
-- Display a time slider (same as match.html) below the map.
-- Render: movement paths up to slider time, player position dots, circle at current time.
-- Layers still controllable via the sidebar.
-- Essentially embeds a simplified version of match.html's canvas logic into mapanalysis.html.
+---
+
+### 3.10 — Drop Zone Win Rate % on Grouped Pies
+
+When the group slider is active and pies are drawn, add a text label inside larger pies (radius
+> 16px screen) showing win rate: `Math.round(outcomes.win/n*100)+'%'`. Renders above the count
+label. Tiny addition to `drawDropPies()` — makes grouped pies instantly tell you the win rate
+at a glance without hovering.
+
+---
+
+### 3.11 — Map Quadrant Survival Grid
+
+Overlay a 3×3 or 4×4 grid where each cell is colored by avg placement of all deaths occurring
+in that cell. Darker red = die early and often here. Different from combat zones (which track
+engagement outcome) — this tracks *where you end up dying*, regardless of fight quality.
+New layer toggle. Uses `LAYER.events.deaths` positions.
+
+---
+
+### 3.12 — Export Current Map View as PNG
+
+Camera button in canvas toolbar. `canvas.toDataURL('image/png')` → auto-download as
+`mapanalysis-{map}-{date}.png`. Map images are local same-origin → `toDataURL` works.
+Exact same approach as suggestion 2.3 for match.html.
+
+---
+
+### 3.13 — Wins-Only Mode on Landing Zone Pies
+
+When "Wins Only" filter (3.1) is active and landing zones are grouped, show the pie slices
+where `outcomes.win > 0` much more prominently — or recolor the whole pie green if win rate
+is above 50%. Small visual reinforcement of the filter's purpose.
+
+---
+
+### 3.14 — Blue Zone Deaths Layer
+
+New layer: "Blue Zone Deaths". Many deaths happen outside the safe zone. Filter
+`LAYER.events.deaths` by matching events where corresponding `dmgTaken` right before death
+is tagged as blue zone. Draw as a distinct "B" icon. Helps identify: "we're dying to blue, not
+to players — rotate faster". Data quality depends on how blue zone damage is tagged in export.
 
 ---
 
 ## 4. Loadout Planner (`pubg.html`)
 
-### ~~4.1 — Saved Presets (localStorage)~~ ✅ IMPLEMENTED
-
-"Presets" panel above Capacity with Select/Load/Save/Delete. Saves `{backpack, vest, counts}` to localStorage under `pubg_preset_*` keys.
-
----
-
-### ~~4.2 — Shareable URL~~ ✅ IMPLEMENTED
-
-"Copy Link" button in Capacity panel. `encodeLoadout()` / `decodeLoadout()` using item indices. On page load, decodes URL params if present.
-
----
-
-### ~~4.3 — Capacity Breakdown Donut Chart~~ ✅ IMPLEMENTED
-
-Chart.js doughnut chart in Capacity panel showing used capacity by category. Center text shows used/total. Color-coded legend below chart. Updates on every render().
-
----
-
-### ~~4.4 — Ammo Smart Suggestion~~ ✅ IMPLEMENTED
-
-Static `AMMO_SUGGEST` table for 6 ammo types. Shows "Suggest: N — fill" hint below each ammo item when current count < suggestion.
+### ~~4.1 — Saved Presets~~ ✅ Done
+### ~~4.2 — Shareable URL~~ ✅ Done
+### ~~4.3 — Capacity Breakdown Donut~~ ✅ Done
+### ~~4.4 — Ammo Smart Suggestions~~ ✅ Done
+### ~~4.6 — Item Search / Filter~~ ✅ Done
 
 ---
 
 ### 4.5 — Map-Specific Starter Presets
 
-**Why it matters:** Loadout meta varies significantly by map. Karakin (tiny map) = more grenades, less ammo. Erangel = healing heavy. Having official starter presets teaches new players and saves regulars time.
-
-**Exact plan:**
-- Add 4 preset buttons at the top: "Erangel", "Miramar", "Sanhok", "Karakin".
-- Each encodes a reasonable community-consensus loadout (based on actual meta guides):
-  - **Erangel** (8×8, slow): 4× FAK, 6× boost, 120× 5.56, 90× 7.62, 3× smoke, 2× frag, 2× stun
-  - **Miramar** (8×8, open): similar but +1 long-range ammo, fewer smokes
-  - **Sanhok** (4×4, fast): 6× bandage, 3× FAK, 4× boost, 90× 5.56, 3× smoke, 3× frag
-  - **Karakin** (2×2, tiny): 6× FAK, 8× boost, 60× 5.56, 60× 7.62, 4× smoke, 3× C4, 4× frag
-- Clicking loads the preset into state (same logic as §4.1 but hardcoded). Doesn't overwrite saved presets.
+4 buttons (Erangel / Miramar / Sanhok / Karakin) that load community-consensus starter
+loadouts. Different maps → different healing/ammo ratios. Karakin needs more grenades,
+Sanhok needs faster tempo (less ammo, more heals). Clicking loads as current loadout without
+overwriting saved presets.
 
 ---
 
-### ~~4.6 — Item Search / Filter~~ ✅ IMPLEMENTED
+### 4.7 — Loadout Comparison Mode
 
-Search input above category tabs. Filters across all categories by name match. Clear button (×) restores category view. Tab row hidden during search.
-
----
-
-## 5. New Page Ideas
-
-### 5.1 — Circle Predictor (`circles.html`) ⭐ Highest Value
-
-**Concept:** "Where will the circle end up?" — Show a heat map of historical final circle positions for each map, built from actual match data. This answers the question pro players obsess over: "should I hold center or play edge?"
-
-**Unique value:** No other personal tracker does this with YOUR own match history. OP.GG and PUBGLookup show community-wide data; this shows what happened in your specific 50+ games.
-
-**Implementation plan:**
-- Data already exists: every match in `MATCH_CACHE` has `circlePhases` with 8 circles per match.
-- Load all match JSONs (same as mapanalysis.html does, using MATCH_CACHE).
-- For each phase 1–8, extract the circle center `{cx, cy}` and radius `r`.
-- Render 8 tabbed views (phase selector).
-- Each view shows:
-  1. **Historical scatter** — small dots for each match's circle center at that phase.
-  2. **Density heatmap** — using the same `buildHeatmapCanvas()` function already written.
-  3. **Average circle** — dashed circle showing the mean center ± 1 standard deviation.
-- Filter by date (reuse the date slider component).
-- Stats sidebar: most common map quadrant, average radius, how often circle starts central vs edge.
-
-```js
-// Core data extraction — runs once per map selection
-function extractPhaseCircles(matches, phaseIdx) {
-  // phaseIdx: 0-7
-  return matches.flatMap(m => {
-    const c = MATCH_CACHE.get(m.match_id);
-    if (!c?.circlePhases?.[phaseIdx]) return [];
-    return [{ cx: c.circlePhases[phaseIdx].cx, cy: c.circlePhases[phaseIdx].cy }];
-  });
-}
-```
-
-**Pages needed:** 1 new HTML file, ~400 lines. Reuses map image, heatmap canvas, date slider from mapanalysis.html (copy or extract shared components).
+Split the capacity panel into two columns: "Current" vs "Compare". Load any saved preset into
+the Compare slot. Shows side-by-side capacity bars and difference indicators (delta values in
+green/red). Useful for "is this preset actually better than what I usually run?"
 
 ---
 
-### 5.2 — Weapon Kill Log (`weapons.html`) ⭐ High Value
+### 4.8 — Throwable Fuse / Effect Timer Panel
 
-**Concept:** A searchable, filterable table of every kill across all matches, with weapon and context. Answers: "What's our best weapon?", "Do we headshot more with snipers?", "What weapons are enemies using when they kill us?"
-
-**Unique value:** This is personal kill-feed data, not aggregate community stats. The weapon breakdown is already in telemetry `events` with `type:'kill'` and `weapon` field.
-
-**Implementation plan:**
-- Load all match JSONs (parallel fetch with MATCH_CACHE, same as mapanalysis.html).
-- Extract all `{type:'kill', player, weapon, target, t, x, y, matchId, date}` events.
-- Build a weapon stats table:
-
-| Weapon | Kills | Deaths | K/D | Headshot% | Avg distance | Matches used |
-|--------|-------|--------|-----|-----------|--------------|--------------|
-
-- Filters: player (D282/S821/both), date range, map, weapon category (AR/SR/SMG/SG/Pistol).
-- Secondary panel: "Killed by" — same table but from `type:'death'` events (if killer weapon is tracked).
-- Chart: top-10 weapons by kills as a horizontal bar chart. Chart.js.
-- Clicking a weapon row filters the match list to show which matches it was used in.
-
-**Weapon distance heatmap:** For each weapon, scatter its kill locations on the map canvas — reveals whether snipers die close-range or ARs are being used at long range.
+Small reference panel below the items list: for each throwable type, show fuse time, effect
+duration, and throw range. Static lookup table — no data needed. Frag: 3s fuse, 5m lethal.
+Smoke: 1s fuse, 14s duration. Molotov: immediate, 10s burn. Useful while planning.
 
 ---
 
-### 5.3 — Duo Chemistry Dashboard (`duo.html`)
+### 4.9 — "Match Your Partner" Suggestion
 
-**Concept:** A page entirely dedicated to D282+S821 as a unit. Every stat is about the partnership, not the individuals.
-
-**Why it's different:** PUBGLookup and OP.GG only show individual stats. The combination insight — "how well do these two play together?" — is completely absent from public tools.
-
-**Implementation plan:**
-- All data from `matches.json` + match JSON files (using MATCH_CACHE).
-- **Section 1: Joint Performance**
-  - Win rate together (already computed).
-  - Games where both got kills vs one-sided.
-  - Avg combined kills per game trend.
-- **Section 2: Proximity Stats** — requires loading individual match JSONs
-  - Average proximity throughout matches (already computed in match.html as "Proximity" chart).
-  - **Correlation: proximity vs outcome**. For each match, compute avg proximity and final placement. Scatter plot. Does playing close together correlate with better results?
-  - Time spent within 100m vs >100m vs >300m (split into phases).
-- **Section 3: Support Stats**
-  - Who revives who more (count `type:'revive'` events per player).
-  - Who takes more blue zone damage.
-  - How often one player is knocked when the other is still up.
-- **Section 4: Carry Analysis**
-  - Delta: (D282 kills - S821 kills) per game. Histogram. Shows balance of contribution.
-  - Games where one player carried (got 3+ kills, other got 0).
-
-**Data sources:** `matches.json` for placement/kills summary, match JSON files for position proximity, revive events, damage events.
+Enter a partner loadout (or load their saved preset), and the planner highlights which item
+categories the partner is already covering. "Partner has medkits covered → you should take
+more smokes." Color-code complementary vs redundant items. Requires two simultaneous loadouts
+in state — a logical extension of the comparison mode in 4.7.
 
 ---
 
-### 5.4 — Personal Records Trophy Room (`records.html`)
+## 5. Records Page (`records.html`)
 
-**Concept:** Lifetime bests displayed as a visual "trophy case". Motivating and easy to skim.
+### ~~5.4 — Personal Records Trophy Room~~ ✅ Done
 
-**Implementation plan:**
-- Load `matches.json` + all match JSONs for detailed records.
-- Categories:
-  - **Most kills in a game** (and link to that match)
-  - **Highest damage in a game** (if in data)
-  - **Best placement streak** (consecutive top-3 finishes)
-  - **Longest win streak**
-  - **Most kills in one session** (across all games on a day)
-  - **Earliest kill in a match** (smallest `t` for a kill event)
-  - **Latest kill before winning** (last kill event in a win)
-  - **Most heals used in one game** (count heal events)
-  - **Closest clutch win** (won with <1 circle phase remaining, e.g., final circle)
-  - **Longest in-blue survival** (time spent outside safe zone)
-- Each record: trophy icon + value + player + date + "View Match →" link.
-- Sparkline charts showing the record stat over time (Chart.js `line` with hidden axes).
-- Reset button to recalculate (since new matches may break old records).
+---
+
+### 5a — Additional Record Categories to Add
+
+The current `computeRecords()` function is easy to extend. Suggested additions:
+
+- **Most damage dealt in a game** — needs `damage_dealt` in match events or per-player summary
+- **Fastest win** — minimum survival time across winning matches (`duration_s` field on match JSON)
+- **Longest survival without winning** — maximum `t` of death event across non-winning matches
+- **Most revives given** — count `type:'revive'` events where `player` is D282 or S821
+- **Most throwables used** — count `type:'throwable'` per match, find the max
+- **Highest performance score in one game** — `computeExactScore()` already exists, just find the max
+- **Most kills duo total** — combined D282+S821 kills in one match
+- **Solo clutch** — win where partner died before final circle (death event exists + placement=1)
+- **Comeback win** — win where both players were knocked at some point during the match
+
+---
+
+## 6. New Pages
+
+### 5.1 — Circle Predictor (`circles.html`) ⭐⭐⭐ Highest Value
+
+Show historical final circle positions per map as a density scatter. Phase selector (1–8).
+Average circle drawn as dashed ring. Reveals terrain biases. Data already in MATCH_CACHE.
+~400 lines, reuses map image + heatmap canvas from mapanalysis.
+
+---
+
+### 5.2 — Weapon Kill Log (`weapons.html`) ⭐⭐⭐ High Value
+
+Searchable table of every kill across all matches: weapon, target, distance (approx), HS.
+Summary: weapons ranked by kill count, K/D, headshot %. Filter by player, date, map, category.
+Answers: "What is actually our best weapon?" beyond gut feel.
+
+---
+
+### 5.3 — Duo Chemistry Dashboard (`duo.html`) ⭐⭐ Medium Value
+
+Proximity vs placement scatter (does playing close together correlate with winning?), who
+carries more per session, revive exchange stats, how often one is knocked while other is alive.
+Requires loading match JSONs for position data (same as mapanalysis).
 
 ---
 
 ### 5.5 — Session Goal Tracker (`goal.html`)
 
-**Concept:** Before a play session, set a goal ("win 1 game", "get 5 kills each", "top-5 every game"). The page tracks live progress as new matches are added. Uses localStorage for persistence.
-
-**Why it's interesting technically:** The site already has a data pipeline that could be extended to pull the latest matches and detect new ones since last visit.
-
-**Implementation plan:**
-- Goal types: Win X games, K/D ≥ X, Avg placement ≤ X, Play Y games.
-- Progress bar per goal.
-- localStorage: `{ goal, startDate, startMatchCount }` — on load, filter matches after `startDate` to measure progress.
-- "Start Session" button sets the baseline. "End Session" shows summary.
-- Simple motivational UI: big progress rings (CSS `conic-gradient`), green when achieved.
-- No new data — uses `matches.json` entirely.
+Before queuing: set a goal (win 1 game / K/D ≥ 2 / top-5 every game). Track progress across
+matches added since goal was set. `localStorage` for persistence. Progress rings (CSS
+`conic-gradient`). Zero new data — uses `matches.json` only.
 
 ---
 
-### 5.6 — Landing Zone Analyzer (`landings.html`)
+### 5.6 — Landing Zone Analyzer (`landings.html`) ⭐⭐ Medium Value
 
-**Concept:** Answer definitively: "Which drop locations give D282+S821 the best results?" Every landing zone is scored by outcome across all historical matches.
-
-**Why it's high value:** This is the strategic question every PUBG duo discusses before queuing. Moving from opinion ("I feel like Pochinki is unlucky") to data ("we win 12% of Pochinki games vs 24% from Georgopol") is genuinely useful.
-
-**Implementation plan:**
-- Load all match JSONs, extract drop locations + match outcomes (placement).
-- Cluster drop locations spatially (DBSCAN with ~80px radius — the same union-find algorithm already written in mapanalysis.html for engagements).
-- Each cluster = a named zone (name by proximity to known POI grid coordinates, or just show grid reference like "C4").
-- Render on map canvas:
-  - Each cluster as a large circle, radius scales with visit count.
-  - Color by avg outcome: green = good results, red = bad results.
-  - Hover: "Visited X times. Avg placement: #Y. Win rate: Z%. Avg combined kills: K."
-- Filter by map (same map tabs as mapanalysis.html).
-- Sidebar: ranked list of all landing zones by win rate (min 3 visits to qualify).
-
-**POI name lookup:** A static lookup table of known POI positions per map (can source from pubg wiki coordinates and convert to canvas coordinates using world_size).
+Every drop location clustered by proximity, scored by historical win rate and avg placement.
+Map canvas with circles scaled by visit count, colored by outcome. Sidebar: ranked zone list
+(min 3 visits). Answers definitively: "Where should we land?" Builds on the duo drop midpoint
+already implemented in mapanalysis.
 
 ---
 
-### 5.7 — Head-to-Head Rivals (`rivals.html`)
+### 5.7 — Rivals / Nemesis Tracker (`rivals.html`)
 
-**Concept:** Track recurring enemy names from kill/death events. Have you fought the same squad multiple times? How did those rematches go?
-
-**Why it's fun:** The PUBG community loves the concept of "nemesis" players. This surfaces yours automatically from telemetry.
-
-**Implementation plan:**
-- Extract from all match JSONs:
-  - `{type:'kill', target}` — enemies the duo killed.
-  - `{type:'death', killer}` — enemies who killed the duo (if killer name is in event data).
-- Build frequency table: enemy name → { encounters, killed_by_us, killed_us, dates }.
-- Show players encountered ≥ 2 times in a table.
-- Sort by: most recent | most encountered | biggest nemesis (killed us more than we killed them).
-- "Rivals" badge: players you've both killed AND been killed by.
-- Note: PUBG telemetry target names may be truncated or anonymized — verify data quality before building this.
+Track recurring enemy names from kill/death events. Table: enemy name → encounters, killed
+by us, killed us, dates. "Rivals" badge for mutually traded kills. Data quality dependent on
+whether killer name is in death events — verify before building.
 
 ---
 
-## 6. Cross-Cutting Technical Improvements
+### 5.8 — Match Comparison (`compare.html`) ⭐ New
+
+Two match selectors → render both matches' paths on the same map canvas with opacity 0.5 each.
+Toggle between "overlay" and "split" (canvas divided down the middle). Useful for "what did we
+do differently in our win vs the loss the same day?"
+
+---
+
+### 5.9 — Zone Control (`zones.html`) ⭐ New
+
+Pure quadrant analysis. 4×4 grid on each map. Per cell: visit count, death count, kill count,
+avg time spent, win rate of matches where we visited this cell. Color by metric (selectable).
+Table view + map canvas view toggle. Answers: "Which zones lead to wins when we go there?"
+
+---
+
+### 5.10 — Career Timeline (`career.html`) ⭐ New
+
+Full chronological strip: one row per match, scrollable from session 1 to now.
+Columns: date, map icon, placement badge, kills, score sparkline.
+Grouped by day with session separator lines. Clicking a row opens `match.html` for that match.
+No new data — entirely from `matches.json`. Replaces the flat table in stats.html for this use case.
+
+---
+
+## 7. Cross-Cutting Technical
 
 ### 6.1 — Shared Component Library
+Nav menu, date slider, filter-row styles are copy-pasted across 5 files. Extract `shared.js` +
+`shared.css`. Low priority — risk of breaking changes across pages.
 
-**Problem:** The nav menu, date slider, and filter-row styles are copy-pasted across 5 files. Any change requires editing all of them.
+### 6.2 — Service Worker / Offline Cache
+Cache all map images (never change) + `matches.json` (5 min TTL) + match JSONs (forever).
+Makes repeat visits to Map Analysis instant. Add `manifest.json` for mobile "Add to Home Screen".
 
-**Solution:** Extract a `shared.js` and `shared.css` (or inline into a `<template>` element):
-- `initSiteNav(currentPage)` — renders the nav, marks current page active.
-- `initDateSlider(dates, onchange)` — reusable dual-range slider.
-- CSS variables already shared via `:root` — extract to a `shared.css` include.
-- **Priority:** Low (cosmetic). **Risk:** Breaking changes across pages if done wrong. Do it carefully, one file at a time.
+### 6.3 — Mobile Touch for `match.html` ⭐ Very Low Effort
+Copy pinch-zoom touch handler (~60 lines) from `mapanalysis.html` directly into `match.html`.
+Canvas/view model is identical. 30 minutes of work, fixes mobile completely.
 
-### 6.2 — Offline / PWA Support
+### 6.4 — Consistent Error States
+`match.html` shows "Loading…" forever on fetch failure. Add visible "X matches failed" badge
+in mapanalysis count display. Show retry button on match.html load failure.
 
-**Problem:** The site requires network for every visit (map images, match data).
-
-**Solution:** Add a `service-worker.js` that caches:
-- All map images (they never change).
-- `matches.json` (cache for 5 minutes, update on next visit).
-- Individual match JSONs (cache forever — they never change once written).
-- Add `manifest.json` for "Add to Home Screen" on mobile.
-- **Impact:** Map Analysis loads instantly on repeat visits. Huge UX improvement for mobile.
-
-### 6.3 — Match Data Update Script
-
-**Problem:** The data pipeline (how `matches.json` and individual match JSONs are written) is external to this site. If there's a script to update it, it should support incremental updates (only fetch new matches).
-
-**Suggestion:** Ensure the data pipeline:
-- Never overwrites existing match JSONs (they're immutable).
-- Appends new matches to `matches.json` sorted newest-first.
-- Writes a `last_updated` timestamp to `matches.json`.
-- Supports a dry-run mode to preview what would be fetched.
-
-### 6.4 — Mobile Touch for Match.html
-
-**Problem:** `match.html` has no pinch-to-zoom or touch pan. You added it to `mapanalysis.html` in an earlier session — the same touch code can be ported directly.
-
-**Solution:** Copy the pinch-zoom touch handler block from `mapanalysis.html` into `match.html`. The canvas/view model is identical (`view.scale`, `view.offsetX/Y`, `applyZoom`, `clampView`). Estimated: 30 minutes, 60 lines.
-
-### 6.5 — Consistent Error States
-
-**Problem:** When match files fail to load (network error), the map just shows "Loading…" forever.
-
-**Solution:**
-- In `match.html`: catch individual match fetch failures, show "Failed to load [matchId]" with a retry button.
-- In `mapanalysis.html`: already handles individual match failures with `console.warn`. Add a visible "X matches failed to load" badge in the match count display.
+### 6.5 — `last_updated` Timestamp in `matches.json`
+Write timestamp in export.py. Display on stats.html: "Last updated: June 25 at 14:32".
+Helps diagnose whether the pipeline has been run recently.
 
 ---
 
-## 7. Priority Matrix
+## 8. Priority Matrix
 
-### Implemented (this sprint)
+### Completed
 
-| # | Item | Status |
-|---|------|--------|
-| 1.1 | Placement histogram | ✅ Done |
-| 1.2 | Rolling K/D trend | ✅ Done |
-| 1.3 | Per-map stats table | ✅ Done |
-| 1.4 | Duo Synergy Panel | ✅ Done |
-| 1.6 | Lifetime Records / PB Badges | ✅ Done |
-| 1.7 | Win Condition Analysis | ✅ Done |
-| 2.5 | Weapon Damage Breakdown | ✅ Done |
-| 2.6 | Blue Zone Indicator | ✅ Done (fallback logic) |
-| 2.7 | Enemy Encounter Table (killed badge) | ✅ Done |
-| 3.3 | Landing zone outcome scoring | ✅ Done |
-| 3.6 | Late Game Positions layer | ✅ Done |
-| 4.1 | Saved presets | ✅ Done |
-| 4.2 | Shareable URL | ✅ Done |
-| 4.3 | Capacity donut chart | ✅ Done |
-| 4.4 | Ammo smart suggestions | ✅ Done |
-| 4.6 | Item search / filter | ✅ Done |
-| 5.4 | Personal Records page (records.html) | ✅ Done |
+| # | Item |
+|---|------|
+| 1.1–1.4, 1.6–1.7 | Stats panels |
+| 2.1 | Match playback |
+| 2.5–2.7 | Weapon damage, blue zone, enemy table |
+| 3.3, 3.6 | Landing zone colors, late game layer |
+| 3.x (session 9) | Grid overlay, duo drop midpoints, landing zone pies, engagement hover table |
+| 4.1–4.4, 4.6 | Loadout presets, URL, donut, ammo suggest, search |
+| 5.4 | Records page |
 
-### Next Sprint
+### Next Sprint (High Impact / Low Effort)
 
 | # | Item | Impact | Effort |
 |---|------|--------|--------|
-| 5.1 | Circle Predictor page | ★★★★★ | Medium |
-| 5.2 | Weapon Kill Log | ★★★★★ | Medium |
-| 2.1 | Match playback | ★★★★★ | Low |
-| 3.1 | Wins-only filter | ★★★★★ | Very Low |
-| 2.2 | Key moments list | ★★★★☆ | Low |
-| 3.4 | Combat choropleth | ★★★★☆ | Low |
-| 3.2 | Final circle scatter | ★★★★☆ | Low |
-| 6.4 | Mobile touch match.html | ★★★★☆ | Very Low |
+| 3.1 | Wins-only filter | ★★★★★ | ≈30 min |
+| 2.14 | Touch pinch-zoom (match.html) | ★★★★☆ | ≈30 min |
+| 3.10 | Win % label on drop pies | ★★★☆☆ | ≈15 min |
+| 2.2 | Key moments jump list | ★★★★☆ | ≈1 hr |
+| 3.2 | Final circle scatter layer | ★★★★☆ | ≈1 hr |
+| 3.4 | Combat zone choropleth | ★★★★☆ | ≈1 hr |
+| 2.8 | Follow mode during playback | ★★★★☆ | ≈45 min |
+| 2.12 | Match notes (localStorage) | ★★★☆☆ | ≈45 min |
+| 3.12 | Export map PNG | ★★★☆☆ | ≈20 min |
+| 5a | Additional records categories | ★★★☆☆ | ≈1 hr |
+| 1.8 | Kill distribution histogram | ★★★☆☆ | ≈45 min |
 
-### Later
+### Medium Effort / High Value
 
 | # | Item | Impact | Effort |
 |---|------|--------|--------|
-| 5.3 | Duo Chemistry page | ★★★★☆ | Medium |
-| 5.6 | Landing Zone Analyzer | ★★★★☆ | Medium |
-| 1.5 | Time-of-day heatmap | ★★★☆☆ | Low |
+| 5.1 | Circle Predictor page | ★★★★★ | ~half day |
+| 5.2 | Weapon Kill Log page | ★★★★★ | ~half day |
+| 5.10 | Career Timeline page | ★★★★☆ | ~2–3 hrs |
+| 2.4 | Zone position timeline chart | ★★★☆☆ | ~2 hrs |
+| 3.8 | Danger zones death layer | ★★★★☆ | ~1 hr |
+| 3.9 | Vehicle routes layer | ★★★☆☆ | ~1 hr |
+| 1.5 | Time-of-day heatmap | ★★★☆☆ | ~1 hr |
+| 2.9 | Loot acquisition overlay | ★★★☆☆ | ~1.5 hrs |
+| 5.8 | Match comparison page | ★★★★☆ | ~half day |
+| 5.9 | Zone control page | ★★★★☆ | ~half day |
+
+### Later / Lower Priority
+
+| # | Item | Impact | Effort |
+|---|------|--------|--------|
+| 5.3 | Duo Chemistry Dashboard | ★★★★☆ | Medium |
+| 5.6 | Landing Zone Analyzer page | ★★★★☆ | Medium |
+| 4.7 | Loadout comparison mode | ★★★☆☆ | Medium |
+| 1.9 | Damage vs placement scatter | ★★★☆☆ | Medium |
 | 3.5 | Rotation arrows | ★★★☆☆ | Medium |
-| 2.3 | Export map snapshot | ★★★★☆ | Low |
-| 2.4 | Zone position timeline | ★★★☆☆ | Low |
+| 2.3 | Export match snapshot | ★★★☆☆ | Low |
+| 2.10 | Throwable throw-location layer | ★★☆☆☆ | Low |
 | 5.5 | Session Goal Tracker | ★★★☆☆ | Medium |
-| 3.7 | Per-match mini replay (DO NOT IMPLEMENT — too complex) | — | Very High |
-| 5.7 | Rivals tracker (DO NOT IMPLEMENT — verify data first) | — | Medium |
-| 6.1 | Shared components | ★★☆☆☆ | Medium |
+| 6.2 | Service worker / offline cache | ★★★☆☆ | Medium |
+| 3.14 | Blue zone deaths layer | ★★☆☆☆ | Low |
+| 5.7 | Rivals tracker | ★★☆☆☆ | Medium (verify data first) |
+| 6.1 | Shared component library | ★★☆☆☆ | Medium (risk of breakage) |
+| 3.7 | Per-match mini replay in mapanalysis | ★★☆☆☆ | Very High (skip) |
 
 ---
 
-*All suggestions assume the same constraints: static GitHub Pages hosting, vanilla JS, no npm, no build step, Chart.js via CDN for charts, Canvas 2D for map rendering.*
+*Stack: static GitHub Pages, vanilla HTML/CSS/JS, Chart.js 4.4.1 CDN, Canvas 2D for maps.*
