@@ -1,6 +1,16 @@
 {
   "D282": [
     {
+      "weapon": "HK416",
+      "category": "AR",
+      "kills": 12,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.083,
+      "hits": 114,
+      "total_damage": 1817.1,
+      "avg_damage_per_hit": 15.9
+    },
+    {
       "weapon": "M249",
       "category": "LMG",
       "kills": 10,
@@ -11,34 +21,24 @@
       "avg_damage_per_hit": 16.4
     },
     {
-      "weapon": "HK416",
-      "category": "AR",
-      "kills": 10,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.1,
-      "hits": 87,
-      "total_damage": 1583.5,
-      "avg_damage_per_hit": 18.2
-    },
-    {
       "weapon": "Mini 14",
       "category": "DMR",
-      "kills": 7,
+      "kills": 9,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 84,
-      "total_damage": 1380.7,
-      "avg_damage_per_hit": 16.4
+      "hits": 99,
+      "total_damage": 1629.3,
+      "avg_damage_per_hit": 16.5
     },
     {
       "weapon": "Mk12 SPR",
       "category": "DMR",
-      "kills": 6,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.167,
-      "hits": 82,
-      "total_damage": 1709.2,
-      "avg_damage_per_hit": 20.8
+      "kills": 7,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.286,
+      "hits": 96,
+      "total_damage": 2075.5,
+      "avg_damage_per_hit": 21.6
     },
     {
       "weapon": "AK-M",
@@ -235,12 +235,12 @@
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 16,
+      "kills": 17,
       "headshot_kills": 3,
-      "headshot_kill_pct": 0.188,
-      "hits": 133,
-      "total_damage": 2227.8,
-      "avg_damage_per_hit": 16.8
+      "headshot_kill_pct": 0.176,
+      "hits": 137,
+      "total_damage": 2274.0,
+      "avg_damage_per_hit": 16.6
     },
     {
       "weapon": "HK416",
@@ -283,6 +283,26 @@
       "avg_damage_per_hit": 20.8
     },
     {
+      "weapon": "Beryl M762",
+      "category": "AR",
+      "kills": 5,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.4,
+      "hits": 33,
+      "total_damage": 741.8,
+      "avg_damage_per_hit": 22.5
+    },
+    {
+      "weapon": "SLR",
+      "category": "DMR",
+      "kills": 4,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.5,
+      "hits": 59,
+      "total_damage": 1633.7,
+      "avg_damage_per_hit": 27.7
+    },
+    {
       "weapon": "AK-M",
       "category": "AR",
       "kills": 4,
@@ -291,16 +311,6 @@
       "hits": 44,
       "total_damage": 878.6,
       "avg_damage_per_hit": 20.0
-    },
-    {
-      "weapon": "SLR",
-      "category": "DMR",
-      "kills": 3,
-      "headshot_kills": 2,
-      "headshot_kill_pct": 0.667,
-      "hits": 37,
-      "total_damage": 1152.4,
-      "avg_damage_per_hit": 31.1
     },
     {
       "weapon": "K2",
@@ -333,6 +343,16 @@
       "avg_damage_per_hit": 11.3
     },
     {
+      "weapon": "Grenade",
+      "category": "Throwable",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 14,
+      "total_damage": 480.6,
+      "avg_damage_per_hit": 34.3
+    },
+    {
       "weapon": "M24",
       "category": "SR",
       "kills": 1,
@@ -341,26 +361,6 @@
       "hits": 7,
       "total_damage": 470.1,
       "avg_damage_per_hit": 67.2
-    },
-    {
-      "weapon": "Grenade",
-      "category": "Throwable",
-      "kills": 1,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 13,
-      "total_damage": 444.1,
-      "avg_damage_per_hit": 34.2
-    },
-    {
-      "weapon": "Beryl M762",
-      "category": "AR",
-      "kills": 1,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 11,
-      "total_damage": 310.6,
-      "avg_damage_per_hit": 28.2
     },
     {
       "weapon": "Tommy Gun",
@@ -461,6 +461,16 @@
       "hits": 7,
       "total_damage": 104.6,
       "avg_damage_per_hit": 14.9
+    },
+    {
+      "weapon": "Panzerfaust",
+      "category": "GL",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 2,
+      "total_damage": 100.0,
+      "avg_damage_per_hit": 50.0
     },
     {
       "weapon": "VSS",
