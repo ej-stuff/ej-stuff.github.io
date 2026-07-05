@@ -1,6 +1,6 @@
 # PUBG Site Improvement Ideas & New Page Concepts
 
-> Last updated: 2026-06-26 (after session 9).
+> Last updated: 2026-07-03 (session 10).
 > Every suggestion is grounded in what the current code actually has. Estimated difficulty uses
 > the same vanilla JS + Canvas + Chart.js stack already in use — no build tools, no npm.
 
@@ -219,12 +219,7 @@ is identical. Direct port: copy the touch handler block (~60 lines) and the `las
 
 ---
 
-### 3.1 — Wins-Only Filter Toggle ⭐ Very Low Effort
-
-Add a "Wins Only" toggle button in the filter row. `state.winsOnly = false` default.
-In `filteredMatches()`, add `&& (!state.winsOnly || m.players['D282']?.placement===1)`.
-Triggers full `loadAndRender()` on toggle. Heatmaps, drops, deaths, kills, engagements —
-everything instantly shows only winning-game patterns. 3 lines of state + 1 button.
+### ~~3.1 — Wins-Only Filter Toggle~~ ✅ Done
 
 ---
 
@@ -294,12 +289,7 @@ Data already exists in `pathData[player]` — positions tagged with `tr` field. 
 
 ---
 
-### 3.10 — Drop Zone Win Rate % on Grouped Pies
-
-When the group slider is active and pies are drawn, add a text label inside larger pies (radius
-> 16px screen) showing win rate: `Math.round(outcomes.win/n*100)+'%'`. Renders above the count
-label. Tiny addition to `drawDropPies()` — makes grouped pies instantly tell you the win rate
-at a glance without hovering.
+### ~~3.10 — Drop Zone Win Rate % on Grouped Pies~~ ✅ Done
 
 ---
 
@@ -413,11 +403,10 @@ Average circle drawn as dashed ring. Reveals terrain biases. Data already in MAT
 
 ---
 
-### 5.2 — Weapon Kill Log (`weapons.html`) ⭐⭐⭐ High Value
-
-Searchable table of every kill across all matches: weapon, target, distance (approx), HS.
-Summary: weapons ranked by kill count, K/D, headshot %. Filter by player, date, map, category.
-Answers: "What is actually our best weapon?" beyond gut feel.
+### ~~5.2 — Weapon Stats Page (`weapons.html`)~~ ✅ Done (session 11)
+Sortable table: shots, hits, accuracy %, damage dealt, dmg/hit, kills, HS kills, knocks,
+damage taken while carried, carry time. Filters: player / map / game phase / date range.
+Possible future extension: per-kill log rows (weapon → target, distance, timestamp).
 
 ---
 
@@ -497,9 +486,8 @@ Canvas/view model is identical. 30 minutes of work, fixes mobile completely.
 `match.html` shows "Loading…" forever on fetch failure. Add visible "X matches failed" badge
 in mapanalysis count display. Show retry button on match.html load failure.
 
-### 6.5 — `last_updated` Timestamp in `matches.json`
-Write timestamp in export.py. Display on stats.html: "Last updated: June 25 at 14:32".
-Helps diagnose whether the pipeline has been run recently.
+### ~~6.5 — `last_updated` Timestamp~~ ✅ Done
+Written to `last_updated.json` by export.py. Displayed in stats.html subtitle.
 
 ---
 
@@ -521,9 +509,9 @@ Helps diagnose whether the pipeline has been run recently.
 
 | # | Item | Impact | Effort |
 |---|------|--------|--------|
-| 3.1 | Wins-only filter | ★★★★★ | ≈30 min |
+| ~~3.1~~ | ~~Wins-only filter~~ | ✅ Done |
 | 2.14 | Touch pinch-zoom (match.html) | ★★★★☆ | ≈30 min |
-| 3.10 | Win % label on drop pies | ★★★☆☆ | ≈15 min |
+| ~~3.10~~ | ~~Win % label on drop pies~~ | ✅ Done |
 | 2.2 | Key moments jump list | ★★★★☆ | ≈1 hr |
 | 3.2 | Final circle scatter layer | ★★★★☆ | ≈1 hr |
 | 3.4 | Combat zone choropleth | ★★★★☆ | ≈1 hr |

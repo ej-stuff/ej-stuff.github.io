@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weapon Stats — D282 &amp; S821</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#14130f; --panel:#1e1c17; --line:#38342c; --text:#e8e3d8;
+  --muted:#9a9385; --accent:#f4a300; --blue:#4a9edd; --ok:#8fae5d; --danger:#d7443e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;padding:24px 16px}
+.wrap{max-width:1200px;margin:0 auto}
+h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);font-size:28px;margin-bottom:2px}
+.subtitle{color:var(--muted);font-size:13px;margin-bottom:20px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.panel-title{font-family:Oswald,system-ui,sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:13px;color:var(--muted);margin-bottom:12px}
+
+.filter-row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.filter-group{display:flex;flex-direction:column;gap:6px}
+.filter-label{font-family:Oswald,system-ui,sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.btn-group{display:flex;gap:6px;flex-wrap:wrap}
+.btn{background:#2a2720;color:var(--text);border:1px solid var(--line);padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit;transition:border-color .1s;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.active{background:var(--accent);color:#14130f;border-color:var(--accent);font-weight:600}
+
+.date-slider-outer{min-width:220px;flex:1;max-width:420px}
+.date-slider-wrap{position:relative;height:36px;margin-top:4px}
+.slider-track-bg{position:absolute;top:10px;left:0;right:0;height:4px;background:var(--line);border-radius:2px;pointer-events:none}
+.slider-track-fill{position:absolute;top:10px;height:4px;background:var(--accent);border-radius:2px;pointer-events:none}
+.date-slider-wrap input[type=range]{position:absolute;top:0;left:0;width:100%;appearance:none;-webkit-appearance:none;background:transparent;height:24px;pointer-events:none;border:none;padding:0;outline:none}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);cursor:grab;pointer-events:all;transition:transform .1s}
+.date-slider-wrap input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.2)}
+.date-slider-wrap input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);cursor:grab;pointer-events:all}
+.slider-labels{position:absolute;bottom:0;left:0;right:0;pointer-events:none}
+.slider-tick{position:absolute;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
+.date-range-display{font-size:12px;color:var(--text);margin-top:2px;min-height:18px}
+.date-range-display span{color:var(--accent);font-weight:600}
+.match-count-badge{background:#2a2720;border:1px solid var(--line);border-radius:5px;padding:5px 12px;font-size:12px;color:var(--muted);white-space:nowrap}
+.match-count-badge strong{color:var(--accent)}
+
+/* Table */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-family:Oswald,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.5px;font-size:11px;color:var(--muted);padding:8px 10px;text-align:right;border-bottom:2px solid var(--line);cursor:pointer;user-select:none;white-space:nowrap;transition:color .1s}
+th:hover{color:var(--accent)}
+th.sorted{color:var(--accent)}
+th .arrow{font-size:9px;margin-left:3px}
+th.tl,td.tl{text-align:left}
+td{padding:7px 10px;text-align:right;border-bottom:1px solid rgba(56,52,44,.4);font-variant-numeric:tabular-nums}
+tbody tr:hover{background:rgba(255,255,255,.03)}
+tbody tr:last-child td{border-bottom:none}
+.weap-name{font-weight:600}
+.weap-cat{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;background:#2a2720;border:1px solid var(--line);color:var(--muted);margin-left:8px;vertical-align:1px}
+tr.total-row td{border-top:2px solid var(--line);border-bottom:none;font-weight:700;color:var(--accent);background:rgba(244,163,0,.04)}
+.acc-good{color:var(--ok)}
+.acc-bad{color:var(--danger)}
+.dim{color:var(--muted)}
+.footnote{color:var(--muted);font-size:11px;margin-top:10px;line-height:1.6}
+.loading-note{color:var(--muted);font-style:italic;padding:30px;text-align:center}
+
+#siteNav{position:fixed;top:10px;left:10px;z-index:9000}
+#siteNavBtn{width:34px;height:34px;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--accent);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+#siteNavBtn:hover{border-color:var(--accent)}
+#siteNavMenu{display:none;position:absolute;top:40px;left:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+#siteNavMenu.open{display:block}
+#siteNavMenu a{display:block;padding:9px 14px;color:var(--text);text-decoration:none;border-radius:7px;font-size:13px;font-family:Oswald,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.5px;transition:background .1s,color .1s}
+#siteNavMenu a:hover{background:rgba(244,163,0,.12);color:var(--accent)}
+#siteNavMenu a.nav-cur{color:var(--accent);pointer-events:none}
+#siteNavMenu .nav-sep{height:1px;background:var(--line);margin:5px 8px}
+</style>
+</head>
+<body>
+
+<div id="siteNav">
+  <button id="siteNavBtn" onclick="toggleSiteNav()">&#9776;</button>
+  <div id="siteNavMenu">
+    <a href="index.html">Home</a>
+    <div class="nav-sep"></div>
+    <a href="stats.html">PUBG Stats</a>
+    <a href="mapanalysis.html">Map Analysis</a>
+    <a href="match.html">Match Analysis</a>
+    <a href="weapons.html" class="nav-cur">Weapon Stats</a>
+    <a href="records.html">Personal Records</a>
+    <a href="pubg.html">Loadout Planner</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1>Weapon Stats</h1>
+  <p class="subtitle">Shots, accuracy, damage and carry time per weapon — D282 &amp; S821</p>
+
+  <div class="panel">
+    <div class="filter-row">
+      <div class="filter-group">
+        <span class="filter-label">Player</span>
+        <div class="btn-group">
+          <button class="btn active" data-pl="both" onclick="setPlayer('both')">Both</button>
+          <button class="btn"        data-pl="D282" onclick="setPlayer('D282')">D282</button>
+          <button class="btn"        data-pl="S821" onclick="setPlayer('S821')">S821</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Map</span>
+        <div class="btn-group" id="mapBtns"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Game Phase</span>
+        <div class="btn-group">
+          <button class="btn active" id="ph_early" onclick="togglePhase('early')" title="0–8 min">Early</button>
+          <button class="btn active" id="ph_mid"   onclick="togglePhase('mid')"   title="8–20 min">Mid</button>
+          <button class="btn active" id="ph_late"  onclick="togglePhase('late')"  title="20+ min">Late</button>
+        </div>
+      </div>
+      <div class="filter-group date-slider-outer">
+        <span class="filter-label">Date Range</span>
+        <div class="date-slider-wrap">
+          <div class="slider-track-bg"></div>
+          <div class="slider-track-fill" id="sliderFill"></div>
+          <input type="range" id="sliderMin" min="0" value="0">
+          <input type="range" id="sliderMax" value="0">
+          <div class="slider-labels" id="sliderLabels"></div>
+        </div>
+        <div class="date-range-display" id="dateRangeDisplay"></div>
+      </div>
+      <div class="filter-group" style="justify-content:flex-end">
+        <span class="filter-label">&nbsp;</span>
+        <div class="match-count-badge" id="matchCountBadge">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Weapons</div>
+    <div class="tbl-wrap">
+      <table id="weapTable">
+        <thead><tr id="theadRow"></tr></thead>
+        <tbody id="tbody"><tr><td colspan="12" class="loading-note">Loading…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="footnote">
+      <strong>Dmg Taken</strong> = damage received while the weapon was equipped in your loadout — telemetry has no true
+      "in hand" signal, so both carried primaries count the same hit. <strong>Carried</strong> = total time the weapon was
+      equipped (game minutes). Accuracy = hits ÷ shots; shotgun pellets count as one hit per shot landed.
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+   CONFIG + STATE
+============================================================================ */
+const COLS = [
+  { key:'weapon',   label:'Weapon',      str:true, tl:true },
+  { key:'shots',    label:'Shots' },
+  { key:'hits',     label:'Hits' },
+  { key:'acc',      label:'Acc %',       fmt:v=>v==null?'—':v.toFixed(1)+'%' },
+  { key:'dmg',      label:'Dmg Dealt',   fmt:v=>fmtNum(Math.round(v)) },
+  { key:'dph',      label:'Dmg/Hit',     fmt:v=>v==null?'—':v.toFixed(1) },
+  { key:'kills',    label:'Kills' },
+  { key:'hs',       label:'HS Kills' },
+  { key:'knocks',   label:'Knocks' },
+  { key:'dmg_taken',label:'Dmg Taken',   fmt:v=>fmtNum(Math.round(v)) },
+  { key:'carried',  label:'Carried',     fmt:v=>fmtMin(v) },
+];
+
+const state = {
+  player:'both', map:'all',
+  phases:{ early:true, mid:true, late:true },
+  dateIdxMin:0, dateIdxMax:0,
+  sortCol:'kills', sortDir:-1,
+};
+
+const DATA = { matches:null, ws:null, dates:[] };
+
+/* ============================================================================
+   HELPERS
+============================================================================ */
+const fmtNum = n => n.toLocaleString('en-US');
+function fmtMin(sec){
+  if (!sec) return '—';
+  const m = Math.floor(sec/60), s = Math.round(sec%60);
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+/* ============================================================================
+   BOOT
+============================================================================ */
+async function boot(){
+  try {
+    const [matches, ws] = await Promise.all([
+      fetch('stats-data/matches.json').then(r=>r.json()),
+      fetch('stats-data/weapon_stats.json').then(r=>r.json()),
+    ]);
+    DATA.matches = matches.filter(m =>
+      m.players['D282']?.placement != null && m.players['S821']?.placement != null);
+    DATA.ws = ws;
+
+    DATA.dates = [...new Set(DATA.matches.map(m=>m.created_at.slice(0,10)))].sort();
+    state.dateIdxMax = DATA.dates.length - 1;
+
+    buildMapBtns();
+    buildDateSlider();
+    buildHeader();
+    render();
+  } catch(e) {
+    document.getElementById('tbody').innerHTML =
+      `<tr><td colspan="12" class="loading-note">Failed to load data — run <code>py export.py</code> to generate weapon_stats.json (${e.message})</td></tr>`;
+  }
+}
+
+/* ============================================================================
+   FILTER UI
+============================================================================ */
+function buildMapBtns(){
+  const counts = DATA.matches.reduce((a,m)=>{ if(m.map) a[m.map]=(a[m.map]||0)+1; return a; },{});
+  const maps = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('mapBtns').innerHTML =
+    `<button class="btn active" data-map="all" onclick="setMap('all')">All</button>` +
+    maps.map(([name,n]) =>
+      `<button class="btn" data-map="${name}" onclick="setMap('${name}')" title="${n} matches">${name}</button>`
+    ).join('');
+}
+function setMap(m){
+  state.map = m;
+  document.querySelectorAll('[data-map]').forEach(el=>el.classList.toggle('active', el.dataset.map===m));
+  render();
+}
+function setPlayer(p){
+  state.player = p;
+  document.querySelectorAll('[data-pl]').forEach(el=>el.classList.toggle('active', el.dataset.pl===p));
+  render();
+}
+function togglePhase(id){
+  state.phases[id] = !state.phases[id];
+  document.getElementById(`ph_${id}`).classList.toggle('active', state.phases[id]);
+  render();
+}
+
+function buildDateSlider(){
+  const dates = DATA.dates, n = dates.length;
+  const slMin = document.getElementById('sliderMin');
+  const slMax = document.getElementById('sliderMax');
+  slMin.min=0; slMin.max=n-1; slMin.value=0;
+  slMax.min=0; slMax.max=n-1; slMax.value=n-1;
+  const pct = i => n<=1?50:(i/(n-1))*100;
+  // Show at most ~8 tick labels to avoid clutter
+  const step = Math.max(1, Math.ceil(n/8));
+  document.getElementById('sliderLabels').innerHTML = dates.map((d,i)=>{
+    if (i%step!==0 && i!==n-1) return '';
+    const[,mm,dd]=d.split('-');
+    return `<span class="slider-tick" style="left:${pct(i)}%">${mm}/${dd}</span>`;
+  }).join('');
+  slMin.oninput = ()=>{ if(+slMin.value>+slMax.value) slMax.value=slMin.value; state.dateIdxMin=+slMin.value; state.dateIdxMax=+slMax.value; updateSliderFill(); render(); };
+  slMax.oninput = ()=>{ if(+slMax.value<+slMin.value) slMin.value=slMax.value; state.dateIdxMin=+slMin.value; state.dateIdxMax=+slMax.value; updateSliderFill(); render(); };
+  updateSliderFill();
+}
+function updateSliderFill(){
+  const dates = DATA.dates, n = dates.length;
+  const minP = n<=1?0:(state.dateIdxMin/(n-1))*100;
+  const maxP = n<=1?100:(state.dateIdxMax/(n-1))*100;
+  document.getElementById('sliderFill').style.cssText = `left:${minP}%;width:${maxP-minP}%`;
+  const fmt = iso=>{const[,mm,dd]=iso.split('-');return `${mm}/${dd}`;};
+  const d0=dates[state.dateIdxMin], d1=dates[state.dateIdxMax];
+  document.getElementById('dateRangeDisplay').innerHTML =
+    d0===d1?`<span>${fmt(d0)}</span>`:`<span>${fmt(d0)}</span> → <span>${fmt(d1)}</span>`;
+}
+
+/* ============================================================================
+   AGGREGATE
+============================================================================ */
+function filteredMatches(){
+  const lo = DATA.dates[state.dateIdxMin], hi = DATA.dates[state.dateIdxMax];
+  return DATA.matches.filter(m => {
+    const d = m.created_at.slice(0,10);
+    return d>=lo && d<=hi && (state.map==='all' || m.map===state.map);
+  });
+}
+
+function aggregate(){
+  const players = state.player==='both' ? ['D282','S821'] : [state.player];
+  const phases  = DATA.ws.phases.filter(p=>state.phases[p]);
+  const matches = filteredMatches();
+  const acc = {};   // weapon -> [8 sums]
+  for (const m of matches){
+    const md = DATA.ws.matches[m.match_id];
+    if (!md) continue;
+    for (const pl of players){
+      const pw = md[pl];
+      if (!pw) continue;
+      for (const [weap, phs] of Object.entries(pw)){
+        for (const ph of phases){
+          const v = phs[ph];
+          if (!v) continue;
+          const a = acc[weap] || (acc[weap] = new Array(8).fill(0));
+          for (let i=0;i<8;i++) a[i]+=v[i];
+        }
+      }
+    }
+  }
+  // -> row objects
+  return Object.entries(acc).map(([weapon, v])=>({
+    weapon, cat: DATA.ws.cats[weapon]||'',
+    shots:v[0], hits:v[1], dmg:v[2], kills:v[3], knocks:v[4], hs:v[5],
+    dmg_taken:v[6], carried:v[7],
+    acc: v[0]>0 ? (v[1]/v[0])*100 : null,
+    dph: v[1]>0 ? v[2]/v[1] : null,
+  }));
+}
+
+/* ============================================================================
+   TABLE
+============================================================================ */
+function buildHeader(){
+  document.getElementById('theadRow').innerHTML = COLS.map(c =>
+    `<th class="${c.tl?'tl':''}" id="th_${c.key}" onclick="sortBy('${c.key}')">${c.label}<span class="arrow"></span></th>`
+  ).join('');
+}
+function sortBy(key){
+  if (state.sortCol===key) state.sortDir*=-1;
+  else { state.sortCol=key; state.sortDir = COLS.find(c=>c.key===key)?.str ? 1 : -1; }
+  render();
+}
+
+function render(){
+  const rows = aggregate();
+  const matches = filteredMatches();
+  document.getElementById('matchCountBadge').innerHTML =
+    `<strong>${matches.length}</strong> match${matches.length!==1?'es':''}`;
+
+  // sort
+  const col = state.sortCol, dir = state.sortDir;
+  const isStr = COLS.find(c=>c.key===col)?.str;
+  rows.sort((a,b)=>{
+    const av=a[col], bv=b[col];
+    if (av==null && bv==null) return 0;
+    if (av==null) return 1;
+    if (bv==null) return -1;
+    return dir * (isStr ? String(av).localeCompare(String(bv)) : av-bv);
+  });
+
+  // header indicators
+  for (const c of COLS){
+    const th = document.getElementById(`th_${c.key}`);
+    th.classList.toggle('sorted', c.key===col);
+    th.querySelector('.arrow').textContent = c.key===col ? (dir===1?'▲':'▼') : '';
+  }
+
+  // totals
+  const tot = rows.reduce((t,r)=>{
+    t.shots+=r.shots; t.hits+=r.hits; t.dmg+=r.dmg; t.kills+=r.kills;
+    t.knocks+=r.knocks; t.hs+=r.hs; t.dmg_taken+=r.dmg_taken; t.carried+=r.carried;
+    return t;
+  }, {shots:0,hits:0,dmg:0,kills:0,knocks:0,hs:0,dmg_taken:0,carried:0});
+  tot.acc = tot.shots>0 ? (tot.hits/tot.shots)*100 : null;
+  tot.dph = tot.hits>0 ? tot.dmg/tot.hits : null;
+
+  const accClass = v => v==null?'':(v>=25?'acc-good':(v<12?'acc-bad':''));
+  const cell = (r,c) => {
+    let v = r[c.key];
+    if (c.key==='weapon')
+      return `<td class="tl"><span class="weap-name">${r.weapon}</span>${r.cat?`<span class="weap-cat">${r.cat}</span>`:''}</td>`;
+    const txt = c.fmt ? c.fmt(v) : (v==null?'—':fmtNum(v));
+    const cls = c.key==='acc' ? accClass(v) : (txt==='—'||txt==='0'?'dim':'');
+    return `<td class="${cls}">${txt}</td>`;
+  };
+
+  const body = rows.map(r=>`<tr>${COLS.map(c=>cell(r,c)).join('')}</tr>`).join('');
+  const totRow = rows.length>1
+    ? `<tr class="total-row"><td class="tl">Total (${rows.length} weapons)</td>${COLS.slice(1).map(c=>{
+        const txt = c.fmt ? c.fmt(tot[c.key]) : (tot[c.key]==null?'—':fmtNum(tot[c.key]));
+        return `<td>${txt}</td>`;
+      }).join('')}</tr>`
+    : '';
+
+  document.getElementById('tbody').innerHTML =
+    (body || `<tr><td colspan="${COLS.length}" class="loading-note">No data for this filter</td></tr>`) + totRow;
+}
+
+/* ============================================================================
+   NAV
+============================================================================ */
+function toggleSiteNav(){
+  document.getElementById('siteNavMenu').classList.toggle('open');
+}
+document.addEventListener('click', e=>{
+  if (!document.getElementById('siteNav').contains(e.target))
+    document.getElementById('siteNavMenu').classList.remove('open');
+});
+
+boot();
+</script>
+</body>
+</html>

@@ -127,6 +127,7 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
     <a href="stats.html">PUBG Stats</a>
     <a href="mapanalysis.html" class="nav-cur">Map Analysis</a>
     <a href="match.html">Match Analysis</a>
+    <a href="weapons.html">Weapon Stats</a>
     <a href="records.html">Personal Records</a>
     <a href="pubg.html">Loadout Planner</a>
   </div>
@@ -168,6 +169,12 @@ h1{font-family:Oswald,system-ui,sans-serif;font-weight:700;letter-spacing:1px;te
           <button class="btn active" id="ph_early" onclick="togglePhase('early')" title="0–8 min">Early</button>
           <button class="btn active" id="ph_mid"   onclick="togglePhase('mid')"   title="8–20 min">Mid</button>
           <button class="btn active" id="ph_late"  onclick="togglePhase('late')"  title="20+ min">Late</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Filter</span>
+        <div class="btn-group">
+          <button class="btn" id="btn_winsOnly" onclick="setWinsOnly(!state.winsOnly)" title="Show only matches where D282 &amp; S821 won">🏆 Wins Only</button>
         </div>
       </div>
       <div class="filter-group" style="justify-content:flex-end">
@@ -328,6 +335,7 @@ const state = {
   circleColorMode: 'white',
   engGroupSlider: 0,
   showGrid: false,
+  winsOnly: false,
   phases: { early:true, mid:true, late:true },
 };
 
@@ -533,7 +541,13 @@ function filteredMatches() {
   const dates=DATA.mapDates[state.map]||[];
   const lo=dates[state.dateIdxMin], hi=dates[state.dateIdxMax];
   return DATA.matches.filter(m =>
-    m.map===state.map && m.created_at.slice(0,10)>=lo && m.created_at.slice(0,10)<=hi);
+    m.map===state.map && m.created_at.slice(0,10)>=lo && m.created_at.slice(0,10)<=hi
+    && (!state.winsOnly || m.players['D282']?.placement===1));
+}
+function setWinsOnly(on) {
+  state.winsOnly = on;
+  document.getElementById('btn_winsOnly').classList.toggle('active', on);
+  loadAndRender();
 }
 
 /* ============================================================================
@@ -1118,9 +1132,20 @@ function drawDropPies(groups) {
     if (r*view.scale>14&&n>1) {
       ctx.save(); ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
       ctx.fillStyle='rgba(255,255,255,0.9)';
-      ctx.font=`bold ${Math.round(Math.min(10,r*view.scale*0.55))}px system-ui`;
+      const rs=r*view.scale;
       ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText(n,cx,cy); ctx.restore();
+      if (rs>28 && outcomes.win>0) {
+        const winPct=Math.round(outcomes.win/n*100);
+        ctx.font=`bold ${Math.round(Math.min(9,rs*0.38))}px system-ui`;
+        ctx.fillText(`${winPct}%`, cx, cy-rs*0.2/view.scale);
+        ctx.font=`${Math.round(Math.min(8,rs*0.32))}px system-ui`;
+        ctx.fillStyle='rgba(255,255,255,0.7)';
+        ctx.fillText(n, cx, cy+rs*0.22/view.scale);
+      } else {
+        ctx.font=`bold ${Math.round(Math.min(10,rs*0.55))}px system-ui`;
+        ctx.fillText(n,cx,cy);
+      }
+      ctx.restore();
       ctx.setTransform(view.scale,0,0,view.scale,view.offsetX,view.offsetY);
     }
     hitTargets.push({cx,cy,r:r+3,type:'drop_group',outcomes,n});

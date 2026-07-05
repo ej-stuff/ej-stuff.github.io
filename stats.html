@@ -458,6 +458,7 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <a href="stats.html" class="nav-cur">PUBG Stats</a>
     <a href="mapanalysis.html">Map Analysis</a>
     <a href="match.html">Match Analysis</a>
+    <a href="weapons.html">Weapon Stats</a>
     <a href="records.html">Personal Records</a>
     <a href="pubg.html">Loadout Planner</a>
   </div>
@@ -676,7 +677,7 @@ async function boot() {
   }
   try {
     const [summary, matches, weapons, items, timeline,
-           throwable_stats, ammo_stats, heal_stats, dimensions] = await Promise.all([
+           throwable_stats, ammo_stats, heal_stats, dimensions, lastUpdated] = await Promise.all([
       fetch('stats-data/summary.json').then(r => r.json()),
       fetch('stats-data/matches.json').then(r => r.json()),
       fetch('stats-data/weapons.json').then(r => r.json()),
@@ -686,6 +687,7 @@ async function boot() {
       fetch('stats-data/ammo_stats.json').then(r => r.json()),
       fetch('stats-data/heal_stats.json').then(r => r.json()),
       fetch('stats-data/dimensions.json').then(r => r.json()),
+      fetch('stats-data/last_updated.json').then(r => r.json()).catch(() => null),
     ]);
 
     Object.assign(DATA, { summary, matches, weapons, items, timeline,
@@ -708,8 +710,14 @@ async function boot() {
     state.dateIdxMax = DATES.length - 1;
 
     const n = duoMatches.length;
-    document.getElementById('mainSubtitle').textContent =
-      `D282 & S821 — duo-fpp, ${n} shared matches`;
+    let subtitle = `D282 & S821 — duo-fpp, ${n} shared matches`;
+    if (lastUpdated?.ts) {
+      const d = new Date(lastUpdated.ts);
+      const fmt = d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+      const hm  = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+      subtitle += ` · Updated ${fmt} ${hm}`;
+    }
+    document.getElementById('mainSubtitle').textContent = subtitle;
 
     // Load individual match files for exact scores (parallel, then re-render)
     Promise.all(

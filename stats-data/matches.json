@@ -22,7 +22,7 @@
         "blue_chips": 0,
         "damage_taken": 216.0,
         "times_knocked": 1,
-        "shots_fired": 2110,
+        "shots_fired": 250,
         "parachute_dist": 325.0,
         "throwables": 2,
         "revive_response_s": null
@@ -42,7 +42,7 @@
         "blue_chips": 0,
         "damage_taken": 453.1,
         "times_knocked": 1,
-        "shots_fired": 1510,
+        "shots_fired": 210,
         "parachute_dist": 326.0,
         "throwables": 0,
         "revive_response_s": 16.6
@@ -122,7 +122,7 @@
         "blue_chips": 0,
         "damage_taken": 197.1,
         "times_knocked": 0,
-        "shots_fired": 250,
+        "shots_fired": 90,
         "parachute_dist": 498.0,
         "throwables": 8,
         "revive_response_s": null
@@ -142,7 +142,7 @@
         "blue_chips": 0,
         "damage_taken": 326.4,
         "times_knocked": 3,
-        "shots_fired": 550,
+        "shots_fired": 130,
         "parachute_dist": 313.0,
         "throwables": 2,
         "revive_response_s": 25.6
@@ -192,7 +192,7 @@
         "blue_chips": 0,
         "damage_taken": 60.4,
         "times_knocked": 0,
-        "shots_fired": 160,
+        "shots_fired": 70,
         "parachute_dist": 357.0,
         "throwables": 0,
         "revive_response_s": null
@@ -222,7 +222,7 @@
         "blue_chips": 0,
         "damage_taken": 119.3,
         "times_knocked": 1,
-        "shots_fired": 650,
+        "shots_fired": 140,
         "parachute_dist": 291.0,
         "throwables": 0,
         "revive_response_s": null
@@ -242,7 +242,7 @@
         "blue_chips": 0,
         "damage_taken": 167.8,
         "times_knocked": 0,
-        "shots_fired": 200,
+        "shots_fired": 80,
         "parachute_dist": 324.0,
         "throwables": 1,
         "revive_response_s": null
@@ -272,7 +272,7 @@
         "blue_chips": 0,
         "damage_taken": 134.4,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 333.0,
         "throwables": 3,
         "revive_response_s": null
@@ -292,7 +292,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 328.0,
         "throwables": 0,
         "revive_response_s": null
@@ -322,7 +322,7 @@
         "blue_chips": 0,
         "damage_taken": 295.8,
         "times_knocked": 0,
-        "shots_fired": 240,
+        "shots_fired": 80,
         "parachute_dist": 316.0,
         "throwables": 2,
         "revive_response_s": null
@@ -342,7 +342,7 @@
         "blue_chips": 0,
         "damage_taken": 160.3,
         "times_knocked": 1,
-        "shots_fired": 60,
+        "shots_fired": 40,
         "parachute_dist": 338.0,
         "throwables": 1,
         "revive_response_s": null
@@ -372,7 +372,7 @@
         "blue_chips": 0,
         "damage_taken": 238.7,
         "times_knocked": 2,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 478.0,
         "throwables": 2,
         "revive_response_s": 19.6
@@ -392,7 +392,7 @@
         "blue_chips": 0,
         "damage_taken": 155.2,
         "times_knocked": 0,
-        "shots_fired": 50,
+        "shots_fired": 40,
         "parachute_dist": 572.0,
         "throwables": 2,
         "revive_response_s": null
@@ -422,7 +422,7 @@
         "blue_chips": 0,
         "damage_taken": 180.8,
         "times_knocked": 1,
-        "shots_fired": 310,
+        "shots_fired": 100,
         "parachute_dist": 383.0,
         "throwables": 1,
         "revive_response_s": null
@@ -442,7 +442,7 @@
         "blue_chips": 0,
         "damage_taken": 157.9,
         "times_knocked": 1,
-        "shots_fired": 990,
+        "shots_fired": 180,
         "parachute_dist": 468.0,
         "throwables": 9,
         "revive_response_s": 20.1
@@ -522,7 +522,7 @@
         "blue_chips": 0,
         "damage_taken": 120.0,
         "times_knocked": 0,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 319.0,
         "throwables": 1,
         "revive_response_s": null
@@ -542,7 +542,7 @@
         "blue_chips": 0,
         "damage_taken": 149.8,
         "times_knocked": 1,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 318.0,
         "throwables": 1,
         "revive_response_s": null
@@ -572,7 +572,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 318.0,
         "throwables": 1,
         "revive_response_s": null
@@ -592,7 +592,7 @@
         "blue_chips": 0,
         "damage_taken": 259.4,
         "times_knocked": 0,
-        "shots_fired": 90,
+        "shots_fired": 50,
         "parachute_dist": 307.0,
         "throwables": 2,
         "revive_response_s": null
@@ -622,7 +622,7 @@
         "blue_chips": 0,
         "damage_taken": 146.8,
         "times_knocked": 1,
-        "shots_fired": 70,
+        "shots_fired": 40,
         "parachute_dist": 311.0,
         "throwables": 0,
         "revive_response_s": null
@@ -642,7 +642,7 @@
         "blue_chips": 0,
         "damage_taken": 246.5,
         "times_knocked": 0,
-        "shots_fired": 380,
+        "shots_fired": 110,
         "parachute_dist": 338.0,
         "throwables": 0,
         "revive_response_s": null
@@ -722,7 +722,7 @@
         "blue_chips": 0,
         "damage_taken": 108.5,
         "times_knocked": 2,
-        "shots_fired": 260,
+        "shots_fired": 110,
         "parachute_dist": 319.0,
         "throwables": 0,
         "revive_response_s": 25.9
@@ -742,7 +742,7 @@
         "blue_chips": 0,
         "damage_taken": 161.2,
         "times_knocked": 0,
-        "shots_fired": 1110,
+        "shots_fired": 170,
         "parachute_dist": 327.0,
         "throwables": 1,
         "revive_response_s": null
@@ -772,7 +772,7 @@
         "blue_chips": 0,
         "damage_taken": 212.1,
         "times_knocked": 1,
-        "shots_fired": 280,
+        "shots_fired": 70,
         "parachute_dist": 313.0,
         "throwables": 3,
         "revive_response_s": 30.3
@@ -792,7 +792,7 @@
         "blue_chips": 0,
         "damage_taken": 122.2,
         "times_knocked": 1,
-        "shots_fired": 110,
+        "shots_fired": 50,
         "parachute_dist": 311.0,
         "throwables": 4,
         "revive_response_s": null
@@ -822,7 +822,7 @@
         "blue_chips": 0,
         "damage_taken": 91.0,
         "times_knocked": 0,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 296.0,
         "throwables": 1,
         "revive_response_s": null
@@ -892,7 +892,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 386.0,
         "throwables": 0,
         "revive_response_s": null
@@ -922,7 +922,7 @@
         "blue_chips": 0,
         "damage_taken": 86.0,
         "times_knocked": 0,
-        "shots_fired": 80,
+        "shots_fired": 50,
         "parachute_dist": 305.0,
         "throwables": 1,
         "revive_response_s": null
@@ -942,7 +942,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 2,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 319.0,
         "throwables": 0,
         "revive_response_s": 15.6
@@ -1042,7 +1042,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 150,
+        "shots_fired": 50,
         "parachute_dist": 415.0,
         "throwables": 0,
         "revive_response_s": null
@@ -1072,7 +1072,7 @@
         "blue_chips": 0,
         "damage_taken": 177.6,
         "times_knocked": 1,
-        "shots_fired": 130,
+        "shots_fired": 60,
         "parachute_dist": 312.0,
         "throwables": 4,
         "revive_response_s": null
@@ -1092,7 +1092,7 @@
         "blue_chips": 0,
         "damage_taken": 357.7,
         "times_knocked": 2,
-        "shots_fired": 430,
+        "shots_fired": 120,
         "parachute_dist": 320.0,
         "throwables": 2,
         "revive_response_s": 23.4
@@ -1172,7 +1172,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 110,
+        "shots_fired": 50,
         "parachute_dist": 291.0,
         "throwables": 0,
         "revive_response_s": null
@@ -1192,7 +1192,7 @@
         "blue_chips": 0,
         "damage_taken": 216.2,
         "times_knocked": 1,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 329.0,
         "throwables": 1,
         "revive_response_s": null
@@ -1222,7 +1222,7 @@
         "blue_chips": 0,
         "damage_taken": 304.9,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 315.0,
         "throwables": 0,
         "revive_response_s": null
@@ -1242,7 +1242,7 @@
         "blue_chips": 1,
         "damage_taken": 303.6,
         "times_knocked": 1,
-        "shots_fired": 390,
+        "shots_fired": 100,
         "parachute_dist": 367.0,
         "throwables": 0,
         "revive_response_s": null
@@ -1322,7 +1322,7 @@
         "blue_chips": 0,
         "damage_taken": 310.0,
         "times_knocked": 0,
-        "shots_fired": 380,
+        "shots_fired": 110,
         "parachute_dist": 355.0,
         "throwables": 2,
         "revive_response_s": null
@@ -1342,7 +1342,7 @@
         "blue_chips": 0,
         "damage_taken": 287.1,
         "times_knocked": 3,
-        "shots_fired": 160,
+        "shots_fired": 70,
         "parachute_dist": 381.0,
         "throwables": 0,
         "revive_response_s": 16.0
@@ -1442,7 +1442,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 311.0,
         "throwables": 0,
         "revive_response_s": null
@@ -1522,7 +1522,7 @@
         "blue_chips": 0,
         "damage_taken": 162.1,
         "times_knocked": 0,
-        "shots_fired": 210,
+        "shots_fired": 80,
         "parachute_dist": 314.0,
         "throwables": 2,
         "revive_response_s": null
@@ -1542,7 +1542,7 @@
         "blue_chips": 0,
         "damage_taken": 399.8,
         "times_knocked": 2,
-        "shots_fired": 630,
+        "shots_fired": 170,
         "parachute_dist": 319.0,
         "throwables": 2,
         "revive_response_s": 19.4
@@ -1572,7 +1572,7 @@
         "blue_chips": 0,
         "damage_taken": 119.4,
         "times_knocked": 1,
-        "shots_fired": 510,
+        "shots_fired": 120,
         "parachute_dist": 343.0,
         "throwables": 2,
         "revive_response_s": null
@@ -1592,7 +1592,7 @@
         "blue_chips": 0,
         "damage_taken": 216.3,
         "times_knocked": 0,
-        "shots_fired": 190,
+        "shots_fired": 90,
         "parachute_dist": 363.0,
         "throwables": 0,
         "revive_response_s": null
@@ -1942,7 +1942,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 451.0,
         "throwables": 0,
         "revive_response_s": null
@@ -1972,7 +1972,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 508.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2022,7 +2022,7 @@
         "blue_chips": 0,
         "damage_taken": 187.5,
         "times_knocked": 2,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 535.0,
         "throwables": 0,
         "revive_response_s": 36.8
@@ -2042,7 +2042,7 @@
         "blue_chips": 0,
         "damage_taken": 163.0,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 504.0,
         "throwables": 2,
         "revive_response_s": null
@@ -2072,7 +2072,7 @@
         "blue_chips": 1,
         "damage_taken": 200.0,
         "times_knocked": 1,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 328.0,
         "throwables": 1,
         "revive_response_s": 34.8
@@ -2092,7 +2092,7 @@
         "blue_chips": 0,
         "damage_taken": 200.0,
         "times_knocked": 2,
-        "shots_fired": 220,
+        "shots_fired": 70,
         "parachute_dist": 405.0,
         "throwables": 2,
         "revive_response_s": null
@@ -2142,7 +2142,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 345.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2192,7 +2192,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 362.0,
         "throwables": 2,
         "revive_response_s": null
@@ -2222,7 +2222,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 70,
+        "shots_fired": 40,
         "parachute_dist": 302.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2242,7 +2242,7 @@
         "blue_chips": 0,
         "damage_taken": 162.0,
         "times_knocked": 0,
-        "shots_fired": 70,
+        "shots_fired": 40,
         "parachute_dist": 376.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2272,7 +2272,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 314.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2342,7 +2342,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 311.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2492,7 +2492,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 326.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2522,7 +2522,7 @@
         "blue_chips": 0,
         "damage_taken": 402.5,
         "times_knocked": 2,
-        "shots_fired": 320,
+        "shots_fired": 110,
         "parachute_dist": 302.0,
         "throwables": 5,
         "revive_response_s": 23.9
@@ -2542,7 +2542,7 @@
         "blue_chips": 0,
         "damage_taken": 347.7,
         "times_knocked": 2,
-        "shots_fired": 210,
+        "shots_fired": 60,
         "parachute_dist": 332.0,
         "throwables": 4,
         "revive_response_s": 19.7
@@ -2642,7 +2642,7 @@
         "blue_chips": 0,
         "damage_taken": 144.4,
         "times_knocked": 1,
-        "shots_fired": 360,
+        "shots_fired": 80,
         "parachute_dist": 632.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2672,7 +2672,7 @@
         "blue_chips": 0,
         "damage_taken": 162.7,
         "times_knocked": 1,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 332.0,
         "throwables": 1,
         "revive_response_s": null
@@ -2692,7 +2692,7 @@
         "blue_chips": 0,
         "damage_taken": 161.9,
         "times_knocked": 0,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 382.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2722,7 +2722,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 314.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2792,7 +2792,7 @@
         "blue_chips": 0,
         "damage_taken": 142.9,
         "times_knocked": 0,
-        "shots_fired": 210,
+        "shots_fired": 60,
         "parachute_dist": 320.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2822,7 +2822,7 @@
         "blue_chips": 0,
         "damage_taken": 148.5,
         "times_knocked": 1,
-        "shots_fired": 690,
+        "shots_fired": 130,
         "parachute_dist": 410.0,
         "throwables": 2,
         "revive_response_s": null
@@ -2842,7 +2842,7 @@
         "blue_chips": 0,
         "damage_taken": 242.5,
         "times_knocked": 1,
-        "shots_fired": 3060,
+        "shots_fired": 270,
         "parachute_dist": 351.0,
         "throwables": 4,
         "revive_response_s": 18.4
@@ -2872,7 +2872,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 487.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2892,7 +2892,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 417.0,
         "throwables": 0,
         "revive_response_s": null
@@ -2922,7 +2922,7 @@
         "blue_chips": 0,
         "damage_taken": 327.5,
         "times_knocked": 0,
-        "shots_fired": 180,
+        "shots_fired": 70,
         "parachute_dist": 335.0,
         "throwables": 3,
         "revive_response_s": null
@@ -2942,7 +2942,7 @@
         "blue_chips": 0,
         "damage_taken": 467.3,
         "times_knocked": 3,
-        "shots_fired": 460,
+        "shots_fired": 140,
         "parachute_dist": 327.0,
         "throwables": 0,
         "revive_response_s": 22.2
@@ -3022,7 +3022,7 @@
         "blue_chips": 0,
         "damage_taken": 210.6,
         "times_knocked": 0,
-        "shots_fired": 150,
+        "shots_fired": 50,
         "parachute_dist": 301.0,
         "throwables": 6,
         "revive_response_s": null
@@ -3042,7 +3042,7 @@
         "blue_chips": 0,
         "damage_taken": 200.0,
         "times_knocked": 1,
-        "shots_fired": 520,
+        "shots_fired": 130,
         "parachute_dist": 309.0,
         "throwables": 3,
         "revive_response_s": null
@@ -3072,7 +3072,7 @@
         "blue_chips": 0,
         "damage_taken": 220.7,
         "times_knocked": 2,
-        "shots_fired": 370,
+        "shots_fired": 90,
         "parachute_dist": 322.0,
         "throwables": 1,
         "revive_response_s": 14.2
@@ -3092,7 +3092,7 @@
         "blue_chips": 0,
         "damage_taken": 197.0,
         "times_knocked": 1,
-        "shots_fired": 340,
+        "shots_fired": 100,
         "parachute_dist": 344.0,
         "throwables": 0,
         "revive_response_s": 28.7
@@ -3142,7 +3142,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 110,
+        "shots_fired": 50,
         "parachute_dist": 324.0,
         "throwables": 0,
         "revive_response_s": null
@@ -3172,7 +3172,7 @@
         "blue_chips": 0,
         "damage_taken": 232.5,
         "times_knocked": 1,
-        "shots_fired": 80,
+        "shots_fired": 50,
         "parachute_dist": 324.0,
         "throwables": 0,
         "revive_response_s": null
@@ -3192,7 +3192,7 @@
         "blue_chips": 1,
         "damage_taken": 234.6,
         "times_knocked": 1,
-        "shots_fired": 220,
+        "shots_fired": 70,
         "parachute_dist": 333.0,
         "throwables": 1,
         "revive_response_s": null
@@ -3222,7 +3222,7 @@
         "blue_chips": 0,
         "damage_taken": 74.4,
         "times_knocked": 0,
-        "shots_fired": 1010,
+        "shots_fired": 170,
         "parachute_dist": 503.0,
         "throwables": 2,
         "revive_response_s": null
@@ -3242,7 +3242,7 @@
         "blue_chips": 0,
         "damage_taken": 249.1,
         "times_knocked": 2,
-        "shots_fired": 420,
+        "shots_fired": 110,
         "parachute_dist": 393.0,
         "throwables": 3,
         "revive_response_s": 19.1
@@ -3322,7 +3322,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 315.0,
         "throwables": 0,
         "revive_response_s": null
@@ -3372,7 +3372,7 @@
         "blue_chips": 0,
         "damage_taken": 185.0,
         "times_knocked": 3,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 312.0,
         "throwables": 0,
         "revive_response_s": 20.3
@@ -3392,7 +3392,7 @@
         "blue_chips": 0,
         "damage_taken": 129.6,
         "times_knocked": 0,
-        "shots_fired": 160,
+        "shots_fired": 60,
         "parachute_dist": 339.0,
         "throwables": 0,
         "revive_response_s": null
@@ -3622,7 +3622,7 @@
         "blue_chips": 0,
         "damage_taken": 101.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 287.0,
         "throwables": 0,
         "revive_response_s": null
@@ -3672,7 +3672,7 @@
         "blue_chips": 2,
         "damage_taken": 185.9,
         "times_knocked": 0,
-        "shots_fired": 2310,
+        "shots_fired": 210,
         "parachute_dist": 316.0,
         "throwables": 3,
         "revive_response_s": null
@@ -3692,7 +3692,7 @@
         "blue_chips": 0,
         "damage_taken": 291.0,
         "times_knocked": 3,
-        "shots_fired": 150,
+        "shots_fired": 50,
         "parachute_dist": 388.0,
         "throwables": 0,
         "revive_response_s": null
@@ -3722,7 +3722,7 @@
         "blue_chips": 0,
         "damage_taken": 169.3,
         "times_knocked": 0,
-        "shots_fired": 810,
+        "shots_fired": 160,
         "parachute_dist": 319.0,
         "throwables": 2,
         "revive_response_s": null
@@ -3742,7 +3742,7 @@
         "blue_chips": 0,
         "damage_taken": 104.5,
         "times_knocked": 1,
-        "shots_fired": 560,
+        "shots_fired": 180,
         "parachute_dist": 318.0,
         "throwables": 2,
         "revive_response_s": null
@@ -3922,7 +3922,7 @@
         "blue_chips": 0,
         "damage_taken": 147.9,
         "times_knocked": 1,
-        "shots_fired": 320,
+        "shots_fired": 100,
         "parachute_dist": 315.0,
         "throwables": 3,
         "revive_response_s": null
@@ -3942,7 +3942,7 @@
         "blue_chips": 0,
         "damage_taken": 233.0,
         "times_knocked": 1,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 307.0,
         "throwables": 4,
         "revive_response_s": 21.7
@@ -3972,7 +3972,7 @@
         "blue_chips": 0,
         "damage_taken": 206.7,
         "times_knocked": 2,
-        "shots_fired": 180,
+        "shots_fired": 70,
         "parachute_dist": 430.0,
         "throwables": 4,
         "revive_response_s": 34.6
@@ -3992,7 +3992,7 @@
         "blue_chips": 0,
         "damage_taken": 195.5,
         "times_knocked": 0,
-        "shots_fired": 870,
+        "shots_fired": 170,
         "parachute_dist": 370.0,
         "throwables": 2,
         "revive_response_s": null
@@ -4022,7 +4022,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 210,
+        "shots_fired": 60,
         "parachute_dist": 314.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4042,7 +4042,7 @@
         "blue_chips": 0,
         "damage_taken": 110.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 381.0,
         "throwables": 0,
         "revive_response_s": 48.9
@@ -4122,7 +4122,7 @@
         "blue_chips": 0,
         "damage_taken": 230.1,
         "times_knocked": 2,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 312.0,
         "throwables": 0,
         "revive_response_s": 18.7
@@ -4142,7 +4142,7 @@
         "blue_chips": 0,
         "damage_taken": 197.4,
         "times_knocked": 0,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 294.0,
         "throwables": 2,
         "revive_response_s": null
@@ -4172,7 +4172,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 306.0,
         "throwables": 1,
         "revive_response_s": null
@@ -4192,7 +4192,7 @@
         "blue_chips": 0,
         "damage_taken": 166.5,
         "times_knocked": 1,
-        "shots_fired": 70,
+        "shots_fired": 40,
         "parachute_dist": 337.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4222,7 +4222,7 @@
         "blue_chips": 0,
         "damage_taken": 261.5,
         "times_knocked": 1,
-        "shots_fired": 70,
+        "shots_fired": 40,
         "parachute_dist": 349.0,
         "throwables": 0,
         "revive_response_s": 18.7
@@ -4242,7 +4242,7 @@
         "blue_chips": 0,
         "damage_taken": 171.3,
         "times_knocked": 1,
-        "shots_fired": 580,
+        "shots_fired": 120,
         "parachute_dist": 341.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4292,7 +4292,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 349.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4322,7 +4322,7 @@
         "blue_chips": 0,
         "damage_taken": 173.0,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 445.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4342,7 +4342,7 @@
         "blue_chips": 0,
         "damage_taken": 254.1,
         "times_knocked": 3,
-        "shots_fired": 230,
+        "shots_fired": 80,
         "parachute_dist": 399.0,
         "throwables": 0,
         "revive_response_s": 17.7
@@ -4372,7 +4372,7 @@
         "blue_chips": 0,
         "damage_taken": 208.0,
         "times_knocked": 1,
-        "shots_fired": 120,
+        "shots_fired": 60,
         "parachute_dist": 393.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4392,7 +4392,7 @@
         "blue_chips": 0,
         "damage_taken": 337.1,
         "times_knocked": 1,
-        "shots_fired": 230,
+        "shots_fired": 80,
         "parachute_dist": 374.0,
         "throwables": 1,
         "revive_response_s": 24.6
@@ -4422,7 +4422,7 @@
         "blue_chips": 0,
         "damage_taken": 281.9,
         "times_knocked": 1,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 317.0,
         "throwables": 2,
         "revive_response_s": 19.5
@@ -4442,7 +4442,7 @@
         "blue_chips": 0,
         "damage_taken": 259.5,
         "times_knocked": 2,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 350.0,
         "throwables": 1,
         "revive_response_s": 17.1
@@ -4492,7 +4492,7 @@
         "blue_chips": 0,
         "damage_taken": 102.0,
         "times_knocked": 0,
-        "shots_fired": 340,
+        "shots_fired": 100,
         "parachute_dist": 292.0,
         "throwables": 1,
         "revive_response_s": null
@@ -4672,7 +4672,7 @@
         "blue_chips": 1,
         "damage_taken": 202.5,
         "times_knocked": 0,
-        "shots_fired": 450,
+        "shots_fired": 90,
         "parachute_dist": 296.0,
         "throwables": 5,
         "revive_response_s": null
@@ -4722,7 +4722,7 @@
         "blue_chips": 0,
         "damage_taken": 118.0,
         "times_knocked": 1,
-        "shots_fired": 480,
+        "shots_fired": 110,
         "parachute_dist": 463.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4742,7 +4742,7 @@
         "blue_chips": 0,
         "damage_taken": 118.0,
         "times_knocked": 0,
-        "shots_fired": 560,
+        "shots_fired": 110,
         "parachute_dist": 424.0,
         "throwables": 7,
         "revive_response_s": null
@@ -4772,7 +4772,7 @@
         "blue_chips": 1,
         "damage_taken": 162.4,
         "times_knocked": 0,
-        "shots_fired": 910,
+        "shots_fired": 180,
         "parachute_dist": 304.0,
         "throwables": 1,
         "revive_response_s": null
@@ -4792,7 +4792,7 @@
         "blue_chips": 0,
         "damage_taken": 224.5,
         "times_knocked": 2,
-        "shots_fired": 1630,
+        "shots_fired": 280,
         "parachute_dist": 334.0,
         "throwables": 2,
         "revive_response_s": null
@@ -4822,7 +4822,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 331.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4842,7 +4842,7 @@
         "blue_chips": 0,
         "damage_taken": 124.6,
         "times_knocked": 1,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 327.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4922,7 +4922,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 210,
+        "shots_fired": 60,
         "parachute_dist": 318.0,
         "throwables": 0,
         "revive_response_s": null
@@ -4942,7 +4942,7 @@
         "blue_chips": 0,
         "damage_taken": 110.0,
         "times_knocked": 2,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 327.0,
         "throwables": 0,
         "revive_response_s": 26.2
@@ -4972,7 +4972,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 335.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5042,7 +5042,7 @@
         "blue_chips": 0,
         "damage_taken": 129.6,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 322.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5072,7 +5072,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 318.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5092,7 +5092,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 316.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5142,7 +5142,7 @@
         "blue_chips": 0,
         "damage_taken": 87.0,
         "times_knocked": 0,
-        "shots_fired": 200,
+        "shots_fired": 80,
         "parachute_dist": 308.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5172,7 +5172,7 @@
         "blue_chips": 0,
         "damage_taken": 158.0,
         "times_knocked": 0,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 330.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5192,7 +5192,7 @@
         "blue_chips": 0,
         "damage_taken": 110.4,
         "times_knocked": 1,
-        "shots_fired": 60,
+        "shots_fired": 40,
         "parachute_dist": 311.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5342,7 +5342,7 @@
         "blue_chips": 0,
         "damage_taken": 80.0,
         "times_knocked": 0,
-        "shots_fired": 660,
+        "shots_fired": 110,
         "parachute_dist": 310.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5392,7 +5392,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 333.0,
         "throwables": 1,
         "revive_response_s": null
@@ -5472,7 +5472,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 333.0,
         "throwables": 1,
         "revive_response_s": null
@@ -5542,7 +5542,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 298.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5592,7 +5592,7 @@
         "blue_chips": 0,
         "damage_taken": 144.4,
         "times_knocked": 0,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 305.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5622,7 +5622,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 297.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5722,7 +5722,7 @@
         "blue_chips": 0,
         "damage_taken": 75.0,
         "times_knocked": 1,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 305.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5742,7 +5742,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 331.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5772,7 +5772,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 333.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5792,7 +5792,7 @@
         "blue_chips": 0,
         "damage_taken": 148.5,
         "times_knocked": 0,
-        "shots_fired": 100,
+        "shots_fired": 40,
         "parachute_dist": 311.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5822,7 +5822,7 @@
         "blue_chips": 0,
         "damage_taken": 200.0,
         "times_knocked": 2,
-        "shots_fired": 160,
+        "shots_fired": 60,
         "parachute_dist": 320.0,
         "throwables": 0,
         "revive_response_s": 23.7
@@ -5842,7 +5842,7 @@
         "blue_chips": 0,
         "damage_taken": 297.0,
         "times_knocked": 1,
-        "shots_fired": 150,
+        "shots_fired": 80,
         "parachute_dist": 354.0,
         "throwables": 0,
         "revive_response_s": 51.2
@@ -5872,7 +5872,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 1,
-        "shots_fired": 30,
+        "shots_fired": 20,
         "parachute_dist": 315.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5972,7 +5972,7 @@
         "blue_chips": 0,
         "damage_taken": 100.0,
         "times_knocked": 0,
-        "shots_fired": 60,
+        "shots_fired": 30,
         "parachute_dist": 575.0,
         "throwables": 0,
         "revive_response_s": null
@@ -5992,7 +5992,7 @@
         "blue_chips": 0,
         "damage_taken": 251.1,
         "times_knocked": 2,
-        "shots_fired": 40,
+        "shots_fired": 30,
         "parachute_dist": 553.0,
         "throwables": 0,
         "revive_response_s": 22.4
