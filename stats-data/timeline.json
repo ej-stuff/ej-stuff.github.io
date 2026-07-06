@@ -2157,5 +2157,39 @@
       "damage": 303.8,
       "placement": 2
     }
+  },
+  {
+    "match_id": "3a4e06de-e92c-4960-a7fb-03a08a68e961",
+    "created_at": "2026-07-06T19:51:25Z",
+    "date": "2026-07-06",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 27.4,
+      "placement": 14
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 104.3,
+      "placement": 14
+    }
+  },
+  {
+    "match_id": "a4189cca-3ae1-4696-9fc7-c37a8cd37f5c",
+    "created_at": "2026-07-06T20:10:26Z",
+    "date": "2026-07-06",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 46
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 46
+    }
   }
 ]
