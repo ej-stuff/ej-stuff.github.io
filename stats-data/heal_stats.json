@@ -7918,5 +7918,467 @@
         }
       }
     }
+  },
+  {
+    "match_id": "5e55edcf-2820-4a25-b35d-88cab2ef1ea3",
+    "created_at": "2026-07-06T17:30:38Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 2
+        },
+        "Painkiller": {
+          "used": 1,
+          "picked_up": 6
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 5
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 3
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "__total__": {
+          "used": 1,
+          "picked_up": 17
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 6
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 2
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 5
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 3
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 16
+        }
+      }
+    }
+  },
+  {
+    "match_id": "235a8395-eb60-4c8e-a032-0d9b393b69de",
+    "created_at": "2026-07-06T17:56:17Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 4
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 10
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 16
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "Energy Drink": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Bandage": {
+          "used": 3,
+          "picked_up": 10
+        },
+        "First Aid Kit": {
+          "used": 5,
+          "picked_up": 3
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 9,
+          "picked_up": 15
+        }
+      }
+    }
+  },
+  {
+    "match_id": "adb6ac8c-61b9-4a9f-a136-9f7de6046152",
+    "created_at": "2026-07-06T18:06:14Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 3
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 4
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 4
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 12
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 3,
+          "picked_up": 6
+        },
+        "Painkiller": {
+          "used": 1,
+          "picked_up": 5
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 4
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 4,
+          "picked_up": 15
+        }
+      }
+    }
+  },
+  {
+    "match_id": "c63f0972-fed8-47a6-9bb7-9f5dc4225102",
+    "created_at": "2026-07-06T18:27:12Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 3,
+          "picked_up": 5
+        },
+        "Painkiller": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "Bandage": {
+          "used": 22,
+          "picked_up": 10
+        },
+        "First Aid Kit": {
+          "used": 9,
+          "picked_up": 3
+        },
+        "Med Kit": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "__total__": {
+          "used": 36,
+          "picked_up": 20
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 2
+        },
+        "Painkiller": {
+          "used": 3,
+          "picked_up": 3
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 13,
+          "picked_up": 5
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 16,
+          "picked_up": 10
+        }
+      }
+    }
+  },
+  {
+    "match_id": "dd5c8ec4-9435-4500-b7e3-198898d2d23b",
+    "created_at": "2026-07-06T18:56:26Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 4
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "Bandage": {
+          "used": 11,
+          "picked_up": 15
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 6
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 12,
+          "picked_up": 27
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 6
+        },
+        "Painkiller": {
+          "used": 3,
+          "picked_up": 3
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 5,
+          "picked_up": 6
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 8,
+          "picked_up": 15
+        }
+      }
+    }
+  },
+  {
+    "match_id": "71c21364-5ed0-481b-ab31-8e58e831e94b",
+    "created_at": "2026-07-06T19:13:18Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 7
+        },
+        "Painkiller": {
+          "used": 4,
+          "picked_up": 9
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 5
+        },
+        "First Aid Kit": {
+          "used": 24,
+          "picked_up": 7
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 28,
+          "picked_up": 28
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 3,
+          "picked_up": 16
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 3
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 13,
+          "picked_up": 12
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 16,
+          "picked_up": 31
+        }
+      }
+    }
+  },
+  {
+    "match_id": "378f04a6-1a93-4e61-a7ee-98217708c4b7",
+    "created_at": "2026-07-06T19:32:46Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 11
+        },
+        "Painkiller": {
+          "used": 1,
+          "picked_up": 2
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 11
+        },
+        "First Aid Kit": {
+          "used": 9,
+          "picked_up": 14
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 10,
+          "picked_up": 38
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 5
+        },
+        "Painkiller": {
+          "used": 2,
+          "picked_up": 2
+        },
+        "Bandage": {
+          "used": 5,
+          "picked_up": 8
+        },
+        "First Aid Kit": {
+          "used": 8,
+          "picked_up": 6
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 15,
+          "picked_up": 21
+        }
+      }
+    }
   }
 ]
