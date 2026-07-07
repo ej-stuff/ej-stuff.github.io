@@ -403,9 +403,10 @@ Average circle drawn as dashed ring. Reveals terrain biases. Data already in MAT
 
 ---
 
-### ~~5.2 — Weapon Stats Page (`weapons.html`)~~ ✅ Done (session 11)
-Sortable table: shots, hits, accuracy %, damage dealt, dmg/hit, kills, HS kills, knocks,
-damage taken while carried, carry time. Filters: player / map / game phase / date range.
+### ~~5.2 — Weapon Stats Page (`weapons.html`)~~ ✅ Done (sessions 11–12)
+v2: Mastery Score (0–100), best-weapon cards per player, per-session skill trend chart
+(weapon/class selector + 5 metrics + smoothing), best-weapon-per-session strip, class share
+doughnuts, class filter chips, sortable table with score. Answers "am I improving with X?"
 Possible future extension: per-kill log rows (weapon → target, distance, timestamp).
 
 ---

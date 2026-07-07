@@ -51,6 +51,16 @@
       "avg_damage_per_hit": 23.0
     },
     {
+      "weapon": "QBZ95",
+      "category": "AR",
+      "kills": 4,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 22,
+      "total_damage": 371.4,
+      "avg_damage_per_hit": 16.9
+    },
+    {
       "weapon": "MP5K",
       "category": "SMG",
       "kills": 4,
@@ -141,7 +151,7 @@
       "avg_damage_per_hit": 7.9
     },
     {
-      "weapon": "Winchester",
+      "weapon": "Win94",
       "category": "SR",
       "kills": 1,
       "headshot_kills": 1,
@@ -192,7 +202,7 @@
     },
     {
       "weapon": "Mk47 Mutant",
-      "category": "SR",
+      "category": "AR",
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
@@ -383,6 +393,16 @@
       "avg_damage_per_hit": 12.5
     },
     {
+      "weapon": "QBZ95",
+      "category": "AR",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 14,
+      "total_damage": 222.2,
+      "avg_damage_per_hit": 15.9
+    },
+    {
       "weapon": "AUG A3",
       "category": "AR",
       "kills": 1,
@@ -401,6 +421,16 @@
       "hits": 2,
       "total_damage": 136.6,
       "avg_damage_per_hit": 68.3
+    },
+    {
+      "weapon": "P90",
+      "category": "SMG",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 1,
+      "total_damage": 5.7,
+      "avg_damage_per_hit": 5.7
     },
     {
       "weapon": "Dragunov",
