@@ -524,6 +524,14 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
         <div id="tlWrap">
           <canvas id="tlCanvas"></canvas>
         </div>
+        <div id="phaseLegend" style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-top:4px;padding-left:28px">
+          <span><span style="color:#8a93a6">■</span> Drop</span>
+          <span><span style="color:#e0452e">■</span> Hot Drop</span>
+          <span><span style="color:#f47a00">■</span> Combat</span>
+          <span><span style="color:#8fae5d">■</span> Loot</span>
+          <span><span style="color:#4a9edd">■</span> Rotate</span>
+          <span><span style="color:#7a7264">■</span> Hold</span>
+        </div>
       </div>
 
       <div class="panel">
@@ -626,6 +634,7 @@ function pColor(player) { return PLAYER_COLOR[player] || TEAMMATE_COLOR; }
 const LAYER_DEFS = [
   { id: 'paths',            label: 'Movement Paths',    color: null,      default: false },
   { id: 'enemies',          label: 'Enemy Positions',   color: '#ff4444', default: true  },
+  { id: 'enemy_deaths',     label: 'Enemy Deaths',      color: '#cc2222', default: true  },
   { id: 'circles',          label: 'Blue Zone',         color: '#4a9edd', default: true  },
   { id: 'kill',             label: 'Kills',             color: '#f4a300', default: true  },
   { id: 'knockdown',        label: 'Knocks Out',        color: '#f4a300', default: false },
@@ -901,10 +910,12 @@ function drawEventIcon(c, cx, cy, r, lw, type, col) {
 /* ============================================================================
    EVENTS TIMELINE
 ============================================================================ */
-const TL_H       = 110;    // total timeline height px
+const TL_H       = 126;    // total timeline height px
 const TL_PAD_L   = 28;     // left margin for player labels
-const TL_D282_Y  = 30;     // centre y for D282 lane
-const TL_S821_Y  = 80;     // centre y for S821 lane
+const TL_STRIP_H = 12;     // game-phase strip height (drawn at the top)
+const TL_DIV_Y   = 68;     // divider between player lanes
+const TL_D282_Y  = 42;     // centre y for D282 lane
+const TL_S821_Y  = 94;     // centre y for S821 lane
 const TL_DOT_R   = 5;      // icon radius
 const TL_DOT_SEP = TL_DOT_R * 2 + 2;  // spacing between stacked icons
 
@@ -947,21 +958,31 @@ function drawTimeline() {
 
   // Row tint bands
   tlCtx.fillStyle = 'rgba(244,163,0,0.04)';
-  tlCtx.fillRect(TL_PAD_L, 0, w - TL_PAD_L, h / 2);
+  tlCtx.fillRect(TL_PAD_L, TL_STRIP_H, w - TL_PAD_L, TL_DIV_Y - TL_STRIP_H);
   tlCtx.fillStyle = 'rgba(74,158,221,0.04)';
-  tlCtx.fillRect(TL_PAD_L, h / 2, w - TL_PAD_L, h / 2);
+  tlCtx.fillRect(TL_PAD_L, TL_DIV_Y, w - TL_PAD_L, h - TL_DIV_Y);
 
-  // Combat phase shading
-  const phases = computeCombatPhases();
-  tlCtx.fillStyle = 'rgba(244,100,0,0.09)';
-  for (const ph of phases) {
-    const x1 = tlX(ph.start - 4), x2 = tlX(ph.end + 4);
-    tlCtx.fillRect(x1, 0, x2 - x1, h);
+  // Game-phase strip along the top: drop / hot drop / combat / loot / rotate / hold
+  for (const s of _gamePhases) {
+    const x1 = Math.max(tlX(s.start), TL_PAD_L), x2 = Math.min(tlX(s.end), w - 2);
+    if (x2 <= x1) continue;
+    const st = PHASE_STYLE[s.kind];
+    tlCtx.fillStyle   = st.col;
+    tlCtx.globalAlpha = 0.8;
+    tlCtx.fillRect(x1, 0, x2 - x1, TL_STRIP_H - 2);
+    tlCtx.globalAlpha = 1;
+    if (x2 - x1 > 54) {
+      tlCtx.fillStyle    = '#14130f';
+      tlCtx.font         = 'bold 8px system-ui, sans-serif';
+      tlCtx.textAlign    = 'center';
+      tlCtx.textBaseline = 'middle';
+      tlCtx.fillText(st.label.toUpperCase(), (x1 + x2) / 2, (TL_STRIP_H - 2) / 2 + 0.5);
+    }
   }
 
   // Divider between lanes
   tlCtx.beginPath();
-  tlCtx.moveTo(TL_PAD_L, h / 2); tlCtx.lineTo(w, h / 2);
+  tlCtx.moveTo(TL_PAD_L, TL_DIV_Y); tlCtx.lineTo(w, TL_DIV_Y);
   tlCtx.strokeStyle = 'rgba(56,52,44,0.7)';
   tlCtx.lineWidth = 1;
   tlCtx.stroke();
@@ -1105,6 +1126,91 @@ function onTlMouseMove(e) {
 function onTlLeave() {
   document.getElementById('tooltip').style.display = 'none';
   if (highlightEv !== null) { highlightEv = null; draw(); }
+}
+
+/* ── Game-phase classification ──────────────────────────────────────────── */
+/* Splits the whole match into natural sections based on combat events,
+   movement speed and loot pickups (team-level: either player counts). */
+const PHASE_STYLE = {
+  drop:    { col: '#8a93a6', label: 'Drop' },
+  hotdrop: { col: '#e0452e', label: 'Hot Drop' },
+  combat:  { col: '#f47a00', label: 'Combat' },
+  loot:    { col: '#8fae5d', label: 'Loot' },
+  rotate:  { col: '#4a9edd', label: 'Rotate' },
+  wait:    { col: '#7a7264', label: 'Hold' },
+};
+let _gamePhases = [];
+
+function computeGamePhases() {
+  if (!MD) return [];
+  const STEP = 10;
+  const dur  = MD.duration_s || 1800;
+
+  // Landing = first on-foot position of either player
+  let landT = null;
+  for (const pl of ['D282', 'S821']) {
+    for (const p of (MD.positions[pl] || [])) {
+      if (p.tr === 'foot') { if (landT == null || p.t < landT) landT = p.t; break; }
+    }
+  }
+  if (landT == null) landT = 60;
+
+  const combat = computeCombatPhases().map(p => ({ start: Math.max(0, p.start - 4), end: p.end + 4 }));
+  const picks  = (MD.inventory || []).filter(iv => iv.ev === 'pick' && iv.t >= 0)
+                                     .map(iv => iv.t).sort((a, b) => a - b);
+
+  // Classify until the last of our players disappears (dead or match over)
+  let endT = 0;
+  for (const pl of ['D282', 'S821']) {
+    const pts = MD.positions[pl] || [];
+    if (pts.length) endT = Math.max(endT, pts[pts.length - 1].t);
+  }
+  endT = Math.min(endT || dur, dur);
+
+  function avgSpeed(pl, t0, t1) {   // metres/second over the bucket
+    const pts = MD.positions[pl] || [];
+    if (pts.length < 2) return 0;
+    let lo = 0, hi = pts.length - 1, si = pts.length;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (pts[m].t >= t0) { si = m; hi = m - 1; } else lo = m + 1; }
+    let d = 0, prev = null;
+    for (let i = si; i < pts.length && pts[i].t <= t1; i++) {
+      if (prev) d += Math.hypot(pts[i].x - prev.x, pts[i].y - prev.y);
+      prev = pts[i];
+    }
+    return d / 100 / (t1 - t0);
+  }
+
+  const segs = [];
+  let pickIdx = 0;
+  for (let t = 0; t < endT; t += STEP) {
+    const t1 = Math.min(t + STEP, endT);
+    let kind;
+    if (t1 <= landT) kind = 'drop';
+    else if (combat.some(c => c.start < t1 && c.end > t))
+      kind = t < landT + 120 ? 'hotdrop' : 'combat';
+    else {
+      const spd = Math.max(avgSpeed('D282', t, t1), avgSpeed('S821', t, t1));
+      while (pickIdx < picks.length && picks[pickIdx] < t) pickIdx++;
+      let nPicks = 0, j = pickIdx;
+      while (j < picks.length && picks[j] < t1) { nPicks++; j++; }
+      if (spd > 3.0)       kind = 'rotate';
+      else if (nPicks > 0) kind = 'loot';
+      else                 kind = 'wait';
+    }
+    if (segs.length && segs[segs.length - 1].kind === kind) segs[segs.length - 1].end = t1;
+    else segs.push({ start: t, end: t1, kind });
+  }
+
+  // Absorb single isolated buckets sandwiched between identical neighbours
+  for (let i = 1; i < segs.length - 1; i++) {
+    const s = segs[i];
+    if (s.end - s.start <= STEP && segs[i - 1].kind === segs[i + 1].kind
+        && s.kind !== 'hotdrop' && s.kind !== 'combat') {
+      segs[i - 1].end = segs[i + 1].end;
+      segs.splice(i, 2); i--;
+    }
+  }
+  return segs;
 }
 
 function computeCombatPhases() {
@@ -1346,8 +1452,9 @@ function draw() {
   }
 
   const maxT = state.time;
-  if (state.layers.circles)    drawCircles(maxT);
-  if (state.layers.enemies)    drawEnemies(maxT);
+  if (state.layers.circles)      drawCircles(maxT);
+  if (state.layers.enemy_deaths) drawEnemyDeaths(maxT);
+  if (state.layers.enemies)      drawEnemies(maxT);
   if (state.layers.paths)      drawPaths(maxT);
   if (state.layers.engagement) drawEngagements(maxT);
 
@@ -1620,6 +1727,28 @@ function drawEnemies(maxT) {
       ctx.globalAlpha  = 1;
     }
   }
+}
+
+/* ── Enemy death markers ────────────────────────────────────────────────── */
+/* Small red ✕ at each enemy's death position, appearing at death time.
+   Kills by OUR team are skipped — those already show as big kill stars. */
+function drawEnemyDeaths(maxT) {
+  if (!_enemyDeaths.length) return;
+  const effectiveT = maxT === Infinity ? (MD.duration_s || 1800) : maxT;
+  const s = 3.2 / view.scale;
+  ctx.save();
+  ctx.strokeStyle = '#cc2222';
+  ctx.lineWidth   = 1.3 / view.scale;
+  ctx.globalAlpha = 0.85;
+  for (const d of _enemyDeaths) {
+    if (d.t > effectiveT) continue;
+    const { cx, cy } = w2c(d.x, d.y);
+    ctx.beginPath();
+    ctx.moveTo(cx - s, cy - s); ctx.lineTo(cx + s, cy + s);
+    ctx.moveTo(cx + s, cy - s); ctx.lineTo(cx - s, cy + s);
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 
 function isEnemyKnockedAt(name, T) {
@@ -2716,6 +2845,7 @@ function buildWeaponBreakdown() {
    PRECOMPUTED MATCH DATA  (knock intervals, kill feed)
 ============================================================================ */
 let _enemyKnockIntervals = {};
+let _enemyDeaths = [];
 let _killFeed = [];
 let _lootedCrateTime = {};
 
@@ -2751,6 +2881,26 @@ function precomputeMatchData() {
 
   // Set of all "our side" player keys (D282, S821, plus any random teammates)
   const ourKeys = new Set(['D282', 'S821', ...(MD.teammates || []).map(t => t.key)]);
+
+  _gamePhases = computeGamePhases();
+
+  // Enemy death markers: deaths NOT caused by our team (ours show as kill stars).
+  // Position = last known position at/near death time.
+  _enemyDeaths = [];
+  const ourKillVictims = new Set(
+    (MD.killfeed || []).filter(kf => !kf.is_knock && ourKeys.has(kf.killer)).map(kf => kf.victim));
+  for (const en of (MD.enemies || [])) {
+    if (en.death_t == null || !en.pos || !en.pos.length) continue;
+    const lastPosT = en.pos[en.pos.length - 1][0];
+    if (lastPosT > en.death_t + 10) continue;       // revived (Comeback BR / recall) and survived
+    if (ourKillVictims.has(en.name)) continue;      // our kill — already a kill star
+    let px = null, py = null;
+    for (let i = en.pos.length - 1; i >= 0; i--) {
+      if (en.pos[i][0] <= en.death_t + 5) { px = en.pos[i][1]; py = en.pos[i][2]; break; }
+    }
+    if (px == null) { px = en.pos[0][1]; py = en.pos[0][2]; }
+    _enemyDeaths.push({ name: en.name, t: en.death_t, x: px, y: py });
+  }
 
   // Enemy knock intervals — use full killfeed when available for complete tracking
   if (MD.killfeed && MD.killfeed.length) {

@@ -200,7 +200,7 @@ tr.total-row td{border-top:2px solid var(--line);border-bottom:none;font-weight:
       <div class="btn-group" id="metricBtns">
         <button class="btn sm active" data-m="score"  onclick="setMetric('score')">Score</button>
         <button class="btn sm" data-m="acc"    onclick="setMetric('acc')">Accuracy</button>
-        <button class="btn sm" data-m="dpm"    onclick="setMetric('dpm')">Dmg/min</button>
+        <button class="btn sm" data-m="dpm"    onclick="setMetric('dpm')" title="Damage per combat minute">Dmg/cmb-min</button>
         <button class="btn sm" data-m="kpm"    onclick="setMetric('kpm')">Kills/match</button>
         <button class="btn sm" data-m="dmgm"   onclick="setMetric('dmgm')">Dmg/match</button>
       </div>
@@ -257,23 +257,25 @@ const CLASS_COLOR = {
   LMG:'#3ba8a0', GL:'#e07030', Pistol:'#b0a794', Throwable:'#c8b458',
 };
 
-/* Mastery score (0–100), absolute scale so it is comparable across sessions:
+/* Mastery score (0–100), absolute scale so it is comparable across sessions.
+   Rates use COMBAT time — time inside detected fight windows attributed to the
+   weapon actually used — so main weapons aren't diluted by quiet carry time
+   and hot-drop weapons aren't inflated by short intense bursts:
      Accuracy   min(acc / 25%, 1)      × 30
-     Dmg rate   min(dpm / 12, 1)       × 35   (damage per carried minute)
-     Kill rate  min(kph / 5, 1)        × 25   (kills per carried hour)
+     Dmg rate   min(dcm / 200, 1)      × 35   (damage per combat minute)
+     Kill rate  min(kch / 75, 1)       × 25   (kills per combat hour)
      Headshots  min(hs/kills / 35%, 1) × 10
-   Eligibility: shots ≥ MIN_SHOTS and carried ≥ MIN_CARRY seconds.            */
+   Eligibility: shots ≥ MIN_SHOTS and combat ≥ MIN_COMBAT seconds.            */
 const SCORE = {
   acc:  { max:0.25, pts:30 },
-  dpm:  { max:12,   pts:35 },
-  kph:  { max:5,    pts:25 },
+  dpm:  { max:200,  pts:35 },
+  kph:  { max:75,   pts:25 },
   hsr:  { max:0.35, pts:10 },
 };
-const MIN_SHOTS_ALL = 10, MIN_CARRY_ALL = 120;   // table
-const MIN_SHOTS_SES = 8,  MIN_CARRY_SES = 60;    // per-session
-// Best Weapon cards need real usage — rate-based scores inflate weapons only
-// pulled out during hot fights. Falls back to table thresholds if none qualify.
-const MIN_SHOTS_CARD = 60, MIN_CARRY_CARD = 900;
+const MIN_SHOTS_ALL = 10, MIN_COMBAT_ALL = 90;   // table
+const MIN_SHOTS_SES = 8,  MIN_COMBAT_SES = 45;   // per-session
+// Best Weapon cards need sustained usage. Falls back to table thresholds if none qualify.
+const MIN_SHOTS_CARD = 60, MIN_COMBAT_CARD = 300;
 
 const COLS = [
   { key:'weapon',   label:'Weapon',    str:true, tl:true },
@@ -287,6 +289,7 @@ const COLS = [
   { key:'hs',       label:'HS' },
   { key:'knocks',   label:'Knocks' },
   { key:'dmg_taken',label:'Dmg Taken', fmt:v=>fmtNum(Math.round(v)) },
+  { key:'combat',   label:'Combat',    fmt:v=>fmtMin(v) },
   { key:'carried',  label:'Carried',   fmt:v=>fmtMin(v) },
 ];
 
@@ -317,21 +320,22 @@ function fmtMin(sec){
 const catOf = w => DATA.ws.cats[w] || '';
 const chip = cat => cat?`<span class="cat-chip" style="background:${CLASS_COLOR[cat]||'#888'}">${cat}</span>`:'';
 
-/* sums: [shots,hits,dmg,kills,knocks,hs,dmg_taken,carried_s] */
+/* sums: [shots,hits,dmg,kills,knocks,hs,dmg_taken,carried_s,combat_s] */
+const NSTAT = 9;
 function metricsOf(v){
-  const [shots,hits,dmg,kills,knocks,hs,dmgTaken,car] = v;
+  const [shots,hits,dmg,kills,knocks,hs,dmgTaken,car,cmb] = v;
   return {
-    shots, hits, dmg, kills, knocks, hs, dmg_taken:dmgTaken, carried:car,
+    shots, hits, dmg, kills, knocks, hs, dmg_taken:dmgTaken, carried:car, combat:cmb||0,
     acc: shots>0 ? hits/shots : null,
     dph: hits>0 ? dmg/hits : null,
-    dpm: car>0 ? dmg/(car/60) : null,
-    kph: car>0 ? kills/(car/3600) : null,
+    dpm: cmb>0 ? dmg/(cmb/60) : null,     // damage per COMBAT minute
+    kph: cmb>0 ? kills/(cmb/3600) : null, // kills per COMBAT hour
     hsr: kills>0 ? hs/kills : 0,
   };
 }
-function scoreOf(v, minShots=MIN_SHOTS_ALL, minCarry=MIN_CARRY_ALL){
+function scoreOf(v, minShots=MIN_SHOTS_ALL, minCombat=MIN_COMBAT_ALL){
   const m = metricsOf(v);
-  if (m.shots < minShots || m.carried < minCarry) return null;
+  if (m.shots < minShots || m.combat < minCombat) return null;
   const part = (val,cfg)=> val==null?0:Math.min(val/cfg.max,1)*cfg.pts;
   return part(m.acc,SCORE.acc) + part(m.dpm,SCORE.dpm) + part(m.kph,SCORE.kph) + part(m.hsr,SCORE.hsr);
 }
@@ -339,9 +343,10 @@ function scoreTip(v){
   const m = metricsOf(v);
   const p=(val,cfg)=>val==null?0:Math.min(val/cfg.max,1)*cfg.pts;
   return `Accuracy ${(m.acc*100||0).toFixed(1)}% → ${p(m.acc,SCORE.acc).toFixed(0)}/${SCORE.acc.pts}\n`+
-         `Dmg/min ${(m.dpm||0).toFixed(1)} → ${p(m.dpm,SCORE.dpm).toFixed(0)}/${SCORE.dpm.pts}\n`+
-         `Kills/h ${(m.kph||0).toFixed(1)} → ${p(m.kph,SCORE.kph).toFixed(0)}/${SCORE.kph.pts}\n`+
-         `HS rate ${(m.hsr*100).toFixed(0)}% → ${p(m.hsr,SCORE.hsr).toFixed(0)}/${SCORE.hsr.pts}`;
+         `Dmg/combat-min ${(m.dpm||0).toFixed(0)} → ${p(m.dpm,SCORE.dpm).toFixed(0)}/${SCORE.dpm.pts}\n`+
+         `Kills/combat-h ${(m.kph||0).toFixed(1)} → ${p(m.kph,SCORE.kph).toFixed(0)}/${SCORE.kph.pts}\n`+
+         `HS rate ${(m.hsr*100).toFixed(0)}% → ${p(m.hsr,SCORE.hsr).toFixed(0)}/${SCORE.hsr.pts}\n`+
+         `Combat time ${fmtMin(m.combat)}`;
 }
 
 /* ============================================================================
@@ -504,8 +509,8 @@ function aggregate(matches, players, phases){
         for (const ph of phases){
           const v = phs[ph];
           if (!v) continue;
-          const a = acc[weap] || (acc[weap] = new Array(8).fill(0));
-          for (let i=0;i<8;i++) a[i]+=v[i];
+          const a = acc[weap] || (acc[weap] = new Array(NSTAT).fill(0));
+          for (let i=0;i<NSTAT;i++) a[i]+=(v[i]||0);
         }
       }
     }
@@ -539,12 +544,12 @@ function renderAll(){
 /* ── Best weapon cards ─────────────────────────────────────────────────── */
 function rankedWeapons(player){
   const agg = aggregate(filteredMatches(), [player], selPhases());
-  const rank = (minShots,minCarry) => Object.entries(agg)
-    .map(([w,v])=>({ w, v, score:scoreOf(v,minShots,minCarry) }))
+  const rank = (minShots,minCombat) => Object.entries(agg)
+    .map(([w,v])=>({ w, v, score:scoreOf(v,minShots,minCombat) }))
     .filter(r=>r.score!=null)
     .sort((a,b)=>b.score-a.score);
-  const strict = rank(MIN_SHOTS_CARD, MIN_CARRY_CARD);
-  return strict.length ? strict : rank(MIN_SHOTS_ALL, MIN_CARRY_ALL);
+  const strict = rank(MIN_SHOTS_CARD, MIN_COMBAT_CARD);
+  return strict.length ? strict : rank(MIN_SHOTS_ALL, MIN_COMBAT_ALL);
 }
 function renderCards(){
   const el = document.getElementById('bestCards');
@@ -560,7 +565,7 @@ function renderCards(){
       <div class="pl-tag">${pl} — Best Weapon</div>
       <div class="bw-name">${top.w} ${chip(catOf(top.w))}</div>
       <div class="bw-score">${Math.round(top.score)}<small>/ 100</small></div>
-      <div class="bw-stats">${(m.acc*100).toFixed(1)}% acc · ${m.dpm.toFixed(1)} dmg/min · ${m.kph.toFixed(1)} kills/h · ${m.kills} kills</div>
+      <div class="bw-stats">${(m.acc*100).toFixed(1)}% acc · ${m.dpm.toFixed(0)} dmg/cmb-min · ${m.kph.toFixed(0)} kills/cmb-h · ${m.kills} kills · ${fmtMin(m.combat)} combat</div>
       ${runners?`<div class="bw-runners">${runners}</div>`:''}
     </div>`;
   }).join('');
@@ -588,17 +593,17 @@ function trendFilterWeapon(weap){
 function sessionValue(date, player){
   const ms = matchesOn(date);
   const agg = aggregate(ms, [player], selPhases());
-  const sums = new Array(8).fill(0);
+  const sums = new Array(NSTAT).fill(0);
   let any=false;
   for (const [w,v] of Object.entries(agg)){
     if (!trendFilterWeapon(w)) continue;
-    for (let i=0;i<8;i++) sums[i]+=v[i];
+    for (let i=0;i<NSTAT;i++) sums[i]+=(v[i]||0);
     any=true;
   }
   if (!any) return null;
   const m = metricsOf(sums);
   switch(state.trendMetric){
-    case 'score': return scoreOf(sums, MIN_SHOTS_SES, MIN_CARRY_SES);
+    case 'score': return scoreOf(sums, MIN_SHOTS_SES, MIN_COMBAT_SES);
     case 'acc':   return m.acc==null?null:m.acc*100;
     case 'dpm':   return m.dpm;
     case 'kpm':   return ms.length?m.kills/ms.length:null;
@@ -628,7 +633,7 @@ function renderTrend(){
       });
     }
   }
-  const unit = { score:'score', acc:'%', dpm:'dmg/min', kpm:'kills/match', dmgm:'dmg/match' }[state.trendMetric];
+  const unit = { score:'score', acc:'%', dpm:'dmg/combat-min', kpm:'kills/match', dmgm:'dmg/match' }[state.trendMetric];
   if (trendChart) trendChart.destroy();
   trendChart = new Chart(document.getElementById('trendChart'), {
     type:'line',
@@ -665,7 +670,7 @@ function renderStrip(){
       const agg = aggregate(matchesOn(d), [pl], selPhases());
       let best=null;
       for (const [w,v] of Object.entries(agg)){
-        const s = scoreOf(v, MIN_SHOTS_SES, MIN_CARRY_SES);
+        const s = scoreOf(v, MIN_SHOTS_SES, MIN_COMBAT_SES);
         if (s!=null && (!best || s>best.s)) best={w,s,v};
       }
       cells += best
@@ -757,8 +762,8 @@ function renderTable(){
     th.querySelector('.arrow').textContent = c.key===col ? (dir===1?'▲':'▼') : '';
   }
 
-  const tot = new Array(8).fill(0);
-  for (const r of rows) for (let i=0;i<8;i++) tot[i]+=r.v[i];
+  const tot = new Array(NSTAT).fill(0);
+  for (const r of rows) for (let i=0;i<NSTAT;i++) tot[i]+=(r.v[i]||0);
   const tm = metricsOf(tot);
 
   const accClass = v => v==null?'':(v>=0.25?'acc-good':(v<0.12?'acc-bad':''));
@@ -793,13 +798,15 @@ function renderTable(){
 function buildScoreLegend(){
   document.getElementById('scoreLegend').innerHTML =
     `<strong>Mastery Score (0–100)</strong>: accuracy (≤${SCORE.acc.pts} pts, full at ${SCORE.acc.max*100}%), ` +
-    `damage per carried minute (≤${SCORE.dpm.pts} pts, full at ${SCORE.dpm.max}), ` +
-    `kills per carried hour (≤${SCORE.kph.pts} pts, full at ${SCORE.kph.max}), ` +
+    `damage per combat minute (≤${SCORE.dpm.pts} pts, full at ${SCORE.dpm.max}), ` +
+    `kills per combat hour (≤${SCORE.kph.pts} pts, full at ${SCORE.kph.max}), ` +
     `headshot rate (≤${SCORE.hsr.pts} pts, full at ${SCORE.hsr.max*100}%). ` +
-    `Weapons need ≥${MIN_SHOTS_ALL} shots and ≥${MIN_CARRY_ALL/60} min carried to be scored (per-session: ≥${MIN_SHOTS_SES} shots, ≥${MIN_CARRY_SES} s; ` +
-    `Best Weapon cards: ≥${MIN_SHOTS_CARD} shots, ≥${MIN_CARRY_CARD/60} min). Hover a score for the breakdown.<br>` +
+    `Weapons need ≥${MIN_SHOTS_ALL} shots and ≥${MIN_COMBAT_ALL} s combat to be scored (per-session: ≥${MIN_SHOTS_SES} shots, ≥${MIN_COMBAT_SES} s; ` +
+    `Best Weapon cards: ≥${MIN_SHOTS_CARD} shots, ≥${MIN_COMBAT_CARD/60} min). Hover a score for the breakdown.<br>` +
+    `<strong>Combat</strong> = time inside detected fight windows (shots fired / damage dealt / damage taken clustered within 25 s), ` +
+    `split between the weapons actually used in each fight — quiet carry time doesn't count, so main weapons and hot-drop weapons compete fairly. ` +
     `<strong>Dmg Taken</strong> = damage received while the weapon was in your loadout (both primaries count the same hit). ` +
-    `<strong>Carried</strong> = time equipped (game min). Vehicle, melee and utility "weapons" are excluded; throwables stay.`;
+    `<strong>Carried</strong> = total time equipped. Vehicle, melee and utility "weapons" are excluded; throwables stay.`;
 }
 
 /* ============================================================================
