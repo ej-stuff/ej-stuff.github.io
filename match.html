@@ -296,7 +296,7 @@ h1 {
 .layer-global-btns .group-toggle-btn { flex: 1; text-align: center; }
 
 /* ── Mini charts ─────────────────────────────────────────────────────────── */
-#hpCanvas, #scoreCanvas, #distCanvas { display: block; width: 100%; border-radius: 3px; }
+#hpCanvas, #scoreCanvas { display: block; width: 100%; border-radius: 3px; }
 .chart-legend { display: flex; gap: 10px; }
 .chart-legend span { font-size: 10px; color: var(--muted); }
 
@@ -553,10 +553,6 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
         </div>
         <div id="scoreWrap" style="height:180px"><canvas id="scoreCanvas"></canvas></div>
         <div id="scoreDefGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:3px;margin-top:6px;font-size:11px;color:var(--muted)"></div>
-        <div style="margin-top:10px">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px">Travel /30s &nbsp;<span style="color:var(--accent)">&#9644; D282</span> &nbsp;<span style="color:var(--blue)">&#9644; S821</span></div>
-          <div id="distWrap"><canvas id="distCanvas"></canvas></div>
-        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
           <div id="loadout282" class="loadout-box"></div>
           <div id="loadout821" class="loadout-box"></div>
@@ -577,12 +573,8 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
       </div>
 
       <div class="panel">
-        <div class="panel-title">Show</div>
-        <div class="btn-group" id="playerFilter">
-          <button class="btn active" data-p="both" onclick="setPlayerFilter('both')">Both</button>
-          <button class="btn" data-p="D282"  onclick="setPlayerFilter('D282')">D282</button>
-          <button class="btn" data-p="S821"  onclick="setPlayerFilter('S821')">S821</button>
-        </div>
+        <div class="panel-title">Game Phases</div>
+        <div id="phaseStats"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
       </div>
 
       <div class="panel">
@@ -683,6 +675,7 @@ let lastPinchDist = null, lastPinchMidRaw = null;
 ============================================================================ */
 let MD  = null;
 let MAP = null;
+let WS_DATA           = null;  // weapon_stats.json (top weapons per match)
 let ALL_MATCHES       = null;  // matches.json array (newest-first)
 let CURRENT_MATCH_IDX = -1;    // index of current match in ALL_MATCHES
 let excludeSolo       = true;  // hide solo-mode matches from the list by default
@@ -1024,6 +1017,7 @@ function drawTimeline() {
     for (const ev of MD.events) {
       if (ev.player !== player || ev.t < 0) continue;
       if (ev.type === 'heal' || ev.type === 'boost' || ev.type === 'equip' || ev.type === 'unequip') continue;
+      if (ev.type === 'throwable' && (ev.weapon === 'Snowball' || ev.weapon === 'Rock')) continue;
       // Skip vehicle_out (drawn as part of vehicle_in bar) and short vehicle trips
       if (ev.type === 'vehicle_out') continue;
       if (ev.type === 'vehicle_in') {
@@ -1096,7 +1090,7 @@ function onTlClick(e) {
   drawTimeline();
   drawHpChart();
   drawScoreChart();
-  drawDistCharts();
+ 
 }
 
 function onTlMouseMove(e) {
@@ -1167,17 +1161,26 @@ function computeGamePhases() {
   }
   endT = Math.min(endT || dur, dur);
 
-  function avgSpeed(pl, t0, t1) {   // metres/second over the bucket
+  // Last position at or before t (binary search)
+  function posAt(pl, t) {
     const pts = MD.positions[pl] || [];
-    if (pts.length < 2) return 0;
-    let lo = 0, hi = pts.length - 1, si = pts.length;
-    while (lo <= hi) { const m = (lo + hi) >> 1; if (pts[m].t >= t0) { si = m; hi = m - 1; } else lo = m + 1; }
-    let d = 0, prev = null;
-    for (let i = si; i < pts.length && pts[i].t <= t1; i++) {
-      if (prev) d += Math.hypot(pts[i].x - prev.x, pts[i].y - prev.y);
-      prev = pts[i];
-    }
-    return d / 100 / (t1 - t0);
+    let lo = 0, hi = pts.length - 1, idx = -1;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (pts[m].t <= t) { idx = m; lo = m + 1; } else hi = m - 1; }
+    return idx >= 0 ? pts[idx] : null;
+  }
+
+  // Displacement-based speed between bucket edges (m/s). Sparse position
+  // samples don't break it, and running back and forth in one compound
+  // yields near-zero displacement — which counts as holding, not rotating.
+  function edgeSpeed(pl, t0, t1) {
+    const p0 = posAt(pl, t0), p1 = posAt(pl, t1);
+    if (!p0 || !p1 || p1.t <= p0.t) return 0;
+    return Math.hypot(p1.x - p0.x, p1.y - p0.y) / 100 / (p1.t - p0.t);
+  }
+  const FOOT = new Set(['foot', 'chute', 'plane']);
+  function inVehicle(pl, t0, t1) {
+    const p = posAt(pl, t1) || posAt(pl, t0);
+    return !!(p && p.tr && !FOOT.has(p.tr));
   }
 
   const segs = [];
@@ -1189,13 +1192,14 @@ function computeGamePhases() {
     else if (combat.some(c => c.start < t1 && c.end > t))
       kind = t < landT + 120 ? 'hotdrop' : 'combat';
     else {
-      const spd = Math.max(avgSpeed('D282', t, t1), avgSpeed('S821', t, t1));
+      const spd = Math.max(edgeSpeed('D282', t, t1), edgeSpeed('S821', t, t1));
+      const veh = inVehicle('D282', t, t1) || inVehicle('S821', t, t1);
       while (pickIdx < picks.length && picks[pickIdx] < t) pickIdx++;
       let nPicks = 0, j = pickIdx;
       while (j < picks.length && picks[j] < t1) { nPicks++; j++; }
-      if (spd > 3.0)       kind = 'rotate';
-      else if (nPicks > 0) kind = 'loot';
-      else                 kind = 'wait';
+      if ((veh && spd > 1.0) || spd > 2.5) kind = 'rotate';
+      else if (nPicks > 0)                 kind = 'loot';
+      else                                 kind = 'wait';
     }
     if (segs.length && segs[segs.length - 1].kind === kind) segs[segs.length - 1].end = t1;
     else segs.push({ start: t, end: t1, kind });
@@ -1280,6 +1284,11 @@ async function boot() {
 
   MAP = mapsData[MD.map] || null;
 
+  // Weapon usage data (for Match Summary top weapons) — non-blocking
+  fetch('stats-data/weapon_stats.json').then(r => r.json())
+    .then(ws => { WS_DATA = ws; buildPlayerCards(); })
+    .catch(() => {});
+
   document.title = `Match — ${MD.map_name}`;
   document.getElementById('pageTitle').textContent = MD.map_name;
   document.getElementById('matchMeta').textContent =
@@ -1306,13 +1315,12 @@ async function boot() {
     resizeCanvas();
     resizeTimeline();
     resizeHpChart();
-    resizeDistCharts();
     resizeScoreChart();
     draw();
     drawTimeline();
     drawHpChart();
     drawScoreChart();
-    drawDistCharts();
+   
   });
   canvas.addEventListener('wheel',      onWheel,     { passive: false });
   canvas.addEventListener('mousedown',  onMouseDown);
@@ -1365,10 +1373,10 @@ async function boot() {
   resizeCanvas();
   view.scale = 1; view.offsetX = 0; view.offsetY = 0;
   draw();
+  precomputeMatchData();
   initTimeline();
   initHpChart();
-  initDistCharts();
-  precomputeMatchData();
+  renderPhaseStats();
   buildEngagementSummary();
   buildScoreChart();
   buildWeaponBreakdown();
@@ -1469,6 +1477,7 @@ function draw() {
     if (ev.t > maxT)            continue;
     if (!playerVis(ev.player))  continue;
     if (!state.layers[ev.type]) continue;
+    if (ev.type === 'throwable' && (ev.weapon === 'Snowball' || ev.weapon === 'Rock')) continue;
     // Timed markers (throwables etc.) disappear after their duration
     if (ev.duration_s != null && maxT !== Infinity && maxT > ev.t + ev.duration_s) continue;
     // Skip vehicle markers for short trips
@@ -1754,8 +1763,10 @@ function drawEnemyDeaths(maxT) {
 function isEnemyKnockedAt(name, T) {
   const intervals = _enemyKnockIntervals[name];
   if (!intervals) return false;
-  for (const { knockT, killT } of intervals) {
-    if (T >= knockT && T < knockT + 90 && (killT == null || T < killT)) return true;
+  for (const { knockT, killT, reviveT } of intervals) {
+    if (T >= knockT && T < knockT + 90
+        && (killT == null || T < killT)
+        && (reviveT == null || T < reviveT)) return true;
   }
   return false;
 }
@@ -1907,7 +1918,7 @@ function onTimeInput(e) {
   drawTimeline();
   drawHpChart();
   drawScoreChart();
-  drawDistCharts();
+ 
 }
 
 function resetTime() {
@@ -1920,7 +1931,7 @@ function resetTime() {
   drawTimeline();
   drawHpChart();
   drawScoreChart();
-  drawDistCharts();
+ 
 }
 
 function jumpTime(delta) {
@@ -1938,7 +1949,7 @@ function jumpTime(delta) {
   drawTimeline();
   drawHpChart();
   drawScoreChart();
-  drawDistCharts();
+ 
 }
 
 /* ============================================================================
@@ -1972,7 +1983,7 @@ function pausePlayback() {
   playback.playing = false;
   if (playback.rafId) { cancelAnimationFrame(playback.rafId); playback.rafId = null; }
   document.getElementById('playBtn').textContent = '▶';
-  draw(); drawTimeline(); drawHpChart(); drawScoreChart(); drawDistCharts();
+  draw(); drawTimeline(); drawHpChart(); drawScoreChart();
 }
 
 function playTick(ts) {
@@ -1991,7 +2002,7 @@ function playTick(ts) {
       playback.playing = false;
       playback.rafId   = null;
       document.getElementById('playBtn').textContent = '▶';
-      draw(); drawTimeline(); drawHpChart(); drawScoreChart(); drawDistCharts();
+      draw(); drawTimeline(); drawHpChart(); drawScoreChart();
       return;
     }
 
@@ -2002,7 +2013,7 @@ function playTick(ts) {
     draw();
     drawTimeline();
     if (sec !== _lastChartSec) {
-      drawHpChart(); drawScoreChart(); drawDistCharts();
+      drawHpChart(); drawScoreChart();
       _lastChartSec = sec;
     }
   }
@@ -2021,14 +2032,6 @@ document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if (e.key === ' ') { e.preventDefault(); playToggle(); }
 });
-
-function setPlayerFilter(p) {
-  state.player = p;
-  document.querySelectorAll('#playerFilter .btn').forEach(b =>
-    b.classList.toggle('active', b.dataset.p === p)
-  );
-  draw();
-}
 
 function toggleLayer(id) {
   if (id === 'killfeed') { toggleKillFeed(); return; }
@@ -2382,6 +2385,28 @@ function soloKillCount(events, player) {
   }).length;
 }
 
+/* Top primary weapons this match, ranked by actual combat usage (combat_s
+   from weapon_stats.json, tiebreak shots). Guns only — no pistols/throwables. */
+const _PRIMARY_CATS = new Set(['AR', 'DMR', 'SR', 'SMG', 'SG', 'LMG', 'GL']);
+function topWeaponsFor(player) {
+  const md = WS_DATA?.matches?.[MD?.match_id]?.[player];
+  if (!md) return [];
+  const sums = {};
+  for (const [w, phs] of Object.entries(md)) {
+    if (!_PRIMARY_CATS.has(WS_DATA.cats[w] || '')) continue;
+    for (const v of Object.values(phs)) {
+      const s = sums[w] || (sums[w] = { combat: 0, shots: 0 });
+      s.combat += v[8] || 0;
+      s.shots  += v[0] || 0;
+    }
+  }
+  return Object.entries(sums)
+    .filter(([, s]) => s.combat > 0 || s.shots > 0)
+    .sort((a, b) => (b[1].combat - a[1].combat) || (b[1].shots - a[1].shots))
+    .slice(0, 2)
+    .map(([w]) => w);
+}
+
 function buildPlayerCards() {
   const stats = MD.match_stats || {};
   const evts  = MD.events || [];
@@ -2435,9 +2460,11 @@ function buildPlayerCards() {
     matchScore += Math.floor((s.survival_s || 0) / 60) * C.survivalPerMin;
     matchScore += plBonusPC(s.placement);
 
+    const topW = topWeaponsFor(p);
     const rows = [
       ['Place',        pl],
       ['Score',        (matchScore >= 0 ? '+' : '') + Math.round(matchScore)],
+      ['Weapons',      topW.length ? topW.join(' · ') : '—'],
       ['Kills',        s.kills ?? '—'],
       ['Solo kills',   soloK],
       ['Damage',       s.damage != null ? Math.round(s.damage) : '—'],
@@ -2460,7 +2487,7 @@ function buildPlayerCards() {
 }
 
 const LAYER_GROUPS = [
-  { id: 'map',       label: 'Map',       ids: ['paths', 'circles', 'enemies', 'transport', 'crate_land'] },
+  { id: 'map',       label: 'Map',       ids: ['paths', 'circles', 'enemies', 'enemy_deaths', 'transport', 'crate_land'] },
   { id: 'events',    label: 'Events',    ids: ['kill', 'knockdown', 'knocked', 'death', 'revive', 'blue_chip_revive'] },
   { id: 'damage',    label: 'Damage',    ids: ['dmg_dealt', 'dmg_taken', 'engagement', 'armor_break'] },
   { id: 'items',     label: 'Items',     ids: ['heal', 'boost', 'throwable', 'carepack'] },
@@ -2710,96 +2737,35 @@ function drawEngagements(maxT) {
 }
 
 /* ============================================================================
-   DISTANCE TRAVELED CHARTS  (rolling 30-second window, both players combined)
+   GAME PHASE STATS  (sidebar panel: % of match time per phase)
 ============================================================================ */
-const DIST_H      = 55;
-const DIST_WIN    = 30;
-const DIST_MAX_M  = 700;
-let distCanvas = null, distCtx = null, _dist282 = null, _dist821 = null;
-
-function initDistCharts() {
-  distCanvas = document.getElementById('distCanvas');
-  if (!distCanvas) return;
-  distCtx  = distCanvas.getContext('2d');
-  _dist282 = computeRollingDist('D282');
-  _dist821 = computeRollingDist('S821');
-  resizeDistCharts();
-  drawDistCharts();
-}
-
-function resizeDistCharts() {
-  if (!distCanvas) return;
-  const wrap = document.getElementById('distWrap');
-  if (!wrap) return;
-  const w = wrap.clientWidth;
-  if (distCanvas.width !== w || distCanvas.height !== DIST_H) { distCanvas.width = w; distCanvas.height = DIST_H; }
-}
-
-function computeRollingDist(player) {
-  if (!MD) return [];
-  const pts = MD.positions[player];
-  if (!pts || pts.length < 2) return [];
-  const dur  = MD.duration_s || 1800;
-  const data = [];
-  for (let T = 0; T <= dur; T += 5) {
-    let lo = 0, hi = pts.length - 1, si = pts.length;
-    const winStart = T - DIST_WIN;
-    while (lo <= hi) { const m = (lo+hi)>>1; if (pts[m].t >= winStart) { si = m; hi = m-1; } else lo = m+1; }
-    lo = 0; hi = pts.length - 1; let ei = -1;
-    while (lo <= hi) { const m = (lo+hi)>>1; if (pts[m].t <= T) { ei = m; lo = m+1; } else hi = m-1; }
-    let total = 0;
-    for (let i = Math.max(si, 1); i <= ei; i++) {
-      const dx = pts[i].x - pts[i-1].x, dy = pts[i].y - pts[i-1].y;
-      total += Math.sqrt(dx*dx + dy*dy) / 100;
-    }
-    data.push({ t: T, distM: total });
+function renderPhaseStats() {
+  const el = document.getElementById('phaseStats');
+  if (!el) return;
+  if (!_gamePhases.length) {
+    el.innerHTML = '<span style="color:var(--muted);font-size:12px">No data</span>';
+    return;
   }
-  return data;
-}
-
-function drawDistCharts() {
-  if (!distCanvas || !distCtx || !MD) return;
-  const w = distCanvas.width, h = distCanvas.height;
-  distCtx.clearRect(0, 0, w, h);
-  const PAD_T = 3, PAD_B = 3;
-  const dur   = MD.duration_s || 1800;
-  const plotH = h - PAD_T - PAD_B;
-  const tx    = t => (Math.max(0, t) / dur) * w;
-  const ty    = d => PAD_T + (1 - Math.min(d, DIST_MAX_M) / DIST_MAX_M) * plotH;
-
-  distCtx.fillStyle = 'rgba(0,0,0,0.15)';
-  distCtx.fillRect(0, PAD_T, w, plotH);
-
-  for (const [data, col] of [[_dist282, '#f4a300'], [_dist821, '#4a9edd']]) {
-    if (!data || !data.length) continue;
-    distCtx.beginPath();
-    distCtx.moveTo(tx(data[0].t), ty(data[0].distM));
-    for (let i = 1; i < data.length; i++) distCtx.lineTo(tx(data[i].t), ty(data[i].distM));
-    const last = data[data.length-1];
-    distCtx.lineTo(tx(last.t), PAD_T + plotH);
-    distCtx.lineTo(0, PAD_T + plotH);
-    distCtx.closePath();
-    distCtx.fillStyle = col + '22';
-    distCtx.fill();
-
-    distCtx.beginPath();
-    distCtx.moveTo(tx(data[0].t), ty(data[0].distM));
-    for (let i = 1; i < data.length; i++) distCtx.lineTo(tx(data[i].t), ty(data[i].distM));
-    distCtx.strokeStyle = col;
-    distCtx.lineWidth   = 1.5;
-    distCtx.globalAlpha = 0.85;
-    distCtx.stroke();
-    distCtx.globalAlpha = 1;
+  const totals = {};
+  let total = 0;
+  for (const s of _gamePhases) {
+    const d = s.end - s.start;
+    totals[s.kind] = (totals[s.kind] || 0) + d;
+    total += d;
   }
-
-  if (state.time !== Infinity) {
-    const x = tx(state.time);
-    distCtx.beginPath();
-    distCtx.moveTo(x, PAD_T); distCtx.lineTo(x, h - PAD_B);
-    distCtx.strokeStyle = 'rgba(244,163,0,0.85)';
-    distCtx.lineWidth   = 1.5;
-    distCtx.stroke();
-  }
+  const mmssLocal = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+  el.innerHTML = Object.entries(totals)
+    .sort((a, b) => b[1] - a[1])
+    .map(([kind, secs]) => {
+      const st = PHASE_STYLE[kind];
+      const pct = (secs / total) * 100;
+      return `<div style="display:flex;align-items:center;gap:7px;padding:3px 0;font-size:12px">
+        <span style="width:9px;height:9px;border-radius:2px;background:${st.col};flex-shrink:0"></span>
+        <span style="flex:1">${st.label}</span>
+        <span style="color:var(--muted);font-size:11px">${mmssLocal(secs)}</span>
+        <span style="font-weight:600;font-family:Oswald,sans-serif;min-width:42px;text-align:right">${pct.toFixed(1)}%</span>
+      </div>`;
+    }).join('');
 }
 
 /* ============================================================================
@@ -2917,6 +2883,18 @@ function precomputeMatchData() {
       if (arr && arr.length) {
         const last = arr[arr.length - 1];
         if (!last.killT) last.killT = kf.t;
+      }
+    }
+    // End knocked state when the enemy is revived by a teammate
+    for (const rv of (MD.revives || [])) {
+      if (ourKeys.has(rv.victim)) continue;
+      const arr = _enemyKnockIntervals[rv.victim];
+      if (!arr) continue;
+      for (const iv of arr) {
+        if (rv.t > iv.knockT && (iv.killT == null || rv.t < iv.killT)
+            && (iv.reviveT == null || rv.t < iv.reviveT)) {
+          iv.reviveT = rv.t;
+        }
       }
     }
   } else {
