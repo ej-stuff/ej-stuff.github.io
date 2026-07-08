@@ -9304,5 +9304,137 @@
         }
       }
     }
+  },
+  {
+    "match_id": "ebe4c9b0-9c33-45b1-97b5-cd7d8fd7e653",
+    "created_at": "2026-07-07T20:48:18Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 1
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 1
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 0,
+          "picked_up": 0
+        }
+      }
+    }
+  },
+  {
+    "match_id": "c9afec16-71c1-4769-9511-8ec3559b1c0f",
+    "created_at": "2026-07-07T20:51:13Z",
+    "players": {
+      "D282": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 6
+        },
+        "Painkiller": {
+          "used": 0,
+          "picked_up": 3
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 10
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Med Kit": {
+          "used": 1,
+          "picked_up": 1
+        },
+        "__total__": {
+          "used": 1,
+          "picked_up": 20
+        }
+      },
+      "S821": {
+        "Adrenaline Syringe": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "Energy Drink": {
+          "used": 0,
+          "picked_up": 4
+        },
+        "Painkiller": {
+          "used": 1,
+          "picked_up": 5
+        },
+        "Bandage": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "First Aid Kit": {
+          "used": 0,
+          "picked_up": 6
+        },
+        "Med Kit": {
+          "used": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "used": 1,
+          "picked_up": 15
+        }
+      }
+    }
   }
 ]

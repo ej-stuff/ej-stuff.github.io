@@ -36,9 +36,9 @@
       "kills": 9,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 109,
-      "total_damage": 1921.6,
-      "avg_damage_per_hit": 17.6
+      "hits": 117,
+      "total_damage": 2157.0,
+      "avg_damage_per_hit": 18.4
     },
     {
       "weapon": "AK-M",
@@ -458,9 +458,9 @@
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
-      "hits": 14,
-      "total_damage": 380.1,
-      "avg_damage_per_hit": 27.2
+      "hits": 15,
+      "total_damage": 413.2,
+      "avg_damage_per_hit": 27.5
     },
     {
       "weapon": "SKS",
