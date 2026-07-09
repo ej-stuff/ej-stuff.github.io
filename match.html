@@ -578,6 +578,11 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
       </div>
 
       <div class="panel">
+        <div class="panel-title">Key Moments <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">— click to jump</span></div>
+        <div id="keyMoments" style="max-height:280px;overflow-y:auto"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
+      </div>
+
+      <div class="panel">
         <div class="panel-title">Engagements</div>
         <div id="engagementList"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
       </div>
@@ -1377,6 +1382,7 @@ async function boot() {
   initTimeline();
   initHpChart();
   renderPhaseStats();
+  buildKeyMoments();
   buildEngagementSummary();
   buildScoreChart();
   buildWeaponBreakdown();
@@ -2734,6 +2740,61 @@ function drawEngagements(maxT) {
   ctx.setLineDash([]);
   ctx.globalAlpha = 1;
   ctx.restore();
+}
+
+/* ============================================================================
+   KEY MOMENTS  (sidebar jump list)
+============================================================================ */
+function jumpToMoment(t) {
+  pausePlayback();
+  const sl  = document.getElementById('timeSlider');
+  const max = parseInt(sl.max, 10);
+  const nv  = Math.max(0, Math.min(Math.round(t), max));
+  sl.value  = nv;
+  state.time = nv >= max ? Infinity : nv;
+  document.getElementById('timeDisplay').textContent =
+    state.time === Infinity ? 'Full match' : mmss(nv);
+  playback.lastTs = null;
+  draw(); drawTimeline(); drawHpChart(); drawScoreChart();
+}
+
+function buildKeyMoments() {
+  const el = document.getElementById('keyMoments');
+  if (!el || !MD) return;
+  const rows = [];
+  for (const ev of MD.events) {
+    if (ev.t < 0) continue;
+    const col = pColor(ev.player);
+    let icon = null, text = null;
+    switch (ev.type) {
+      case 'kill':
+        icon = '🎯'; text = `<b style="color:${col}">${ev.player}</b> killed ${ev.victim || '?'} <span class="km-sub">(${ev.weapon || '?'})</span>`; break;
+      case 'knockdown':
+        icon = '↓'; text = `<b style="color:${col}">${ev.player}</b> knocked ${ev.victim || '?'}`; break;
+      case 'knocked':
+        icon = '⚠️'; text = `<b style="color:${col}">${ev.player}</b> knocked down by ${ev.attacker || '?'}`; break;
+      case 'death':
+        icon = '💀'; text = `<b style="color:${col}">${ev.player}</b> died — ${ev.killer || '?'} <span class="km-sub">(${ev.weapon || '?'})</span>`; break;
+      case 'revive':
+        icon = '💊'; text = `<b style="color:${col}">${ev.player}</b> revived ${ev.target || '?'}`; break;
+      case 'blue_chip_revive':
+        icon = '🔵'; text = `<b style="color:${col}">${ev.player}</b> blue-chip revived ${ev.target || '?'}`; break;
+    }
+    if (icon) rows.push({ t: ev.t, icon, text });
+  }
+  if (!rows.length) {
+    el.innerHTML = '<span style="color:var(--muted);font-size:12px">No key events</span>';
+    return;
+  }
+  el.innerHTML = rows.map(r =>
+    `<div onclick="jumpToMoment(${Math.max(0, r.t - 5)})"
+          style="display:flex;align-items:baseline;gap:7px;padding:4px 4px;border-radius:5px;cursor:pointer;font-size:12px;line-height:1.35"
+          onmouseover="this.style.background='rgba(255,255,255,.05)'" onmouseout="this.style.background=''">
+       <span style="color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums;min-width:34px">${mmss(r.t)}</span>
+       <span style="width:16px;text-align:center;flex-shrink:0">${r.icon}</span>
+       <span style="flex:1">${r.text}</span>
+     </div>`
+  ).join('').replaceAll('class="km-sub"', 'style="color:var(--muted);font-size:11px"');
 }
 
 /* ============================================================================

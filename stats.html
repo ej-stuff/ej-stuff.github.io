@@ -504,6 +504,17 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
   <!-- ── SUMMARY CARDS ────────────────────────────────────────────────────── -->
   <div id="summarySection"><p class="loading">Loading…</p></div>
 
+  <!-- ── SESSION DEBRIEF ──────────────────────────────────────────────────── -->
+  <div class="panel" id="debriefPanel">
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      <div class="panel-title" style="margin-bottom:0">Session Debrief</div>
+      <select id="debriefSel" onchange="state.debriefDate=this.value;renderDebrief()"
+              style="background:#2a2720;color:var(--text);border:1px solid var(--line);padding:5px 10px;border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer">
+      </select>
+    </div>
+    <div id="debriefContent"><p class="loading">Loading match data…</p></div>
+  </div>
+
   <!-- ── PLACEMENT HISTOGRAM ─────────────────────────────────────────────── -->
   <div class="panel" id="placementPanel">
     <div class="panel-title">Placement Distribution</div>
@@ -598,6 +609,24 @@ tr.match-row:hover td { background: rgba(244,163,0,0.04); }
     <div id="recordsContent"></div>
   </div>
 
+  <!-- ── MATCH HALL OF FAME ─────────────────────────────────────────────── -->
+  <div class="panel" id="hofPanel">
+    <div class="panel-title">Match Hall of Fame <span class="panel-note">— all-time memorable games, click to replay</span></div>
+    <div id="hofContent"><p class="loading">Loading match data…</p></div>
+  </div>
+
+  <!-- ── FIGHT RECORD ───────────────────────────────────────────────────── -->
+  <div class="panel" id="fightPanel">
+    <div class="panel-title">Fight Record <span class="panel-note" id="fightSummaryNote"></span></div>
+    <div id="fightTopLine" style="margin-bottom:10px"></div>
+    <div class="chart-wrap"><canvas id="fightChart"></canvas></div>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px">
+      A fight = combat events (kills, knocks, damage) within 30 s of each other, team-level.
+      Score: kill +100, knock +50, death −100, knocked −50 — same scale as Map Analysis engagements.
+      Win ≥ +50, loss ≤ −50, otherwise neutral/escape. Win rate = wins ÷ (wins + losses).
+    </p>
+  </div>
+
   <!-- ── WIN CONDITIONS ─────────────────────────────────────────────────── -->
   <div class="panel" id="winCondPanel">
     <div class="panel-title">Win Condition Analysis</div>
@@ -658,7 +687,11 @@ const DATA = {
 const CHARTS = {};
 let lastMatches = [];
 let DATES = [];
-let MATCH_SCORES = {};
+let MATCH_SCORES  = {};
+let MATCH_DETAILS = {};   // match_id -> full match detail JSON (loaded in background)
+let FIGHT_CACHE   = {};   // match_id -> computed fights
+let WS_DATA       = null; // weapon_stats.json (for debrief weapon deltas)
+let fightChartObj = null;
 
 /* ============================================================================
    BOOT
@@ -728,6 +761,7 @@ async function boot() {
       files.forEach((mf, i) => {
         if (!mf?.events) return;
         const m    = duoMatches[i];
+        MATCH_DETAILS[m.match_id] = mf;
         const pd   = m.players['D282'], ps = m.players['S821'];
         const ps282 = mf.match_stats?.['D282'] || pd || {};
         const ps821 = mf.match_stats?.['S821'] || ps || {};
@@ -736,7 +770,15 @@ async function boot() {
         MATCH_SCORES[m.match_id] = { D282: s282, S821: s821, duo: s282 + s821 };
       });
       renderAll();
+      buildDebriefSelect();
+      renderDebrief();
+      renderHallOfFame();
     });
+
+    // Weapon usage data for the debrief's per-weapon score deltas
+    fetch('stats-data/weapon_stats.json').then(r => r.json())
+      .then(ws => { WS_DATA = ws; renderDebrief(); })
+      .catch(() => {});
 
     buildMapButtons();
     buildChartDropdowns();
@@ -1243,12 +1285,34 @@ function renderSummary(matches) {
     const sB = statsFrom(matches, 'S821');
     section.innerHTML = `
       <div class="compare-split">
-        <div class="compare-col d282"><h3>D282</h3>${grid('D282', sA)}</div>
-        <div class="compare-col s821"><h3>S821</h3>${grid('S821', sB)}</div>
+        <div class="compare-col d282"><h3>D282 ${formBadge('D282')}</h3>${grid('D282', sA)}</div>
+        <div class="compare-col s821"><h3>S821 ${formBadge('S821')}</h3>${grid('S821', sB)}</div>
       </div>`;
   } else {
-    section.innerHTML = grid(state.player, statsFrom(matches, state.player));
+    const badge = formBadge(state.player);
+    section.innerHTML =
+      (badge ? `<div style="margin-bottom:8px;font-family:Oswald,sans-serif;font-size:15px;letter-spacing:.5px">
+         <span style="color:${PLAYER_COLOR[state.player] || 'var(--text)'}">${state.player}</span> ${badge}</div>` : '') +
+      grid(state.player, statsFrom(matches, state.player));
   }
+}
+
+/* Form badge: last-5 average exact match score vs career average.
+   🔥 when ≥ max(15, 15%) above career, ❄ when equally far below. */
+function formBadge(player) {
+  const scores = allDuoMatches()          // newest-first
+    .map(m => MATCH_SCORES[m.match_id]?.[player])
+    .filter(v => v != null);
+  if (scores.length < 10) return '';
+  const l5  = scores.slice(0, 5).reduce((a, b) => a + b, 0) / 5;
+  const car = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const thr = Math.max(15, Math.abs(car) * 0.15);
+  const tip = `Last 5 avg score ${Math.round(l5)} vs career ${Math.round(car)}`;
+  const pill = (txt, col, bg) =>
+    `<span title="${tip}" style="font-size:11px;font-family:system-ui,sans-serif;letter-spacing:0;padding:2px 9px;border-radius:9px;background:${bg};color:${col};vertical-align:2px;cursor:help">${txt}</span>`;
+  if (l5 - car >= thr) return pill('🔥 Hot form', '#ffb14d', 'rgba(244,120,0,.15)');
+  if (car - l5 >= thr) return pill('❄ Cold streak', '#9cc7e8', 'rgba(74,158,221,.14)');
+  return pill('— Steady', 'var(--muted)', 'rgba(255,255,255,.05)');
 }
 
 /* ============================================================================
@@ -2263,6 +2327,365 @@ function renderWinConditions(matches) {
 /* ============================================================================
    RENDER ALL
 ============================================================================ */
+/* ============================================================================
+   FIGHTS  (team-level combat clusters from match detail events)
+============================================================================ */
+const FIGHT_GAP = 30;
+const FIGHT_PTS = { kill: 100, knockdown: 50, death: -100, knocked: -50 };
+
+function fightsFor(matchId) {
+  if (FIGHT_CACHE[matchId]) return FIGHT_CACHE[matchId];
+  const md = MATCH_DETAILS[matchId];
+  if (!md) return null;
+  const fights = [];
+  for (const e of md.events) {
+    if (e.t < 0) continue;
+    if (!(e.type in FIGHT_PTS) && e.type !== 'dmg_dealt' && e.type !== 'dmg_taken') continue;
+    const f = fights[fights.length - 1];
+    if (f && e.t - f.end <= FIGHT_GAP) { f.end = e.t; f.events.push(e); }
+    else fights.push({ start: e.t, end: e.t, events: [e] });
+  }
+  for (const f of fights) {
+    let sc = 0, dmgD = 0, dmgT = 0, kills = 0, knocks = 0;
+    for (const e of f.events) {
+      if (e.type === 'dmg_dealt')      dmgD += e.damage || 0;
+      else if (e.type === 'dmg_taken') dmgT += e.damage || 0;
+      else {
+        sc += FIGHT_PTS[e.type] || 0;
+        if (e.type === 'kill')      kills++;
+        if (e.type === 'knockdown') knocks++;
+      }
+    }
+    f.score = sc; f.dmgD = dmgD; f.dmgT = dmgT; f.kills = kills; f.knocks = knocks;
+    f.outcome = sc >= 50 ? 'win' : (sc <= -50 ? 'loss' : 'neutral');
+  }
+  FIGHT_CACHE[matchId] = fights;
+  return fights;
+}
+
+function fightTally(matches) {
+  const t = { win: 0, loss: 0, neutral: 0, total: 0, ready: 0 };
+  for (const m of matches) {
+    const fs = fightsFor(m.match_id);
+    if (!fs) continue;
+    t.ready++;
+    for (const f of fs) { t[f.outcome]++; t.total++; }
+  }
+  return t;
+}
+
+function renderFights(matches) {
+  const top  = document.getElementById('fightTopLine');
+  const note = document.getElementById('fightSummaryNote');
+  if (!Object.keys(MATCH_DETAILS).length) {
+    top.innerHTML = '<p class="loading">Loading fight data…</p>';
+    return;
+  }
+  const t  = fightTally(matches);
+  const wr = (t.win + t.loss) ? Math.round(100 * t.win / (t.win + t.loss)) : 0;
+  note.textContent = `— ${t.total} fights in ${t.ready} matches`;
+  top.innerHTML =
+    `<span style="font-family:Oswald,sans-serif;font-size:22px;font-weight:700">
+       <span style="color:var(--ok)">${t.win}W</span>
+       <span style="color:var(--muted)"> – </span>
+       <span style="color:var(--danger)">${t.loss}L</span>
+       <span style="color:var(--muted)"> – ${t.neutral}N</span>
+     </span>
+     <span style="margin-left:14px;font-size:14px">Fight win rate
+       <strong style="color:${wr >= 50 ? 'var(--ok)' : 'var(--danger)'};font-family:Oswald,sans-serif;font-size:18px">${wr}%</strong>
+     </span>`;
+
+  // Per-session series (respects the current filters via `matches`)
+  const byDate = {};
+  for (const m of matches) {
+    const fs = fightsFor(m.match_id);
+    if (!fs) continue;
+    const d = m.created_at.slice(0, 10);
+    const b = byDate[d] || (byDate[d] = { win: 0, loss: 0, neutral: 0 });
+    for (const f of fs) b[f.outcome]++;
+  }
+  const dates  = Object.keys(byDate).sort();
+  const labels = dates.map(d => { const [, mm, dd] = d.split('-'); return `${mm}/${dd}`; });
+  const wrData = dates.map(d => { const b = byDate[d]; return (b.win + b.loss) ? 100 * b.win / (b.win + b.loss) : null; });
+  const nData  = dates.map(d => { const b = byDate[d]; return b.win + b.loss + b.neutral; });
+
+  if (fightChartObj) fightChartObj.destroy();
+  fightChartObj = new Chart(document.getElementById('fightChart'), {
+    data: {
+      labels,
+      datasets: [
+        { type: 'line', label: 'Fight win %', data: wrData, borderColor: '#8fae5d', backgroundColor: '#8fae5d',
+          spanGaps: true, tension: .25, pointRadius: 3, borderWidth: 2, yAxisID: 'y' },
+        { type: 'bar', label: 'Fights', data: nData, backgroundColor: 'rgba(154,147,133,.25)',
+          borderColor: 'rgba(154,147,133,.4)', borderWidth: 1, yAxisID: 'y2' },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { labels: { color: '#e8e3d8', boxWidth: 14 } } },
+      scales: {
+        x:  { ticks: { color: '#9a9385', maxRotation: 45 }, grid: { color: 'rgba(56,52,44,.4)' } },
+        y:  { min: 0, max: 100, ticks: { color: '#8fae5d', callback: v => v + '%' }, grid: { color: 'rgba(56,52,44,.4)' },
+              title: { display: true, text: 'win %', color: '#9a9385', font: { size: 11 } } },
+        y2: { position: 'right', beginAtZero: true, ticks: { color: '#9a9385' }, grid: { display: false },
+              title: { display: true, text: 'fights', color: '#9a9385', font: { size: 11 } } },
+      },
+    },
+  });
+}
+
+/* ============================================================================
+   SESSION DEBRIEF
+============================================================================ */
+const allDuoMatches = () => DATA.matches.filter(m =>
+  m.players['D282']?.placement != null && m.players['S821']?.placement != null);
+
+function buildDebriefSelect() {
+  const sel = document.getElementById('debriefSel');
+  const dates = [...new Set(allDuoMatches().map(m => m.created_at.slice(0, 10)))].sort().reverse();
+  sel.innerHTML = dates.map(d => `<option value="${d}">${d}</option>`).join('');
+  if (!state.debriefDate || !dates.includes(state.debriefDate)) state.debriefDate = dates[0];
+  sel.value = state.debriefDate;
+}
+
+// Same mastery-score formula as weapons.html (session-level thresholds)
+function weaponSessionScore(v) {
+  const [shots, hits, dmg, kills, , hs, , , cmb] = v;
+  if (shots < 8 || (cmb || 0) < 45) return null;
+  const acc = shots ? hits / shots : 0;
+  const dpm = cmb ? dmg / (cmb / 60) : 0;
+  const kph = cmb ? kills / (cmb / 3600) : 0;
+  const hsr = kills ? hs / kills : 0;
+  return Math.min(acc / .25, 1) * 30 + Math.min(dpm / 200, 1) * 35 + Math.min(kph / 75, 1) * 25 + Math.min(hsr / .35, 1) * 10;
+}
+function weaponSums(matchIds, player) {   // weapon -> summed 9-stat array
+  const out = {};
+  for (const mid of matchIds) {
+    const pw = WS_DATA?.matches?.[mid]?.[player];
+    if (!pw) continue;
+    for (const [w, phs] of Object.entries(pw)) {
+      const a = out[w] || (out[w] = new Array(9).fill(0));
+      for (const v of Object.values(phs)) for (let i = 0; i < 9; i++) a[i] += (v[i] || 0);
+    }
+  }
+  return out;
+}
+
+function renderDebrief() {
+  const el = document.getElementById('debriefContent');
+  if (!el) return;
+  if (!Object.keys(MATCH_DETAILS).length) { el.innerHTML = '<p class="loading">Loading match data…</p>'; return; }
+  const date = state.debriefDate;
+  if (!date) { el.innerHTML = '<p class="empty">No sessions.</p>'; return; }
+
+  const all  = allDuoMatches();
+  const sess = all.filter(m => m.created_at.slice(0, 10) === date)
+                  .sort((a, b) => a.created_at < b.created_at ? -1 : 1);
+  const prior = all.filter(m => m.created_at.slice(0, 10) < date);
+  if (!sess.length) { el.innerHTML = '<p class="empty">No matches on this date.</p>'; return; }
+
+  /* ── match capsules ── */
+  const capsules = sess.map(m => {
+    const md  = MATCH_DETAILS[m.match_id];
+    const pd  = m.players['D282'], ps = m.players['S821'];
+    const pl  = pd.placement;
+    const plCol = pl === 1 ? '#FFD700' : pl <= 5 ? 'var(--ok)' : pl <= 10 ? 'var(--blue)' : 'var(--muted)';
+    let ending = '';
+    if (pl === 1) ending = '<span style="color:#FFD700;font-weight:600">WINNER 🏆</span>';
+    else if (md) {
+      const deaths = md.events.filter(e => e.type === 'death' && (e.player === 'D282' || e.player === 'S821'));
+      const lastD  = deaths[deaths.length - 1];
+      if (lastD) ending = `<span style="color:var(--muted)">wiped ${mmss(lastD.t)} by ${lastD.killer || '?'} (${lastD.weapon || '?'})</span>`;
+    }
+    return `<div onclick="location='match.html?id=${m.match_id}'"
+        style="display:flex;align-items:center;gap:10px;padding:6px 10px;border:1px solid var(--line);border-radius:7px;cursor:pointer;font-size:12px;flex-wrap:wrap"
+        onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--line)'">
+      <span style="font-family:Oswald,sans-serif;font-weight:700;font-size:16px;color:${plCol};min-width:32px">#${pl}</span>
+      <span style="min-width:64px">${m.map}</span>
+      <span><b style="color:var(--accent)">${pd.kills}</b>+<b style="color:var(--blue)">${ps.kills}</b> kills</span>
+      <span style="color:var(--muted)">${Math.round((pd.damage || 0) + (ps.damage || 0))} dmg</span>
+      <span style="flex:1;text-align:right">${ending}</span>
+    </div>`;
+  }).join('');
+
+  /* ── aggregates ── */
+  const t = fightTally(sess);
+  const wr = (t.win + t.loss) ? Math.round(100 * t.win / (t.win + t.loss)) : null;
+  const kills = sess.reduce((s, m) => s + m.players.D282.kills + m.players.S821.kills, 0);
+  const avgPl = sess.reduce((s, m) => s + m.players.D282.placement, 0) / sess.length;
+  const carPl = prior.length ? prior.reduce((s, m) => s + m.players.D282.placement, 0) / prior.length : avgPl;
+  const plArrow = avgPl < carPl - 0.5 ? '<span style="color:var(--ok)">▲ better than career</span>'
+                : avgPl > carPl + 0.5 ? '<span style="color:var(--danger)">▼ below career</span>'
+                : '<span style="color:var(--muted)">≈ career level</span>';
+
+  const aggLine = `<div style="display:flex;gap:22px;flex-wrap:wrap;font-size:13px;margin:12px 0">
+    <span>Fights <b style="color:var(--ok)">${t.win}W</b>–<b style="color:var(--danger)">${t.loss}L</b>${wr != null ? ` (<b>${wr}%</b>)` : ''}</span>
+    <span>Kills <b>${kills}</b></span>
+    <span>Avg place <b>#${avgPl.toFixed(1)}</b> ${plArrow}</span>
+  </div>`;
+
+  /* ── weapon score deltas ── */
+  let weaponHTML = '';
+  if (WS_DATA) {
+    const sessIds  = sess.map(m => m.match_id);
+    const priorIds = prior.map(m => m.match_id);
+    const parts = [];
+    for (const p of ['D282', 'S821']) {
+      const sw = weaponSums(sessIds, p);
+      const best = Object.entries(sw)
+        .map(([w, v]) => ({ w, v, cmb: v[8] || 0, score: weaponSessionScore(v) }))
+        .filter(r => r.score != null)
+        .sort((a, b) => b.cmb - a.cmb)[0];
+      if (!best) continue;
+      const careerV = weaponSums(priorIds, p)[best.w];
+      const careerS = careerV ? weaponSessionScore(careerV) : null;
+      const d = careerS != null ? Math.round(best.score - careerS) : null;
+      const dTxt = d == null ? '' : d >= 3 ? ` <span style="color:var(--ok)">▲${d}</span>`
+                 : d <= -3 ? ` <span style="color:var(--danger)">▼${Math.abs(d)}</span>` : ' ≈';
+      parts.push(`<span><b style="color:${PLAYER_COLOR[p]}">${p}</b> ${best.w}: <b>${Math.round(best.score)}</b>${dTxt}</span>`);
+    }
+    if (parts.length)
+      weaponHTML = `<div style="display:flex;gap:22px;flex-wrap:wrap;font-size:13px;margin-bottom:12px">
+        <span style="color:var(--muted)">Main weapon score vs career:</span>${parts.join('')}</div>`;
+  }
+
+  /* ── records broken ── */
+  const recs = [];
+  for (const p of ['D282', 'S821']) {
+    for (const [field, label] of [['kills', 'kills'], ['damage', 'damage']]) {
+      const prevMax = Math.max(0, ...prior.map(m => m.players[p][field] || 0));
+      const sessMax = Math.max(...sess.map(m => m.players[p][field] || 0));
+      if (sessMax > prevMax && prior.length)
+        recs.push(`🏆 <b style="color:${PLAYER_COLOR[p]}">${p}</b> new record: <b>${Math.round(sessMax)}</b> ${label}`);
+    }
+  }
+  const recHTML = recs.length
+    ? `<div style="font-size:13px;margin-bottom:12px">${recs.join(' &nbsp;·&nbsp; ')}</div>` : '';
+
+  /* ── focus point ── */
+  let focus = '';
+  const sessFights = sess.flatMap(m => fightsFor(m.match_id) || []);
+  const deaths = sess.flatMap(m => (MATCH_DETAILS[m.match_id]?.events || [])
+    .filter(e => e.type === 'death' && (e.player === 'D282' || e.player === 'S821')));
+  const firstFights = sess.map(m => (fightsFor(m.match_id) || []).find(f => f.outcome !== 'neutral' || (f.dmgD + f.dmgT) >= 80)).filter(Boolean);
+  const ffLoss = firstFights.filter(f => f.outcome === 'loss').length;
+  const avgDeathT = deaths.length ? deaths.reduce((s, e) => s + e.t, 0) / deaths.length : null;
+  const dmgD = sessFights.reduce((s, f) => s + f.dmgD, 0), dmgT = sessFights.reduce((s, f) => s + f.dmgT, 0);
+  if (firstFights.length >= 2 && ffLoss / firstFights.length > 0.5)
+    focus = `You lost ${ffLoss} of ${firstFights.length} opening fights — pick the first fight on your terms (range, cover, numbers).`;
+  else if (avgDeathT != null && avgDeathT < 480 && deaths.length >= 2)
+    focus = `Most deaths came in the early game (avg ${mmss(avgDeathT)}) — consider a quieter drop and gear up first.`;
+  else if (wr != null && wr >= 50 && avgPl > 12)
+    focus = `You won ${wr}% of fights but still placed #${avgPl.toFixed(0)} on average — likely third parties or late rotations. Disengage faster after winning a fight.`;
+  else if (dmgT > dmgD * 1.3 && dmgT > 300)
+    focus = `You took ${Math.round(dmgT)} damage vs ${Math.round(dmgD)} dealt — you're getting shot first. Fight at your range and use cover before peeking.`;
+  else if (wr != null && wr >= 50)
+    focus = `Solid session — ${wr}% fight win rate. Keep taking fights like these.`;
+  else
+    focus = `Mixed session. Review the toughest match above in the replay to see what went wrong.`;
+
+  el.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:5px">${capsules}</div>
+    ${aggLine}${weaponHTML}${recHTML}
+    <div style="border-left:3px solid var(--accent);padding:7px 12px;background:rgba(244,163,0,.06);border-radius:0 6px 6px 0;font-size:13px">
+      <b style="color:var(--accent)">Focus:</b> ${focus}
+    </div>`;
+}
+
+/* ============================================================================
+   MATCH HALL OF FAME
+============================================================================ */
+function renderHallOfFame() {
+  const el = document.getElementById('hofContent');
+  if (!el || !Object.keys(MATCH_DETAILS).length) return;
+  const all = allDuoMatches();
+  const cards = [];
+  const mInfo = m => `${m.map} · ${m.created_at.slice(0, 10)}`;
+
+  // 🏆 Chicken dinners
+  for (const m of all.filter(m => m.players.D282.placement === 1)) {
+    cards.push({ icon: '🏆', title: 'Chicken Dinner', val: `${m.players.D282.kills + m.players.S821.kills} team kills`, sub: mInfo(m), id: m.match_id, gold: true });
+  }
+
+  // 🎯 Longest kill (from kill event positions)
+  let lk = null;
+  for (const m of all) {
+    const md = MATCH_DETAILS[m.match_id];
+    if (!md) continue;
+    for (const e of md.events) {
+      if (e.type !== 'kill' || !e.x || !e.ex) continue;
+      const d = Math.hypot(e.x - e.ex, e.y - e.ey) / 100;
+      if (d > 700) continue; // teleport artifacts
+      if (!lk || d > lk.d) lk = { d, e, m };
+    }
+  }
+  if (lk) cards.push({ icon: '🎯', title: 'Longest Kill', val: `${Math.round(lk.d)} m — ${lk.e.player} (${lk.e.weapon})`, sub: mInfo(lk.m), id: lk.m.match_id });
+
+  // 🚀 Kill rush: most kills by one player within 60 s
+  let rush = null;
+  for (const m of all) {
+    const md = MATCH_DETAILS[m.match_id];
+    if (!md) continue;
+    for (const p of ['D282', 'S821']) {
+      const ks = md.events.filter(e => e.type === 'kill' && e.player === p).map(e => e.t);
+      for (let i = 0; i < ks.length; i++) {
+        let j = i;
+        while (j + 1 < ks.length && ks[j + 1] - ks[i] <= 60) j++;
+        const n = j - i + 1, span = ks[j] - ks[i];
+        if (n >= 2 && (!rush || n > rush.n || (n === rush.n && span < rush.span)))
+          rush = { n, span, p, m };
+      }
+    }
+  }
+  if (rush) cards.push({ icon: '🚀', title: 'Kill Rush', val: `${rush.p}: ${rush.n} kills in ${Math.max(1, Math.round(rush.span))} s`, sub: mInfo(rush.m), id: rush.m.match_id });
+
+  // 🌪 Longest fight
+  let lf = null;
+  for (const m of all) {
+    for (const f of (fightsFor(m.match_id) || [])) {
+      if (f.kills + f.knocks === 0 && f.dmgD + f.dmgT < 150) continue;
+      const dur = f.end - f.start;
+      if (!lf || dur > lf.dur) lf = { dur, f, m };
+    }
+  }
+  if (lf) cards.push({ icon: '🌪️', title: 'Longest Fight', val: `${mmss(lf.dur)} — ${lf.f.kills} kills, ${Math.round(lf.f.dmgD)} dmg`, sub: mInfo(lf.m), id: lf.m.match_id });
+
+  // 💪 The Comeback: best placement where both players got knocked
+  let cb = null;
+  for (const m of all) {
+    const md = MATCH_DETAILS[m.match_id];
+    if (!md) continue;
+    const kn = new Set(md.events.filter(e => e.type === 'knocked').map(e => e.player));
+    if (!kn.has('D282') || !kn.has('S821')) continue;
+    const pl = m.players.D282.placement;
+    if (!cb || pl < cb.pl) cb = { pl, m };
+  }
+  if (cb && cb.pl <= 5) cards.push({ icon: '💪', title: 'The Comeback', val: `#${cb.pl} after both got knocked`, sub: mInfo(cb.m), id: cb.m.match_id });
+
+  // 🛡 Marathon: longest survival without winning
+  const nonWins = all.filter(m => m.players.D282.placement !== 1);
+  if (nonWins.length) {
+    const mm2 = nonWins.reduce((a, b) => (b.duo_survival_s || 0) > (a.duo_survival_s || 0) ? b : a);
+    cards.push({ icon: '🛡️', title: 'Marathon (no win)', val: `${mmss(mm2.duo_survival_s)} survived, #${mm2.players.D282.placement}`, sub: mInfo(mm2), id: mm2.match_id });
+  }
+
+  // 😱 Fastest wipe
+  const fw = all.reduce((a, b) => (b.duo_survival_s || 9e9) < (a.duo_survival_s || 9e9) ? b : a);
+  cards.push({ icon: '😱', title: 'Fastest Wipe', val: `${mmss(fw.duo_survival_s)} — ouch`, sub: mInfo(fw), id: fw.match_id });
+
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px">${
+    cards.map(c => `
+      <div onclick="location='match.html?id=${c.id}'"
+           style="border:1px solid ${c.gold ? '#FFD70066' : 'var(--line)'};border-radius:9px;padding:11px 13px;cursor:pointer;background:${c.gold ? 'rgba(255,215,0,.05)' : 'transparent'}"
+           onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='${c.gold ? '#FFD70066' : 'var(--line)'}'">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-family:Oswald,sans-serif">${c.icon} ${c.title}</div>
+        <div style="font-weight:600;font-size:14px;margin:3px 0 2px">${c.val}</div>
+        <div style="font-size:11px;color:var(--muted)">${c.sub} · replay →</div>
+      </div>`).join('')
+  }</div>`;
+}
+
 function renderAll() {
   syncButtons();
   lastMatches = filtered();
@@ -2273,6 +2696,7 @@ function renderAll() {
   renderDuoChemistry(lastMatches);
   renderLifetimeRecords(lastMatches);
   renderWinConditions(lastMatches);
+  renderFights(lastMatches);
   renderChart(lastMatches);
   renderDailyStats(lastMatches);
   renderMatchHistory(lastMatches);
