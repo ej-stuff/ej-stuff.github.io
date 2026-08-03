@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Debrief — D282 &amp; S821</title>
+<meta name="description" content="A one-time deep read of 143 PUBG matches — the arc, the playstyles, the maps, and the moments.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+  :root {
+    --bg:      #14130f;
+    --panel:   #1e1c17;
+    --panel2:  #221f19;
+    --line:    #38342c;
+    --text:    #e8e3d8;
+    --muted:   #9a9385;
+    --accent:  #f4a300;   /* D282 */
+    --s821:    #4a9edd;   /* S821 */
+    --ok:      #8fae5d;
+    --danger:  #d7443e;
+    --purple:  #c080ff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    line-height: 1.65;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+  h1, h2, h3, .oswald {
+    font-family: Oswald, system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+  a { color: var(--accent); }
+  p { color: var(--text); }
+  .muted { color: var(--muted); }
+
+  /* ── Hero ─────────────────────────────────────────────────────────────── */
+  .hero {
+    padding: 90px 24px 50px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 900px 400px at 50% -10%, rgba(244,163,0,.10), transparent 60%),
+      var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .kicker {
+    font-family: Oswald, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .kicker b { color: var(--accent); }
+  .hero h1 {
+    font-size: clamp(38px, 7vw, 64px);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0 0 14px;
+    background: linear-gradient(135deg, #ffd479, var(--accent) 55%, #c97e00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-sub {
+    max-width: 620px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .hero-meta {
+    margin-top: 22px;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: Oswald, sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .hero-meta span.d { color: var(--accent); }
+  .hero-meta span.s { color: var(--s821); }
+
+  .intro {
+    padding: 40px 0 10px;
+    font-size: 16px;
+    color: var(--text);
+  }
+  .intro p { margin: 0 0 14px; }
+
+  /* ── Section scaffolding ─────────────────────────────────────────────── */
+  section.chapter { padding: 56px 0 8px; border-top: 1px solid var(--line); }
+  .chapter-num {
+    font-family: Oswald, sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .chapter h2 {
+    font-size: 28px;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+    color: var(--text);
+  }
+  .chapter .lede { color: var(--muted); font-size: 15.5px; max-width: 640px; margin: 0 0 26px; }
+
+  /* ── Stat callouts ────────────────────────────────────────────────────── */
+  .statrow { display: flex; flex-wrap: wrap; gap: 14px; margin: 20px 0 30px; }
+  .stat {
+    flex: 1 1 150px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 16px;
+  }
+  .stat .num {
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat.blue .num { color: var(--s821); }
+  .stat.ok .num { color: var(--ok); }
+  .stat .label { color: var(--muted); font-size: 12.5px; margin-top: 6px; text-transform: uppercase; letter-spacing: .5px; }
+  .stat .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  .arrow-pair { display:flex; align-items:center; gap:10px; font-family: Oswald, sans-serif; font-weight:700; font-size: 26px; }
+  .arrow-pair .from { color: var(--muted); font-size: 20px; }
+  .arrow-pair .to { color: var(--ok); }
+  .arrow-pair .sep { color: var(--muted); font-size: 18px; }
+
+  /* ── Chart ────────────────────────────────────────────────────────────── */
+  .chart-box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 8px; margin: 10px 0 28px; }
+  .chart-box canvas { max-height: 260px; }
+  .chart-cap { text-align: center; color: var(--muted); font-size: 12.5px; margin: 6px 0 4px; }
+
+  /* ── Panels / prose blocks ───────────────────────────────────────────── */
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-bottom: 18px; }
+  .panel h3 { margin: 0 0 8px; font-size: 16px; color: var(--accent); text-transform: uppercase; letter-spacing: .5px; }
+  .panel p { color: var(--text); font-size: 15px; margin: 0 0 10px; }
+  .panel p:last-child { margin-bottom: 0; }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(244,163,0,.06);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 18px 0;
+    font-size: 15px;
+  }
+  .callout.blue { border-color: var(--s821); background: rgba(74,158,221,.07); }
+  .callout.ok { border-color: var(--ok); background: rgba(143,174,93,.07); }
+
+  /* ── Two-player compare bars ─────────────────────────────────────────── */
+  .compare-row { margin-bottom: 16px; }
+  .compare-label { display:flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px;}
+  .compare-track { display: flex; align-items: center; gap: 8px; }
+  .compare-track .side { flex: 1; height: 10px; border-radius: 6px; background: var(--line); overflow: hidden; position: relative; }
+  .compare-track .side.left { display:flex; justify-content: flex-end; }
+  .compare-track .fill { height: 100%; border-radius: 6px; }
+  .compare-track .fill.d { background: var(--accent); }
+  .compare-track .fill.s { background: var(--s821); }
+  .compare-track .val { font-family: Oswald, sans-serif; font-size: 13px; width: 62px; text-align: center; color: var(--text); flex: 0 0 auto; }
+
+  /* ── Map table ────────────────────────────────────────────────────────── */
+  .maprow { display: grid; grid-template-columns: 96px 1fr 60px; gap: 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .maprow:last-child { border-bottom: none; }
+  .maprow .mname { font-family: Oswald, sans-serif; font-size: 14px; }
+  .maprow .mname .n { display:block; color: var(--muted); font-size: 11px; font-weight: 400; letter-spacing: .5px; }
+  .maprow .bar-outer { background: var(--line); border-radius: 6px; height: 16px; overflow: hidden; }
+  .maprow .bar-inner { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--ok), #b7cf87); display:flex; align-items:center; }
+  .maprow .place { text-align: right; font-family: Oswald, sans-serif; font-size: 13px; color: var(--muted); }
+
+  /* ── Highlight cards ──────────────────────────────────────────────────── */
+  .hl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin: 10px 0 10px; }
+  .hl {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    transition: border-color .15s, transform .15s;
+  }
+  .hl:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .hl .tag {
+    display: inline-block;
+    font-family: Oswald, sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  .hl.win .tag { background: var(--ok); }
+  .hl.bad .tag { background: var(--danger); }
+  .hl.blue .tag { background: var(--s821); }
+  .hl h4 { margin: 0 0 6px; font-family: Oswald, sans-serif; font-size: 15px; text-transform: uppercase; }
+  .hl .detail { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+  .hl .link { color: var(--accent); font-size: 12.5px; font-family: Oswald, sans-serif; text-transform: uppercase; letter-spacing: .5px; }
+  .hl.win .link { color: var(--ok); }
+  .hl.blue .link { color: var(--s821); }
+
+  /* ── Coach's notes list ───────────────────────────────────────────────── */
+  .notes { list-style: none; margin: 0; padding: 0; counter-reset: note; }
+  .notes li {
+    counter-increment: note;
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .notes li:last-child { border-bottom: none; }
+  .notes li::before {
+    content: counter(note);
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--accent);
+    flex: 0 0 auto;
+    width: 30px;
+  }
+  .notes h4 { margin: 0 0 4px; font-size: 15.5px; font-family: Oswald, sans-serif; text-transform: uppercase; letter-spacing: .3px; }
+  .notes p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  footer {
+    text-align: center;
+    padding: 60px 24px 30px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+  }
+  footer .sign { font-family: Oswald, sans-serif; color: var(--accent); font-size: 15px; letter-spacing: .5px; margin-bottom: 6px; }
+
+  @media (max-width: 560px) {
+    .maprow { grid-template-columns: 78px 1fr 46px; gap: 8px; }
+    .hero { padding: 76px 18px 40px; }
+  }
+
+  /* ── Site nav (same pattern as the rest of the site) ─────────────────── */
+  #siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
+  #siteNavBtn {
+    width: 34px; height: 34px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; color: var(--accent);
+    font-size: 17px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .15s;
+  }
+  #siteNavBtn:hover { border-color: var(--accent); }
+  #siteNavMenu {
+    display: none; position: absolute; top: 40px; left: 0;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 6px;
+    min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,.6);
+  }
+  #siteNavMenu.open { display: block; }
+  #siteNavMenu a {
+    display: block; padding: 9px 14px;
+    color: var(--text); text-decoration: none;
+    border-radius: 7px; font-size: 13px;
+    font-family: Oswald, system-ui, sans-serif;
+    text-transform: uppercase; letter-spacing: .5px;
+    transition: background .1s, color .1s;
+  }
+  #siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
+  #siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
+  #siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+</style>
+</head>
+<body>
+
+<div id="siteNav">
+  <button id="siteNavBtn" onclick="toggleSiteNav()" title="Navigate">&#9776;</button>
+  <div id="siteNavMenu">
+    <a href="index.html">Home</a>
+    <div class="nav-sep"></div>
+    <a href="stats.html">PUBG Stats</a>
+    <a href="mapanalysis.html">Map Analysis</a>
+    <a href="match.html">Match Analysis</a>
+    <a href="weapons.html">Weapon Stats</a>
+    <a href="records.html">Personal Records</a>
+    <a href="debrief.html" class="nav-cur">The Debrief</a>
+    <a href="pubg.html">Loadout Planner</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="kicker">A ONE-TIME DEEP READ &middot; NOT PART OF THE REGULAR DASHBOARD</div>
+  <h1>The Debrief</h1>
+  <p class="hero-sub">143 matches. Twelve days you actually got to play. This is what the data says
+    about how <span style="color:var(--accent)">D282</span> and <span style="color:var(--s821)">S821</span>
+    actually play PUBG &mdash; not the box scores, the patterns underneath them.</p>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 2 Jun &ndash; 7 Jul 2026</div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro">
+    <p>The other pages on this site track everything live &mdash; every match, every weapon, every
+      circle, updated automatically. This one doesn't get touched by that pipeline. It's a single,
+      hand-built pass through all 143 games looking for the stuff a stat table doesn't say out loud:
+      where you're actually improving, where the two of you play differently, which maps like you
+      back, and a few moments worth reliving.</p>
+    <p>One thing up front: this isn't about rival players. You're dropping into a fresh lobby of
+      ~95 strangers almost every game, so there's no rivalry to track &mdash; the story here is entirely
+      about the two of you, which, given you're fitting a whole season of improvement into a
+      handful of stolen evenings, is a better story anyway.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="arc">
+    <div class="chapter-num">01</div>
+    <h2>The Arc</h2>
+    <p class="lede">The single biggest thing in this dataset isn't a stat &mdash; it's a trend line.
+      You are meaningfully, measurably better now than when this data starts.</p>
+
+    <div class="statrow">
+      <div class="stat">
+        <div class="num">31.9<span style="font-size:16px;color:var(--muted)"> avg</span></div>
+        <div class="label">Placement &middot; first 25 games</div>
+        <div class="sub">Top-10 rate: 4%</div>
+      </div>
+      <div class="stat ok">
+        <div class="num">17.5<span style="font-size:16px;color:var(--muted)"> avg</span></div>
+        <div class="label">Placement &middot; last 25 games</div>
+        <div class="sub">Top-10 rate: 48%</div>
+      </div>
+      <div class="stat blue">
+        <div class="num">~50</div>
+        <div class="label">Teams per lobby (avg)</div>
+        <div class="sub">so top-10 = literal top 20%</div>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <canvas id="arcChart"></canvas>
+    </div>
+    <div class="chart-cap">10-game rolling average placement, all 143 matches, in chronological order. Lower = better (axis is flipped).</div>
+
+    <div class="panel">
+      <h3>What the math says</h3>
+      <p>With roughly 50 duo teams in an average lobby, landing in the top 10 by pure luck happens
+        about 1 in 5 times &mdash; 20%. In your first 25 games you were hitting it 1 in 25 (4%), which
+        is actually <em>worse</em> than random &mdash; completely normal while you're still learning
+        rotations, loot priority, and when to fight. In your most recent 25 games you're hitting
+        top-10 roughly every other game (48%) &mdash; more than double the random rate. That's not
+        noise, that's a real skill curve, and it happened without a lot of hours to build it on
+        (more on that in a second).</p>
+      <p class="muted" style="font-size:13.5px">There's a dip in the middle of the chart, around
+        game 80&ndash;90 &mdash; that lines up almost exactly with your roughest single session
+        (see Chapter 02). Even a strong upward trend has a bad night in it.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="sessions">
+    <div class="chapter-num">02</div>
+    <h2>How You Actually Play</h2>
+    <p class="lede">You don't play often. When you do, you really play.</p>
+
+    <div class="statrow">
+      <div class="stat">
+        <div class="num">12</div>
+        <div class="label">Days you played, at all</div>
+        <div class="sub">out of 36 days on the calendar</div>
+      </div>
+      <div class="stat">
+        <div class="num">61<span style="font-size:16px;color:var(--muted)">h</span></div>
+        <div class="label">Total time logged</div>
+        <div class="sub">lobby-to-elimination, all matches</div>
+      </div>
+      <div class="stat blue">
+        <div class="num">21</div>
+        <div class="label">Games in your biggest session</div>
+        <div class="sub">20 Jun &mdash; a genuine marathon</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>The sessions, ranked</h3>
+      <p>143 games happened across exactly 12 calendar days. Everything else is a gap. When a
+        session happens, it's not a quick game or two &mdash; it's a sitting:</p>
+      <p class="muted" style="font-size:14px; line-height:2">
+        <b style="color:var(--text)">20 Jun</b> &mdash; 21 games &middot;
+        <b style="color:var(--text)">2 Jun</b> &mdash; 19 games &middot;
+        <b style="color:var(--text)">22 Jun</b> &mdash; 18 games &middot;
+        <b style="color:var(--text)">3 Jun</b> &mdash; 18 games &middot;
+        <b style="color:var(--text)">7 Jul</b> &mdash; 14 games &middot;
+        <b style="color:var(--text)">17 Jun</b> &mdash; 13 games &middot;
+        <b style="color:var(--text)">5 Jun</b> &mdash; 13 games &middot;
+        <b style="color:var(--text)">29 Jun</b> &mdash; 10 games &middot;
+        plus four smaller sittings of 1&ndash;4 games.
+      </p>
+    </div>
+
+    <div class="callout ok">
+      <b>No fatigue curve.</b> Split any session of 6+ games into thirds &mdash; the first third
+      and the last third land at almost identical average placement (24.7 vs 23.7). Game #18 of a
+      21-game night is exactly as sharp as game #1. Either the breaks between drops are doing real
+      work, or you were already this tired at kickoff and PUBG genuinely can't tell the difference.
+    </div>
+
+    <p class="muted" style="font-size:13.5px">Small footnote: in 7 of the 143 games, only D282's
+      data shows up &mdash; S821 either disconnected, joined solo, or life happened mid-session.
+      Tracked as-is; not a big enough number to change anything above.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="duo">
+    <div class="chapter-num">03</div>
+    <h2>Two Playstyles, One Duo</h2>
+    <p class="lede">You don't play the same way, and the numbers make the split pretty obvious.</p>
+
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>Shots fired / minute alive</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:74%"></div></div>
+        <div class="val">3.2 &nbsp;/&nbsp; 4.4</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>Headshot kill rate</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:55%"></div></div>
+        <div class="val">12.3% / 22.2%</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>Knock-outs delivered / match</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:80%"></div></div>
+        <div class="val">0.44 / 0.55</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>Times knocked / match (higher = riskier)</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:89%"></div></div>
+        <div class="val">0.65 / 0.73</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>Revives given / match</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:100%"></div></div>
+        <div class="val">0.22 / 0.16</div>
+        <div class="side"><div class="fill s" style="width:73%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>Boosts used / match</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:81%"></div></div>
+        <div class="val">1.16 / 1.43</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Trigger and glue</h3>
+      <p><b style="color:var(--s821)">S821</b> is the trigger: more shots per minute alive, more
+        knock-outs delivered, a headshot rate (22%) that's genuinely strong for casual play, and
+        the higher overall K/D (0.67 vs 0.52). That aggression isn't free &mdash; S821 also eats
+        slightly more knockdowns. <b style="color:var(--accent)">D282</b> shoots less but revives
+        more, and lands the majority of downed-and-still-fighting kills too (see below) &mdash; less
+        the trigger, more the glue holding the two of you together.</p>
+      <p>Neither role is the "better" one. A duo where one person only ever plays cautious support
+        and the other only ever pushes fights doesn't survive long &mdash; and yours does both.</p>
+    </div>
+
+    <div class="statrow">
+      <div class="stat">
+        <div class="num">41</div>
+        <div class="label">D282 solo kills</div>
+        <div class="sub">landed while S821 was down or dead</div>
+      </div>
+      <div class="stat blue">
+        <div class="num">36</div>
+        <div class="label">S821 solo kills</div>
+        <div class="sub">landed while D282 was down or dead</div>
+      </div>
+      <div class="stat ok">
+        <div class="num">24.1<span style="font-size:16px;color:var(--muted)">s</span></div>
+        <div class="label">Avg. revive response time</div>
+        <div class="sub">fastest: 11.1s &middot; PUBG gives you ~2 min</div>
+      </div>
+    </div>
+    <p class="muted" style="font-size:13.5px">Both of you can carry alone when it comes to it &mdash;
+      the solo-kill counts are close. And a 24-second average time from "teammate down" to
+      "teammate back up" is a genuinely fast rescue, not a lucky one.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="weapons">
+    <div class="chapter-num">04</div>
+    <h2>Signature Weapons</h2>
+    <p class="lede">Same duo, different guns &mdash; and the accuracy numbers explain why.</p>
+
+    <div class="panel">
+      <h3 style="color:var(--accent)">D282 &mdash; AR / DMR / LMG spread</h3>
+      <p><b>Mk12 SPR</b> &mdash; 700 shots, 15.4% acc, 2,629 dmg, 10 kills<br>
+      <b>HK416</b> &mdash; 1,120 shots, 9.9% acc, 2,473 dmg, 13 kills<br>
+      <b>M249</b> &mdash; 1,170 shots, 8.6% acc, 2,372 dmg, 11 kills</p>
+      <p class="muted" style="font-size:13.5px">The M249 number is the tell &mdash; almost 1,200
+        shots at under 9% accuracy is exactly what an LMG is for: holding an angle down with volume
+        of fire rather than precision. That's a legitimate way to play a fight, just a different
+        one than S821's.</p>
+    </div>
+
+    <div class="panel">
+      <h3 style="color:var(--s821)">S821 &mdash; the ACE32, and genuine marksmanship</h3>
+      <p><b>ACE32</b> &mdash; 1,400 shots, 9.1% acc, 2,978 dmg, 18 kills &mdash; the main damage engine<br>
+      <b>SLR</b> &mdash; 480 shots, 17.5% acc, 2,515 dmg, 7 kills<br>
+      <b>Mk12 SPR</b> &mdash; 550 shots, 13.8% acc, 1,964 dmg, 8 kills</p>
+      <p class="muted" style="font-size:13.5px">17.5% on a single-fire DMR is a real "actually
+        lining up the shot" number, not a spray number &mdash; and it shows up again on Mini 14
+        (16.2%) and AK-M (16.1%). Casual full-auto accuracy in PUBG typically sits in single
+        digits to low teens; anything mid-teens and up on a semi-auto gun means the shots are
+        being taken with intent, not fired to see what happens.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="maps">
+    <div class="chapter-num">05</div>
+    <h2>Where You Shine, Where You Don't</h2>
+    <p class="lede">Average placement by map, best to worst (minimum 10 games played).</p>
+
+    <div class="panel" style="padding-top:14px;">
+      <div class="maprow">
+        <div class="mname">Karakin<span class="n">13 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:100%"></div></div>
+        <div class="place">10.6</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Vikendi<span class="n">12 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:61%"></div></div>
+        <div class="place">19.8</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Erangel<span class="n">57 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:48%"></div></div>
+        <div class="place">22.8</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Miramar<span class="n">16 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:46%"></div></div>
+        <div class="place">23.3</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Taego<span class="n">17 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:31%; background:linear-gradient(90deg,#d99a3d,#c97e00)"></div></div>
+        <div class="place">26.9</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Sanhok<span class="n">21 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:8%; background:linear-gradient(90deg,var(--danger),#a83530)"></div></div>
+        <div class="place">32.2</div>
+      </div>
+    </div>
+    <p class="chart-cap" style="text-align:left; margin-top:-6px;">Bar length = better placement (shorter avg. finish position). Karakin &amp; Vikendi lean green, Sanhok is the clear outlier.</p>
+
+    <div class="statrow" style="margin-top:22px;">
+      <div class="stat">
+        <div class="num">61.5%</div>
+        <div class="label">Top-10 rate on Karakin</div>
+        <div class="sub">best of any map &mdash; but 0 wins there</div>
+      </div>
+      <div class="stat">
+        <div class="num">14.3%</div>
+        <div class="label">Top-10 rate on Sanhok</div>
+        <div class="sub">worst of any map with real sample size</div>
+      </div>
+      <div class="stat blue">
+        <div class="num">0</div>
+        <div class="label">Kills on Rondo. Ever.</div>
+        <div class="sub">4 games, 4 goose eggs &mdash; small sample, but 4-for-4</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Why, probably</h3>
+      <p><b>Karakin</b> is the tiny 2&times;2km map with almost no vehicles worth using and constant
+        close-range pressure &mdash; the fact you land top-10 there more than any other map says
+        your survival instincts are genuinely good in the chaos. The fact you've never won it says
+        the opposite habit is costing you: Karakin's final circles are small enough that turtling
+        rarely wins, so the fix is probably fighting more, not less, once you're inside the top 4&ndash;5.</p>
+      <p><b>Sanhok</b> is the opposite problem. It's dense, fast, and the fights start early and
+        close &mdash; it punishes a patient, mid-range playstyle, which is exactly your playstyle
+        (your best weapons, SLR/Mini14/Mk12 SPR/AK-M, all want space to work). If Sanhok comes up,
+        expect a fight inside the first two minutes and loot with that in mind rather than trying
+        to out-rotate the map.</p>
+      <p class="muted" style="font-size:13.5px">Deston (3 games) and Rondo (4 games) don't have
+        enough data to draw real conclusions from &mdash; though "zero kills in four straight games
+        on Rondo" is at least a fun thing to notice.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="reel">
+    <div class="chapter-num">06</div>
+    <h2>Highlight Reel</h2>
+    <p class="lede">Click through to relive any of these in the full match replay.</p>
+
+    <div class="hl-grid">
+      <a class="hl win" href="match.html?id=694542fc-2dc3-454a-956d-6f79dd19f891">
+        <span class="tag">Chicken Dinner #1</span>
+        <h4>Erangel &middot; 17 Jun</h4>
+        <p class="detail">D282 6 kills / 410 dmg &middot; S821 2 kills / 239 dmg. The first one.</p>
+        <span class="link">Watch the replay &rarr;</span>
+      </a>
+      <a class="hl win" href="match.html?id=01bc906a-cd0c-46b3-a727-f9c35c84dd65">
+        <span class="tag">Chicken Dinner #2</span>
+        <h4>Erangel &middot; 29 Jun</h4>
+        <p class="detail">D282 2 kills / 264 dmg &middot; S821 3 kills / 406 dmg. Different game, same map, same result.</p>
+        <span class="link">Watch the replay &rarr;</span>
+      </a>
+      <a class="hl" href="match.html?id=8f36b68f-25d4-4fdb-a213-57bd70bfb73e">
+        <span class="tag">Best of the Rest</span>
+        <h4>Miramar &middot; 29 Jun</h4>
+        <p class="detail">2nd place, 8 combined kills, 1,221 combined damage &mdash; the best game
+          that didn't end in a dinner. Someone else's squad was just hotter.</p>
+        <span class="link">Watch the replay &rarr;</span>
+      </a>
+      <a class="hl" href="match.html?id=c63f0972-fed8-47a6-9bb7-9f5dc4225102">
+        <span class="tag">The Marathon</span>
+        <h4>Erangel &middot; 6 Jul</h4>
+        <p class="detail">27.7 minutes survived, 2nd place. As deep into a match as this dataset goes without winning it.</p>
+        <span class="link">Watch the replay &rarr;</span>
+      </a>
+      <a class="hl blue" href="match.html?id=71c21364-5ed0-481b-ab31-8e58e831e94b">
+        <span class="tag">Tank of the Tape</span>
+        <h4>Karakin &middot; 6 Jul</h4>
+        <p class="detail">D282 absorbed 481 damage and still closed out 2nd place. Whatever the healing
+          items were doing that night, keep doing that.</p>
+        <span class="link">Watch the replay &rarr;</span>
+      </a>
+      <a class="hl bad" href="match.html?id=ebe4c9b0-9c33-45b1-97b5-cd7d8fd7e653">
+        <span class="tag">Fastest Wipe</span>
+        <h4>Karakin &middot; 7 Jul</h4>
+        <p class="detail">Dead in 78 seconds. Hot drop, cold luck &mdash; happens to everyone eventually.</p>
+        <span class="link">Watch the replay &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="deaths">
+    <div class="chapter-num">07</div>
+    <h2>Death Habits</h2>
+    <p class="lede">Not about who kills you &mdash; it's a fresh lobby of strangers every game.
+      About the pattern in <em>how</em>.</p>
+
+    <div class="statrow">
+      <div class="stat ok">
+        <div class="num">7.7%</div>
+        <div class="label">Games ending in &lt;90s</div>
+        <div class="sub">11 of 143 &mdash; genuinely low</div>
+      </div>
+      <div class="stat">
+        <div class="num">50%</div>
+        <div class="label">Non-win games where you die together</div>
+        <div class="sub">same elapsed second, both eliminated</div>
+      </div>
+      <div class="stat blue">
+        <div class="num">8</div>
+        <div class="label">Kills credited to the blue zone</div>
+        <div class="sub">more than any human opponent managed</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Landing isn't the problem</h3>
+      <p>Only 11 of 143 games (7.7%) end inside the first 90 seconds &mdash; most drop-and-die panic
+        that sinks casual squads isn't really your issue. Whatever trouble finds you, it mostly
+        finds you later, once the real game has started.</p>
+    </div>
+
+    <div class="callout">
+      <b>You go down together &mdash; a lot.</b> In exactly half of your non-win games, both of you
+      were eliminated in the same recorded second. That's not a coincidence at that rate &mdash;
+      when a fight turns against you, it turns fast for both of you at once, which usually means
+      you're standing close enough that one grenade or one lucky spray can end the game twice over.
+      Simple fix: when you're holding an angle together, put a few real meters (and ideally a wall)
+      between you. If it goes wrong, make the enemy have to work for both kills separately.
+    </div>
+
+    <p class="muted" style="font-size:13.5px">For what it's worth, the weapon that "kills" you most
+      isn't a person at all &mdash; blue-zone/bleed-out damage accounts for more eliminations (8)
+      than any single enemy in 143 games of strangers. The circle doesn't miss, and it doesn't care
+      how good your aim is.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="notes">
+    <div class="chapter-num">08</div>
+    <h2>Coach's Notes</h2>
+    <p class="lede">Five things the data actually supports &mdash; not generic PUBG advice, things
+      that show up specifically in your 143 games.</p>
+
+    <ol class="notes">
+      <li>
+        <div>
+          <h4>Spread out when a fight is live</h4>
+          <p>Half your losses end with both of you eliminated in the same second. A few meters of
+            separation and a piece of cover between you is free insurance against one grenade or
+            one lucky burst ending the whole game at once.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>Let fights come to your sightline, not the other way around</h4>
+          <p>Every one of your best accuracy numbers &mdash; SLR, Mini 14, AK-M, Mk12 SPR &mdash;
+            is a single-fire gun used at range. Pushing into buildings for close-quarters fights
+            plays against your actual strengths; holding an angle and letting the enemy walk into
+            it plays to them.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>On Karakin, finish the job</h4>
+          <p>Best top-10 rate of any map (61.5%) but zero wins. You already out-survive almost
+            everyone there &mdash; the final circles on a 2&times;2km map are too small to hide in, so
+            treat top-4&ndash;5 there as the moment to fight, not the moment to turtle.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>On Sanhok, front-load the aggression</h4>
+          <p>It's the one map actively working against your patient, mid-range style. Loot fast,
+            expect contact inside the first two minutes, and don't be surprised when the DMRs
+            don't get room to breathe &mdash; that's the map, not you.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>Keep stacking sessions, not hours</h4>
+          <p>Your entire improvement arc &mdash; 31.9 to 17.5 average placement, 4% to 48% top-10
+            rate &mdash; happened across about a dozen play days in five weeks, with zero measurable
+            fatigue drop-off even in 21-game marathons. You don't need more time to keep improving.
+            You're clearly learning fast with the time you do get.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+</div>
+
+<footer>
+  <div class="sign">&mdash; compiled from all 143 shared matches, once, by request</div>
+  Not updated automatically. If you want a fresh read after more games, just ask for another one.
+</footer>
+
+<script>
+function toggleSiteNav() {
+  document.getElementById('siteNavMenu').classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('siteNav').contains(e.target))
+    document.getElementById('siteNavMenu').classList.remove('open');
+});
+
+const placements = [19, 45, 35, 19, 39, 40, 29, 41, 31, 38, 20, 38, 33, 24, 20, 15, 37, 41, 34, 39, 47, 48, 21, 41, 3, 4, 8, 43, 50, 34, 37, 26, 7, 13, 23, 3, 14, 13, 38, 38, 4, 5, 48, 40, 45, 3, 7, 32, 10, 16, 17, 5, 29, 47, 14, 1, 16, 43, 10, 3, 38, 6, 44, 11, 24, 48, 29, 16, 43, 2, 39, 26, 37, 32, 41, 24, 17, 38, 14, 10, 26, 39, 31, 71, 86, 11, 11, 6, 3, 7, 6, 34, 33, 8, 41, 7, 25, 48, 5, 11, 42, 4, 39, 24, 9, 23, 38, 31, 8, 32, 46, 1, 9, 14, 29, 7, 25, 3, 43, 2, 2, 11, 10, 2, 18, 2, 2, 14, 46, 47, 49, 9, 2, 23, 7, 22, 35, 18, 2, 9, 3, 31, 28];
+const roll = [19, 32, 33, 29.5, 31.4, 32.83, 32.29, 33.38, 33.11, 33.6, 33.7, 33, 32.8, 33.3, 31.4, 28.9, 29.7, 29.7, 30, 30.1, 32.8, 33.8, 32.6, 34.3, 32.6, 31.5, 28.6, 28.8, 30.4, 29.9, 28.9, 26.7, 25.3, 22.5, 24.5, 24.4, 25, 22, 20.8, 21.2, 17.9, 15.8, 19.9, 22.6, 24.8, 24.8, 24.1, 26, 23.2, 21, 22.3, 22.3, 20.4, 21.1, 18, 17.8, 18.7, 19.8, 19.8, 18.5, 20.6, 20.7, 22.2, 18.6, 19.6, 24.3, 25.6, 22.9, 26.2, 26.1, 26.2, 28.2, 27.5, 29.6, 31.3, 28.9, 27.7, 29.9, 27, 27.8, 26.5, 27.8, 27.2, 31.1, 35.6, 34.3, 33.7, 30.5, 29.4, 29.1, 27.1, 26.6, 26.8, 20.5, 16, 15.6, 17, 21.2, 21.4, 21.8, 25.4, 22.4, 23, 24.6, 21.4, 23, 24.3, 22.6, 22.9, 25, 25.4, 25.1, 22.1, 21.1, 23.1, 21.5, 20.2, 17.4, 20.9, 17.9, 13.5, 14.5, 14.6, 13.4, 12.3, 11.8, 9.5, 10.6, 10.9, 15.4, 20.1, 19.9, 19.1, 21.2, 20.1, 22.1, 25.4, 25.8, 21.4, 17.6, 13, 15.2, 17.8];
+const labels = placements.map((_,i)=>i+1);
+
+const ctx = document.getElementById('arcChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [
+      {
+        label: '10-game rolling avg. placement',
+        data: roll,
+        borderColor: '#f4a300',
+        backgroundColor: 'rgba(244,163,0,.12)',
+        borderWidth: 2.5,
+        pointRadius: 0,
+        fill: true,
+        tension: .25,
+      },
+      {
+        label: 'Placement (per game)',
+        data: placements,
+        borderColor: 'rgba(154,147,133,.35)',
+        borderWidth: 1,
+        pointRadius: 0,
+        fill: false,
+        tension: 0,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#9a9385', font: { family: 'Oswald' }, boxWidth: 14 } },
+      tooltip: {
+        backgroundColor: '#1e1c17', borderColor: '#38342c', borderWidth: 1,
+        titleColor: '#e8e3d8', bodyColor: '#e8e3d8',
+        callbacks: { title: (items) => 'Game #' + items[0].label }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#9a9385', maxTicksLimit: 12 },
+        grid: { color: '#26241d' },
+        title: { display: true, text: 'Match number (chronological)', color: '#9a9385' }
+      },
+      y: {
+        reverse: true,
+        min: 1,
+        ticks: { color: '#9a9385' },
+        grid: { color: '#26241d' },
+        title: { display: true, text: 'Placement (1 = win)', color: '#9a9385' }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
