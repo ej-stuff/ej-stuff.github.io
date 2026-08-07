@@ -2429,5 +2429,209 @@
       "damage": 33.1,
       "placement": 28
     }
+  },
+  {
+    "match_id": "ef3253dd-c7b2-47bb-9514-737240908742",
+    "created_at": "2026-08-07T17:39:42Z",
+    "date": "2026-08-07",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 44
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 75.0,
+      "placement": 44
+    }
+  },
+  {
+    "match_id": "82478691-32a1-4c52-b86b-0a644d97e536",
+    "created_at": "2026-08-07T17:43:56Z",
+    "date": "2026-08-07",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 88.3,
+      "placement": 14
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 14
+    }
+  },
+  {
+    "match_id": "6ba846ff-3219-41a7-9dc5-c20ca2fcdf82",
+    "created_at": "2026-08-07T17:52:43Z",
+    "date": "2026-08-07",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 25
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 120.0,
+      "placement": 25
+    }
+  },
+  {
+    "match_id": "f41a0656-3163-4c3a-9825-64088451c69b",
+    "created_at": "2026-08-07T18:03:39Z",
+    "date": "2026-08-07",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 23.4,
+      "placement": 15
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 176.6,
+      "placement": 15
+    }
+  },
+  {
+    "match_id": "b26b4315-94fd-4d80-8c62-513afc0760ed",
+    "created_at": "2026-08-07T18:22:28Z",
+    "date": "2026-08-07",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 125.3,
+      "placement": 6
+    },
+    "S821": {
+      "kills": 3,
+      "damage": 267.4,
+      "placement": 6
+    }
+  },
+  {
+    "match_id": "6368c0bd-5e6a-47f2-8308-c11f8498ac18",
+    "created_at": "2026-08-07T18:37:12Z",
+    "date": "2026-08-07",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 17
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 17
+    }
+  },
+  {
+    "match_id": "e714b73a-bb5c-43ab-832a-fa2cb84d95fe",
+    "created_at": "2026-08-07T18:54:30Z",
+    "date": "2026-08-07",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 59.2,
+      "placement": 36
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 5.6,
+      "placement": 36
+    }
+  },
+  {
+    "match_id": "6b3c9198-aa15-4655-b6f3-df0e4a78c974",
+    "created_at": "2026-08-07T19:01:35Z",
+    "date": "2026-08-07",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 41.1,
+      "placement": 4
+    },
+    "S821": {
+      "kills": 2,
+      "damage": 487.3,
+      "placement": 4
+    }
+  },
+  {
+    "match_id": "d5491276-e180-4085-9c70-f3a7448dbef7",
+    "created_at": "2026-08-07T19:27:56Z",
+    "date": "2026-08-07",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 29
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 284.3,
+      "placement": 29
+    }
+  },
+  {
+    "match_id": "32d5cb36-dea5-48e4-8a52-6e64c0309009",
+    "created_at": "2026-08-07T19:35:31Z",
+    "date": "2026-08-07",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 159.2,
+      "placement": 12
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 149.0,
+      "placement": 12
+    }
+  },
+  {
+    "match_id": "64a7aa65-ed50-45b4-811b-a4147cfd9a0d",
+    "created_at": "2026-08-07T19:54:15Z",
+    "date": "2026-08-07",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 30.9,
+      "placement": 44
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 87.1,
+      "placement": 44
+    }
+  },
+  {
+    "match_id": "f9d6c0c6-9b25-4d1f-acef-cb5908bf34e2",
+    "created_at": "2026-08-07T19:58:24Z",
+    "date": "2026-08-07",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 122.1,
+      "placement": 9
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 76.6,
+      "placement": 9
+    }
   }
 ]
