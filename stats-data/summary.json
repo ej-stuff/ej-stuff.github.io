@@ -1,14 +1,14 @@
 {
   "D282": {
     "account_id": "account.b0a37f3d51cf4669b626781fe58836f8",
-    "matches": 155,
+    "matches": 156,
     "kills": 77,
-    "deaths": 153,
-    "assists": 30,
+    "deaths": 154,
+    "assists": 31,
     "kd_ratio": 0.5,
     "avg_damage": 107.0,
-    "avg_placement": 23.7,
-    "top10_rate": 0.297,
+    "avg_placement": 23.5,
+    "top10_rate": 0.301,
     "win_rate": 0.013,
     "knockdowns": 65,
     "revives_given": 35,
@@ -17,18 +17,18 @@
   },
   "S821": {
     "account_id": "account.61d1f14476da433588d5b56cdab5da08",
-    "matches": 148,
-    "kills": 100,
-    "deaths": 146,
+    "matches": 149,
+    "kills": 102,
+    "deaths": 147,
     "assists": 32,
-    "kd_ratio": 0.68,
-    "avg_damage": 135.5,
-    "avg_placement": 23.4,
-    "top10_rate": 0.297,
-    "win_rate": 0.014,
-    "knockdowns": 89,
+    "kd_ratio": 0.69,
+    "avg_damage": 136.5,
+    "avg_placement": 23.2,
+    "top10_rate": 0.302,
+    "win_rate": 0.013,
+    "knockdowns": 90,
     "revives_given": 23,
     "headshot_kills": 22,
-    "headshot_kill_pct": 0.22
+    "headshot_kill_pct": 0.216
   }
 }
