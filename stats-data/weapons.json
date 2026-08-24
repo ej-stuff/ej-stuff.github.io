@@ -6,9 +6,9 @@
       "kills": 15,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.067,
-      "hits": 155,
-      "total_damage": 2650.2,
-      "avg_damage_per_hit": 17.1
+      "hits": 157,
+      "total_damage": 2733.0,
+      "avg_damage_per_hit": 17.4
     },
     {
       "weapon": "M249",
@@ -36,9 +36,9 @@
       "kills": 9,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.222,
-      "hits": 126,
-      "total_damage": 2602.8,
-      "avg_damage_per_hit": 20.7
+      "hits": 127,
+      "total_damage": 2644.0,
+      "avg_damage_per_hit": 20.8
     },
     {
       "weapon": "AK-M",
@@ -76,9 +76,19 @@
       "kills": 3,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.333,
-      "hits": 27,
-      "total_damage": 590.9,
-      "avg_damage_per_hit": 21.9
+      "hits": 30,
+      "total_damage": 665.2,
+      "avg_damage_per_hit": 22.2
+    },
+    {
+      "weapon": "SKS",
+      "category": "DMR",
+      "kills": 3,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 29,
+      "total_damage": 627.9,
+      "avg_damage_per_hit": 21.7
     },
     {
       "weapon": "UMP45",
@@ -101,24 +111,14 @@
       "avg_damage_per_hit": 14.9
     },
     {
-      "weapon": "SKS",
-      "category": "DMR",
-      "kills": 2,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 24,
-      "total_damage": 532.8,
-      "avg_damage_per_hit": 22.2
-    },
-    {
       "weapon": "ACE32",
       "category": "AR",
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 21,
-      "total_damage": 285.4,
-      "avg_damage_per_hit": 13.6
+      "hits": 25,
+      "total_damage": 379.5,
+      "avg_damage_per_hit": 15.2
     },
     {
       "weapon": "S686",
@@ -186,9 +186,9 @@
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
-      "hits": 16,
-      "total_damage": 559.1,
-      "avg_damage_per_hit": 34.9
+      "hits": 19,
+      "total_damage": 626.5,
+      "avg_damage_per_hit": 33.0
     },
     {
       "weapon": "Micro UZI",
@@ -308,9 +308,9 @@
       "kills": 13,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.231,
-      "hits": 86,
-      "total_damage": 1373.5,
-      "avg_damage_per_hit": 16.0
+      "hits": 87,
+      "total_damage": 1401.9,
+      "avg_damage_per_hit": 16.1
     },
     {
       "weapon": "SLR",
@@ -328,9 +328,9 @@
       "kills": 8,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.25,
-      "hits": 93,
-      "total_damage": 2092.6,
-      "avg_damage_per_hit": 22.5
+      "hits": 95,
+      "total_damage": 2210.3,
+      "avg_damage_per_hit": 23.3
     },
     {
       "weapon": "MP5K",
@@ -373,6 +373,16 @@
       "avg_damage_per_hit": 20.0
     },
     {
+      "weapon": "M24",
+      "category": "SR",
+      "kills": 4,
+      "headshot_kills": 3,
+      "headshot_kill_pct": 0.75,
+      "hits": 14,
+      "total_damage": 780.6,
+      "avg_damage_per_hit": 55.8
+    },
+    {
       "weapon": "UMP45",
       "category": "SMG",
       "kills": 4,
@@ -381,16 +391,6 @@
       "hits": 39,
       "total_damage": 565.7,
       "avg_damage_per_hit": 14.5
-    },
-    {
-      "weapon": "M24",
-      "category": "SR",
-      "kills": 2,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.5,
-      "hits": 10,
-      "total_damage": 613.3,
-      "avg_damage_per_hit": 61.3
     },
     {
       "weapon": "Kar98k",
@@ -421,6 +421,16 @@
       "hits": 9,
       "total_damage": 130.8,
       "avg_damage_per_hit": 14.5
+    },
+    {
+      "weapon": "Dragunov",
+      "category": "DMR",
+      "kills": 1,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 1.0,
+      "hits": 20,
+      "total_damage": 611.1,
+      "avg_damage_per_hit": 30.6
     },
     {
       "weapon": "Grenade",
@@ -493,24 +503,14 @@
       "avg_damage_per_hit": 5.7
     },
     {
-      "weapon": "Dragunov",
-      "category": "DMR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 18,
-      "total_damage": 504.3,
-      "avg_damage_per_hit": 28.0
-    },
-    {
       "weapon": "SKS",
       "category": "DMR",
       "kills": 0,
       "headshot_kills": 0,
       "headshot_kill_pct": 0,
-      "hits": 12,
-      "total_damage": 352.0,
-      "avg_damage_per_hit": 29.3
+      "hits": 13,
+      "total_damage": 384.1,
+      "avg_damage_per_hit": 29.5
     },
     {
       "weapon": "Micro UZI",
