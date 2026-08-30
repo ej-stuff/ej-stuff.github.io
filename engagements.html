@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Engagement Report — D282 &amp; S821</title>
-<meta name="description" content="564 fights from 213 PUBG matches, reconstructed from map positions — who shoots first, where fights are won, and the drop that costs you Sanhok.">
+<meta name="description" content="Every fight from 213 PUBG matches rebuilt from telemetry with ~30 features each — what separates the fights you win from the ones you lose.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,145 +20,129 @@
     --muted:   #9a9385;
     --accent:  #f4a300;   /* D282 */
     --s821:    #4a9edd;   /* S821 */
-    --ok:      #8fae5d;
-    --win:     #a3c76a;   /* chart green — validated against gray/red */
+    --win:     #a3c76a;
     --trade:   #9a9385;
     --danger:  #d7443e;
-    --purple:  #c080ff;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    line-height: 1.65;
-  }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px 80px; }
-  h1, h2, h3, .oswald { font-family: Oswald, system-ui, sans-serif; font-weight: 600; letter-spacing: .5px; }
+  body { margin:0; background:var(--bg); color:var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; line-height:1.65; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px 80px; }
+  h1,h2,h3,.oswald { font-family: Oswald, system-ui, sans-serif; font-weight:600; letter-spacing:.5px; }
   a { color: var(--accent); }
   .muted { color: var(--muted); }
 
-  /* ── Hero ──────────────────────────────────────────────────────────── */
-  .hero {
-    padding: 90px 24px 50px; text-align: center;
+  .hero { padding:90px 24px 50px; text-align:center;
     background: radial-gradient(ellipse 900px 400px at 50% -10%, rgba(244,163,0,.10), transparent 60%), var(--bg);
-    border-bottom: 1px solid var(--line);
-  }
-  .kicker { font-family: Oswald, sans-serif; text-transform: uppercase; letter-spacing: 4px; font-size: 12px; color: var(--muted); margin-bottom: 14px; }
-  .hero h1 {
-    font-size: clamp(36px, 6.5vw, 60px); text-transform: uppercase; letter-spacing: 3px; margin: 0 0 14px;
-    background: linear-gradient(135deg, #ffd479, var(--accent) 55%, #c97e00);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .hero-sub { max-width: 640px; margin: 0 auto; color: var(--muted); font-size: 16px; }
-  .hero-meta { margin-top: 22px; font-size: 13px; color: var(--muted); font-family: Oswald, sans-serif; letter-spacing: 1px; text-transform: uppercase; }
-  .hero-meta span.d { color: var(--accent); }
-  .hero-meta span.s { color: var(--s821); }
+    border-bottom:1px solid var(--line); }
+  .kicker { font-family:Oswald,sans-serif; text-transform:uppercase; letter-spacing:4px; font-size:12px; color:var(--muted); margin-bottom:14px; }
+  .hero h1 { font-size:clamp(36px,6.5vw,60px); text-transform:uppercase; letter-spacing:3px; margin:0 0 14px;
+    background:linear-gradient(135deg,#ffd479,var(--accent) 55%,#c97e00);
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { max-width:660px; margin:0 auto; color:var(--muted); font-size:16px; }
+  .hero-meta { margin-top:22px; font-size:13px; color:var(--muted); font-family:Oswald,sans-serif; letter-spacing:1px; text-transform:uppercase; }
+  .hero-meta span.d { color:var(--accent); } .hero-meta span.s { color:var(--s821); }
 
-  .intro { padding: 40px 0 10px; font-size: 16px; }
-  .intro p { margin: 0 0 14px; }
+  .intro { padding:40px 0 10px; font-size:16px; }
+  .intro p { margin:0 0 14px; }
 
-  /* ── Sections ──────────────────────────────────────────────────────── */
-  section.chapter { padding: 56px 0 8px; border-top: 1px solid var(--line); }
-  .chapter-num { font-family: Oswald, sans-serif; font-size: 12px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; }
-  .chapter h2 { font-size: 28px; text-transform: uppercase; margin: 0 0 16px; }
-  .chapter .lede { color: var(--muted); font-size: 15.5px; max-width: 660px; margin: 0 0 26px; }
+  section.chapter { padding:56px 0 8px; border-top:1px solid var(--line); }
+  .chapter-num { font-family:Oswald,sans-serif; font-size:12px; letter-spacing:3px; color:var(--accent); text-transform:uppercase; margin-bottom:6px; }
+  .chapter h2 { font-size:28px; text-transform:uppercase; margin:0 0 16px; }
+  .chapter .lede { color:var(--muted); font-size:15.5px; max-width:680px; margin:0 0 26px; }
 
-  /* ── Stats ─────────────────────────────────────────────────────────── */
-  .statrow { display: flex; flex-wrap: wrap; gap: 14px; margin: 20px 0 30px; }
-  .stat { flex: 1 1 150px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 16px; }
-  .stat .num { font-family: Oswald, sans-serif; font-weight: 700; font-size: 34px; color: var(--accent); line-height: 1; }
-  .stat.blue .num { color: var(--s821); }
-  .stat.ok .num { color: var(--win); }
-  .stat.bad .num { color: var(--danger); }
-  .stat .label { color: var(--muted); font-size: 12.5px; margin-top: 6px; text-transform: uppercase; letter-spacing: .5px; }
-  .stat .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .statrow { display:flex; flex-wrap:wrap; gap:14px; margin:20px 0 30px; }
+  .stat { flex:1 1 150px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 16px; }
+  .stat .num { font-family:Oswald,sans-serif; font-weight:700; font-size:32px; color:var(--accent); line-height:1; }
+  .stat.blue .num { color:var(--s821); } .stat.ok .num { color:var(--win); } .stat.bad .num { color:var(--danger); }
+  .stat .label { color:var(--muted); font-size:12.5px; margin-top:6px; text-transform:uppercase; letter-spacing:.5px; }
+  .stat .sub { color:var(--muted); font-size:12px; margin-top:2px; }
 
-  /* ── Charts ────────────────────────────────────────────────────────── */
-  .chart-box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 10px; margin: 10px 0 10px; }
-  .chart-box canvas { max-height: 300px; }
-  .chart-cap { color: var(--muted); font-size: 12.5px; margin: 4px 0 26px; }
+  .chart-box { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 18px 10px; margin:10px 0 10px; }
+  /* Chart.js with maintainAspectRatio:false sizes to its parent, so the
+     wrapper must carry an explicit height or the canvas collapses. */
+  .chart-box .cv { position:relative; height:330px; }
+  .chart-box.tall .cv { height:560px; }
+  .chart-box canvas { width:100% !important; height:100% !important; }
+  .chart-cap { color:var(--muted); font-size:12.5px; margin:4px 0 26px; }
 
-  /* ── Panels ────────────────────────────────────────────────────────── */
-  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-bottom: 18px; }
-  .panel h3 { margin: 0 0 8px; font-size: 16px; color: var(--accent); text-transform: uppercase; letter-spacing: .5px; }
-  .panel p { font-size: 15px; margin: 0 0 10px; }
-  .panel p:last-child { margin-bottom: 0; }
-  .callout { border-left: 3px solid var(--accent); background: rgba(244,163,0,.06); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 18px 0; font-size: 15px; }
-  .callout.blue { border-color: var(--s821); background: rgba(74,158,221,.07); }
-  .callout.ok { border-color: var(--win); background: rgba(163,199,106,.08); }
-  .callout.bad { border-color: var(--danger); background: rgba(215,68,62,.07); }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:18px; }
+  .panel h3 { margin:0 0 8px; font-size:16px; color:var(--accent); text-transform:uppercase; letter-spacing:.5px; }
+  .panel p { font-size:15px; margin:0 0 10px; } .panel p:last-child { margin-bottom:0; }
+  .callout { border-left:3px solid var(--accent); background:rgba(244,163,0,.06); padding:14px 18px; border-radius:0 10px 10px 0; margin:18px 0; font-size:15px; }
+  .callout.blue { border-color:var(--s821); background:rgba(74,158,221,.07); }
+  .callout.ok { border-color:var(--win); background:rgba(163,199,106,.08); }
+  .callout.bad { border-color:var(--danger); background:rgba(215,68,62,.07); }
 
-  /* ── Data table (drop zones / weapons) ─────────────────────────────── */
-  .dtable { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .dtable th {
-    text-align: left; font-family: Oswald, sans-serif; font-weight: 500; font-size: 11.5px;
-    text-transform: uppercase; letter-spacing: .6px; color: var(--muted);
-    padding: 6px 10px 8px 0; border-bottom: 1px solid var(--line);
-  }
-  .dtable th.r, .dtable td.r { text-align: right; padding-right: 0; }
-  .dtable td { padding: 9px 10px 9px 0; border-bottom: 1px solid rgba(56,52,44,.55); }
-  .dtable tr:last-child td { border-bottom: none; }
-  .dtable td.name { font-family: Oswald, sans-serif; letter-spacing: .3px; }
-  .dtable td .n { color: var(--muted); font-size: 11.5px; }
-  /* the bar column needs its own gutter or the value column collides with it */
-  .dtable th.bar-cell, .dtable td.bar-cell { padding-left: 16px; padding-right: 10px; width: 34%; }
-  .dtable th.pad, .dtable td.pad { padding-right: 14px; }
-  .bar-outer { background: var(--line); border-radius: 5px; height: 14px; overflow: hidden; }
-  .bar-inner { height: 100%; border-radius: 5px; }
-  .good { color: var(--win); }
-  .bad  { color: var(--danger); }
-  .flat { color: var(--muted); }
-  .pill { font-family: Oswald, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
-          padding: 2px 8px; border-radius: 5px; color: var(--bg); }
-  .pill.d { background: var(--accent); }
-  .pill.s { background: var(--s821); }
+  .dtable { width:100%; border-collapse:collapse; font-size:14px; }
+  .dtable th { text-align:left; font-family:Oswald,sans-serif; font-weight:500; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:.6px; color:var(--muted); padding:6px 12px 8px 0; border-bottom:1px solid var(--line); }
+  .dtable th.r, .dtable td.r { text-align:right; padding-right:0; }
+  .dtable th.pad, .dtable td.pad { padding-right:16px; }
+  .dtable td { padding:9px 12px 9px 0; border-bottom:1px solid rgba(56,52,44,.55); }
+  .dtable tr:last-child td { border-bottom:none; }
+  .dtable td.name { font-family:Oswald,sans-serif; letter-spacing:.3px; }
+  .dtable td .n { color:var(--muted); font-size:11.5px; }
+  .good { color:var(--win); } .bad { color:var(--danger); } .flat { color:var(--muted); }
 
-  /* ── Experiment cards ──────────────────────────────────────────────── */
-  .exp { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent);
-         border-radius: 0 12px 12px 0; padding: 18px 20px; margin-bottom: 14px; }
-  .exp.hi { border-left-color: var(--danger); }
-  .exp.ok { border-left-color: var(--win); }
-  .exp h4 { margin: 0 0 6px; font-family: Oswald, sans-serif; font-size: 16px; text-transform: uppercase; letter-spacing: .4px; }
-  .exp .why { color: var(--muted); font-size: 14px; margin: 0 0 8px; }
-  .exp .do { font-size: 14.5px; margin: 0; }
-  .exp .do b { color: var(--accent); }
-  .exp.hi .do b { color: var(--danger); }
-  .exp.ok .do b { color: var(--win); }
-  .exp .tag { display: inline-block; font-family: Oswald, sans-serif; font-size: 10px; letter-spacing: 1px;
-              text-transform: uppercase; color: var(--muted); border: 1px solid var(--line);
-              padding: 1px 7px; border-radius: 4px; margin-bottom: 8px; }
+  .exp { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--accent);
+    border-radius:0 12px 12px 0; padding:18px 20px; margin-bottom:14px; }
+  .exp.hi { border-left-color:var(--danger); } .exp.ok { border-left-color:var(--win); }
+  .exp h4 { margin:0 0 6px; font-family:Oswald,sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:.4px; }
+  .exp .why { color:var(--muted); font-size:14px; margin:0 0 8px; }
+  .exp .do { font-size:14.5px; margin:0; } .exp .do b { color:var(--accent); }
+  .exp.hi .do b { color:var(--danger); } .exp.ok .do b { color:var(--win); }
+  .exp .tag { display:inline-block; font-family:Oswald,sans-serif; font-size:10px; letter-spacing:1px;
+    text-transform:uppercase; color:var(--muted); border:1px solid var(--line); padding:1px 7px; border-radius:4px; margin-bottom:8px; }
 
-  footer { text-align: center; padding: 60px 24px 30px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); margin-top: 40px; }
-  footer .sign { font-family: Oswald, sans-serif; color: var(--accent); font-size: 15px; letter-spacing: .5px; margin-bottom: 6px; }
+  /* ── Engagement browser ─────────────────────────────────────────────── */
+  .filters { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; align-items:center; }
+  .filters select, .filters button {
+    background:var(--panel2); color:var(--text); border:1px solid var(--line);
+    border-radius:7px; padding:7px 10px; font-size:13px; font-family:inherit; cursor:pointer; }
+  .filters select:hover, .filters button:hover { border-color:var(--accent); }
+  .filters label { font-size:11.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted);
+    font-family:Oswald,sans-serif; margin-right:-4px; }
+  #engSummary { font-size:13.5px; color:var(--muted); margin:0 0 12px; }
+  #engSummary b { color:var(--text); }
+  .etable-wrap { max-height:560px; overflow:auto; border:1px solid var(--line); border-radius:12px; background:var(--panel); }
+  .etable { width:100%; border-collapse:collapse; font-size:13px; }
+  .etable th { position:sticky; top:0; background:var(--panel2); z-index:2;
+    text-align:left; font-family:Oswald,sans-serif; font-weight:500; font-size:11px;
+    text-transform:uppercase; letter-spacing:.5px; color:var(--muted);
+    padding:9px 8px; border-bottom:1px solid var(--line); cursor:pointer; white-space:nowrap; }
+  .etable th:hover { color:var(--accent); }
+  .etable th.sorted::after { content:' ▾'; color:var(--accent); }
+  .etable th.sorted.asc::after { content:' ▴'; }
+  .etable td { padding:8px; border-bottom:1px solid rgba(56,52,44,.45); white-space:nowrap; }
+  .etable tr:hover td { background:rgba(244,163,0,.05); }
+  .etable .ow { color:var(--win); font-weight:600; }
+  .etable .ol { color:var(--danger); font-weight:600; }
+  .etable .ot { color:var(--muted); font-weight:600; }
+  .etable a { text-decoration:none; }
+  .etable .dim { color:var(--muted); }
 
-  .method { font-size: 13.5px; color: var(--muted); }
-  .method li { margin-bottom: 7px; }
+  footer { text-align:center; padding:60px 24px 30px; color:var(--muted); font-size:13px; border-top:1px solid var(--line); margin-top:40px; }
+  footer .sign { font-family:Oswald,sans-serif; color:var(--accent); font-size:15px; letter-spacing:.5px; margin-bottom:6px; }
+  .method { font-size:13.5px; color:var(--muted); } .method li { margin-bottom:7px; }
 
-  @media (max-width: 560px) {
-    .hero { padding: 76px 18px 40px; }
-    .dtable { font-size: 13px; }
-    .hide-sm { display: none; }
-  }
+  @media (max-width:620px) { .hero { padding:76px 18px 40px; } .hide-sm { display:none; } }
 
-  /* ── Site nav ──────────────────────────────────────────────────────── */
-  #siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
-  #siteNavBtn { width: 34px; height: 34px; background: var(--panel); border: 1px solid var(--line);
-    border-radius: 8px; color: var(--accent); font-size: 17px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: border-color .15s; }
-  #siteNavBtn:hover { border-color: var(--accent); }
-  #siteNavMenu { display: none; position: absolute; top: 40px; left: 0; background: var(--panel);
-    border: 1px solid var(--line); border-radius: 10px; padding: 6px; min-width: 210px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.6); }
-  #siteNavMenu.open { display: block; }
-  #siteNavMenu a { display: block; padding: 9px 14px; color: var(--text); text-decoration: none;
-    border-radius: 7px; font-size: 13px; font-family: Oswald, system-ui, sans-serif;
-    text-transform: uppercase; letter-spacing: .5px; transition: background .1s, color .1s; }
-  #siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
-  #siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
-  #siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+  #siteNav { position:fixed; top:10px; left:10px; z-index:9000; }
+  #siteNavBtn { width:34px; height:34px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; color:var(--accent); font-size:17px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:border-color .15s; }
+  #siteNavBtn:hover { border-color:var(--accent); }
+  #siteNavMenu { display:none; position:absolute; top:40px; left:0; background:var(--panel);
+    border:1px solid var(--line); border-radius:10px; padding:6px; min-width:210px; box-shadow:0 8px 24px rgba(0,0,0,.6); }
+  #siteNavMenu.open { display:block; }
+  #siteNavMenu a { display:block; padding:9px 14px; color:var(--text); text-decoration:none;
+    border-radius:7px; font-size:13px; font-family:Oswald,system-ui,sans-serif;
+    text-transform:uppercase; letter-spacing:.5px; }
+  #siteNavMenu a:hover { background:rgba(244,163,0,.12); color:var(--accent); }
+  #siteNavMenu a.nav-cur { color:var(--accent); pointer-events:none; }
+  #siteNavMenu .nav-sep { height:1px; background:var(--line); margin:5px 8px; }
 </style>
 </head>
 <body>
@@ -180,653 +164,632 @@
 </div>
 
 <div class="hero">
-  <div class="kicker">POSITIONAL DEEP-DIVE &middot; 564 RECONSTRUCTED FIGHTS</div>
+  <div class="kicker">564 FIGHTS &middot; ~30 MEASUREMENTS EACH</div>
   <h1>The Engagement Report</h1>
-  <p class="hero-sub">Every shot, knock and kill from 213 matches, put back on the map with the
-    circle, the terrain and both of your positions attached. The question isn't how many fights you
-    win &mdash; it's <em>which</em> fights, and what they have in common.</p>
+  <p class="hero-sub">Every fight from 213 matches rebuilt from raw telemetry — positions, elevation,
+    health, spacing, who moved toward whom, who fired first, and how long before the second player
+    joined in. Then: what separates the fights you win from the ones you lose.</p>
   <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 2 Jun &ndash; 25 Aug 2026</div>
 </div>
 
 <div class="wrap">
 
   <div class="intro">
-    <p>The <a href="debrief.html">Debrief</a> looked at outcomes &mdash; placements, K/D, maps.
-      This one looks at <em>mechanism</em>. Every combat event was pulled from the raw match
-      telemetry, grouped into discrete fights, and tagged with where you were standing: how far
-      from the circle centre, inside a town or out in the open, how far apart the two of you were,
-      and who landed the first hit.</p>
-    <p>The headline is uncomfortable and also the most useful thing in here: <b>you lose most of
-      your fights, and the reason is almost entirely about who starts them.</b> Everything else
-      &mdash; guns, maps, terrain &mdash; is a rounding error next to that one variable.</p>
+    <p>Every combat event was pulled from the raw match telemetry and grouped into discrete fights
+      (a new fight starts after 45 seconds of silence). For each one I reconstructed the situation
+      from position pings taken every 10 seconds: where both of you were, how far apart, how fast you
+      were moving, whether you were in a vehicle, your health, your elevation relative to the enemy,
+      whether they were closing on you or you on them, who landed the first hit, and how many seconds
+      passed before the second of you started shooting.</p>
+    <p>That gives 365 decisive fights with about thirty measurements each. The interesting part isn't
+      any single number — it's that when you line the wins up against the losses, <b>four things
+      separate them and the rest barely move at all.</b></p>
   </div>
 
   <!-- ============================================================ -->
-  <section class="chapter" id="baseline">
+  <section class="chapter" id="split">
     <div class="chapter-num">01</div>
-    <h2>The Baseline</h2>
-    <p class="lede">564 fights against real players. A "win" here means you knocked or killed
-      someone and neither of you went down. It is a strict definition, and you don't clear it often.</p>
+    <h2>Wins vs Losses, Feature by Feature</h2>
+    <p class="lede">63 clean wins against 193 clean losses. Every measurement, side by side. Most of
+      them are nearly identical — which is exactly what makes the four that aren't worth acting on.</p>
 
-    <div class="statrow">
-      <div class="stat">
-        <div class="num">365</div>
-        <div class="label">Decisive fights</div>
-        <div class="sub">someone went down &mdash; of 544 vs humans</div>
-      </div>
-      <div class="stat bad">
-        <div class="num">17.3%</div>
-        <div class="label">You win outright</div>
-        <div class="sub">63 clean wins &middot; 109 trades &middot; 193 losses</div>
-      </div>
-      <div class="stat">
-        <div class="num">33%</div>
-        <div class="label">Fights nobody wins</div>
-        <div class="sub">179 long-range pokes, no one downed</div>
-      </div>
+    <div class="chart-box tall"><div class="cv"><canvas id="splitChart"></canvas></div></div>
+    <p class="chart-cap">Share of fights where each condition was true, in wins vs losses. Bars far
+      apart = the thing actually matters. Bars level = it doesn't.</p>
+
+    <div class="callout ok">
+      <b>The four that separate wins from losses:</b> you landed the first hit (76% of wins vs 21% of
+      losses), both of you actually shot at the enemy (57% vs 18%), you went in at full health (65%
+      vs 33%), and you had the high ground (18% vs 7%). Everything else — circle position, spacing,
+      whether you were moving or holding, terrain, how many enemies — is close to a coin flip.
     </div>
 
-    <p>Three in ten of your fights end with someone downed on both sides (a trade), and more than
-      half end with only your side down. That's a losing record, but it isn't a shooting problem
-      &mdash; the rest of this page is the evidence that it's a <em>starting</em> problem.</p>
+    <div class="panel">
+      <h3>The measurements that <em>didn't</em> matter</h3>
+      <p>Worth stating plainly, because it saves you effort: median distance from the circle centre
+        was 0.41 in both wins and losses. Duo spacing at contact was 25m vs 23m. Fight duration 23s
+        vs 22s. Number of enemies, 2 vs 2. Whether you were standing still or moving, near-identical.
+        Even "did we fire a shot before getting hit" is flat (43% vs 45%) — shooting first isn't the
+        same as <em>hitting</em> first, and only hitting counts.</p>
+      <p>The one mild surprise: in fights you won, the enemy had closed 38m on you in the previous
+        30 seconds; in fights you lost, only 20m. <b>Letting them walk to you is better than walking
+        to them.</b> More on that in Chapter 05.</p>
+    </div>
   </section>
 
   <!-- ============================================================ -->
-  <section class="chapter" id="initiation">
+  <section class="chapter" id="risk">
     <div class="chapter-num">02</div>
-    <h2>Who Shoots First Decides It</h2>
-    <p class="lede">This is the finding. Everything else on this page is smaller than this.</p>
+    <h2>The Four Risk Factors</h2>
+    <p class="lede">Take the things that actually predict a loss, count how many are present at the
+      start of a fight, and the outcome becomes almost deterministic.</p>
 
-    <div class="chart-box"><canvas id="initChart"></canvas></div>
-    <p class="chart-cap">Outcome of all 365 decisive fights, split by who landed the first damaging
-      hit. Hover any segment for counts.</p>
+    <div class="chart-box"><div class="cv"><canvas id="riskChart"></canvas></div></div>
+    <p class="chart-cap">Risk factors: you were hit first &middot; the fight is under 30m &middot;
+      only one of you engages &middot; more than one enemy team involved.</p>
+
+    <div class="statrow">
+      <div class="stat ok">
+        <div class="num">44%</div>
+        <div class="label">Win rate, zero risk factors</div>
+        <div class="sub">n=18 &mdash; rare, but you dominate them</div>
+      </div>
+      <div class="stat">
+        <div class="num">70%</div>
+        <div class="label">Of fights have 2+ factors</div>
+        <div class="sub">261 of 365 &mdash; the normal case</div>
+      </div>
+      <div class="stat bad">
+        <div class="num">0%</div>
+        <div class="label">Win rate, all four</div>
+        <div class="sub">n=16 &middot; 0 wins, 7 trades, 9 losses</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>These stack multiplicatively, not additively.</b> One risk factor is survivable (37% win
+      rate — better than your 17% average). Two drops you to 11.5%. Three to 6.6%. All four has never
+      produced a win in 16 attempts. The practical version: you rarely lose a fight because of one
+      mistake, you lose because three conditions were already true when the shooting started.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="first">
+    <div class="chapter-num">03</div>
+    <h2>Getting Hit First</h2>
+    <p class="lede">The largest single effect in the dataset, and the one you have the most control
+      over.</p>
 
     <div class="statrow">
       <div class="stat ok">
         <div class="num">31.8%</div>
-        <div class="label">Win rate when you open</div>
-        <div class="sub">n=151 &middot; you deal 167, take 140</div>
+        <div class="label">Win rate, you hit first</div>
+        <div class="sub">n=151 &middot; +28 avg damage differential</div>
       </div>
       <div class="stat bad">
         <div class="num">7.0%</div>
-        <div class="label">Win rate when they open</div>
-        <div class="sub">n=214 &middot; you deal 72, take 182</div>
+        <div class="label">Win rate, they hit first</div>
+        <div class="sub">n=214 &middot; &minus;110 avg damage differential</div>
       </div>
       <div class="stat">
-        <div class="num">59%</div>
-        <div class="label">Of fights, they shoot first</div>
-        <div class="sub">214 of 365 &mdash; the core problem</div>
+        <div class="num">6.4<span style="font-size:16px;color:var(--muted)">s</span></div>
+        <div class="label">To return fire when ambushed</div>
+        <div class="sub">a lifetime in a gunfight</div>
       </div>
     </div>
 
     <div class="callout bad">
-      <b>Getting shot first is a 4.5&times; swing, and it happens to you in most fights.</b>
-      When you land the first hit you win 31.8% outright. When they do, you win 7.0%. The damage
-      tells the same story from the other side: opening a fight, you deal 167 and take 140. Getting
-      opened on, you deal 72 and take 182 &mdash; you barely get to shoot back. And 78% of ambushed
-      fights end with one of you dead, against 57% of the ones you start.
+      <b>In two-thirds of the fights where you're hit first, you hadn't fired a single shot.</b>
+      Of 214 ambushed fights, in 144 (67%) neither of you had pulled a trigger before the first bullet
+      landed on you — you didn't know the fight existed. And once it starts that way it takes a median
+      6.4 seconds to shoot back, by which time the exchange is usually decided. Those fights win at 6.2%.
     </div>
 
-    <p>Worth being precise about what "first hit" means: PUBG only logs shots that connect, so this
-      is who lands the first <em>hit</em>, not who pulls the trigger first. That actually makes the
-      gap more meaningful &mdash; it's not about reaction time, it's about who had a firing solution
-      set up before the fight started.</p>
+    <p>The critical distinction: shooting first and <em>hitting</em> first are different things, and
+      only the second one predicts anything. In wins you fired before being hit 43% of the time; in
+      losses, 45%. The gap is entirely in who <b>connects</b> first — which is a question of who had
+      their sights already on the right place, not who reacted faster.</p>
 
-    <p class="muted" style="font-size:13.5px">One encouraging note: your first-hit rate climbs
-      through the game &mdash; 39% in the first five minutes, 50% in the endgame past 18 minutes.
-      When the map is small and you're deliberately holding a position, you're a different team than
-      you are in the looting phase.</p>
+    <p class="muted" style="font-size:13.5px">This is the same thing PUBG guides call peeker's
+      advantage and crosshair placement — pre-aiming where you expect a body to appear so that
+      stepping out needs a small correction, not a full sweep. The data can't see your crosshair,
+      but it can see that the team who connects first wins four and a half times more often.</p>
   </section>
 
   <!-- ============================================================ -->
-  <section class="chapter" id="range">
-    <div class="chapter-num">03</div>
-    <h2>Range: Where Your Fights Are Winnable</h2>
-    <p class="lede">You fight almost everything up close, and up close is exactly where the
-      first-hit penalty bites hardest.</p>
+  <section class="chapter" id="together">
+    <div class="chapter-num">04</div>
+    <h2>Fighting As One Or As Two</h2>
+    <p class="lede">In 62% of your fights, only one of you ever damages the enemy. That is the second
+      biggest lever on this page.</p>
 
-    <div class="chart-box"><canvas id="rangeChart"></canvas></div>
-    <p class="chart-cap">Win rate by fight range, split by who opened. Sample sizes per bar in the
-      tooltip; the 80&ndash;200m bars are the smallest (n=20 and n=23) so treat the exact figures
-      as indicative.</p>
+    <div class="statrow">
+      <div class="stat ok">
+        <div class="num">26.1%</div>
+        <div class="label">Win rate, both engage</div>
+        <div class="sub">n=138 &middot; damage differential +12</div>
+      </div>
+      <div class="stat bad">
+        <div class="num">11.9%</div>
+        <div class="label">Win rate, one fights alone</div>
+        <div class="sub">n=227 &middot; damage differential &minus;92</div>
+      </div>
+      <div class="stat">
+        <div class="num">47.8%</div>
+        <div class="label">Win rate, joining within 2s</div>
+        <div class="sub">n=23 &mdash; the best number on this page</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Is this just "we lost too fast for the second player to shoot"?</h3>
+      <p>That was the obvious objection, so I tested it. Restricting to fights that lasted more than
+        30 seconds — plenty of time for both to join — fighting together wins 20.0% and fighting
+        alone wins 6.0%. Restricting instead to fights where both of you were alive and on your feet
+        when it started, and lasting 15s+: 23.2% versus 8.2%. <b>The effect survives every control
+        I could put on it.</b> It isn't an artifact of losing quickly; it's a cause of losing.</p>
+    </div>
+
+    <div class="callout ok">
+      <b>Speed of joining matters more than joining at all.</b> When the second player starts shooting
+      within 2 seconds, you win 47.8% — nearly triple your baseline. Between 2 and 15 seconds it falls
+      to 15&ndash;20%. Past 15 seconds it recovers slightly (23.9%), but those are a different animal:
+      long-range fights where there was never a shared burst of pressure. The winning pattern is both
+      guns arriving essentially at once.
+    </div>
+
+    <p>There's also an asymmetry in who ends up alone. <b style="color:var(--s821)">S821</b> fights
+      alone 82 times and wins 24.4% of those; <b style="color:var(--accent)">D282</b> fights alone 66
+      times and wins 10.6%. Being caught solo hurts both, but it is roughly twice as costly for D282.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="health">
+    <div class="chapter-num">05</div>
+    <h2>You Fight Too Hurt, Too Soon</h2>
+    <p class="lede">This one didn't show up in the first version of this analysis at all, and it may
+      be the cheapest thing on the page to fix.</p>
+
+    <div class="chart-box"><div class="cv"><canvas id="hpChart"></canvas></div></div>
+    <p class="chart-cap">Fight win rate by the lower of your two health values when the shooting
+      started. The gradient is clean and steep.</p>
+
+    <div class="callout bad">
+      <b>Below 50 health, you win 4.2% of fights.</b> At full health you win 25.6%. That's a six-fold
+      difference, and it's monotonic all the way down: 100hp &rarr; 25.6%, 75&ndash;99 &rarr; 17.7%,
+      50&ndash;75 &rarr; 13.3%, under 50 &rarr; 4.2%. And 96 of your 365 fights — better than one in
+      four — start with one of you already under half health.
+    </div>
+
+    <div class="panel">
+      <h3>Where the damaged fights come from</h3>
+      <p>Almost entirely from re-engaging too soon after the last fight. Sorting every fight by how
+        long since the previous one in the same match:</p>
+      <table class="dtable" style="margin-top:10px">
+        <thead><tr><th>When the fight happened</th><th class="r pad">Fights</th><th class="r pad">Median health</th><th class="r">Win rate</th></tr></thead>
+        <tbody>
+          <tr><td class="name">First fight of the match</td><td class="r pad">212</td><td class="r pad good">100</td><td class="r good">20.8%</td></tr>
+          <tr><td class="name">More than 5 min later</td><td class="r pad">47</td><td class="r pad good">98</td><td class="r">17.0%</td></tr>
+          <tr><td class="name">2&ndash;5 min after the last</td><td class="r pad">64</td><td class="r pad">76</td><td class="r">12.5%</td></tr>
+          <tr><td class="name">Within 2 min of the last</td><td class="r pad">42</td><td class="r pad bad">29</td><td class="r bad">7.1%</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px">A fight taken within two minutes of the previous one starts at a
+        median of 29 health and wins 7.1% of the time. The pattern is: fight, survive, don't reset,
+        get caught again while still broken.</p>
+    </div>
+
+    <div class="callout">
+      <b>It's also the strongest predictor of being ambushed.</b> In fights where the enemy hit you
+      first, one of you was already below 75 health 48% of the time. In fights where you hit first,
+      only 15%. Being hurt and being surprised are the same failure — you're moving, or healing in
+      the open, or pushing to finish something, instead of being behind cover with your sights up.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="start">
+    <div class="chapter-num">06</div>
+    <h2>How The Fight Starts</h2>
+    <p class="lede">Using the position tracks, I can tell whether the enemy walked into you or you
+      walked into them in the 30 seconds before first contact.</p>
+
+    <div class="panel">
+      <table class="dtable">
+        <thead><tr><th>How it began</th><th class="r pad">Fights</th><th class="r pad">Win rate</th><th class="r">Damage diff</th></tr></thead>
+        <tbody>
+          <tr><td class="name">They came to us</td><td class="r pad">81</td><td class="r pad good">21.0%</td><td class="r">&minus;35</td></tr>
+          <tr><td class="name">Mutual push</td><td class="r pad">118</td><td class="r pad">18.6%</td><td class="r">&minus;49</td></tr>
+          <tr><td class="name">Static / long range</td><td class="r pad">93</td><td class="r pad">17.2%</td><td class="r">&minus;61</td></tr>
+          <tr><td class="name">We pushed them</td><td class="r pad">73</td><td class="r pad bad">11.0%</td><td class="r bad">&minus;69</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <b>Pushing is your worst opening and it's a third of your fights.</b> When you close the
+      distance you win 11.0%; when they close on you, 21.0% — nearly double. This matches the health
+      finding and the first-hit finding: the team that arrives is the team that gets seen first, and
+      being seen first is how you get hit first.
+    </div>
+
+    <div class="statrow">
+      <div class="stat bad">
+        <div class="num">9.7%</div>
+        <div class="label">Win rate starting in a vehicle</div>
+        <div class="sub">n=31 &middot; damage differential &minus;112</div>
+      </div>
+      <div class="stat">
+        <div class="num">18.0%</div>
+        <div class="label">Win rate on foot</div>
+        <div class="sub">n=334</div>
+      </div>
+      <div class="stat">
+        <div class="num">3&times;</div>
+        <div class="label">More likely to be ambushed in a car</div>
+        <div class="sub">11.7% of ambushes vs 4.0% of fights you start</div>
+      </div>
+    </div>
+
+    <p>Getting caught in a vehicle is close to the worst thing that happens to you: it's your lowest
+      win rate of any starting condition and the largest damage deficit (&minus;112). A moving car is
+      audible from hundreds of metres, and everyone who hears it has time to set up on it while you
+      have none.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="geometry">
+    <div class="chapter-num">07</div>
+    <h2>Range And High Ground</h2>
+    <p class="lede">Where the shooting actually happens, and why the same fight at a different
+      distance is a different fight.</p>
+
+    <div class="chart-box"><div class="cv"><canvas id="rangeChart"></canvas></div></div>
+    <p class="chart-cap">Win rate by fight range, split by who landed the first hit. Note the
+      80&ndash;200m bars are the smallest samples (n=19 and n=22).</p>
 
     <div class="statrow">
       <div class="stat">
         <div class="num">86%</div>
         <div class="label">Of fights are under 80m</div>
-        <div class="sub">312 of 365 &mdash; median fight is ~28m</div>
+        <div class="sub">313 of 365</div>
       </div>
       <div class="stat ok">
-        <div class="num">55%</div>
-        <div class="label">Win rate opening at 80&ndash;200m</div>
-        <div class="sub">your single best situation (n=20)</div>
+        <div class="num">34.1%</div>
+        <div class="label">Win rate at 80&ndash;200m</div>
+        <div class="sub">n=41 &mdash; your best bracket by far</div>
       </div>
       <div class="stat bad">
-        <div class="num">7.1%</div>
-        <div class="label">Win rate ambushed under 30m</div>
-        <div class="sub">n=113 &mdash; your most common fight</div>
+        <div class="num">6.8%</div>
+        <div class="label">Ambushed under 30m</div>
+        <div class="sub">n=117 &mdash; your single most common fight</div>
       </div>
     </div>
 
-    <div class="callout">
-      <b>Your most common fight is your worst one.</b> Being jumped inside 30 metres happens 113
-      times &mdash; more than any other situation in the dataset &mdash; and you win it 7.1% of the
-      time. Meanwhile the fight you're best at, opening on someone at 80&ndash;200m, comes up 20
-      times. You are spending most of your fighting in the one bracket where the ambusher's
-      advantage is largest, because at 15 metres there is no time to recover from a bad first
-      second.
-    </div>
-
-    <p>This lines up with the accuracy profile from the Debrief: your best numbers are all on
-      single-fire guns at range (Mini 14, SLR, SKS, Dragunov). The data here says that isn't just a
-      shooting preference &mdash; it's where your fight results are actually good.</p>
-  </section>
-
-  <!-- ============================================================ -->
-  <section class="chapter" id="terrain">
-    <div class="chapter-num">04</div>
-    <h2>Compounds vs Open Ground</h2>
-    <p class="lede">Using PUBG's own named-location tags, every fight is either inside a
-      town/compound or out in open field, forest and hills.</p>
-
-    <div class="statrow">
-      <div class="stat">
-        <div class="num">14.8%</div>
-        <div class="label">Win rate in compounds</div>
-        <div class="sub">n=142 &middot; median range 19m</div>
-      </div>
-      <div class="stat ok">
-        <div class="num">18.8%</div>
-        <div class="label">Win rate in the open</div>
-        <div class="sub">n=223 &middot; median range 36m</div>
-      </div>
-      <div class="stat">
-        <div class="num">&minus;61 / &minus;48</div>
-        <div class="label">Avg damage differential</div>
-        <div class="sub">compound vs open &mdash; both negative</div>
-      </div>
-    </div>
-
-    <p>Open ground is modestly better, and the reason is visible in the range column: fights in
-      compounds happen at a median of 19 metres, in the open at 36. Buildings force the exact
-      bracket you're weakest in. It isn't that you're bad indoors specifically &mdash; it's that
-      indoors is where sub-30m ambushes live.</p>
+    <p>The pattern repeats at every distance: opening the fight is worth roughly 4&times;, and the
+      gap gets bigger as range grows. At 80&ndash;200m when you shoot first you win 57.9%. At the same
+      range when they shoot first, 13.6%. Distance buys you time to react — but only if you're the one
+      who spotted the other team.</p>
 
     <div class="callout ok">
-      <b>The interaction matters more than either factor alone.</b> Opening a fight in the open:
-      34.8% win rate. Getting opened on in a compound: 5.0%. That's a seven-fold spread, and both
-      halves of it are things you control &mdash; where you choose to be, and whether you're set up
-      before contact.
-    </div>
-
-    <p class="muted" style="font-size:13.5px">Caveat worth stating: PUBG only tags <em>named</em>
-      locations, so a lone farmhouse or a two-shed cluster counts as "open" here. The compound
-      bucket is really "inside a named town", not "inside any building".</p>
-  </section>
-
-  <!-- ============================================================ -->
-  <section class="chapter" id="circle">
-    <div class="chapter-num">05</div>
-    <h2>Circle Position: Not Edge, Not Deep</h2>
-    <p class="lede">For every fight, how far you were from the safe-zone centre as a fraction of
-      its radius. 0 = dead centre, 1.0 = right on the boundary.</p>
-
-    <div class="chart-box"><canvas id="circleChart"></canvas></div>
-    <p class="chart-cap">Win rate by position within the safe zone. The middle band is clearly best;
-      the rim is clearly worst.</p>
-
-    <div class="callout">
-      <b>Playing the rim is costing you.</b> Fights in the outer third of the circle
-      (0.65&ndash;1.0 of the radius) win at 10.7% &mdash; the worst bucket on the board, on a solid
-      n=103. The middle band (0.35&ndash;0.65) wins at 26.4%, two and a half times better. Dead
-      centre is mediocre too (17.2%): you end up in the open with people looking in at you from
-      every side.
-    </div>
-
-    <p>There's a mechanism behind it, and it's the same one as everywhere else on this page. In the
-      middle band you land the first hit 53.8% of the time &mdash; your best number anywhere. On the
-      rim it drops to 38.8%, and outside the zone to 15.8%. Playing the edge means people are
-      rotating <em>through</em> you from behind while your attention is pointed inward, and you keep
-      meeting them on their terms.</p>
-
-    <p class="muted" style="font-size:13.5px">A fair warning about this one: across whole matches,
-      average circle position barely predicts placement at all (among games where you survived 15+
-      minutes, the most-central and most-edge quartiles finish 8.2 and 8.9 on average &mdash;
-      effectively identical). So this is a claim about <em>where fights go well</em>, not a claim
-      that hugging the middle all game wins games.</p>
-  </section>
-
-  <!-- ============================================================ -->
-  <section class="chapter" id="spacing">
-    <div class="chapter-num">06</div>
-    <h2>Spacing: The Real Trade-Off</h2>
-    <p class="lede">The Debrief corrected the old "spread out" advice, because your simultaneous
-      deaths turned out to be the knockdown rule, not shared grenades. Here is the fuller picture
-      &mdash; and it cuts both ways.</p>
-
-    <div class="chart-box"><canvas id="spacingChart"></canvas></div>
-    <p class="chart-cap">Two things that move in opposite directions as you separate: how often you
-      win the fight, and how often a knocked teammate actually gets picked back up.</p>
-
-    <div class="statrow">
-      <div class="stat">
-        <div class="num">21m</div>
-        <div class="label">Your median spacing in a fight</div>
-        <div class="sub">57% of fights are under 25m apart</div>
-      </div>
-      <div class="stat ok">
-        <div class="num">36%</div>
-        <div class="label">Fight win rate at 75&ndash;200m apart</div>
-        <div class="sub">vs 12% when stacked, at matched ranges</div>
-      </div>
-      <div class="stat bad">
-        <div class="num">12.6%</div>
-        <div class="label">Revive rate past 25m</div>
-        <div class="sub">vs 36.8% when inside 25m</div>
-      </div>
-    </div>
-
-    <div class="callout">
-      <b>Separation wins fights and loses teammates.</b> Holding different angles roughly triples
-      your fight win rate &mdash; and this survives the obvious objection, because comparing only
-      fights that happened at similar ranges (under 80m), stacked pairs win 12.2% and pairs
-      75&ndash;200m apart win 36.0%. But the revive numbers run the other way and they run hard:
-      inside 25m you pick each other up 36.8% of the time; between 25 and 75m that collapses to
-      12.6%, and past 75m to 8.3%. Across 287 knockdowns, only 27% ended in a pickup.
-    </div>
-
-    <p>At match level, the tight games are the good games: your closest-playing quarter of matches
-      averages 17.3 placement with a 46% top-10 rate, the most spread-out quarter averages 28.4 and
-      15.7%. So the answer isn't "spread out" &mdash; it's that <b>separation is a thing you switch
-      on for a fight and switch off the moment it goes wrong.</b></p>
-
-    <div class="callout ok">
-      <b>The practical shape:</b> hold 30&ndash;60m and different angles when you're set up and
-      expecting contact &mdash; far enough that one spray or one grenade can't catch both, close
-      enough to close the gap in a few seconds. The instant one of you goes down, the other's job
-      changes from winning the fight to breaking line-of-sight and reaching the body. Right now
-      three-quarters of your knockdowns never get picked up, and that's the step that turns one
-      mistake into a wiped team.
+      <b>High ground is worth about as much as a whole risk factor.</b> Fights where you were more
+      than 5m above the enemy win 35.5% (n=31). Level ground, 16.3%. More than 5m below them, 11.5%.
+      You take the high side in only 8% of your fights.
     </div>
   </section>
 
   <!-- ============================================================ -->
-  <section class="chapter" id="weapons">
-    <div class="chapter-num">07</div>
-    <h2>Who Should Hold What</h2>
-    <p class="lede">Fights where each player did the most damage, bucketed by the weapon they did it
-      with. This measures <em>fight outcomes</em>, not raw damage &mdash; a gun can post big numbers
-      and still lose the fight.</p>
+  <section class="chapter" id="arc">
+    <div class="chapter-num">08</div>
+    <h2>The Match Arc</h2>
+    <p class="lede">Fights at minute 3 and fights at minute 22 barely resemble each other. Your win
+      rate is flat across all of them, which is itself informative.</p>
 
     <div class="panel">
       <table class="dtable">
         <thead>
-          <tr>
-            <th>Weapon</th>
-            <th class="r">D282</th>
-            <th class="r">S821</th>
-            <th class="r hide-sm">Median range</th>
-          </tr>
+          <tr><th>Stage</th><th class="r pad">Fights</th><th class="r pad">Win rate</th>
+              <th class="r pad hide-sm">Median range</th><th class="r pad hide-sm">Spacing</th>
+              <th class="r pad">Hit first</th><th class="r">Multi-team</th></tr>
         </thead>
         <tbody>
-          <tr><td class="name">Mini 14</td>
-              <td class="r good">33.3% <span class="n">n=15</span></td>
-              <td class="r good">66.7% <span class="n">n=9</span></td>
-              <td class="r hide-sm muted">59&ndash;109m</td></tr>
-          <tr><td class="name">HK416</td>
-              <td class="r">23.8% <span class="n">n=21</span></td>
-              <td class="r good">45.5% <span class="n">n=11</span></td>
-              <td class="r hide-sm muted">~24m</td></tr>
-          <tr><td class="name">Beryl M762</td>
-              <td class="r muted">&mdash;</td>
-              <td class="r good">75.0% <span class="n">n=4</span></td>
-              <td class="r hide-sm muted">21m</td></tr>
-          <tr><td class="name">AK-M</td>
-              <td class="r bad">0.0% <span class="n">n=14</span></td>
-              <td class="r good">37.5% <span class="n">n=8</span></td>
-              <td class="r hide-sm muted">11&ndash;27m</td></tr>
-          <tr><td class="name">SLR</td>
-              <td class="r muted">&mdash;</td>
-              <td class="r">26.7% <span class="n">n=15</span></td>
-              <td class="r hide-sm muted">68m</td></tr>
-          <tr><td class="name">ACE32</td>
-              <td class="r">16.7% <span class="n">n=6</span></td>
-              <td class="r">16.7% <span class="n">n=18</span></td>
-              <td class="r hide-sm muted">8&ndash;26m</td></tr>
-          <tr><td class="name">Mk12 SPR</td>
-              <td class="r">14.3% <span class="n">n=14</span></td>
-              <td class="r bad">8.3% <span class="n">n=12</span></td>
-              <td class="r hide-sm muted">54&ndash;57m</td></tr>
-          <tr><td class="name">M249</td>
-              <td class="r bad">9.7% <span class="n">n=31</span></td>
-              <td class="r bad">10.0% <span class="n">n=10</span></td>
-              <td class="r hide-sm muted">19&ndash;38m</td></tr>
-          <tr><td class="name">RPD</td>
-              <td class="r bad">0.0% <span class="n">n=6</span></td>
-              <td class="r">15.4% <span class="n">n=13</span></td>
-              <td class="r hide-sm muted">21&ndash;23m</td></tr>
-          <tr><td class="name">MP5K</td>
-              <td class="r">16.7% <span class="n">n=6</span></td>
-              <td class="r bad">10.0% <span class="n">n=10</span></td>
-              <td class="r hide-sm muted">~20m</td></tr>
+          <tr><td class="name">0&ndash;5 min <span class="n">drop &amp; loot</span></td>
+              <td class="r pad">110</td><td class="r pad good">19.1%</td>
+              <td class="r pad hide-sm">17m</td><td class="r pad hide-sm">39m</td>
+              <td class="r pad">41.8%</td><td class="r">21.8%</td></tr>
+          <tr><td class="name">5&ndash;12 min <span class="n">early rotate</span></td>
+              <td class="r pad">85</td><td class="r pad">16.5%</td>
+              <td class="r pad hide-sm">29m</td><td class="r pad hide-sm">26m</td>
+              <td class="r pad">35.3%</td><td class="r">22.4%</td></tr>
+          <tr><td class="name">12&ndash;18 min <span class="n">mid</span></td>
+              <td class="r pad">83</td><td class="r pad">18.1%</td>
+              <td class="r pad hide-sm">40m</td><td class="r pad hide-sm">20m</td>
+              <td class="r pad">42.2%</td><td class="r">38.6%</td></tr>
+          <tr><td class="name">18 min+ <span class="n">endgame</span></td>
+              <td class="r pad">87</td><td class="r pad bad">14.9%</td>
+              <td class="r pad hide-sm">40m</td><td class="r pad hide-sm">16m</td>
+              <td class="r pad good">46.0%</td><td class="r bad">42.5%</td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="statrow">
-      <div class="stat">
-        <div class="num">16.2%</div>
-        <div class="label">D282 fight win rate</div>
-        <div class="sub">n=142 &middot; median range 23m</div>
-      </div>
-      <div class="stat blue">
-        <div class="num">27.8%</div>
-        <div class="label">S821 fight win rate</div>
-        <div class="sub">n=144 &middot; median range 30m</div>
-      </div>
-      <div class="stat">
-        <div class="num">~equal</div>
-        <div class="label">Damage per fight</div>
-        <div class="sub">143 vs 142 &mdash; the gap is in outcomes</div>
-      </div>
-    </div>
+    <p>As the match progresses the shape of your fights changes completely: range more than doubles
+      (17m &rarr; 40m), you close right up on each other (39m apart &rarr; 16m), and you get better at
+      landing the first hit (41.8% &rarr; 46.0%). But the win rate doesn't improve, because the fights
+      get harder at the same pace — multi-team fights double from 22% to 43%.</p>
 
-    <div class="callout bad">
-      <b>D282's most-carried gun is his worst gun.</b> The M249 is the weapon he leads more fights
-      with than any other (n=31) and it wins 9.7% of them. The AK-M is worse still: 0 wins in 14
-      fights. Both are being used at ~20&ndash;27m, which is the ambush bracket &mdash; a 100-round
-      LMG is a suppression tool, and suppression doesn't win a fight that started with you already
-      being shot.
+    <div class="callout">
+      <b>The early game is where the volume is and where the habits are worst.</b> 110 fights happen
+      in the first five minutes — more than any other stage. Three-quarters are inside 30m, 65% are
+      inside a compound, and only 34% have both of you shooting. That's the profile of the fights this page
+      says you lose: close, cramped, and fought alone. It's also, per <a href="debrief.html">the
+      Debrief</a>, mostly a consequence of where you drop.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="players">
+    <div class="chapter-num">09</div>
+    <h2>D282 vs S821</h2>
+    <p class="lede">Same team, same fights, meaningfully different results — and the gap is not where
+      you'd guess.</p>
+
+    <div class="panel">
+      <table class="dtable">
+        <thead><tr><th>Matched condition</th><th class="r pad">D282</th><th class="r">S821</th></tr></thead>
+        <tbody>
+          <tr><td class="name">All fights they led</td>
+              <td class="r pad">16.2% <span class="n">n=142</span></td>
+              <td class="r good">27.8% <span class="n">n=144</span></td></tr>
+          <tr><td class="name">When they hit first</td>
+              <td class="r pad">27.0% <span class="n">n=74</span></td>
+              <td class="r good">36.4% <span class="n">n=77</span></td></tr>
+          <tr><td class="name">When ambushed</td>
+              <td class="r pad bad">4.4% <span class="n">n=68</span></td>
+              <td class="r good">17.9% <span class="n">n=67</span></td></tr>
+          <tr><td class="name">Fights under 30m</td>
+              <td class="r pad">13.3% <span class="n">n=83</span></td>
+              <td class="r">21.9% <span class="n">n=73</span></td></tr>
+          <tr><td class="name">Fights 30m+</td>
+              <td class="r pad">20.3% <span class="n">n=59</span></td>
+              <td class="r good">33.8% <span class="n">n=71</span></td></tr>
+          <tr><td class="name">Median engagement range</td>
+              <td class="r pad">23m</td><td class="r">30m</td></tr>
+          <tr><td class="name">Share of fights under 30m</td>
+              <td class="r pad">58.5%</td><td class="r">50.7%</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="callout blue">
-      <b>The Mini 14 is the most effective gun either of you touches.</b> D282 wins 33.3% with it,
-      S821 wins 66.7% &mdash; and note the median range attached to it: 59m for D282, 109m for S821.
-      It's not that the gun is magic, it's that picking it up means you're fighting at the distance
-      where you're good. Same story on the HK416 in S821's hands (45.5%).
-    </div>
-
-    <p>The overall player gap is real but narrower than it looks in isolation: identical damage per
-      fight (143 vs 142), different outcomes (16.2% vs 27.8%). S821 fights at a slightly longer
-      median range and lands the first hit marginally more often. Given the same guns and the same
-      positioning, the gap would likely shrink a lot.</p>
-
-    <p class="muted" style="font-size:13.5px">Samples of 4&ndash;15 fights are small; the Beryl
-      (n=4) and Mini 14 (n=9) figures for S821 are suggestive, not settled. The M249 (n=31) and
-      AK-M (n=14) results for D282 are the most solid numbers in the table.</p>
-  </section>
-
-  <!-- ============================================================ -->
-  <section class="chapter" id="drops">
-    <div class="chapter-num">08</div>
-    <h2>The Drop That Costs You Sanhok</h2>
-    <p class="lede">This is the single biggest, cheapest fix in the dataset, and it was hiding
-      inside the map stats.</p>
-
-    <div class="callout bad">
-      <b>22 of your 27 Sanhok games start at Bootcamp. 64% of those end with you dead inside five
-      minutes, at an average finish of 32.8.</b> The three Sanhok games you didn't drop Bootcamp
-      averaged 10.0 with nobody dying early. Sanhok isn't your worst map because of the jungle or
-      the close-quarters meta &mdash; it's your worst map because you keep landing on the most
-      contested square on it.
+      <b>The gap is almost entirely about recovering from a bad start.</b> When D282 lands the first
+      hit he wins 27% — respectable, and only 9 points behind S821. When he's ambushed he wins 4.4%
+      against S821's 17.9%, a four-fold difference. Combine that with fighting 7m closer on average
+      and taking more sub-30m fights, and the picture is consistent: D282 is in more situations where
+      a bad first second can't be recovered.
     </div>
 
     <div class="panel">
+      <h3>Weapons, by fights won rather than damage dealt</h3>
       <table class="dtable">
-        <thead>
-          <tr>
-            <th>Drop zone</th>
-            <th class="r">Games</th>
-            <th class="r pad">Avg finish</th>
-            <th class="bar-cell" colspan="2">Dead inside 5 min</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Weapon</th><th class="r pad">D282</th><th class="r pad">S821</th><th class="r hide-sm">Median range</th></tr></thead>
         <tbody>
-          <tr><td class="name">Bootcamp <span class="n">Sanhok</span></td><td class="r">22</td>
-              <td class="r pad bad">32.8</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:64%;background:var(--danger)"></div></div></td>
-              <td class="r bad">64%</td></tr>
-          <tr><td class="name">Gatka <span class="n">Erangel</span></td><td class="r">10</td>
-              <td class="r pad bad">36.1</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:70%;background:var(--danger)"></div></div></td>
-              <td class="r bad">70%</td></tr>
-          <tr><td class="name">Pecado <span class="n">Miramar</span></td><td class="r">11</td>
-              <td class="r pad bad">33.6</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:45%;background:var(--danger)"></div></div></td>
-              <td class="r bad">45%</td></tr>
-          <tr><td class="name">Georgopol <span class="n">Erangel</span></td><td class="r">15</td>
-              <td class="r pad">24.1</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:13%;background:var(--win)"></div></div></td>
-              <td class="r good">13%</td></tr>
-          <tr><td class="name">Myltapower <span class="n">Erangel</span></td><td class="r">19</td>
-              <td class="r pad">21.6</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:32%;background:var(--accent)"></div></div></td>
-              <td class="r">32%</td></tr>
-          <tr><td class="name">Lipovka <span class="n">Erangel</span></td><td class="r">19</td>
-              <td class="r pad">20.2</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:21%;background:var(--accent)"></div></div></td>
-              <td class="r">21%</td></tr>
-          <tr><td class="name">Ferry Pier <span class="n">Erangel</span></td><td class="r">11</td>
-              <td class="r pad good">15.5</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:9%;background:var(--win)"></div></div></td>
-              <td class="r good">9%</td></tr>
-          <tr><td class="name">Unnamed / open <span class="n">all maps</span></td><td class="r">88</td>
-              <td class="r pad good">19.0</td>
-              <td class="bar-cell"><div class="bar-outer"><div class="bar-inner" style="width:25%;background:var(--win)"></div></div></td>
-              <td class="r good">25%</td></tr>
+          <tr><td class="name">Mini 14</td><td class="r pad good">33.3% <span class="n">n=15</span></td>
+              <td class="r pad good">62.5% <span class="n">n=8</span></td><td class="r hide-sm muted">59&ndash;94m</td></tr>
+          <tr><td class="name">HK416</td><td class="r pad">13.6% <span class="n">n=22</span></td>
+              <td class="r pad good">41.7% <span class="n">n=12</span></td><td class="r hide-sm muted">~20m</td></tr>
+          <tr><td class="name">SLR</td><td class="r pad muted">&mdash;</td>
+              <td class="r pad good">33.3% <span class="n">n=15</span></td><td class="r hide-sm muted">68m</td></tr>
+          <tr><td class="name">Mk12 SPR</td><td class="r pad">21.4% <span class="n">n=14</span></td>
+              <td class="r pad bad">10.0% <span class="n">n=10</span></td><td class="r hide-sm muted">54&ndash;60m</td></tr>
+          <tr><td class="name">ACE32</td><td class="r pad muted">&mdash;</td>
+              <td class="r pad">16.7% <span class="n">n=18</span></td><td class="r hide-sm muted">22m</td></tr>
+          <tr><td class="name">M249</td><td class="r pad bad">15.6% <span class="n">n=32</span></td>
+              <td class="r pad bad">10.0% <span class="n">n=10</span></td><td class="r hide-sm muted">21&ndash;38m</td></tr>
+          <tr><td class="name">RPD</td><td class="r pad bad">0.0% <span class="n">n=6</span></td>
+              <td class="r pad bad">15.4% <span class="n">n=13</span></td><td class="r hide-sm muted">~22m</td></tr>
+          <tr><td class="name">AK-M</td><td class="r pad bad">0.0% <span class="n">n=14</span></td>
+              <td class="r pad">33.3% <span class="n">n=6</span></td><td class="r hide-sm muted">10&ndash;26m</td></tr>
         </tbody>
       </table>
+      <p class="muted" style="font-size:13.5px;margin-top:12px">D282's two most-carried guns are the
+        M249 (32 fights, 15.6%) and the HK416 (22 fights, 13.6%), both used around 20m. His two best
+        are the Mini 14 (33.3%) and Mk12 SPR (21.4%), both used near 55m. The AK-M is 0 for 14.</p>
     </div>
 
-    <div class="statrow">
-      <div class="stat ok">
-        <div class="num">15.8</div>
-        <div class="label">Avg finish, long glide</div>
-        <div class="sub">466m median &middot; only 13% die early</div>
-      </div>
-      <div class="stat bad">
-        <div class="num">26.8</div>
-        <div class="label">Avg finish, short glide</div>
-        <div class="sub">308m median &middot; 36% die early</div>
-      </div>
-      <div class="stat">
-        <div class="num">19.0 vs 25.7</div>
-        <div class="label">Open drop vs named POI</div>
-        <div class="sub">average finish across all maps</div>
-      </div>
-    </div>
-
-    <p>The glide numbers say the same thing a different way. Sorting all 210 drops by how far you
-      flew from the plane line, the furthest third averages a 15.8 finish with 13% early deaths; the
-      nearest third averages 26.8 with 36%. Flying further means landing where fewer people
-      committed, which means looting instead of fighting a coin-flip at 90 seconds &mdash; and, per
-      Chapter 02, a coin-flip at 90 seconds is exactly the fight you're worst at.</p>
-
-    <p class="muted" style="font-size:13.5px">Honest caveat: the "3 non-Bootcamp Sanhok games" is a
-      tiny sample and the 10.0 average shouldn't be taken literally. The Bootcamp result itself
-      (n=22) is not tiny, and neither is the overall named-POI vs open-ground gap (122 vs 88 games).</p>
+    <p class="muted" style="font-size:13.5px">The guns that kill you most often, in order:
+      AUG A3 (27 losses), HK416 (19), M24 (13), MP5K (13), Beryl M762 (12). A mix of close-range
+      automatics and bolt-action rifles — consistent with dying both in compounds and to marksmen
+      while crossing open ground.</p>
   </section>
 
   <!-- ============================================================ -->
-  <section class="chapter" id="thirdparty">
-    <div class="chapter-num">09</div>
-    <h2>After You Win</h2>
-    <p class="lede">A won fight is the most dangerous ninety seconds in the game.</p>
-
-    <div class="statrow">
-      <div class="stat">
-        <div class="num">21%</div>
-        <div class="label">Won fights with a follow-up</div>
-        <div class="sub">13 of 63, within 120 seconds</div>
-      </div>
-      <div class="stat bad">
-        <div class="num">85%</div>
-        <div class="label">Of those follow-ups, lost</div>
-        <div class="sub">11 of 13 &mdash; small n, stark result</div>
-      </div>
-      <div class="stat">
-        <div class="num">31%</div>
-        <div class="label">Fights involving 2+ enemy teams</div>
-        <div class="sub">112 of 365 decisive fights</div>
-      </div>
-    </div>
-
-    <p>One in five fights you win is followed by another fight inside two minutes, and you lose
-      almost all of them. The sample is small (13 follow-ups), so treat the 85% as a warning rather
-      than a precise figure &mdash; but the direction matches the multi-team numbers, where fights
-      against two teams win at 15.3% and three-or-more at 11.1%, against 18.6% for a clean 1v1
-      duel.</p>
-
-    <div class="callout">
-      <b>The looting window is the trap.</b> A finished fight leaves you low, out of position and
-      audible from a long way off, and the boxes are usually in the open where the fight happened.
-      The data can't tell you what you were doing in those two minutes, but it can tell you the
-      outcome, and the outcome says the loot is not worth the exposure unless you've moved first.
-    </div>
-  </section>
-
-  <!-- ============================================================ -->
-  <section class="chapter" id="try">
+  <section class="chapter" id="browser">
     <div class="chapter-num">10</div>
-    <h2>Things To Actually Try</h2>
-    <p class="lede">Ranked by how much the data backs them and how easy they are to just do. Each
-      one is a testable change &mdash; play ten games with it and the numbers on this site will tell
-      you whether it worked.</p>
+    <h2>Walk Through Every Fight</h2>
+    <p class="lede">All 365 decisive engagements with their measurements. Filter and sort it however
+      you like — the summary line updates to show the win rate of whatever you've selected.</p>
+
+    <div class="filters">
+      <label>Outcome</label>
+      <select id="fOutcome"><option value="">All</option><option value="win">Win</option><option value="trade">Trade</option><option value="loss">Loss</option></select>
+      <label>Stage</label>
+      <select id="fStage"><option value="">All</option><option value="0">0–5 min</option><option value="1">5–12 min</option><option value="2">12–18 min</option><option value="3">18 min+</option></select>
+      <label>Map</label>
+      <select id="fMap"><option value="">All</option></select>
+      <label>Opened by</label>
+      <select id="fInit"><option value="">All</option><option value="we_hit_first">Us</option><option value="they_hit_first">Them</option></select>
+      <label>Both engaged</label>
+      <select id="fBoth"><option value="">All</option><option value="1">Yes</option><option value="0">No</option></select>
+      <button id="fReset">Reset</button>
+    </div>
+
+    <p id="engSummary">Loading…</p>
+
+    <div class="etable-wrap">
+      <table class="etable">
+        <thead>
+          <tr>
+            <th data-k="stage_s">Time</th>
+            <th data-k="map">Map</th>
+            <th data-k="outcome">Result</th>
+            <th data-k="initiated">Opened</th>
+            <th data-k="range_med">Range</th>
+            <th data-k="hp_min">HP</th>
+            <th data-k="spacing">Apart</th>
+            <th data-k="both_engaged">Both</th>
+            <th data-k="join_lag_s">Join</th>
+            <th data-k="elev_delta">Elev</th>
+            <th data-k="n_enemy_teams">Teams</th>
+            <th data-k="dealt">Dealt</th>
+            <th data-k="taken">Taken</th>
+            <th data-k="primary_weapon">Lead gun</th>
+            <th>Replay</th>
+          </tr>
+        </thead>
+        <tbody id="engBody"></tbody>
+      </table>
+    </div>
+    <p class="chart-cap" style="margin-top:10px">"Join" is seconds between the first and second of you
+      damaging the enemy. "Elev" is your height minus theirs. "Replay" opens that match on the
+      match-analysis map.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="focus">
+    <div class="chapter-num">11</div>
+    <h2>What To Focus On</h2>
+    <p class="lede">Ordered by expected gain. The first three are worth more than everything else on
+      this page combined, because they're the three factors that actually separated your wins from
+      your losses.</p>
 
     <div class="exp hi">
-      <div class="tag">Highest confidence &middot; n=22</div>
-      <h4>1. Stop dropping Bootcamp</h4>
-      <p class="why">22 of 27 Sanhok games, 64% dead inside five minutes, average finish 32.8.
-        This single drop is most of why Sanhok is your worst map.</p>
-      <p class="do"><b>Do:</b> on Sanhok, pick anything on the outer ring &mdash; Ha Tinh, Kampong,
-        Camp Charlie, or just an unnamed cluster near the plane's exit. Same for Gatka on Erangel
-        (70% early deaths) and Pecado on Miramar (45%).</p>
+      <div class="tag">Biggest gain &middot; n=365</div>
+      <h4>1. Never take a second fight without resetting first</h4>
+      <p class="why">Fights starting under 50 health win 4.2%; at full health, 25.6%. A quarter of
+        your fights start below half health, and fights taken within two minutes of the last one
+        start at a median of 29 health and win 7.1%.</p>
+      <p class="do"><b>Do:</b> after any fight, the next action is not looting and not pushing — it's
+        <b>break line of sight, get behind hard cover, heal and boost to full</b>. Guides put this the
+        same way: pre-heal and pre-boost before you push, not during, so you enter at 100 with a full
+        bar. If you can't safely reset, you can't safely fight — leave instead.</p>
     </div>
 
     <div class="exp hi">
-      <div class="tag">Highest confidence &middot; n=210</div>
-      <h4>2. Fly further from the plane line</h4>
-      <p class="why">Furthest third of your drops: 15.8 average finish, 13% early deaths. Nearest
-        third: 26.8 and 36%. Consistent across every map.</p>
-      <p class="do"><b>Do:</b> target roughly <b>450m+</b> of glide instead of your current ~330m
-        median. Practically: hold the dive longer before opening the chute, and pick a spot one
-        ridge past the obvious one.</p>
+      <div class="tag">Biggest gain &middot; n=138 vs 227</div>
+      <h4>2. Both guns, or no fight</h4>
+      <p class="why">Only one of you damages the enemy in 62% of fights, and those win 11.9% vs 26.1%
+        when both engage. Joining within 2 seconds wins 47.8%. The effect survives every control —
+        it isn't just "we died before he could shoot".</p>
+      <p class="do"><b>Do:</b> make it an explicit rule that <b>nobody opens unless both of you have
+        an angle</b>. Call the target, count down, fire together. If only one of you can see it, the
+        answer is to reposition until both can — or to leave it alone. A solo opening is a fight
+        you've already half-lost.</p>
     </div>
 
     <div class="exp">
-      <div class="tag">Strong &middot; n=113</div>
-      <h4>3. Refuse the fights you didn't start</h4>
-      <p class="why">Ambushed inside 30m you win 7.1% of the time, and that's your single most
-        common situation (113 fights). You are not going to shoot your way out of it at a better
-        rate &mdash; the number has 113 games behind it.</p>
-      <p class="do"><b>Do:</b> treat "we're taking fire and I don't know from where" as an automatic
-        <b>break contact</b> call, not a fight. Smoke, wall, leave. Re-engage on your terms or
-        don't. The 7.1% is what trading anyway looks like.</p>
+      <div class="tag">Biggest gain &middot; n=214 ambushes</div>
+      <h4>3. Stop being the one who gets seen first</h4>
+      <p class="why">You're hit first in 59% of fights and win those 7.0%. In two-thirds of them you
+        hadn't fired at all — you didn't know the fight existed — and it takes 6.4 seconds to shoot back.</p>
+      <p class="do"><b>Do:</b> two habits. <b>Crosshair up and pre-aimed</b> at head height on the
+        angle you're about to clear, so first contact needs a small correction rather than a sweep.
+        And <b>stop moving before you look</b> — most of your ambushes happen while relocating. Clear
+        with a shoulder-peek from cover rather than walking into the open and scanning from there.</p>
+    </div>
+
+    <div class="exp ok">
+      <div class="tag">Strong &middot; n=73 vs 81</div>
+      <h4>4. Stop pushing; let them come</h4>
+      <p class="why">When you close the distance you win 11.0%. When they close on you, 21.0%. In
+        fights you won, the enemy had moved 38m toward you in the previous 30 seconds; in losses, 20m.</p>
+      <p class="do"><b>Do:</b> when you hear or spot a team that hasn't seen you, the default should
+        be <b>hold and set a crossfire</b>, not close the gap. Pushing hands them the first-hit
+        advantage, which is the single biggest predictor of losing. Push only when they're already
+        broken or you have a clear flank.</p>
+    </div>
+
+    <div class="exp ok">
+      <div class="tag">Strong &middot; n=31 vehicle fights</div>
+      <h4>5. Park early and finish on foot</h4>
+      <p class="why">Fights that start with you in a vehicle win 9.7% with a &minus;112 damage
+        differential — your worst starting condition. You're three times more likely to be ambushed
+        in a car than in fights you initiate.</p>
+      <p class="do"><b>Do:</b> stop <b>200–300m short</b> of where you're actually going and walk the
+        last stretch. The car announces you to everyone in the zone; arriving quietly is most of what
+        "rotate early" is actually buying you.</p>
     </div>
 
     <div class="exp">
-      <div class="tag">Strong &middot; n=287 knockdowns</div>
-      <h4>4. Change what happens after a knock</h4>
-      <p class="why">Only 27% of your knockdowns end in a revive. Past 25m apart it drops to 12.6%.
-        And per the Debrief, an un-revived teammate is auto-eliminated the moment the other dies
-        &mdash; so a failed pickup costs two lives, not one.</p>
-      <p class="do"><b>Do:</b> when one goes down, the standing player's job stops being the fight.
-        Break line of sight first, <b>then</b> res &mdash; and if the gap is more than about
-        25&ndash;30m with an enemy holding the angle, back off and reset rather than feeding the
-        second body.</p>
+      <div class="tag">Solid &middot; n=31 vs 52</div>
+      <h4>6. Take the high side</h4>
+      <p class="why">More than 5m above the enemy: 35.5% win rate. Level: 16.3%. More than 5m below:
+        11.5%. You only have the height edge in 8% of your fights.</p>
+      <p class="do"><b>Do:</b> when choosing between two positions that both cover the angle, take
+        the higher one, and avoid fighting uphill into a compound. Being below someone is close to a
+        risk factor in its own right.</p>
     </div>
 
-    <div class="exp ok">
-      <div class="tag">Strong &middot; n=273 fights</div>
-      <h4>5. Fight at 30&ndash;60m apart, not stacked</h4>
-      <p class="why">At matched fight ranges, stacked pairs (&lt;25m) win 12.2% and separated pairs
-        win 36.0%. But revives collapse past 25m &mdash; so the win is in the middle, not at the
-        extremes.</p>
-      <p class="do"><b>Do:</b> when you're set and expecting contact, hold <b>different angles about
-        30&ndash;60m apart</b> &mdash; two firing lines, not one silhouette. Collapse back together
-        the second it goes wrong. You're currently under 25m in 57% of fights.</p>
-    </div>
-
-    <div class="exp ok">
+    <div class="exp">
       <div class="tag">Solid &middot; n=45</div>
-      <h4>6. D282: bench the M249 and the AK-M</h4>
-      <p class="why">M249 &mdash; 31 fights led, 9.7% won. AK-M &mdash; 14 fights, 0 won. Together
-        that's 45 fights and 3 wins. The Mini 14 (33.3%) and HK416 (23.8%) are far better in the
-        same hands.</p>
-      <p class="do"><b>Do:</b> D282 takes <b>Mini 14 / HK416</b> as the primary pair and leaves the
-        LMG on the floor. If an LMG gets picked up, treat it as a vehicle/suppression tool, not the
-        gun you take into a building.</p>
-    </div>
-
-    <div class="exp ok">
-      <div class="tag">Solid &middot; n=144</div>
-      <h4>7. S821 takes the marksman slot</h4>
-      <p class="why">S821 wins 66.7% of Mini 14 fights and 45.5% of HK416 fights, at longer median
-        ranges (109m and 25m), and 27.8% of fights overall against D282's 16.2% on identical damage.</p>
-      <p class="do"><b>Do:</b> when a single good DMR drops, it goes to <b>S821</b>. Pair that with
-        D282 holding the closer angle &mdash; that's the split you're already best at, made
-        deliberate.</p>
+      <h4>7. D282: change the gun and the distance</h4>
+      <p class="why">M249 (32 fights, 15.6%) and AK-M (14 fights, 0 wins) are 46 of his fights at
+        ~20–25m. Mini 14 (33.3%) and Mk12 SPR (21.4%) are his best, both used near 55m. He also fights
+        7m closer than S821 on average and wins 4.4% when ambushed against S821's 17.9%.</p>
+      <p class="do"><b>Do:</b> D282 runs a <b>DMR plus one AR</b> and deliberately holds the longer
+        angle, leaving the close side to S821. That plays to his best numbers and removes him from the
+        sub-30m ambushes he recovers from worst.</p>
     </div>
 
     <div class="exp">
-      <div class="tag">Moderate &middot; n=103</div>
-      <h4>8. Stop holding the rim</h4>
-      <p class="why">Rim fights (outer third of the circle) win at 10.7%; middle-band fights win at
-        26.4%. On the rim you land the first hit only 38.8% of the time versus 53.8% in the middle
-        band &mdash; people rotate through you from behind.</p>
-      <p class="do"><b>Do:</b> rotate to sit <b>inside the middle band</b> of the circle rather than
-        shading to the edge, and when you do hold an edge, hold it facing <b>outward</b> at the
-        people still coming in.</p>
+      <div class="tag">Context &middot; n=110 early fights</div>
+      <h4>8. The early game is where all of this compounds</h4>
+      <p class="why">110 of your 365 fights happen in the first five minutes, 75% of them inside 30m,
+        65% inside compounds, with only 34% having both of you shooting. That's every risk factor at once.</p>
+      <p class="do"><b>Do:</b> this is mostly fixed by the drop choices in <a href="debrief.html">the
+        Debrief</a> — land where you can gear up uncontested, and treat the first five minutes as
+        looting time, not fighting time. Every early fight you decline is a fight you were probably
+        going to lose.</p>
     </div>
 
-    <div class="exp">
-      <div class="tag">Moderate &middot; n=13</div>
-      <h4>9. Move before you loot a kill</h4>
-      <p class="why">21% of won fights are followed by another inside two minutes, and 85% of those
-        follow-ups are losses. Small sample, but it matches the multi-team numbers.</p>
-      <p class="do"><b>Do:</b> after a won fight, <b>reposition first, loot second</b> &mdash;
-        or skip the box entirely if you're already kitted. Assume someone heard it.</p>
-    </div>
-
-    <div class="exp">
-      <div class="tag">No signal &mdash; don't bother</div>
-      <h4>10. Who drives: leave it alone</h4>
-      <p class="why">You asked specifically about this. D282 drives in 52 matches, S821 in 29, and
-        once you compare only games that reached 15 minutes there's no meaningful placement
-        difference (8.5 vs 10.6, with n=38 and n=20). The big raw gap between "driving" and "no
-        driving" games is just survival time &mdash; dead players don't drive.</p>
-      <p class="do"><b>Do:</b> nothing. Same for blue-zone discipline and overall circle position at
-        match level &mdash; both looked flat. Spend the effort on items 1&ndash;5.</p>
+    <div class="callout ok">
+      <b>If you only change one thing:</b> make "reset to full health before the next fight" a hard
+      rule, and make "we both shoot or nobody shoots" the second one. Those two conditions alone
+      separate a 26% win rate from a 12% one, and unlike aim or reflexes they're pure discipline —
+      you can do them perfectly from the very next game.
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="method">
-    <div class="chapter-num">11</div>
+    <div class="chapter-num">12</div>
     <h2>Method &amp; Caveats</h2>
-    <p class="lede">So you can tell how much weight each number deserves.</p>
 
     <div class="panel">
       <ul class="method">
-        <li><b>Source:</b> raw PUBG match telemetry for 213 matches (2 Jun &ndash; 25 Aug 2026) &mdash;
-          every position ping, damage, knock and kill, not the summary stats the other pages use.</li>
-        <li><b>A "fight"</b> is a cluster of combat events involving either player, split whenever
-          45+ seconds pass with no combat. 564 fights against humans; 20 bot-only fights were
-          excluded from every headline number (you win 60% of those, which would flatter the totals).</li>
-        <li><b>"Win"</b> = you knocked or killed someone and neither of you went down. "Trade" =
-          both sides lost someone. "Loss" = only your side. 179 fights ended with nobody downed and
-          are excluded from win-rate figures.</li>
-        <li><b>"First hit"</b> is who landed the first <em>damaging</em> hit &mdash; PUBG doesn't log
-          misses, so this is not literally who pulled the trigger first.</li>
-        <li><b>Terrain</b> uses PUBG's named-location tag. Unnamed farm buildings count as "open",
-          so the compound bucket means "inside a named town", not "inside any structure".</li>
-        <li><b>Circle position</b> is distance from safe-zone centre divided by its radius, sampled
-          at the midpoint of each fight.</li>
-        <li><b>Match-level claims are confounded by survival time</b> &mdash; dying early prevents
-          driving, rotating and late fights. Where it mattered, figures are also shown for games
-          that reached 15 minutes, and that's flagged in the text.</li>
-        <li><b>Correlation, not proof.</b> These are patterns in 213 games of your own play, not
-          controlled experiments. The point of Chapter 10 is that they're cheap to test.</li>
+        <li><b>Source:</b> raw PUBG telemetry for 213 matches (2 Jun – 25 Aug 2026) — position pings
+          every 10s per player, plus every damage, knock, kill and shot event.</li>
+        <li><b>A fight</b> = a cluster of combat events involving either player, split whenever 45s
+          pass with no combat. 564 total; 20 bot-only fights are excluded everywhere (you win 60% of
+          those and they'd flatter the numbers); 179 ended with nobody downed and are excluded from
+          win rates. That leaves <b>365 decisive fights</b>.</li>
+        <li><b>Win</b> = you knocked or killed someone and neither of you went down. <b>Trade</b> =
+          both sides lost someone. <b>Loss</b> = only your side.</li>
+        <li><b>"Hit first"</b> means landed the first damaging hit. PUBG doesn't log misses, so this
+          is about who connects, not who pulls the trigger — the two are tracked separately and only
+          connecting predicts the outcome.</li>
+        <li><b>Approach</b> is computed by comparing each side's position 30s before contact with
+          their position at contact, so "they came to us" means they genuinely closed ground.</li>
+        <li><b>Health</b> is from the position ping nearest the start of the fight (within 15s), so
+          it's accurate to roughly a ten-second window, not the exact instant.</li>
+        <li><b>Terrain</b> uses PUBG's named-location tag; unnamed farm buildings count as "open".</li>
+        <li><b>Confounds:</b> the "both engaged" result was re-tested restricting to long fights and
+          to fights where both started alive, and it held. Most other findings are simple
+          correlations across your own games — they're strong enough to act on, but they aren't
+          controlled experiments.</li>
+        <li><b>Small samples</b> are labelled inline wherever they're under about n=20. The
+          80–200m bracket, the zero-risk-factor bucket and several weapon rows are in that category.</li>
       </ul>
     </div>
   </section>
@@ -834,159 +797,185 @@
 </div>
 
 <footer>
-  <div class="sign">&mdash; built from raw telemetry across 213 matches &middot; a companion to <a href="debrief.html">The Debrief</a></div>
+  <div class="sign">&mdash; 564 fights, ~30 measurements each, from raw telemetry &middot; companion to <a href="debrief.html">The Debrief</a></div>
   Not updated automatically. Ask for a refresh once there are more games.
 </footer>
 
 <script>
-function toggleSiteNav() {
-  document.getElementById('siteNavMenu').classList.toggle('open');
-}
-document.addEventListener('click', function(e) {
-  if (!document.getElementById('siteNav').contains(e.target))
+function toggleSiteNav(){document.getElementById('siteNavMenu').classList.toggle('open');}
+document.addEventListener('click',function(e){
+  if(!document.getElementById('siteNav').contains(e.target))
     document.getElementById('siteNavMenu').classList.remove('open');
 });
 
-const INK = '#9a9385', GRID = '#26241d', SURF = '#1e1c17', LINE = '#38342c';
-const WIN = '#a3c76a', TRADE = '#9a9385', LOSS = '#d7443e';
-const D282 = '#f4a300', S821 = '#4a9edd';
+const INK='#9a9385', GRID='#26241d', SURF='#1e1c17', LINE='#38342c';
+const WIN='#a3c76a', TRADE='#9a9385', LOSS='#d7443e', D_C='#f4a300', S_C='#4a9edd';
+Chart.defaults.color=INK;
+Chart.defaults.font.family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+const TT={backgroundColor:SURF,borderColor:LINE,borderWidth:1,titleColor:'#e8e3d8',
+  bodyColor:'#e8e3d8',padding:10,titleFont:{family:'Oswald',size:13},boxPadding:4};
 
-Chart.defaults.color = INK;
-Chart.defaults.font.family = "system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
-
-const tooltipStyle = {
-  backgroundColor: SURF, borderColor: LINE, borderWidth: 1,
-  titleColor: '#e8e3d8', bodyColor: '#e8e3d8', padding: 10,
-  titleFont: { family: 'Oswald', size: 13 }, displayColors: true, boxPadding: 4
-};
-
-// ── Chart 1: who lands the first hit ──────────────────────────────────
-new Chart(document.getElementById('initChart'), {
-  type: 'bar',
-  data: {
-    labels: ['You land the first hit', 'They land the first hit'],
-    datasets: [
-      { label: 'Win',   data: [48, 15],  backgroundColor: WIN,   borderColor: SURF, borderWidth: 2, borderRadius: 4 },
-      { label: 'Trade', data: [63, 46],  backgroundColor: TRADE, borderColor: SURF, borderWidth: 2, borderRadius: 4 },
-      { label: 'Loss',  data: [40, 153], backgroundColor: LOSS,  borderColor: SURF, borderWidth: 2, borderRadius: 4 }
-    ]
-  },
-  options: {
-    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-    interaction: { mode: 'nearest', intersect: true },
-    plugins: {
-      legend: { labels: { boxWidth: 12, font: { family: 'Oswald' } } },
-      tooltip: { ...tooltipStyle, callbacks: {
-        label: (c) => {
-          const tot = c.chart.data.datasets.reduce((s, d) => s + d.data[c.dataIndex], 0);
-          return ` ${c.dataset.label}: ${c.raw} fights (${Math.round(c.raw / tot * 100)}%)`;
-        }
-      } }
-    },
-    scales: {
-      x: { stacked: true, grid: { color: GRID }, title: { display: true, text: 'Number of fights', color: INK } },
-      y: { stacked: true, grid: { display: false }, ticks: { font: { family: 'Oswald', size: 12 } } }
-    }
-  }
+/* 1 — wins vs losses feature split */
+new Chart(document.getElementById('splitChart'),{
+  type:'bar',
+  data:{
+    labels:['We landed the first hit','Both of us damaged them','Both at full health',
+            'We had high ground (>5m)','Enemy closed >20m on us','We were moving (>2m/s)',
+            'Fight in a compound','Multi-team fight','We closed >20m on them',
+            'We fired before being hit','Started in a vehicle'],
+    datasets:[
+      {label:'Fights we won',  data:[76.2,57.1,65.1,17.5,61.9,39.7,33.3,25.4,47.6,42.9,4.8],
+       backgroundColor:WIN, borderColor:SURF, borderWidth:2, borderRadius:4},
+      {label:'Fights we lost', data:[20.7,18.1,33.2,7.3,48.7,30.6,43.0,21.8,51.8,44.6,9.8],
+       backgroundColor:LOSS, borderColor:SURF, borderWidth:2, borderRadius:4}
+    ]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{boxWidth:12,font:{family:'Oswald'}}},
+      tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${c.raw}%`}}},
+    scales:{x:{beginAtZero:true,max:80,grid:{color:GRID},ticks:{callback:v=>v+'%'},
+        title:{display:true,text:'Share of fights where this was true',color:INK}},
+      y:{grid:{display:false},ticks:{font:{size:11.5}}}}}
 });
 
-// ── Chart 2: win rate by range, split by who opened ───────────────────
-const rangeN = { open: [75, 52, 20], amb: [113, 72, 23] };
-new Chart(document.getElementById('rangeChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Under 30m', '30–80m', '80–200m'],
-    datasets: [
-      { label: 'You opened',  data: [25.3, 28.8, 55.0], backgroundColor: WIN,  borderColor: SURF, borderWidth: 2, borderRadius: 4 },
-      { label: 'They opened', data: [7.1, 5.6, 13.0],   backgroundColor: LOSS, borderColor: SURF, borderWidth: 2, borderRadius: 4 }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { labels: { boxWidth: 12, font: { family: 'Oswald' } } },
-      tooltip: { ...tooltipStyle, callbacks: {
-        label: (c) => {
-          const key = c.datasetIndex === 0 ? 'open' : 'amb';
-          return ` ${c.dataset.label}: ${c.raw}% win rate (n=${rangeN[key][c.dataIndex]})`;
-        }
-      } }
-    },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { family: 'Oswald', size: 12 } } },
-      y: { beginAtZero: true, max: 60, grid: { color: GRID },
-           ticks: { callback: v => v + '%' },
-           title: { display: true, text: 'Fight win rate', color: INK } }
-    }
-  }
+/* 2 — risk factor stacking */
+const riskN=[18,86,139,106,16];
+new Chart(document.getElementById('riskChart'),{
+  type:'bar',
+  data:{labels:['0','1','2','3','4'],
+    datasets:[{label:'Win rate',data:[44.4,37.2,11.5,6.6,0.0],
+      backgroundColor:[WIN,WIN,TRADE,LOSS,LOSS],borderColor:SURF,borderWidth:2,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{...TT,callbacks:{title:i=>`${i[0].label} risk factor(s)`,
+        label:c=>` ${c.raw}% win rate (n=${riskN[c.dataIndex]})`}}},
+    scales:{x:{grid:{display:false},title:{display:true,text:'Risk factors present when the fight started',color:INK},
+        ticks:{font:{family:'Oswald',size:13}}},
+      y:{beginAtZero:true,max:50,grid:{color:GRID},ticks:{callback:v=>v+'%'},
+        title:{display:true,text:'Fight win rate',color:INK}}}}
 });
 
-// ── Chart 3: win rate by circle position ──────────────────────────────
-const circN = [128, 91, 103, 19];
-const circTitles = ['Core (<0.35)', 'Middle band (0.35–0.65)', 'Rim (0.65–1.0)', 'Outside (>1.0)'];
-new Chart(document.getElementById('circleChart'), {
-  type: 'bar',
-  data: {
-    // Chart.js renders an array label as multiple lines; '\n' in a string does not wrap.
-    labels: [['Core', '(<0.35)'], ['Middle band', '(0.35–0.65)'],
-             ['Rim', '(0.65–1.0)'], ['Outside', '(>1.0)']],
-    datasets: [{
-      label: 'Fight win rate',
-      data: [17.2, 26.4, 10.7, 15.8],
-      backgroundColor: [TRADE, WIN, LOSS, TRADE],
-      borderColor: SURF, borderWidth: 2, borderRadius: 4
-    }]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: { ...tooltipStyle, callbacks: {
-        title: (items) => circTitles[items[0].dataIndex],
-        label: (c) => ` ${c.raw}% win rate (n=${circN[c.dataIndex]})`
-      } }
-    },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { family: 'Oswald', size: 11 } } },
-      y: { beginAtZero: true, max: 32, grid: { color: GRID },
-           ticks: { callback: v => v + '%' },
-           title: { display: true, text: 'Fight win rate', color: INK } }
-    }
-  }
+/* 3 — health gradient */
+const hpN=[160,79,30,96];
+new Chart(document.getElementById('hpChart'),{
+  type:'bar',
+  data:{labels:[['Full health','(100)'],['Lightly hurt','(75–99)'],['Hurt','(50–75)'],['Badly hurt','(under 50)']],
+    datasets:[{label:'Win rate',data:[25.6,17.7,13.3,4.2],
+      backgroundColor:[WIN,TRADE,LOSS,LOSS],borderColor:SURF,borderWidth:2,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{...TT,callbacks:{label:c=>` ${c.raw}% win rate (n=${hpN[c.dataIndex]})`}}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'Oswald',size:11.5}},
+        title:{display:true,text:'Lower of your two health values at first contact',color:INK}},
+      y:{beginAtZero:true,max:30,grid:{color:GRID},ticks:{callback:v=>v+'%'},
+        title:{display:true,text:'Fight win rate',color:INK}}}}
 });
 
-// ── Chart 4: spacing trade-off ────────────────────────────────────────
-const spN = { fight: [187, 107, 29], rev: [174, 87, 24] };
-new Chart(document.getElementById('spacingChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Under 25m apart', '25–75m apart', '75–200m apart'],
-    datasets: [
-      { label: 'Fight win rate',    data: [15.5, 19.6, 31.0], backgroundColor: D282, borderColor: SURF, borderWidth: 2, borderRadius: 4 },
-      { label: 'Revive rate after a knock', data: [36.8, 12.6, 8.3], backgroundColor: S821, borderColor: SURF, borderWidth: 2, borderRadius: 4 }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { labels: { boxWidth: 12, font: { family: 'Oswald' } } },
-      tooltip: { ...tooltipStyle, callbacks: {
-        label: (c) => {
-          const key = c.datasetIndex === 0 ? 'fight' : 'rev';
-          return ` ${c.dataset.label}: ${c.raw}% (n=${spN[key][c.dataIndex]})`;
-        }
-      } }
-    },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { family: 'Oswald', size: 12 } } },
-      y: { beginAtZero: true, max: 42, grid: { color: GRID },
-           ticks: { callback: v => v + '%' },
-           title: { display: true, text: 'Rate', color: INK } }
-    }
-  }
+/* 4 — range x initiation */
+const rN={a:[76,52,19],b:[117,68,22]};
+new Chart(document.getElementById('rangeChart'),{
+  type:'bar',
+  data:{labels:['Under 30m','30–80m','80–200m'],
+    datasets:[
+      {label:'We hit first',data:[25.0,28.8,57.9],backgroundColor:WIN,borderColor:SURF,borderWidth:2,borderRadius:4},
+      {label:'They hit first',data:[6.8,5.9,13.6],backgroundColor:LOSS,borderColor:SURF,borderWidth:2,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{boxWidth:12,font:{family:'Oswald'}}},
+      tooltip:{...TT,callbacks:{label:c=>{const k=c.datasetIndex===0?'a':'b';
+        return ` ${c.dataset.label}: ${c.raw}% (n=${rN[k][c.dataIndex]})`;}}}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'Oswald',size:12}}},
+      y:{beginAtZero:true,max:62,grid:{color:GRID},ticks:{callback:v=>v+'%'},
+        title:{display:true,text:'Fight win rate',color:INK}}}}
 });
+
+/* ── Engagement browser ─────────────────────────────────────────────── */
+let ENG=[], sortKey='stage_s', sortAsc=true;
+const $=id=>document.getElementById(id);
+
+function stageIdx(s){ if(s==null)return null; if(s<300)return 0; if(s<720)return 1; if(s<1080)return 2; return 3; }
+function mmss(s){ if(s==null)return '—'; const m=Math.floor(s/60),x=Math.round(s%60); return m+':'+String(x).padStart(2,'0'); }
+function num(v,suf=''){ return v==null?'<span class="dim">—</span>':(Math.round(v*10)/10)+suf; }
+
+function applyFilters(){
+  const o=$('fOutcome').value, st=$('fStage').value, mp=$('fMap').value,
+        ini=$('fInit').value, bo=$('fBoth').value;
+  return ENG.filter(e=>
+    (!o||e.outcome===o) && (!st||String(stageIdx(e.stage_s))===st) &&
+    (!mp||e.map===mp) && (!ini||e.initiated===ini) &&
+    (!bo||String(e.both_engaged?1:0)===bo));
+}
+
+function render(){
+  const rows=applyFilters();
+  rows.sort((a,b)=>{
+    let x=a[sortKey],y=b[sortKey];
+    if(typeof x==='boolean'){x=x?1:0;y=y?1:0;}
+    if(x==null)return 1; if(y==null)return -1;
+    if(typeof x==='string')return sortAsc?x.localeCompare(y):y.localeCompare(x);
+    return sortAsc?x-y:y-x;
+  });
+  const w=rows.filter(e=>e.outcome==='win').length,
+        t=rows.filter(e=>e.outcome==='trade').length,
+        l=rows.filter(e=>e.outcome==='loss').length;
+  $('engSummary').innerHTML= rows.length
+    ? `<b>${rows.length}</b> fights shown — <b>${w}</b> won, <b>${t}</b> traded, <b>${l}</b> lost · win rate <b>${(w/rows.length*100).toFixed(1)}%</b>`
+    : 'No fights match those filters.';
+
+  $('engBody').innerHTML = rows.map(e=>{
+    const oc = e.outcome==='win'?'<span class="ow">WIN</span>'
+             : e.outcome==='loss'?'<span class="ol">LOSS</span>'
+             : '<span class="ot">trade</span>';
+    const init = e.initiated==='we_hit_first'
+      ? '<span class="good">us</span>' : '<span class="bad">them</span>';
+    const both = e.both_engaged?'<span class="good">yes</span>':'<span class="bad">no</span>';
+    const hp = e.hp_min==null?'<span class="dim">—</span>'
+      : `<span class="${e.hp_min>=99?'good':e.hp_min<50?'bad':''}">${e.hp_min}</span>`;
+    const el = e.elev_delta==null?'<span class="dim">—</span>'
+      : `<span class="${e.elev_delta>5?'good':e.elev_delta<-5?'bad':''}">${e.elev_delta>0?'+':''}${Math.round(e.elev_delta)}m</span>`;
+    return `<tr>
+      <td>${mmss(e.stage_s)}</td>
+      <td class="dim">${e.map}</td>
+      <td>${oc}</td>
+      <td>${init}</td>
+      <td>${num(e.range_med,'m')}</td>
+      <td>${hp}</td>
+      <td>${num(e.spacing,'m')}</td>
+      <td>${both}</td>
+      <td>${e.join_lag_s==null?'<span class="dim">—</span>':e.join_lag_s+'s'}</td>
+      <td>${el}</td>
+      <td>${e.n_enemy_teams}</td>
+      <td>${Math.round(e.dealt)}</td>
+      <td>${Math.round(e.taken)}</td>
+      <td class="dim">${e.primary_weapon||'—'}</td>
+      <td><a href="match.html?id=${e.match_id}" title="Open this match">map →</a></td>
+    </tr>`;
+  }).join('');
+}
+
+document.querySelectorAll('.etable th[data-k]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=th.dataset.k;
+    if(sortKey===k) sortAsc=!sortAsc; else {sortKey=k; sortAsc=true;}
+    document.querySelectorAll('.etable th').forEach(x=>x.classList.remove('sorted','asc'));
+    th.classList.add('sorted'); if(sortAsc) th.classList.add('asc');
+    render();
+  });
+});
+['fOutcome','fStage','fMap','fInit','fBoth'].forEach(id=>$(id).addEventListener('change',render));
+$('fReset').addEventListener('click',()=>{
+  ['fOutcome','fStage','fMap','fInit','fBoth'].forEach(id=>$(id).value='');
+  render();
+});
+
+fetch('stats-data/engagements.json')
+  .then(r=>r.json())
+  .then(d=>{
+    ENG=d;
+    const maps=[...new Set(d.map(e=>e.map))].sort();
+    $('fMap').innerHTML='<option value="">All</option>'+maps.map(m=>`<option>${m}</option>`).join('');
+    render();
+  })
+  .catch(()=>{ $('engSummary').textContent='Could not load engagement data.'; });
 </script>
 
 </body>

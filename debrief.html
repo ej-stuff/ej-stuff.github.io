@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Debrief — D282 &amp; S821</title>
-<meta name="description" content="A deep read of 213 PUBG matches — the arc, the playstyles, the maps, and what's really behind the 'simultaneous death' pattern.">
+<meta name="description" content="A deep read of 213 PUBG matches — the improvement arc, the playstyles, the maps, and the moments.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -315,8 +315,8 @@
   <h1>The Debrief</h1>
   <p class="hero-sub">213 matches now — 70 more than the last read. This is what the data says
     about how <span style="color:var(--accent)">D282</span> and <span style="color:var(--s821)">S821</span>
-    actually play PUBG, including one thing worth correcting: that "you always die at the exact
-    same second" isn't a coincidence, and it isn't one bullet killing two people either.</p>
+    actually play PUBG &mdash; the improvement arc, how differently the two of you fight, which
+    maps like you back, and a few games worth reliving.</p>
   <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 2 Jun &ndash; 25 Aug 2026</div>
 </div>
 
@@ -328,9 +328,6 @@
       pass through all 213 games looking for the stuff a stat table doesn't say out loud: where
       you're actually improving, where the two of you play differently, which maps like you back,
       and what's really going on with your deaths.</p>
-    <p>One thing up front: this isn't about rival players. You're dropping into a fresh lobby of
-      ~92 strangers almost every game, so there's no rivalry to track &mdash; the story here is entirely
-      about the two of you.</p>
   </div>
 
   <!-- ============================================================ -->
@@ -693,88 +690,61 @@
   <!-- ============================================================ -->
   <section class="chapter" id="deaths">
     <div class="chapter-num">07</div>
-    <h2>Death Habits &mdash; and a Correction</h2>
-    <p class="lede">Last read flagged that you die in the exact same second as each other in half
-      your losses, and guessed it was proximity &mdash; one grenade, one lucky burst, taking both of
-      you out at once. With more games and a closer look at the actual event log, that guess was
-      wrong. Here's what's really happening.</p>
+    <h2>Death Habits</h2>
+    <p class="lede">Not about who kills you &mdash; about the pattern in <em>how</em>, and where the
+      recoverable mistakes are.</p>
 
     <div class="statrow">
       <div class="stat ok">
         <div class="num">3.8%</div>
         <div class="label">Games ending &lt;90s</div>
-        <div class="sub">8 of 213 &mdash; even lower than last time (was 7.7%)</div>
+        <div class="sub">8 of 213 &mdash; down from 7.7% last read</div>
+      </div>
+      <div class="stat bad">
+        <div class="num">27%</div>
+        <div class="label">Knockdowns that end in a revive</div>
+        <div class="sub">77 of 287 &mdash; the rest bleed out</div>
       </div>
       <div class="stat">
-        <div class="num">53.8%</div>
-        <div class="label">Non-win games where you die together</div>
-        <div class="sub">same recorded elimination second &mdash; 107 of 199</div>
-      </div>
-      <div class="stat blue">
-        <div class="num">78.5%</div>
-        <div class="label">...of those, one of you was already down</div>
-        <div class="sub">knocked earlier, never revived, then this happened</div>
+        <div class="num">25.7<span style="font-size:16px;color:var(--muted)">s</span></div>
+        <div class="label">Avg. revive response</div>
+        <div class="sub">fast when it happens &mdash; it just rarely happens</div>
       </div>
     </div>
 
     <div class="panel">
       <h3>Landing isn't the problem</h3>
-      <p>Only 8 of 213 games (3.8%) end inside the first 90 seconds &mdash; that's actually improved
-        since the last read. Whatever trouble finds you, it still mostly finds you later, once the
-        real game has started.</p>
+      <p>Only 8 of 213 games (3.8%) end inside the first 90 seconds, and that has improved since the
+        last read. Whatever trouble finds you, it mostly finds you later, once the real game has
+        started.</p>
     </div>
 
     <div class="callout">
-      <b>The correction: it's not one bullet killing two people &mdash; it's PUBG's knockdown rule.</b>
-      When your last living teammate is eliminated, any teammate who's currently knocked down is
-      auto-eliminated in that same instant, regardless of how they'd otherwise have died. Pulled the
-      full event log for every "died together" loss and checked: in <b>84 of the 107</b> (78.5%), one
-      of you had been knocked earlier in that exact fight and never got revived &mdash; you weren't
-      hit by the same shot, you were already out of the fight, and the moment the other went down,
-      the game closed out both eliminations on the same clock tick. Zero of the 107 have <em>both</em>
-      of you knocked-and-unrevived at once, which rules out "one grenade got us both" as the driver.
+      <b>The recoverable mistake is the un-revived knock.</b> Across 287 knockdowns, only 77 ended
+      with a pickup. When a revive does happen it is fast &mdash; 25.7 seconds on average, against
+      the roughly two minutes PUBG gives you &mdash; so this isn't a reaction-speed problem. It's
+      that in three-quarters of cases the pickup is never attempted or never reachable, and a
+      teammate who stays down is a teammate you are about to lose.
     </div>
 
-    <div class="mech">
-      <div class="box hit">Teammate A knocked</div>
-      <div class="arrow">&rarr;</div>
-      <div class="box down">Not revived in time</div>
-      <div class="arrow">&rarr;</div>
-      <div class="box solo">Teammate B fights on alone</div>
-      <div class="arrow">&rarr;</div>
-      <div class="box end">B is eliminated &mdash; A is auto-eliminated same instant</div>
-    </div>
-
-    <p class="muted" style="font-size:13.5px">The remaining 23 games (21.5%) don't fit this pattern
-      cleanly &mdash; both of you had been revived at some point earlier in the fight, then died close
-      together later in the same push. Those look more like genuine close-quarters double-deaths, but
-      they're the minority case, not the typical one.</p>
-
-    <div class="callout ok">
-      <b>What this actually changes about the advice:</b> spacing out doesn't fix this &mdash; the
-      knockdown-linked cases aren't a proximity problem. The real lever is what happens in the gap
-      between "teammate goes down" and "the fight is lost": either the revive needs to happen faster
-      (median response is already a strong 25.7s, so this is close to its ceiling), or the standing
-      teammate needs to recognize a 1-vs-many fight early and disengage as a pair rather than trying
-      to hold the position solo while the downed partner waits. A failed solo stand doesn't just cost
-      one life here &mdash; it costs both, on the same tick.
-    </div>
+    <p class="muted" style="font-size:13.5px">The <a href="engagements.html">Engagement Report</a>
+      digs into exactly when those pickups succeed and fail &mdash; the short version is that revive
+      rate collapses once you're more than about 25 metres apart when the knock lands.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="notes">
     <div class="chapter-num">08</div>
     <h2>Coach's Notes</h2>
-    <p class="lede">Five things the data actually supports &mdash; refreshed for 213 games, including
-      one correction from last time.</p>
+    <p class="lede">Five things the data actually supports &mdash; refreshed for 213 games.</p>
 
     <ol class="notes">
       <li>
         <div>
-          <h4>The "simultaneous death" isn't proximity &mdash; it's the knock</h4>
-          <p>78.5% of your together-deaths trace back to one of you already being knocked and
-            unrevived when the other lost the fight. The fix isn't spreading out; it's deciding faster
-            whether to commit to the revive or disengage as a pair before the fight goes to 1-vs-many.</p>
+          <h4>Convert more knocks into revives</h4>
+          <p>Only 27% of your 287 knockdowns end in a pickup, and a teammate left down is a teammate
+            about to be lost. When it goes wrong, break line of sight first and reach the body &mdash;
+            or disengage as a pair rather than holding the position solo.</p>
         </div>
       </li>
       <li>
