@@ -3619,5 +3619,226 @@
       "damage": 65.8,
       "placement": 7
     }
+  },
+  {
+    "match_id": "c353164b-4b24-4008-ac00-6e4255038c53",
+    "created_at": "2026-08-30T18:51:26Z",
+    "date": "2026-08-30",
+    "map": "Erangel",
+    "game_mode": "solo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 55
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": null
+    }
+  },
+  {
+    "match_id": "7f7f1bb6-f2c2-4146-a0ed-b7812c5b1a8e",
+    "created_at": "2026-08-30T19:01:24Z",
+    "date": "2026-08-30",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 99.9,
+      "placement": 38
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 200.1,
+      "placement": 38
+    }
+  },
+  {
+    "match_id": "83481fe4-e28d-4a85-9431-a195ad307d0a",
+    "created_at": "2026-08-30T19:07:44Z",
+    "date": "2026-08-30",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 33.1,
+      "placement": 44
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 44
+    }
+  },
+  {
+    "match_id": "a537f575-0323-4b17-b74e-63552e92752a",
+    "created_at": "2026-08-30T19:12:55Z",
+    "date": "2026-08-30",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 27
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 27
+    }
+  },
+  {
+    "match_id": "11c80629-8d90-46f3-b971-18b933373150",
+    "created_at": "2026-08-30T19:25:22Z",
+    "date": "2026-08-30",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 12
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 40.1,
+      "placement": 12
+    }
+  },
+  {
+    "match_id": "10c7473d-4918-477a-bbbc-5627d1f1db0a",
+    "created_at": "2026-08-30T19:44:31Z",
+    "date": "2026-08-30",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 2,
+      "damage": 144.5,
+      "placement": 2
+    },
+    "S821": {
+      "kills": 2,
+      "damage": 383.4,
+      "placement": 2
+    }
+  },
+  {
+    "match_id": "cf16787f-3c19-4ef4-84e7-c594be53871b",
+    "created_at": "2026-08-30T20:12:27Z",
+    "date": "2026-08-30",
+    "map": "Chimera_Main",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 2,
+      "damage": 268.9,
+      "placement": 27
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 27
+    }
+  },
+  {
+    "match_id": "c6f57000-8f8b-4b74-ba0c-7b58f96d18d3",
+    "created_at": "2026-08-30T20:16:03Z",
+    "date": "2026-08-30",
+    "map": "Chimera_Main",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 32
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 100.0,
+      "placement": 32
+    }
+  },
+  {
+    "match_id": "6cd5fc69-8a19-49fd-8a59-48e342eb9a17",
+    "created_at": "2026-08-30T20:18:37Z",
+    "date": "2026-08-30",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 21
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 100.0,
+      "placement": 21
+    }
+  },
+  {
+    "match_id": "92c3b357-75d3-4d3e-8715-443ad01681c7",
+    "created_at": "2026-08-30T20:31:56Z",
+    "date": "2026-08-30",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 2,
+      "damage": 263.8,
+      "placement": 39
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 39
+    }
+  },
+  {
+    "match_id": "788e3aa0-343c-4f9c-a5e7-c8cdf10da5e2",
+    "created_at": "2026-08-30T20:37:09Z",
+    "date": "2026-08-30",
+    "map": "Chimera_Main",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 2,
+      "damage": 171.6,
+      "placement": 18
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 122.7,
+      "placement": 18
+    }
+  },
+  {
+    "match_id": "b3d5a752-1fac-4a8b-85df-f315cd1b948d",
+    "created_at": "2026-08-30T20:43:38Z",
+    "date": "2026-08-30",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 59.0,
+      "placement": 24
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 24
+    }
+  },
+  {
+    "match_id": "6af7aff8-1870-42ec-837b-385c5973ab74",
+    "created_at": "2026-08-30T20:57:13Z",
+    "date": "2026-08-30",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 34
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 99.2,
+      "placement": 34
+    }
   }
 ]

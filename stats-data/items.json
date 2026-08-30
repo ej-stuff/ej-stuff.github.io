@@ -4,60 +4,60 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 146,
-        "per_match": 0.69
+        "total": 152,
+        "per_match": 0.67
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 63,
-        "per_match": 0.3
+        "total": 65,
+        "per_match": 0.29
       },
       {
         "item": "Adrenaline Syringe",
         "category": "Boost",
         "total": 28,
-        "per_match": 0.13
+        "per_match": 0.12
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 126,
-        "per_match": 0.59
+        "total": 127,
+        "per_match": 0.56
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 99,
-        "per_match": 0.46
+        "total": 102,
+        "per_match": 0.45
       },
       {
         "item": "Med Kit",
         "category": "Heal",
         "total": 14,
-        "per_match": 0.07
+        "per_match": 0.06
       }
     ],
     "throwables": [
       {
         "item": "Snowball",
-        "total": 80,
-        "per_match": 0.38
+        "total": 96,
+        "per_match": 0.42
       },
       {
         "item": "Smoke Grenade",
         "total": 69,
-        "per_match": 0.32
+        "per_match": 0.31
       },
       {
         "item": "Rock",
         "total": 68,
-        "per_match": 0.32
+        "per_match": 0.3
       },
       {
         "item": "Grenade",
         "total": 59,
-        "per_match": 0.28
+        "per_match": 0.26
       },
       {
         "item": "Sticky Grenade",
@@ -76,31 +76,31 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 150,
-        "per_match": 0.75
+        "total": 155,
+        "per_match": 0.73
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 115,
+        "total": 122,
         "per_match": 0.57
       },
       {
         "item": "Adrenaline Syringe",
         "category": "Boost",
-        "total": 28,
+        "total": 29,
         "per_match": 0.14
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 130,
-        "per_match": 0.65
+        "total": 135,
+        "per_match": 0.63
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 83,
+        "total": 88,
         "per_match": 0.41
       },
       {
@@ -114,12 +114,12 @@
       {
         "item": "Smoke Grenade",
         "total": 91,
-        "per_match": 0.45
+        "per_match": 0.43
       },
       {
         "item": "Grenade",
         "total": 46,
-        "per_match": 0.23
+        "per_match": 0.22
       },
       {
         "item": "Sticky Grenade",
