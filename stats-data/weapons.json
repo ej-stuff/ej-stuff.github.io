@@ -16,9 +16,9 @@
       "kills": 15,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.067,
-      "hits": 162,
-      "total_damage": 2831.4,
-      "avg_damage_per_hit": 17.5
+      "hits": 170,
+      "total_damage": 2965.8,
+      "avg_damage_per_hit": 17.4
     },
     {
       "weapon": "Mk12 SPR",
@@ -26,9 +26,9 @@
       "kills": 11,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.273,
-      "hits": 142,
+      "hits": 147,
       "total_damage": 2989.9,
-      "avg_damage_per_hit": 21.1
+      "avg_damage_per_hit": 20.3
     },
     {
       "weapon": "Mini 14",
@@ -288,9 +288,9 @@
       "kills": 29,
       "headshot_kills": 6,
       "headshot_kill_pct": 0.207,
-      "hits": 248,
-      "total_damage": 4346.6,
-      "avg_damage_per_hit": 17.5
+      "hits": 249,
+      "total_damage": 4372.4,
+      "avg_damage_per_hit": 17.6
     },
     {
       "weapon": "HK416",
