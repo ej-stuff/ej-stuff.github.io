@@ -1,5 +1,55 @@
 [
   {
+    "match_id": "e82c671a-b3b3-4c7b-95f2-1af92958457d",
+    "created_at": "2026-08-30T21:37:32Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1661,
+    "duo_survival_s": 1492,
+    "players": {
+      "D282": {
+        "present": true,
+        "kills": 5,
+        "hs_kills": 3,
+        "knockdowns": 4,
+        "assists": 1,
+        "damage": 407.0,
+        "placement": 4,
+        "survival_s": 1492,
+        "revives": 2,
+        "heals": 1,
+        "boosts": 1,
+        "blue_chips": 0,
+        "damage_taken": 111.8,
+        "times_knocked": 1,
+        "shots_fired": 80,
+        "parachute_dist": 311.0,
+        "throwables": 4,
+        "revive_response_s": null
+      },
+      "S821": {
+        "present": true,
+        "kills": 2,
+        "hs_kills": 1,
+        "knockdowns": 1,
+        "assists": 2,
+        "damage": 204.2,
+        "placement": 4,
+        "survival_s": 1492,
+        "revives": 0,
+        "heals": 2,
+        "boosts": 3,
+        "blue_chips": 0,
+        "damage_taken": 249.8,
+        "times_knocked": 2,
+        "shots_fired": 210,
+        "parachute_dist": 315.0,
+        "throwables": 0,
+        "revive_response_s": 16.4
+      }
+    }
+  },
+  {
     "match_id": "4dc05c64-5439-4c2f-b32e-ea35018202ff",
     "created_at": "2026-08-30T21:28:18Z",
     "map": "Chimera_Main",

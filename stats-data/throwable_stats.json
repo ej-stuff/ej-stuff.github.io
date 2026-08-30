@@ -18238,5 +18238,85 @@
         }
       }
     }
+  },
+  {
+    "match_id": "e82c671a-b3b3-4c7b-95f2-1af92958457d",
+    "created_at": "2026-08-30T21:37:32Z",
+    "players": {
+      "D282": {
+        "Flare Gun": {
+          "count": 0,
+          "kills": 0,
+          "damage": 0,
+          "knockdowns": 0,
+          "picked_up": 1
+        },
+        "Grenade": {
+          "count": 2,
+          "kills": 0,
+          "damage": 45.0,
+          "knockdowns": 0,
+          "picked_up": 3
+        },
+        "Smoke Grenade": {
+          "count": 2,
+          "kills": 0,
+          "damage": 0,
+          "knockdowns": 0,
+          "picked_up": 2
+        },
+        "Sticky Grenade": {
+          "count": 0,
+          "kills": 0,
+          "damage": 0,
+          "knockdowns": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "count": 4,
+          "kills": 0,
+          "damage": 45.0,
+          "knockdowns": 0,
+          "picked_up": 6
+        }
+      },
+      "S821": {
+        "Flare Gun": {
+          "count": 0,
+          "kills": 0,
+          "damage": 0,
+          "knockdowns": 0,
+          "picked_up": 2
+        },
+        "Grenade": {
+          "count": 0,
+          "kills": 0,
+          "damage": 0,
+          "knockdowns": 0,
+          "picked_up": 1
+        },
+        "Smoke Grenade": {
+          "count": 0,
+          "kills": 0,
+          "damage": 0,
+          "knockdowns": 0,
+          "picked_up": 2
+        },
+        "Sticky Grenade": {
+          "count": 0,
+          "kills": 0,
+          "damage": 0,
+          "knockdowns": 0,
+          "picked_up": 0
+        },
+        "__total__": {
+          "count": 0,
+          "kills": 0,
+          "damage": 0.0,
+          "knockdowns": 0,
+          "picked_up": 5
+        }
+      }
+    }
   }
 ]
