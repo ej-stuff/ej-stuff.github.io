@@ -1678,6 +1678,11 @@ function drawCircles(maxT) {
 }
 
 /* ── Enemy positions ────────────────────────────────────────────────────── */
+/* An enemy marker is only trustworthy as long as their position ping is recent.
+   Pings arrive every ~10s while alive (p99 gap 20s), so anything older than this
+   is treated as "position unknown" and not drawn. */
+const STALE_POS_S = 45;
+
 function drawEnemies(maxT) {
   const enemies = MD.enemies;
   if (!enemies || !enemies.length) return;
@@ -1689,9 +1694,6 @@ function drawEnemies(maxT) {
   for (const en of enemies) {
     const pos = en.pos;
     if (!pos || !pos.length) continue;
-    // Skip if dead — but only if no positions exist after death_t (blue-chip revived enemies have later positions)
-    const lastPosT = pos[pos.length - 1][0];
-    if (en.death_t != null && effectiveT >= en.death_t && lastPosT <= en.death_t + 10) continue;
     let lo = 0, hi = pos.length - 1, idx = -1;
     while (lo <= hi) {
       const mid = (lo + hi) >> 1;
@@ -1699,6 +1701,18 @@ function drawEnemies(maxT) {
       else hi = mid - 1;
     }
     if (idx < 0) continue;
+    const sampleT = pos[idx][0];
+
+    // Dead enemies must not linger on the map. Blue-chip revives do produce
+    // samples after death_t, so keep drawing only when the sample we actually
+    // picked is from after the death — not merely when a later sample exists.
+    if (en.death_t != null && effectiveT >= en.death_t && sampleT <= en.death_t) continue;
+
+    // Never draw a stale ghost. Enemy pings land every ~10s (p99 20s), so a
+    // sample older than STALE_POS_S means we no longer know where they are:
+    // disconnects, players who never landed, and telemetry gaps would otherwise
+    // sit frozen on the map for the rest of the match.
+    if (effectiveT - sampleT > STALE_POS_S) continue;
 
     const { cx, cy } = w2c(pos[idx][1], pos[idx][2]);
     const r          = (en.medal ? 6 : 4) / view.scale;

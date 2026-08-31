@@ -64,7 +64,7 @@
     "world_size": 102000,
     "image_px": 4096
   },
-  "Paramo_Main": {
+  "Chimera_Main": {
     "name": "Paramo",
     "image_url": "map-images/Paramo.jpg",
     "cdn_url": "https://raw.githubusercontent.com/pubg/api-assets/master/Assets/Maps/Paramo_Main_Low_Res.png",

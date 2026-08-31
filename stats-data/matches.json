@@ -52,7 +52,7 @@
   {
     "match_id": "4dc05c64-5439-4c2f-b32e-ea35018202ff",
     "created_at": "2026-08-30T21:28:18Z",
-    "map": "Chimera_Main",
+    "map": "Paramo",
     "game_mode": "duo-fpp",
     "duration_s": 1248,
     "duo_survival_s": 429,
@@ -252,7 +252,7 @@
   {
     "match_id": "788e3aa0-343c-4f9c-a5e7-c8cdf10da5e2",
     "created_at": "2026-08-30T20:37:09Z",
-    "map": "Chimera_Main",
+    "map": "Paramo",
     "game_mode": "duo-fpp",
     "duration_s": 1217,
     "duo_survival_s": 274,
@@ -402,7 +402,7 @@
   {
     "match_id": "c6f57000-8f8b-4b74-ba0c-7b58f96d18d3",
     "created_at": "2026-08-30T20:16:03Z",
-    "map": "Chimera_Main",
+    "map": "Paramo",
     "game_mode": "duo-fpp",
     "duration_s": 1232,
     "duo_survival_s": 61,
@@ -452,7 +452,7 @@
   {
     "match_id": "cf16787f-3c19-4ef4-84e7-c594be53871b",
     "created_at": "2026-08-30T20:12:27Z",
-    "map": "Chimera_Main",
+    "map": "Paramo",
     "game_mode": "duo-fpp",
     "duration_s": 1217,
     "duo_survival_s": 121,

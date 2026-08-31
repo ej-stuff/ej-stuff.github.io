@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Debrief — D282 &amp; S821</title>
-<meta name="description" content="A deep read of 213 PUBG matches — the improvement arc, the playstyles, the maps, and the moments.">
+<meta name="description" content="A deep read of 229 PUBG matches — the improvement arc, the playstyles, the maps, and the moments.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -141,7 +141,9 @@
 
   /* ── Chart ────────────────────────────────────────────────────────────── */
   .chart-box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 8px; margin: 10px 0 28px; }
-  .chart-box canvas { max-height: 260px; }
+  /* Chart.js sizes to the parent, so the wrapper needs a real height */
+  .chart-box .cv { position: relative; height: 300px; }
+  .chart-box canvas { width: 100% !important; height: 100% !important; }
   .chart-cap { text-align: center; color: var(--muted); font-size: 12.5px; margin: 6px 0 4px; }
 
   /* ── Panels / prose blocks ───────────────────────────────────────────── */
@@ -313,11 +315,11 @@
 <div class="hero">
   <div class="kicker">A DEEP READ &middot; NOT PART OF THE REGULAR DASHBOARD &middot; V2</div>
   <h1>The Debrief</h1>
-  <p class="hero-sub">213 matches now — 70 more than the last read. This is what the data says
+  <p class="hero-sub">229 matches now — 16 more than the last read. This is what the data says
     about how <span style="color:var(--accent)">D282</span> and <span style="color:var(--s821)">S821</span>
     actually play PUBG &mdash; the improvement arc, how differently the two of you fight, which
     maps like you back, and a few games worth reliving.</p>
-  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 2 Jun &ndash; 25 Aug 2026</div>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 2 Jun &ndash; 30 Aug 2026</div>
 </div>
 
 <div class="wrap">
@@ -325,7 +327,7 @@
   <div class="intro">
     <p>The other pages on this site track everything live &mdash; every match, every weapon, every
       circle, updated automatically. This one doesn't get touched by that pipeline. It's a hand-built
-      pass through all 213 games looking for the stuff a stat table doesn't say out loud: where
+      pass through all 229 games looking for the stuff a stat table doesn't say out loud: where
       you're actually improving, where the two of you play differently, which maps like you back,
       and what's really going on with your deaths.</p>
   </div>
@@ -335,7 +337,7 @@
     <div class="chapter-num">01</div>
     <h2>The Arc</h2>
     <p class="lede">The single biggest thing in this dataset still isn't a stat &mdash; it's a trend
-      line. And it's held up over 70 more games.</p>
+      line, though the most recent games have flattened it.</p>
 
     <div class="statrow">
       <div class="stat">
@@ -344,9 +346,9 @@
         <div class="sub">Top-10 rate: 4%</div>
       </div>
       <div class="stat ok">
-        <div class="num">16.9<span style="font-size:16px;color:var(--muted)"> avg</span></div>
+        <div class="num">23.7<span style="font-size:16px;color:var(--muted)"> avg</span></div>
         <div class="label">Placement &middot; most recent 25</div>
-        <div class="sub">Top-10 rate: 44%</div>
+        <div class="sub">Top-10 rate: 20%</div>
       </div>
       <div class="stat blue">
         <div class="num">~46</div>
@@ -356,21 +358,24 @@
     </div>
 
     <div class="chart-box">
-      <canvas id="arcChart"></canvas>
+      <div class="cv"><canvas id="arcChart"></canvas></div>
     </div>
-    <div class="chart-cap">10-game rolling average placement, all 213 matches, in chronological order. Lower = better (axis is flipped).</div>
+    <div class="chart-cap">10-game rolling average placement, all 229 matches, in chronological order. Lower = better (axis is flipped).</div>
 
     <div class="panel">
       <h3>What the math says, updated</h3>
       <p>With roughly 46 duo teams in an average lobby, landing in the top 10 by pure chance happens
-        about 1 in 4.6 tries &mdash; 22%. Your first 25 games hit it 1 in 25 (4%, worse than random,
-        completely normal while everything is new). Your most recent 25 hit it 11 times (44%) &mdash;
-        double the random rate, and that's with a much bigger, much more recent sample than the last
-        read of this data. The improvement wasn't a hot streak that faded; it's a floor you've been
-        playing at for two months now.</p>
-      <p class="muted" style="font-size:13.5px">The rolling average still dips around game 80&ndash;90
-        (the roughest stretch, see Chapter 02) and again briefly in the low 200s &mdash; but both dips
-        recover, and the chart's overall direction since game ~130 is flat-to-improving, not declining.</p>
+        about 1 in 4.6 tries &mdash; 22%. Your first 25 games hit it once (4%), which is worse than
+        random and completely normal while everything is new. Your most recent 25 hit it five times
+        (20%), at an average finish of 23.7.</p>
+      <p>Read honestly, that is a real improvement on where you started but <b>not the steep climb the
+        June version of this page suggested</b>. At the 213-match mark the trailing 25 games averaged
+        16.9 with a 44% top-10 rate; the 16 games added on 30 August were a mixed bag and pulled that
+        trailing window back down. The 10-game rolling line finishes around 22 &mdash; much better
+        than the 33 you opened with, and roughly flat for the last hundred games.</p>
+      <p class="muted" style="font-size:13.5px">A trailing-25 window swings hard on one session, so
+        neither the June spike nor this dip should be over-read. The durable claim is the one the whole
+        chart supports: you improved a lot early and have been steady since.</p>
     </div>
   </section>
 
@@ -383,12 +388,12 @@
 
     <div class="statrow">
       <div class="stat">
-        <div class="num">19</div>
+        <div class="num">20</div>
         <div class="label">Days you played, at all</div>
-        <div class="sub">across roughly 12 weeks</div>
+        <div class="sub">across roughly 13 weeks</div>
       </div>
       <div class="stat">
-        <div class="num">89<span style="font-size:16px;color:var(--muted)">h</span></div>
+        <div class="num">96<span style="font-size:16px;color:var(--muted)">h</span></div>
         <div class="label">Total time logged</div>
         <div class="sub">lobby-to-elimination, all matches</div>
       </div>
@@ -401,7 +406,7 @@
 
     <div class="panel">
       <h3>The sessions, ranked</h3>
-      <p>213 games across 19 calendar days, spread from early June into late August. Seven new
+      <p>229 games across 20 calendar days, spread from early June into late August. Seven new
         sessions have landed since the last read, several of them full nights on their own:</p>
       <p class="muted" style="font-size:14px; line-height:2">
         <b style="color:var(--text)">20 Jun</b> &mdash; 21 games &middot;
@@ -424,14 +429,14 @@
 
     <div class="callout ok">
       <b>You warm up, you don't wear down.</b> Split every session of 6+ games into thirds and
-      compare: across all of them combined, the first third of a session averages a 25.7 placement
-      and the last third averages 21.0 &mdash; nearly five spots better. Last read of this data found
+      compare: across all of them combined, the first third of a session averages a 26.4 placement
+      and the last third averages 20.7 &mdash; nearly five spots better. Last read of this data found
       a flat line (no fatigue). With almost double the sessions to check it against, the pattern is
       actually a mild <em>improvement</em> curve within a sitting &mdash; the first couple of games
       look like re-acclimating, and you're sharpest in the back half, not the front.
     </div>
 
-    <p class="muted" style="font-size:13.5px">In 12 of the 213 games, only one of you shows up in the
+    <p class="muted" style="font-size:13.5px">In 13 of the 229 games, only one of you shows up in the
       data &mdash; the other disconnected, joined solo, or life happened mid-session. Tracked as-is;
       too small a number to move anything above.</p>
   </section>
@@ -446,7 +451,7 @@
       <div class="compare-label"><span>D282</span><span>Shots fired / minute alive</span><span>S821</span></div>
       <div class="compare-track">
         <div class="side left"><div class="fill d" style="width:69%"></div></div>
-        <div class="val">3.1 &nbsp;/&nbsp; 4.5</div>
+        <div class="val">3.1 &nbsp;/&nbsp; 4.4</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
@@ -454,7 +459,7 @@
       <div class="compare-label"><span>D282</span><span>Headshot kill rate</span><span>S821</span></div>
       <div class="compare-track">
         <div class="side left"><div class="fill d" style="width:58%"></div></div>
-        <div class="val">14.6% / 25.0%</div>
+        <div class="val">18.2% / 25.2%</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
@@ -462,7 +467,7 @@
       <div class="compare-label"><span>D282</span><span>Knock-outs delivered / match</span><span>S821</span></div>
       <div class="compare-track">
         <div class="side left"><div class="fill d" style="width:62%"></div></div>
-        <div class="val">0.38 / 0.61</div>
+        <div class="val">0.40 / 0.60</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
@@ -470,7 +475,7 @@
       <div class="compare-label"><span>D282</span><span>Times knocked / match (higher = riskier)</span><span>S821</span></div>
       <div class="compare-track">
         <div class="side left"><div class="fill d" style="width:87%"></div></div>
-        <div class="val">0.65 / 0.75</div>
+        <div class="val">0.64 / 0.74</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
@@ -478,7 +483,7 @@
       <div class="compare-label"><span>D282</span><span>Revives given / match</span><span>S821</span></div>
       <div class="compare-track">
         <div class="side left"><div class="fill d" style="width:100%"></div></div>
-        <div class="val">0.22 / 0.15</div>
+        <div class="val">0.21 / 0.14</div>
         <div class="side"><div class="fill s" style="width:68%"></div></div>
       </div>
     </div>
@@ -486,7 +491,7 @@
       <div class="compare-label"><span>D282</span><span>Boosts used / match</span><span>S821</span></div>
       <div class="compare-track">
         <div class="side left"><div class="fill d" style="width:76%"></div></div>
-        <div class="val">1.11 / 1.46</div>
+        <div class="val">1.10 / 1.45</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
@@ -495,29 +500,29 @@
       <h3>Trigger and glue &mdash; and the gap widened a bit</h3>
       <p><b style="color:var(--s821)">S821</b> is still the trigger: more shots per minute alive, more
         knock-outs delivered, a genuinely strong 25% headshot rate, and a K/D that's pulled further
-        ahead (0.70 vs 0.45 &mdash; that gap was 0.67 vs 0.52 last time). <b style="color:var(--accent)">D282</b>
+        ahead (0.69 vs 0.48). <b style="color:var(--accent)">D282</b>
         still shoots less and revives more, and it's D282 who holds the revives-given lead across the
         whole dataset. The roles haven't changed; S821's aggression has just kept compounding faster
         than D282's has over these extra 70 games.</p>
       <p>Neither role is wrong &mdash; a duo where one person only pushes and the other only supports
         doesn't survive long, and yours still does both. But if there's one thing worth naming plainly:
-        D282's K/D has drifted down slightly (0.52&rarr;0.45) while S821's has climbed (0.67&rarr;0.70).
+        D282's K/D sits at 0.48 against S821's 0.69, and the headshot gap has narrowed (18.2% vs 25.2%).
         Worth keeping an eye on, not panicking about.</p>
     </div>
 
     <div class="statrow">
       <div class="stat">
-        <div class="num">36</div>
+        <div class="num">42</div>
         <div class="label">D282 solo kills</div>
-        <div class="sub">37.5% of D282's 96 career kills</div>
+        <div class="sub">38% of D282's 110 career kills</div>
       </div>
       <div class="stat blue">
         <div class="num">56</div>
         <div class="label">S821 solo kills</div>
-        <div class="sub">40.0% of S821's 140 career kills</div>
+        <div class="sub">38% of S821's 147 career kills</div>
       </div>
       <div class="stat ok">
-        <div class="num">25.7<span style="font-size:16px;color:var(--muted)">s</span></div>
+        <div class="num">25.4<span style="font-size:16px;color:var(--muted)">s</span></div>
         <div class="label">Avg. revive response time</div>
         <div class="sub">fastest: 11.1s &middot; PUBG gives you ~2 min</div>
       </div>
@@ -569,14 +574,14 @@
         <div class="place">10.5</div>
       </div>
       <div class="maprow">
-        <div class="mname">Vikendi<span class="n">14 games</span></div>
-        <div class="bar-outer"><div class="bar-inner" style="width:58%"></div></div>
-        <div class="place">18.0</div>
+        <div class="mname">Vikendi<span class="n">20 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:55%"></div></div>
+        <div class="place">19.1</div>
       </div>
       <div class="maprow">
-        <div class="mname">Erangel<span class="n">91 games</span></div>
-        <div class="bar-outer"><div class="bar-inner" style="width:37%"></div></div>
-        <div class="place">22.9</div>
+        <div class="mname">Erangel<span class="n">97 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:36%"></div></div>
+        <div class="place">23.4</div>
       </div>
       <div class="maprow">
         <div class="mname">Miramar<span class="n">26 games</span></div>
@@ -608,9 +613,9 @@
         <div class="sub">now the worst top-10 rate &mdash; overtook Sanhok</div>
       </div>
       <div class="stat blue">
-        <div class="num">2 / 213</div>
+        <div class="num">2 / 229</div>
         <div class="label">Wins, career total</div>
-        <div class="sub">both from June &mdash; the last ~70 games haven't added a third yet</div>
+        <div class="sub">both from June &mdash; nothing since has added a third</div>
       </div>
     </div>
 
@@ -628,7 +633,7 @@
         forest map &mdash; a very different shape of problem than Sanhok's close-quarters rush, and
         with 23 games it's a real signal, not noise, even if the "why" isn't as clean yet. Worth
         another look once there's more Taego data specifically.</p>
-      <p class="muted" style="font-size:13.5px">Deston (3 games) and Rondo (4 games) still don't have
+      <p class="muted" style="font-size:13.5px">Paramo (4 games, avg 22.5), Deston (3 games) and Rondo (4 games) don't have
         enough data for real conclusions. The old "zero kills on Rondo" note from last time is gone,
         though &mdash; both maps have picked up kills since. Rondo's average placement (40.2) is still
         the worst on the board, small sample and all.</p>
@@ -696,14 +701,14 @@
 
     <div class="statrow">
       <div class="stat ok">
-        <div class="num">3.8%</div>
+        <div class="num">3.9%</div>
         <div class="label">Games ending &lt;90s</div>
-        <div class="sub">8 of 213 &mdash; down from 7.7% last read</div>
+        <div class="sub">9 of 229 &mdash; down from 7.7% in June</div>
       </div>
       <div class="stat bad">
-        <div class="num">27%</div>
+        <div class="num">26%</div>
         <div class="label">Knockdowns that end in a revive</div>
-        <div class="sub">77 of 287 &mdash; the rest bleed out</div>
+        <div class="sub">80 of 306 &mdash; the rest bleed out</div>
       </div>
       <div class="stat">
         <div class="num">25.7<span style="font-size:16px;color:var(--muted)">s</span></div>
@@ -714,14 +719,14 @@
 
     <div class="panel">
       <h3>Landing isn't the problem</h3>
-      <p>Only 8 of 213 games (3.8%) end inside the first 90 seconds, and that has improved since the
+      <p>Only 9 of 229 games (3.9%) end inside the first 90 seconds, and that has improved since the
         last read. Whatever trouble finds you, it mostly finds you later, once the real game has
         started.</p>
     </div>
 
     <div class="callout">
-      <b>The recoverable mistake is the un-revived knock.</b> Across 287 knockdowns, only 77 ended
-      with a pickup. When a revive does happen it is fast &mdash; 25.7 seconds on average, against
+      <b>The recoverable mistake is the un-revived knock.</b> Across 306 knockdowns, only 80 ended
+      with a pickup. When a revive does happen it is fast &mdash; 25.4 seconds on average, against
       the roughly two minutes PUBG gives you &mdash; so this isn't a reaction-speed problem. It's
       that in three-quarters of cases the pickup is never attempted or never reachable, and a
       teammate who stays down is a teammate you are about to lose.
@@ -736,13 +741,13 @@
   <section class="chapter" id="notes">
     <div class="chapter-num">08</div>
     <h2>Coach's Notes</h2>
-    <p class="lede">Five things the data actually supports &mdash; refreshed for 213 games.</p>
+    <p class="lede">Five things the data actually supports &mdash; refreshed for 229 games.</p>
 
     <ol class="notes">
       <li>
         <div>
           <h4>Convert more knocks into revives</h4>
-          <p>Only 27% of your 287 knockdowns end in a pickup, and a teammate left down is a teammate
+          <p>Only 26% of your 306 knockdowns end in a pickup, and a teammate left down is a teammate
             about to be lost. When it goes wrong, break line of sight first and reach the body &mdash;
             or disengage as a pair rather than holding the position solo.</p>
         </div>
@@ -786,7 +791,7 @@
 </div>
 
 <footer>
-  <div class="sign">&mdash; compiled from all 213 shared matches, by request, replacing the June read</div>
+  <div class="sign">&mdash; compiled from all 229 shared matches, by request, replacing the June read</div>
   Not updated automatically. If you want a fresh read after more games, just ask for another one.
 </footer>
 
@@ -799,8 +804,8 @@ document.addEventListener('click', function(e) {
     document.getElementById('siteNavMenu').classList.remove('open');
 });
 
-const placements = [19, 45, 35, 19, 39, 40, 29, 41, 31, 38, 20, 38, 33, 24, 20, 15, 37, 41, 34, 39, 47, 48, 21, 41, 3, 4, 8, 43, 50, 34, 37, 26, 7, 13, 23, 3, 14, 13, 38, 38, 4, 5, 48, 40, 45, 3, 7, 32, 10, 16, 17, 5, 29, 47, 14, 1, 16, 43, 10, 3, 38, 6, 44, 11, 24, 48, 29, 16, 43, 2, 39, 26, 37, 32, 41, 24, 17, 38, 14, 10, 26, 39, 31, 71, 86, 11, 11, 6, 3, 7, 6, 34, 33, 8, 41, 7, 25, 48, 5, 11, 42, 4, 39, 24, 9, 23, 38, 31, 8, 32, 46, 1, 9, 14, 29, 7, 25, 3, 43, 2, 2, 11, 10, 2, 18, 2, 2, 14, 46, 47, 49, 9, 2, 23, 7, 22, 35, 18, 2, 9, 3, 31, 28, 44, 14, 25, 15, 6, 17, 36, 4, 29, 12, 44, 9, 2, 53, 49, 38, 9, 4, 40, 5, 30, 20, 17, 5, 13, 27, 14, 45, 5, 2, 2, 2, 24, 46, 43, 13, 47, 48, 6, 30, 21, 22, 11, 13, 16, 3, 19, 7, 11, 3, 40, 21, 23, 9, 5, 9, 18, 2, 18, 35, 9, 37, 5, 13, 41, 21, 44, 8, 15, 7];
-const roll = [19.0, 32.0, 33.0, 29.5, 31.4, 32.83, 32.29, 33.38, 33.11, 33.6, 33.7, 33.0, 32.8, 33.3, 31.4, 28.9, 29.7, 29.7, 30.0, 30.1, 32.8, 33.8, 32.6, 34.3, 32.6, 31.5, 28.6, 28.8, 30.4, 29.9, 28.9, 26.7, 25.3, 22.5, 24.5, 24.4, 25.0, 22.0, 20.8, 21.2, 17.9, 15.8, 19.9, 22.6, 24.8, 24.8, 24.1, 26.0, 23.2, 21.0, 22.3, 22.3, 20.4, 21.1, 18.0, 17.8, 18.7, 19.8, 19.8, 18.5, 20.6, 20.7, 22.2, 18.6, 19.6, 24.3, 25.6, 22.9, 26.2, 26.1, 26.2, 28.2, 27.5, 29.6, 31.3, 28.9, 27.7, 29.9, 27.0, 27.8, 26.5, 27.8, 27.2, 31.1, 35.6, 34.3, 33.7, 30.5, 29.4, 29.1, 27.1, 26.6, 26.8, 20.5, 16.0, 15.6, 17.0, 21.2, 21.4, 21.8, 25.4, 22.4, 23.0, 24.6, 21.4, 23.0, 24.3, 22.6, 22.9, 25.0, 25.4, 25.1, 22.1, 21.1, 23.1, 21.5, 20.2, 17.4, 20.9, 17.9, 13.5, 14.5, 14.6, 13.4, 12.3, 11.8, 9.5, 10.6, 10.9, 15.4, 20.1, 19.9, 19.1, 21.2, 20.1, 22.1, 25.4, 25.8, 21.4, 17.6, 13.0, 15.2, 17.8, 19.9, 20.6, 20.9, 18.9, 17.7, 19.2, 21.9, 22.0, 21.8, 20.2, 20.2, 19.7, 17.4, 21.2, 25.5, 27.6, 24.9, 24.9, 26.0, 25.3, 23.9, 25.0, 26.5, 21.7, 18.1, 17.0, 17.5, 21.6, 18.1, 17.8, 15.0, 13.2, 13.9, 18.0, 21.0, 19.6, 22.9, 23.2, 23.3, 26.1, 28.0, 30.0, 28.7, 25.4, 22.7, 21.7, 18.9, 14.8, 15.3, 12.6, 14.5, 14.4, 15.6, 15.2, 14.1, 14.7, 14.6, 14.1, 14.8, 18.0, 14.9, 16.5, 14.7, 15.1, 18.7, 19.9, 22.5, 23.1, 22.8, 20.0];
+const placements = [19, 45, 35, 19, 39, 40, 29, 41, 31, 38, 20, 38, 33, 24, 20, 15, 37, 41, 34, 39, 47, 48, 21, 41, 3, 4, 8, 43, 50, 34, 37, 26, 7, 13, 23, 3, 14, 13, 38, 38, 4, 5, 48, 40, 45, 3, 7, 32, 10, 16, 17, 5, 29, 47, 14, 1, 16, 43, 10, 3, 38, 6, 44, 11, 24, 48, 29, 16, 43, 2, 39, 26, 37, 32, 41, 24, 17, 38, 14, 10, 26, 39, 31, 71, 86, 11, 11, 6, 3, 7, 6, 34, 33, 8, 41, 7, 25, 48, 5, 11, 42, 4, 39, 24, 9, 23, 38, 31, 8, 32, 46, 1, 9, 14, 29, 7, 25, 3, 43, 2, 2, 11, 10, 2, 18, 2, 2, 14, 46, 47, 49, 9, 2, 23, 7, 22, 35, 18, 2, 9, 3, 31, 28, 44, 14, 25, 15, 6, 17, 36, 4, 29, 12, 44, 9, 2, 53, 49, 38, 9, 4, 40, 5, 30, 20, 17, 5, 13, 27, 14, 45, 5, 2, 2, 2, 24, 46, 43, 13, 47, 48, 6, 30, 21, 22, 11, 13, 16, 3, 19, 7, 11, 3, 40, 21, 23, 9, 5, 9, 18, 2, 18, 35, 9, 37, 5, 13, 41, 21, 44, 8, 15, 7, 55, 38, 44, 27, 12, 2, 27, 32, 21, 39, 18, 24, 34, 11, 13, 4];
+const roll = [19.0, 32.0, 33.0, 29.5, 31.4, 32.83, 32.29, 33.38, 33.11, 33.6, 33.7, 33.0, 32.8, 33.3, 31.4, 28.9, 29.7, 29.7, 30.0, 30.1, 32.8, 33.8, 32.6, 34.3, 32.6, 31.5, 28.6, 28.8, 30.4, 29.9, 28.9, 26.7, 25.3, 22.5, 24.5, 24.4, 25.0, 22.0, 20.8, 21.2, 17.9, 15.8, 19.9, 22.6, 24.8, 24.8, 24.1, 26.0, 23.2, 21.0, 22.3, 22.3, 20.4, 21.1, 18.0, 17.8, 18.7, 19.8, 19.8, 18.5, 20.6, 20.7, 22.2, 18.6, 19.6, 24.3, 25.6, 22.9, 26.2, 26.1, 26.2, 28.2, 27.5, 29.6, 31.3, 28.9, 27.7, 29.9, 27.0, 27.8, 26.5, 27.8, 27.2, 31.1, 35.6, 34.3, 33.7, 30.5, 29.4, 29.1, 27.1, 26.6, 26.8, 20.5, 16.0, 15.6, 17.0, 21.2, 21.4, 21.8, 25.4, 22.4, 23.0, 24.6, 21.4, 23.0, 24.3, 22.6, 22.9, 25.0, 25.4, 25.1, 22.1, 21.1, 23.1, 21.5, 20.2, 17.4, 20.9, 17.9, 13.5, 14.5, 14.6, 13.4, 12.3, 11.8, 9.5, 10.6, 10.9, 15.4, 20.1, 19.9, 19.1, 21.2, 20.1, 22.1, 25.4, 25.8, 21.4, 17.6, 13.0, 15.2, 17.8, 19.9, 20.6, 20.9, 18.9, 17.7, 19.2, 21.9, 22.0, 21.8, 20.2, 20.2, 19.7, 17.4, 21.2, 25.5, 27.6, 24.9, 24.9, 26.0, 25.3, 23.9, 25.0, 26.5, 21.7, 18.1, 17.0, 17.5, 21.6, 18.1, 17.8, 15.0, 13.2, 13.9, 18.0, 21.0, 19.6, 22.9, 23.2, 23.3, 26.1, 28.0, 30.0, 28.7, 25.4, 22.7, 21.7, 18.9, 14.8, 15.3, 12.6, 14.5, 14.4, 15.6, 15.2, 14.1, 14.7, 14.6, 14.1, 14.8, 18.0, 14.9, 16.5, 14.7, 15.1, 18.7, 19.9, 22.5, 23.1, 22.8, 20.0, 24.6, 24.7, 28.6, 30.0, 27.1, 25.2, 23.5, 25.9, 26.5, 29.7, 26.0, 24.6, 23.6, 22.0, 22.1, 22.3];
 const labels = placements.map((_,i)=>i+1);
 
 const ctx = document.getElementById('arcChart').getContext('2d');
