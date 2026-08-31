@@ -4,32 +4,32 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 154,
-        "per_match": 0.67
+        "total": 161,
+        "per_match": 0.68
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 68,
+        "total": 70,
         "per_match": 0.3
       },
       {
         "item": "Adrenaline Syringe",
         "category": "Boost",
         "total": 29,
-        "per_match": 0.13
+        "per_match": 0.12
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 128,
+        "total": 131,
         "per_match": 0.56
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 102,
-        "per_match": 0.45
+        "total": 109,
+        "per_match": 0.46
       },
       {
         "item": "Med Kit",
@@ -41,22 +41,22 @@
     "throwables": [
       {
         "item": "Snowball",
-        "total": 99,
-        "per_match": 0.43
+        "total": 112,
+        "per_match": 0.47
       },
       {
         "item": "Smoke Grenade",
-        "total": 71,
-        "per_match": 0.31
+        "total": 75,
+        "per_match": 0.32
       },
       {
         "item": "Rock",
         "total": 68,
-        "per_match": 0.3
+        "per_match": 0.29
       },
       {
         "item": "Grenade",
-        "total": 61,
+        "total": 63,
         "per_match": 0.27
       },
       {
@@ -76,49 +76,49 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 156,
-        "per_match": 0.72
+        "total": 164,
+        "per_match": 0.73
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 128,
-        "per_match": 0.59
+        "total": 134,
+        "per_match": 0.6
       },
       {
         "item": "Adrenaline Syringe",
         "category": "Boost",
-        "total": 30,
+        "total": 31,
         "per_match": 0.14
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 138,
-        "per_match": 0.64
+        "total": 149,
+        "per_match": 0.66
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 88,
-        "per_match": 0.41
+        "total": 98,
+        "per_match": 0.44
       },
       {
         "item": "Med Kit",
         "category": "Heal",
-        "total": 19,
+        "total": 20,
         "per_match": 0.09
       }
     ],
     "throwables": [
       {
         "item": "Smoke Grenade",
-        "total": 94,
+        "total": 98,
         "per_match": 0.44
       },
       {
         "item": "Grenade",
-        "total": 46,
+        "total": 47,
         "per_match": 0.21
       },
       {
