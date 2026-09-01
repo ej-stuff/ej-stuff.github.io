@@ -13,12 +13,12 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 15,
+      "kills": 16,
       "headshot_kills": 1,
-      "headshot_kill_pct": 0.067,
-      "hits": 170,
-      "total_damage": 2965.8,
-      "avg_damage_per_hit": 17.4
+      "headshot_kill_pct": 0.062,
+      "hits": 173,
+      "total_damage": 3027.0,
+      "avg_damage_per_hit": 17.5
     },
     {
       "weapon": "Mini 14",
@@ -53,12 +53,12 @@
     {
       "weapon": "MP5K",
       "category": "SMG",
-      "kills": 6,
+      "kills": 7,
       "headshot_kills": 1,
-      "headshot_kill_pct": 0.167,
-      "hits": 51,
-      "total_damage": 584.9,
-      "avg_damage_per_hit": 11.5
+      "headshot_kill_pct": 0.143,
+      "hits": 68,
+      "total_damage": 743.4,
+      "avg_damage_per_hit": 10.9
     },
     {
       "weapon": "SCAR-L",
@@ -176,9 +176,9 @@
       "kills": 1,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 17,
-      "total_damage": 477.7,
-      "avg_damage_per_hit": 28.1
+      "hits": 18,
+      "total_damage": 544.1,
+      "avg_damage_per_hit": 30.2
     },
     {
       "weapon": "Dragunov",
@@ -325,12 +325,12 @@
     {
       "weapon": "MP5K",
       "category": "SMG",
-      "kills": 9,
+      "kills": 10,
       "headshot_kills": 3,
-      "headshot_kill_pct": 0.333,
-      "hits": 143,
-      "total_damage": 1836.5,
-      "avg_damage_per_hit": 12.8
+      "headshot_kill_pct": 0.3,
+      "hits": 146,
+      "total_damage": 1878.0,
+      "avg_damage_per_hit": 12.9
     },
     {
       "weapon": "Mk12 SPR",
@@ -428,9 +428,9 @@
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 9,
-      "total_damage": 130.8,
-      "avg_damage_per_hit": 14.5
+      "hits": 11,
+      "total_damage": 169.7,
+      "avg_damage_per_hit": 15.4
     },
     {
       "weapon": "Dragunov",

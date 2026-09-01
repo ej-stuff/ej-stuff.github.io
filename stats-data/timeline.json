@@ -4044,5 +4044,39 @@
       "damage": 282.3,
       "placement": 24
     }
+  },
+  {
+    "match_id": "33371077-b5c9-42c9-855d-d522c15575b5",
+    "created_at": "2026-08-31T20:20:55Z",
+    "date": "2026-08-31",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 127.5,
+      "placement": 45
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 38.8,
+      "placement": 45
+    }
+  },
+  {
+    "match_id": "bcac2d6c-53b3-4143-80fc-bbb5dac86313",
+    "created_at": "2026-08-31T20:25:08Z",
+    "date": "2026-08-31",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 158.5,
+      "placement": 25
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 41.5,
+      "placement": 25
+    }
   }
 ]
