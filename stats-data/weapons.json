@@ -6,8 +6,8 @@
       "kills": 18,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.056,
-      "hits": 237,
-      "total_damage": 4125.6,
+      "hits": 243,
+      "total_damage": 4237.8,
       "avg_damage_per_hit": 17.4
     },
     {
@@ -21,24 +21,24 @@
       "avg_damage_per_hit": 17.4
     },
     {
+      "weapon": "AK-M",
+      "category": "AR",
+      "kills": 17,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.118,
+      "hits": 115,
+      "total_damage": 2920.1,
+      "avg_damage_per_hit": 25.4
+    },
+    {
       "weapon": "Mini 14",
       "category": "DMR",
       "kills": 15,
       "headshot_kills": 4,
       "headshot_kill_pct": 0.267,
-      "hits": 181,
-      "total_damage": 3487.7,
+      "hits": 190,
+      "total_damage": 3671.6,
       "avg_damage_per_hit": 19.3
-    },
-    {
-      "weapon": "AK-M",
-      "category": "AR",
-      "kills": 13,
-      "headshot_kills": 2,
-      "headshot_kill_pct": 0.154,
-      "hits": 101,
-      "total_damage": 2530.8,
-      "avg_damage_per_hit": 25.1
     },
     {
       "weapon": "Mk12 SPR",
@@ -63,12 +63,12 @@
     {
       "weapon": "SCAR-L",
       "category": "AR",
-      "kills": 4,
+      "kills": 5,
       "headshot_kills": 1,
-      "headshot_kill_pct": 0.25,
-      "hits": 40,
-      "total_damage": 731.1,
-      "avg_damage_per_hit": 18.3
+      "headshot_kill_pct": 0.2,
+      "hits": 42,
+      "total_damage": 765.6,
+      "avg_damage_per_hit": 18.2
     },
     {
       "weapon": "Tommy Gun",
@@ -166,9 +166,9 @@
       "kills": 1,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 23,
-      "total_damage": 726.1,
-      "avg_damage_per_hit": 31.6
+      "hits": 30,
+      "total_damage": 991.9,
+      "avg_damage_per_hit": 33.1
     },
     {
       "weapon": "Grenade",
@@ -186,9 +186,9 @@
       "kills": 1,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 10,
-      "total_damage": 183.6,
-      "avg_damage_per_hit": 18.4
+      "hits": 11,
+      "total_damage": 219.9,
+      "avg_damage_per_hit": 20.0
     },
     {
       "weapon": "Vector",
@@ -338,19 +338,19 @@
       "kills": 12,
       "headshot_kills": 9,
       "headshot_kill_pct": 0.75,
-      "hits": 47,
-      "total_damage": 2668.3,
-      "avg_damage_per_hit": 56.8
+      "hits": 49,
+      "total_damage": 2785.9,
+      "avg_damage_per_hit": 56.9
     },
     {
       "weapon": "MP5K",
       "category": "SMG",
-      "kills": 10,
-      "headshot_kills": 3,
-      "headshot_kill_pct": 0.3,
-      "hits": 146,
-      "total_damage": 1878.0,
-      "avg_damage_per_hit": 12.9
+      "kills": 11,
+      "headshot_kills": 4,
+      "headshot_kill_pct": 0.364,
+      "hits": 152,
+      "total_damage": 2043.4,
+      "avg_damage_per_hit": 13.4
     },
     {
       "weapon": "Mk12 SPR",
@@ -368,8 +368,8 @@
       "kills": 8,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.25,
-      "hits": 92,
-      "total_damage": 1992.1,
+      "hits": 93,
+      "total_damage": 2016.4,
       "avg_damage_per_hit": 21.7
     },
     {
@@ -398,9 +398,9 @@
       "kills": 4,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 44,
-      "total_damage": 878.6,
-      "avg_damage_per_hit": 20.0
+      "hits": 47,
+      "total_damage": 973.0,
+      "avg_damage_per_hit": 20.7
     },
     {
       "weapon": "SKS",
