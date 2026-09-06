@@ -96,9 +96,9 @@
       "kills": 3,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 30,
-      "total_damage": 650.0,
-      "avg_damage_per_hit": 21.7
+      "hits": 32,
+      "total_damage": 738.9,
+      "avg_damage_per_hit": 23.1
     },
     {
       "weapon": "AUG A3",
@@ -295,12 +295,12 @@
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 31,
+      "kills": 32,
       "headshot_kills": 6,
-      "headshot_kill_pct": 0.194,
-      "hits": 265,
-      "total_damage": 4667.5,
-      "avg_damage_per_hit": 17.6
+      "headshot_kill_pct": 0.188,
+      "hits": 285,
+      "total_damage": 4867.5,
+      "avg_damage_per_hit": 17.1
     },
     {
       "weapon": "HK416",
@@ -318,8 +318,8 @@
       "kills": 14,
       "headshot_kills": 5,
       "headshot_kill_pct": 0.357,
-      "hits": 149,
-      "total_damage": 3765.8,
+      "hits": 151,
+      "total_damage": 3827.0,
       "avg_damage_per_hit": 25.3
     },
     {
@@ -338,9 +338,9 @@
       "kills": 12,
       "headshot_kills": 9,
       "headshot_kill_pct": 0.75,
-      "hits": 49,
-      "total_damage": 2785.9,
-      "avg_damage_per_hit": 56.9
+      "hits": 51,
+      "total_damage": 2919.4,
+      "avg_damage_per_hit": 57.2
     },
     {
       "weapon": "MP5K",

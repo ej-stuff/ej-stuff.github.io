@@ -1,5 +1,55 @@
 [
   {
+    "match_id": "e6be4260-f966-4e50-b220-797d9f2dc318",
+    "created_at": "2026-09-05T21:12:43Z",
+    "map": "Deston",
+    "game_mode": "duo-fpp",
+    "duration_s": 1748,
+    "duo_survival_s": 1729,
+    "players": {
+      "D282": {
+        "present": true,
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 89.0,
+        "placement": 3,
+        "survival_s": 1340,
+        "revives": 0,
+        "heals": 3,
+        "boosts": 3,
+        "blue_chips": 0,
+        "damage_taken": 190.7,
+        "times_knocked": 2,
+        "shots_fired": 10,
+        "parachute_dist": 333.0,
+        "throwables": 0,
+        "revive_response_s": null
+      },
+      "S821": {
+        "present": true,
+        "kills": 1,
+        "hs_kills": 0,
+        "knockdowns": 3,
+        "assists": 0,
+        "damage": 394.7,
+        "placement": 3,
+        "survival_s": 1729,
+        "revives": 0,
+        "heals": 5,
+        "boosts": 8,
+        "blue_chips": 1,
+        "damage_taken": 239.6,
+        "times_knocked": 0,
+        "shots_fired": 80,
+        "parachute_dist": 382.0,
+        "throwables": 0,
+        "revive_response_s": null
+      }
+    }
+  },
+  {
     "match_id": "c4c92586-0438-4b69-9dc3-dde69f562816",
     "created_at": "2026-09-05T20:48:10Z",
     "map": "Deston",
