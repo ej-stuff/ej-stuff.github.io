@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Armory — D282 &amp; S821</title>
+<meta name="description" content="Which weapon actually wins engagements, not just which has the best accuracy — a main (AR/LMG) and long gun (DMR/SR) pick for each player, built from 476 reconstructed fights.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+  :root {
+    --bg:      #14130f;
+    --panel:   #1e1c17;
+    --panel2:  #221f19;
+    --line:    #38342c;
+    --text:    #e8e3d8;
+    --muted:   #9a9385;
+    --accent:  #f4a300;   /* D282 */
+    --s821:    #4a9edd;   /* S821 */
+    --ok:      #a3c76a;
+    --danger:  #d7443e;
+    --purple:  #c080ff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    line-height: 1.65;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px 80px; }
+  h1, h2, h3, h4 { font-family: Oswald, system-ui, sans-serif; font-weight: 600; letter-spacing: .5px; }
+  a { color: var(--accent); }
+  .muted { color: var(--muted); }
+
+  .hero {
+    padding: 90px 24px 50px; text-align: center;
+    background: radial-gradient(ellipse 900px 400px at 50% -10%, rgba(244,163,0,.10), transparent 60%), var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .kicker { font-family: Oswald, sans-serif; text-transform: uppercase; letter-spacing: 4px; font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+  .hero h1 {
+    font-size: clamp(38px, 7vw, 64px); text-transform: uppercase; letter-spacing: 3px; margin: 0 0 14px;
+    background: linear-gradient(135deg, #ffd479, var(--accent) 55%, #c97e00);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { max-width: 660px; margin: 0 auto; color: var(--muted); font-size: 16px; }
+  .hero-meta { margin-top: 22px; font-size: 13px; color: var(--muted); font-family: Oswald, sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+  .hero-meta span.d { color: var(--accent); } .hero-meta span.s { color: var(--s821); }
+
+  .intro { padding: 40px 0 10px; font-size: 16px; }
+  .intro p { margin: 0 0 14px; }
+
+  section.chapter { padding: 56px 0 8px; border-top: 1px solid var(--line); }
+  .chapter-num { font-family: Oswald, sans-serif; font-size: 12px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; }
+  .chapter h2 { font-size: 28px; text-transform: uppercase; margin: 0 0 16px; }
+  .chapter .lede { color: var(--muted); font-size: 15.5px; max-width: 660px; margin: 0 0 26px; }
+  .chapter.s821 .chapter-num { color: var(--s821); }
+
+  .statrow { display: flex; flex-wrap: wrap; gap: 14px; margin: 20px 0 30px; }
+  .stat { flex: 1 1 150px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 16px; }
+  .stat .num { font-family: Oswald, sans-serif; font-weight: 700; font-size: 32px; color: var(--accent); line-height: 1; }
+  .stat.blue .num { color: var(--s821); } .stat.ok .num { color: var(--ok); } .stat.bad .num { color: var(--danger); }
+  .stat .label { color: var(--muted); font-size: 12.5px; margin-top: 6px; text-transform: uppercase; letter-spacing: .5px; }
+  .stat .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  .chart-box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 8px; margin: 10px 0 28px; }
+  .chart-box .cv { position: relative; height: 320px; }
+  .chart-box canvas { width: 100% !important; height: 100% !important; }
+  .chart-cap { text-align: center; color: var(--muted); font-size: 12.5px; margin: 6px 0 4px; }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-bottom: 18px; }
+  .panel h3 { margin: 0 0 8px; font-size: 16px; color: var(--accent); text-transform: uppercase; letter-spacing: .5px; }
+  .panel.s821 h3 { color: var(--s821); }
+  .panel p { color: var(--text); font-size: 15px; margin: 0 0 10px; }
+  .panel p:last-child { margin-bottom: 0; }
+  .callout { border-left: 3px solid var(--accent); background: rgba(244,163,0,.06); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 18px 0; font-size: 15px; }
+  .callout.blue { border-color: var(--s821); background: rgba(74,158,221,.07); }
+  .callout.ok { border-color: var(--ok); background: rgba(163,199,106,.08); }
+  .callout.bad { border-color: var(--danger); background: rgba(215,68,62,.07); }
+
+  .dtable { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .dtable th { text-align: left; font-family: Oswald, sans-serif; font-weight: 500; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .6px; color: var(--muted); padding: 6px 10px 8px 0; border-bottom: 1px solid var(--line); }
+  .dtable th.r, .dtable td.r { text-align: right; padding-right: 0; }
+  .dtable th.pad, .dtable td.pad { padding-right: 14px; }
+  .dtable td { padding: 9px 10px 9px 0; border-bottom: 1px solid rgba(56,52,44,.55); }
+  .dtable tr:last-child td { border-bottom: none; }
+  .dtable td.name { font-family: Oswald, sans-serif; letter-spacing: .3px; }
+  .dtable tr.pick td { background: rgba(163,199,106,.07); }
+  .dtable tr.pick td.name { color: var(--ok); font-weight: 600; }
+  .cat-pill { display: inline-block; font-family: Oswald, sans-serif; font-size: 10px; letter-spacing: .5px;
+    text-transform: uppercase; padding: 1px 6px; border-radius: 4px; background: var(--panel2); color: var(--muted); border: 1px solid var(--line); }
+  .good { color: var(--ok); } .bad { color: var(--danger); } .flat { color: var(--muted); }
+
+  .wrap-scroll { overflow-x: auto; }
+
+  /* loadout cards */
+  .loadout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin: 10px 0 10px; }
+  .loadout-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; }
+  .loadout-card.d { border-top: 3px solid var(--accent); }
+  .loadout-card.s { border-top: 3px solid var(--s821); }
+  .loadout-card h3 { margin: 0 0 4px; font-size: 20px; text-transform: uppercase; }
+  .loadout-card.d h3 { color: var(--accent); } .loadout-card.s h3 { color: var(--s821); }
+  .loadout-card .slot { margin-top: 16px; }
+  .loadout-card .slot-label { font-family: Oswald, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .loadout-card .slot-gun { font-family: Oswald, sans-serif; font-size: 22px; font-weight: 700; margin: 2px 0 4px; }
+  .loadout-card .slot-why { font-size: 13.5px; color: var(--muted); }
+  .loadout-card .try { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); font-size: 13px; color: var(--muted); }
+  .loadout-card .try b { color: var(--text); }
+
+  /* compare bars (borrowed from The Debrief) */
+  .compare-row { margin-bottom: 14px; }
+  .compare-label { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+  .compare-track { display: flex; align-items: center; gap: 8px; }
+  .compare-track .side { flex: 1; height: 10px; border-radius: 6px; background: var(--line); overflow: hidden; position: relative; }
+  .compare-track .side.left { display: flex; justify-content: flex-end; }
+  .compare-track .fill { height: 100%; border-radius: 6px; }
+  .compare-track .fill.d { background: var(--accent); }
+  .compare-track .fill.s { background: var(--s821); }
+  .compare-track .val { font-family: Oswald, sans-serif; font-size: 12.5px; width: 66px; text-align: center; color: var(--text); flex: 0 0 auto; }
+
+  footer { text-align: center; padding: 60px 24px 30px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); margin-top: 40px; }
+  footer .sign { font-family: Oswald, sans-serif; color: var(--accent); font-size: 15px; letter-spacing: .5px; margin-bottom: 6px; }
+  .method { font-size: 13.5px; color: var(--muted); } .method li { margin-bottom: 7px; }
+
+  @media (max-width: 620px) {
+    .hero { padding: 76px 18px 40px; }
+    .dtable { font-size: 12px; }
+  }
+
+  #siteNav { position: fixed; top: 10px; left: 10px; z-index: 9000; }
+  #siteNavBtn {
+    width: 34px; height: 34px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; color: var(--accent); font-size: 17px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: border-color .15s;
+  }
+  #siteNavBtn:hover { border-color: var(--accent); }
+  #siteNavMenu {
+    display: none; position: absolute; top: 40px; left: 0; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 6px; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,.6);
+  }
+  #siteNavMenu.open { display: block; }
+  #siteNavMenu a {
+    display: block; padding: 9px 14px; color: var(--text); text-decoration: none; border-radius: 7px; font-size: 13px;
+    font-family: Oswald, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .5px; transition: background .1s, color .1s;
+  }
+  #siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
+  #siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
+  #siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+</style>
+</head>
+<body>
+
+<div id="siteNav">
+  <button id="siteNavBtn" onclick="toggleSiteNav()" title="Navigate">&#9776;</button>
+  <div id="siteNavMenu">
+    <a href="index.html">Home</a>
+    <div class="nav-sep"></div>
+    <a href="stats.html">PUBG Stats</a>
+    <a href="mapanalysis.html">Map Analysis</a>
+    <a href="match.html">Match Analysis</a>
+    <a href="weapons.html">Weapon Stats</a>
+    <a href="records.html">Personal Records</a>
+    <a href="debrief.html">The Debrief</a>
+    <a href="engagements.html">Engagement Report</a>
+    <a href="pubg.html">Loadout Planner</a>
+    <a href="armory.html" class="nav-cur">The Armory</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="kicker">476 FIGHTS &middot; WHICH GUN ACTUALLY WINS</div>
+  <h1>The Armory</h1>
+  <p class="hero-sub">The <a href="weapons.html">Weapon Stats</a> page ranks guns by accuracy and damage. This
+    page asks a harder, more useful question: when a weapon was doing the work in a real fight, how often did
+    that fight end in a win? One main (AR or LMG) and one long gun (DMR or SR) each &mdash; here's what the data
+    says you should actually be carrying.</p>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; built from 476 decisive engagements, 268 matches</div>
+</div>
+
+<div class="wrap">
+
+  <div class="intro">
+    <p>Every gun on this site so far has been scored the same way: shots, hits, accuracy, damage per minute.
+      Those numbers say how well you shoot a weapon. They don't say whether carrying it makes you more likely
+      to win the fight it's in &mdash; a gun can look great on a range-test stat line and still be the reason
+      you keep losing 1-on-1s, if it's mostly used in situations that were already bad news.</p>
+    <p>This page uses the <a href="engagements.html">Engagement Report</a>'s 476 reconstructed fights instead.
+      Every one of them already has a "primary weapon" attached &mdash; whichever gun did most of a player's
+      damage in that specific fight &mdash; so we can ask, weapon by weapon: when this gun led the fight, what
+      fraction of the time did you actually win it? That's a different, and for choosing a loadout, more useful
+      number than accuracy.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="method">
+    <div class="chapter-num">00</div>
+    <h2>The Method, In Short</h2>
+    <p class="lede">Three things worth knowing before any of the numbers below mean anything.</p>
+
+    <div class="panel">
+      <h3>What "win rate" means here</h3>
+      <p>Every fight gets a "primary weapon": whichever gun a player fired most often in that specific fight.
+        The fight then counts as a <b>win</b>, <b>trade</b> (both sides took a knock/kill) or <b>loss</b> for
+        that weapon. A weapon's win% is wins &divide; all decisive fights it led &mdash; trades and losses both
+        count against it, same convention as the Engagement Report.</p>
+    </div>
+
+    <div class="callout">
+      <b>The obvious confound: it's not a controlled experiment.</b> A DMR mostly gets used at range, where you
+      have time to see the enemy coming; an LMG mostly gets used up close, where ambushes happen. Some of the
+      gap between weapons below is genuinely about the gun. Some of it is about the situations that gun tends
+      to get pulled into. Every chapter below checks this by also splitting each weapon's fights into <b>you
+      opened it</b> vs <b>you got ambushed</b> &mdash; if a weapon still looks bad within just the "you opened
+      it" bucket, that's a real weapon problem, not a confound.
+    </div>
+
+    <p class="muted" style="font-size:13.5px">Sample sizes below run from n=5 to n=66. Read every percentage
+      next to its n, not instead of it &mdash; that discipline is called out explicitly wherever a number is
+      thin. Full method notes in Chapter&nbsp;08.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="bigpicture">
+    <div class="chapter-num">01</div>
+    <h2>The Big Picture: AR Beats LMG, DMR/SR Beats Everything</h2>
+    <p class="lede">Before the individual guns, the category-level result that frames all of it &mdash; pooling
+      every AR together, every LMG together, and so on, for a much bigger sample than any single gun gets.</p>
+
+    <div class="chart-box"><div class="cv"><canvas id="catChart"></canvas></div></div>
+    <div class="chart-cap">Engagement win rate by weapon category, each player's fights where that category led the damage.</div>
+
+    <div class="statrow">
+      <div class="stat">
+        <div class="num">18.2<span style="font-size:16px;color:var(--muted)">%</span></div>
+        <div class="label">D282 · AR win rate</div>
+        <div class="sub">n=66 vs LMG's 10.9% (n=46)</div>
+      </div>
+      <div class="stat blue">
+        <div class="num">42.9<span style="font-size:16px;color:var(--muted)">%</span></div>
+        <div class="label">S821 · SR win rate</div>
+        <div class="sub">n=21, his best category by far</div>
+      </div>
+      <div class="stat bad">
+        <div class="num">10.9<span style="font-size:16px;color:var(--muted)">/13.8%</span></div>
+        <div class="label">LMG win rate, both players</div>
+        <div class="sub">the worst category for D282 and S821 alike</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>The pattern holds for both of you, separately</h3>
+      <p>For <b style="color:var(--accent)">D282</b>: AR 18.2% beats LMG 10.9%, and DMR (23.4%) beats both. For
+        <b style="color:var(--s821)">S821</b>: AR 31.7% beats LMG 13.8%, and SR (42.9%) plus DMR (36.4%) both
+        beat AR by a wide margin. Neither of you has a single category where the LMG comes out ahead &mdash;
+        it's the worst pick on the board for both of you, by a large margin, every time it's measured.</p>
+      <p>This isn't just about carrying an LMG being unlucky. Look at initiation rate (how often you're the one
+        who opens the fight) alongside win rate: D282's LMG fights open only 41.3% of the time (his lowest of
+        any category, against AR's 51.5%) and convert worse too &mdash; worse on both counts. S821's case is
+        more telling: his LMG fights actually open <em>more</em> often than his AR fights (58.6% vs 54.0%) and
+        still convert at less than half the rate (13.8% vs 31.7%). For him it isn't a story about missed
+        openers at all &mdash; it really is the weapon.</p>
+    </div>
+
+    <p class="muted" style="font-size:13.5px">"SMG" appears in the underlying tables (MP5K for both, plus a
+      little Beryl M762/Tommy Gun) but isn't a valid main-weapon slot under your own rule (AR or LMG main, DMR
+      or SR long), so it's shown for context only and left out of the recommendations below.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="d-main">
+    <div class="chapter-num">02</div>
+    <h2>D282's Main Weapon: AR or LMG</h2>
+    <p class="lede">The M249 is D282's single most-carried weapon on the whole site &mdash; 43.9 combat-minutes,
+      more than any other gun he owns. It's also his second-worst performer in an actual fight.</p>
+
+    <div class="panel" style="padding-top:14px;">
+      <div class="wrap-scroll">
+      <table class="dtable">
+        <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
+          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+        <tbody>
+          <tr class="pick"><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">24</td><td class="r pad good">12.5%</td><td class="r pad">45.8%</td><td class="r pad dim">19.1m</td><td class="r bad">&minus;34.0</td></tr>
+          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">19</td><td class="r pad">10.5%</td><td class="r pad">47.4%</td><td class="r pad dim">21.3m</td><td class="r bad">&minus;52.6</td></tr>
+          <tr><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">39</td><td class="r pad">12.8%</td><td class="r pad">46.2%</td><td class="r pad dim">21.1m</td><td class="r bad">&minus;69.1</td></tr>
+          <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">7</td><td class="r pad bad">0.0%</td><td class="r pad">14.3%</td><td class="r pad dim">22.7m</td><td class="r bad">&minus;59.0</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="callout bad">
+      <b>M249 collapses completely when D282 is ambushed.</b> Split by initiation: when D282 opens the fight
+      with the M249, he wins 27.8% of the time (18 fights) &mdash; not great, but workable. When he's ambushed
+      with it in his hands, he has won <b>zero of 21</b>. That's not a small-sample fluke; 21 is one of the
+      bigger buckets on this whole page. A 71-pound belt-fed gun that's supposed to be your suppression tool
+      is instead your single worst ambush weapon.
+    </div>
+
+    <div class="panel">
+      <h3>HK416 over AK-M &mdash; not because it wins more, because it survives more</h3>
+      <p>Overall win rate is a coin flip between them (12.5% vs 10.5%, both thin at n=19&ndash;24) and both open
+        fights at almost the same rate (~46&ndash;47%). The split is the tell: ambushed with the <b>AK-M</b>,
+        D282 has won <b>zero of 10</b>. Ambushed with the <b>HK416</b>, he's won <b>15.4% of 13</b> &mdash;
+        still not good, but not a wall of zeroes either. Since you can't choose when you get ambushed, the gun
+        that gives you <em>any</em> chance in that situation is the better default.</p>
+      <p class="muted" style="font-size:13.5px">RPD is a clear no on the current evidence &mdash; 0% in 7
+        fights, and only opens the fight 14.3% of the time (worst initiation rate of anything on this page).
+        Small n, but there's nothing in it pulling the other way either.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="d-long">
+    <div class="chapter-num">03</div>
+    <h2>D282's Long Gun: DMR or SR</h2>
+    <p class="lede">D282's whole DMR category is his best (23.4%, and it opens fights 76.6% of the time &mdash;
+      by far his highest), but the two guns inside it tell almost opposite stories.</p>
+
+    <div class="panel" style="padding-top:14px;">
+      <div class="wrap-scroll">
+      <table class="dtable">
+        <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
+          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+        <tbody>
+          <tr class="pick"><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">20</td><td class="r pad good">35.0%</td><td class="r pad">70.0%</td><td class="r pad dim">65.3m</td><td class="r bad">&minus;12.9</td></tr>
+          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">17</td><td class="r pad">17.6%</td><td class="r pad">88.2%</td><td class="r pad dim">55.3m</td><td class="r good">+20.3</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Mk12 SPR wins the opener, then stalls</h3>
+      <p>D282 opens the fight with the Mk12 SPR an incredible <b>88.2%</b> of the time &mdash; the highest
+        initiation rate of any weapon either of you carries &mdash; and still only converts 20.0% of those
+        openers into wins (3 of 15). The damage differential is positive (+20.3, his best of any weapon), so
+        he's landing real hits first. The fight just isn't closing out: 8 of his 17 Mk12 SPR fights end in a
+        trade. That reads like a gun that opens well but doesn't have the follow-up rate to finish before the
+        enemy recovers.</p>
+      <p><b>Mini 14 does what the SPR promises.</b> Same role, similar initiation rate (70.0%), and it actually
+        converts &mdash; 35.0% overall and 50.0% within just the fights D282 opens himself. It's also the only
+        weapon on this page where D282's win rate clears 30%.</p>
+    </div>
+
+    <div class="callout">
+      <b>D282 has never carried a real sniper rifle long enough to get a read on it.</b> No Kar98k, M24, AWM
+      or Win94 shows up with enough shots to make this page's n&ge;5 cutoff. That's not a finding against SRs
+      &mdash; it's a genuine gap in the data. Worth a deliberate session or two actually testing one, especially
+      given what S821's M24 does in the next chapter.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter s821" id="s-main">
+    <div class="chapter-num">04</div>
+    <h2 style="color:var(--s821)">S821's Main Weapon: AR or LMG</h2>
+    <p class="lede">ACE32 is S821's signature gun by volume &mdash; more shots, more kills, more combat time
+      than anything else he owns. By engagement win rate, it's merely his fourth-best AR.</p>
+
+    <div class="panel s821" style="padding-top:14px;">
+      <div class="wrap-scroll">
+      <table class="dtable">
+        <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
+          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Beryl M762</td><td><span class="cat-pill">AR</span></td><td class="r pad">5</td><td class="r pad good">80.0%</td><td class="r pad">60.0%</td><td class="r pad dim">14.8m</td><td class="r good">+109.2</td></tr>
+          <tr class="pick"><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">12</td><td class="r pad good">41.7%</td><td class="r pad">41.7%</td><td class="r pad dim">20.0m</td><td class="r bad">&minus;4.5</td></tr>
+          <tr><td class="name">ACE32</td><td><span class="cat-pill">AR</span></td><td class="r pad">25</td><td class="r pad">24.0%</td><td class="r pad">56.0%</td><td class="r pad dim">21.2m</td><td class="r good">+16.9</td></tr>
+          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">9</td><td class="r pad">22.2%</td><td class="r pad">66.7%</td><td class="r pad dim">10.2m</td><td class="r bad">&minus;31.2</td></tr>
+          <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">18</td><td class="r pad bad">11.1%</td><td class="r pad">50.0%</td><td class="r pad dim">23.8m</td><td class="r bad">&minus;56.8</td></tr>
+          <tr><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">10</td><td class="r pad bad">10.0%</td><td class="r pad">70.0%</td><td class="r pad dim">38.0m</td><td class="r flat">+0.4</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="panel s821">
+      <h3>The workhorse isn't the weak link, it's just not the sharpest tool</h3>
+      <p>ACE32 is not a bad gun for S821 &mdash; positive damage differential (+16.9), a healthy 56% initiation
+        rate, and by far his most combat time (32.0 minutes, 50% more than his next-busiest gun) and most kills
+        (38, career-high). It's the reliable default and there's no case for dropping it. But per <em>fight</em>,
+        it converts at 24.0% &mdash; worse than HK416's 41.7% on nearly identical range and role, and nowhere
+        close to the small-sample Beryl M762 flash.</p>
+      <p><b>Beryl M762 (80.0%, n=5) is the single most interesting number on this page</b> and the most fragile.
+        Five fights is not a loadout decision on its own &mdash; but a +109.2 damage differential on top of an
+        80% win rate is a big enough signal to deliberately pick it up more often and see if it holds at n=15
+        or 20, rather than writing it off as noise.</p>
+    </div>
+
+    <div class="callout bad">
+      <b>Both LMGs are S821's floor, exactly like D282's.</b> RPD (11.1%, and it's his second most-used weapon
+      on the whole site at 1,730 shots) and M249 (10.0%) are his two worst performers regardless of role or
+      range. RPD's damage differential (&minus;56.8) is nearly as bad as D282's M249. High volume, low
+      conversion &mdash; heavy LMG usage for either of you has not been buying wins.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter s821" id="s-long">
+    <div class="chapter-num">05</div>
+    <h2 style="color:var(--s821)">S821's Long Gun: DMR or SR</h2>
+    <p class="lede">This is the easiest call on the entire page. S821's M24 numbers aren't just good &mdash;
+      they're the best weapon-player fit anywhere in the dataset, on either roster.</p>
+
+    <div class="panel s821" style="padding-top:14px;">
+      <div class="wrap-scroll">
+      <table class="dtable">
+        <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
+          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+        <tbody>
+          <tr class="pick"><td class="name">M24</td><td><span class="cat-pill">SR</span></td><td class="r pad">19</td><td class="r pad good">36.8%</td><td class="r pad">73.7%</td><td class="r pad dim">87.2m</td><td class="r bad">&minus;27.9</td></tr>
+          <tr><td class="name">SLR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">17</td><td class="r pad good">29.4%</td><td class="r pad">70.6%</td><td class="r pad dim">68.0m</td><td class="r good">+17.2</td></tr>
+          <tr><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">9</td><td class="r pad good">55.6%</td><td class="r pad">77.8%</td><td class="r pad dim">112.5m</td><td class="r good">+56.5</td></tr>
+          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">10</td><td class="r pad bad">10.0%</td><td class="r pad">60.0%</td><td class="r pad dim">59.6m</td><td class="r bad">&minus;34.0</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="callout ok">
+      <b>55.0% accuracy. 315 damage per combat-minute. 77.5 kills per combat-hour.</b> All from the <a href="weapons.html">Weapon
+      Stats</a> page's own numbers, on a genuinely usable 100-shot sample &mdash; more than double the damage
+      output of literally any other gun either of you owns, and it isn't close. In-fight, the M24 wins 36.8% at
+      a real, honest sniper range (87.2m median) and opens the fight almost three-quarters of the time (73.7%).
+      This is what "using a DMR/SR as intended" looks like when it works.
+    </div>
+
+    <div class="panel s821">
+      <h3>Mini 14 might actually be better &mdash; on a much smaller sample</h3>
+      <p>Nine fights isn't enough to overturn the M24 pick, but 55.6% win rate and a +56.5 damage differential,
+        used at an even longer median range (112.5m) than the M24, is not a number to ignore either. Reasonable
+        read: M24 is the proven, high-volume choice; Mini 14 is a very promising second option worth deliberately
+        getting more reps on rather than defaulting away from whenever it drops.</p>
+      <p><b>SLR is the solid, unglamorous third option</b> &mdash; positive damage differential, decent win
+        rate, plenty of games to be confident in it (n=17). <b>Mk12 SPR is S821's worst long gun by a wide
+        margin</b> (10.0%, &minus;34.0 diff) despite a 60% initiation rate &mdash; the same "wins the opener,
+        loses the fight" pattern D282 has with the identical weapon (see next chapter).</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="crossplayer">
+    <div class="chapter-num">06</div>
+    <h2>Same Gun, Different Player: Is It The Weapon Or The Person?</h2>
+    <p class="lede">Seven weapons show up in both of your hands with enough fights to compare directly. The
+      answer is: sometimes the gun travels, sometimes it very much doesn't.</p>
+
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>HK416 — win rate</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:30%"></div></div>
+        <div class="val">12.5% / 41.7%</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>Mini 14 — win rate</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:63%"></div></div>
+        <div class="val">35.0% / 55.6%</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>S821</span><span>Mk12 SPR — win rate</span><span>D282</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill s" style="width:57%"></div></div>
+        <div class="val">10.0% / 17.6%</div>
+        <div class="side"><div class="fill d" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>S821</span><span>AK-M — win rate</span><span>D282</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill s" style="width:100%"></div></div>
+        <div class="val">22.2% / 10.5%</div>
+        <div class="side"><div class="fill d" style="width:47%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>M249 — win rate</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:100%"></div></div>
+        <div class="val">12.8% / 10.0%</div>
+        <div class="side"><div class="fill s" style="width:78%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>RPD — win rate</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:1%"></div></div>
+        <div class="val">0.0% / 11.1%</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-label"><span>D282</span><span>MP5K — win rate</span><span>S821</span></div>
+      <div class="compare-track">
+        <div class="side left"><div class="fill d" style="width:100%"></div></div>
+        <div class="val">16.7% / 16.7%</div>
+        <div class="side"><div class="fill s" style="width:100%"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>The HK416 gap is the loudest signal on this whole page</h3>
+      <p>Same gun, similar range (19&ndash;20m), nearly identical initiation rate (~42&ndash;46%) &mdash; and
+        S821 wins the fight <b>more than three times as often</b> (41.7% vs 12.5%). Range and situation are
+        controlled for here about as well as this dataset allows; what's left is positioning, target
+        prioritization, or just raw gunskill with this specific weapon. <b>If only one HK416 drops, it should
+        go to S821</b>, not by default to whoever calls it first.</p>
+      <p>Mini 14 goes the same direction (S821 ahead, 55.6% vs 35.0%) but both of you clear 30%+ &mdash; it's a
+        gun that rewards whoever's holding it, just more so for S821. <b>Mk12 SPR flips</b>: D282's the better
+        pick there (17.6% vs 10.0%), for the same reason detailed in Chapter&nbsp;03 &mdash; S821 doesn't open
+        with it as reliably (60.0% vs D282's 88.2%) and both of you show the "wins the opener, loses the
+        fight" pattern with it, S821 just more severely.</p>
+      <p>Meanwhile <b>M249, RPD and MP5K don't meaningfully change hands</b> &mdash; whoever's carrying them,
+        the outcome sits in the same mediocre-to-bad range. That's the cleanest evidence that these three
+        specifically are weapon problems, not player problems.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="loadout">
+    <div class="chapter-num">07</div>
+    <h2>The Recommended Loadout</h2>
+    <p class="lede">Putting it together — one main, one long gun, per player, with the reasoning compressed to
+      a sentence each.</p>
+
+    <div class="loadout-grid">
+      <div class="loadout-card d">
+        <h3>D282</h3>
+        <div class="slot">
+          <div class="slot-label">Main &middot; AR/LMG</div>
+          <div class="slot-gun">HK416</div>
+          <div class="slot-why">Not the highest win rate (12.5%), but the only main-slot option that doesn't
+            collapse to 0% when ambushed (15.4% of 13) &mdash; and the M249 he currently carries most is his
+            worst-performing gun by damage differential (&minus;69.1) despite being his most-used.</div>
+        </div>
+        <div class="slot">
+          <div class="slot-label">Long &middot; DMR/SR</div>
+          <div class="slot-gun">Mini 14</div>
+          <div class="slot-why">Clear best by win rate (35.0%, 50.0% in fights he opens) and the only weapon
+            of his that clears 30%. The Mk12 SPR opens fights even more often (88.2%) but stalls out after
+            &mdash; keep it as a fallback, not the default.</div>
+        </div>
+        <div class="try"><b>Worth testing:</b> an actual sniper rifle (Kar98k / M24 / AWM) &mdash; D282 has
+          never carried one long enough to get a read, and S821's results with the M24 suggest the slot has
+          real upside untested.</div>
+      </div>
+
+      <div class="loadout-card s">
+        <h3>S821</h3>
+        <div class="slot">
+          <div class="slot-label">Main &middot; AR/LMG</div>
+          <div class="slot-gun">ACE32 <span style="font-size:13px;color:var(--muted);font-family:system-ui;">(keep as default) &mdash; rotate in HK416</span></div>
+          <div class="slot-why">ACE32 stays the reliable workhorse (positive damage diff, most combat time,
+            career-high kills) &mdash; there's no case for dropping it. But HK416 wins the actual fight more
+            often on a smaller sample (41.7% vs 24.0%) at nearly the same range, so take it when it's a choice
+            between the two.</div>
+        </div>
+        <div class="slot">
+          <div class="slot-label">Long &middot; DMR/SR</div>
+          <div class="slot-gun">M24</div>
+          <div class="slot-why">The best individual weapon-player fit in the whole dataset &mdash; 55.0%
+            accuracy, 315 dmg/combat-min, 77.5 kills/combat-hour, and a 36.8% engagement win rate at a genuine
+            87m median range. Not a close call.</div>
+        </div>
+        <div class="try"><b>Worth testing:</b> Beryl M762 as a main-slot pick (80.0% win rate, +109.2 damage
+          diff on just 5 fights) and more reps on Mini 14 at range (55.6% win rate on 9 fights &mdash; actually
+          higher than the M24's, though nowhere near its accuracy or damage output) &mdash; both too thin to
+          promote above, both too good to ignore.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>The one-sentence version:</b> drop the LMGs entirely if you can help it &mdash; they're the worst
+      category for both of you, every time it's measured &mdash; and lean into DMR/SR play, which is already
+      both of your best category and is carrying most of your engagement wins.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="caveats">
+    <div class="chapter-num">08</div>
+    <h2>Method &amp; Caveats</h2>
+    <div class="panel">
+      <ul class="method">
+        <li><b>Source:</b> the 476 decisive engagements from <a href="engagements.html">The Engagement
+          Report</a> (built from raw telemetry, 268 matches, 2 Jun &ndash; 11 Sep 2026), cross-referenced with
+          the per-weapon combat-time stats behind <a href="weapons.html">Weapon Stats</a>.</li>
+        <li><b>"Primary weapon"</b> = the gun a player fired most often within one specific fight. A fight's
+          outcome (win/trade/loss) is attributed to whichever player dealt the most damage in it, and to that
+          player's primary weapon. This means a weapon gets credit or blame for fights it merely <em>led</em>,
+          not necessarily fights where it landed the killing blow.</li>
+        <li><b>Category roll-ups</b> (Chapter 01) pool every fight led by any weapon in that category (e.g. all
+          AR fights together) for a larger, more stable sample than any single gun gets on its own.</li>
+        <li><b>The initiation split</b> (we-opened-it vs ambushed) is the main confound control used throughout
+          &mdash; see Chapter&nbsp;00. It isn't a perfect control: multi-team fights, enemy skill, and plain
+          variance in a 5&ndash;39-fight sample all still move these numbers around.</li>
+        <li><b>Small samples are named inline.</b> Anything under n=10 (Beryl M762, MP5K for D282, both DMRs at
+          the very low end) is a genuine finding worth acting on cautiously, not a settled one. The Beryl M762
+          and Mini&nbsp;14-for-S821 results in particular are exciting but fragile &mdash; treat them as "test
+          more," not "switch now."</li>
+        <li><b>Individual output stats</b> (accuracy, damage/combat-minute, kills/combat-hour, cited for the
+          M24 and elsewhere) come from <code>weapon_stats.json</code> and include a handful of matches where
+          only one of you was in the squad; the engagement win-rate figures are always duo fights, sourced
+          directly from the Engagement Report's 476.</li>
+        <li><b>These are correlations from your own games</b>, same as the Engagement Report &mdash; not a
+          controlled test. Treat this page as a strong prior for what to carry, not a guarantee.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="sign">&mdash; built from 476 engagements and 268 matches &middot; companion to <a href="engagements.html">The Engagement Report</a> and <a href="weapons.html">Weapon Stats</a></div>
+  Not updated automatically. Ask for a refresh once there's more data, especially on the small-sample picks.
+</footer>
+
+<script>
+function toggleSiteNav(){document.getElementById('siteNavMenu').classList.toggle('open');}
+document.addEventListener('click',function(e){
+  if(!document.getElementById('siteNav').contains(e.target))
+    document.getElementById('siteNavMenu').classList.remove('open');
+});
+
+const INK='#9a9385',GRID='#26241d',SURF='#1e1c17',LINE='#38342c';
+Chart.defaults.color=INK;
+Chart.defaults.font.family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
+const TT={backgroundColor:SURF,borderColor:LINE,borderWidth:1,titleColor:'#e8e3d8',
+  bodyColor:'#e8e3d8',padding:10,titleFont:{family:'Oswald',size:13},boxPadding:4};
+
+new Chart(document.getElementById('catChart'),{
+  type:'bar',
+  data:{
+    labels:['AR','LMG','DMR','SR'],
+    datasets:[
+      {label:'D282', data:[18.2,10.9,23.4,null], backgroundColor:'#f4a300', borderRadius:4, borderSkipped:false},
+      {label:'S821', data:[31.7,13.8,36.4,42.9], backgroundColor:'#4a9edd', borderRadius:4, borderSkipped:false},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{boxWidth:12,font:{family:'Oswald'}}},
+      tooltip:{...TT,callbacks:{label:c=> c.raw==null ? ` ${c.dataset.label}: no data (n<5)` : ` ${c.dataset.label}: ${c.raw}% win rate`}}
+    },
+    scales:{
+      x:{grid:{display:false},ticks:{font:{family:'Oswald',size:13}}},
+      y:{grid:{color:GRID},title:{display:true,text:'Engagement win rate (%)',color:INK},beginAtZero:true}
+    }
+  }
+});
+</script>
+
+</body>
+</html>
