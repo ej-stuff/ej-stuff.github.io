@@ -16,8 +16,8 @@
       "kills": 18,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.056,
-      "hits": 256,
-      "total_damage": 4480.6,
+      "hits": 260,
+      "total_damage": 4560.7,
       "avg_damage_per_hit": 17.5
     },
     {
@@ -36,9 +36,9 @@
       "kills": 15,
       "headshot_kills": 4,
       "headshot_kill_pct": 0.267,
-      "hits": 190,
-      "total_damage": 3671.6,
-      "avg_damage_per_hit": 19.3
+      "hits": 193,
+      "total_damage": 3743.6,
+      "avg_damage_per_hit": 19.4
     },
     {
       "weapon": "Mk12 SPR",
@@ -295,12 +295,12 @@
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 35,
+      "kills": 36,
       "headshot_kills": 7,
-      "headshot_kill_pct": 0.2,
-      "hits": 331,
-      "total_damage": 5375.7,
-      "avg_damage_per_hit": 16.2
+      "headshot_kill_pct": 0.194,
+      "hits": 335,
+      "total_damage": 5464.2,
+      "avg_damage_per_hit": 16.3
     },
     {
       "weapon": "HK416",
@@ -338,9 +338,9 @@
       "kills": 12,
       "headshot_kills": 9,
       "headshot_kill_pct": 0.75,
-      "hits": 52,
-      "total_damage": 2967.6,
-      "avg_damage_per_hit": 57.1
+      "hits": 54,
+      "total_damage": 3109.0,
+      "avg_damage_per_hit": 57.6
     },
     {
       "weapon": "MP5K",
@@ -541,6 +541,16 @@
       "hits": 3,
       "total_damage": 124.4,
       "avg_damage_per_hit": 41.5
+    },
+    {
+      "weapon": "MG3",
+      "category": "LMG",
+      "kills": 1,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 4,
+      "total_damage": 91.0,
+      "avg_damage_per_hit": 22.8
     },
     {
       "weapon": "P90",
