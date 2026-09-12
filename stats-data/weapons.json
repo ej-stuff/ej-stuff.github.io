@@ -91,6 +91,16 @@
       "avg_damage_per_hit": 16.8
     },
     {
+      "weapon": "RPD",
+      "category": "LMG",
+      "kills": 3,
+      "headshot_kills": 3,
+      "headshot_kill_pct": 1.0,
+      "hits": 25,
+      "total_damage": 793.0,
+      "avg_damage_per_hit": 31.7
+    },
+    {
       "weapon": "SKS",
       "category": "DMR",
       "kills": 3,
@@ -301,6 +311,16 @@
       "hits": 335,
       "total_damage": 5464.2,
       "avg_damage_per_hit": 16.3
+    },
+    {
+      "weapon": "RPD",
+      "category": "LMG",
+      "kills": 17,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.059,
+      "hits": 163,
+      "total_damage": 2456.3,
+      "avg_damage_per_hit": 15.1
     },
     {
       "weapon": "HK416",

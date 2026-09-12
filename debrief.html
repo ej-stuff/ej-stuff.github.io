@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Debrief — D282 &amp; S821</title>
-<meta name="description" content="A deep read of 229 PUBG matches — the improvement arc, the playstyles, the maps, and the moments.">
+<meta name="description" content="A deep read of 268 PUBG matches — the improvement arc, the playstyles, the maps, and the moments.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -313,13 +313,14 @@
 </div>
 
 <div class="hero">
-  <div class="kicker">A DEEP READ &middot; NOT PART OF THE REGULAR DASHBOARD &middot; V2</div>
+  <div class="kicker">A DEEP READ &middot; NOT PART OF THE REGULAR DASHBOARD &middot; V3</div>
   <h1>The Debrief</h1>
-  <p class="hero-sub">229 matches now — 16 more than the last read. This is what the data says
-    about how <span style="color:var(--accent)">D282</span> and <span style="color:var(--s821)">S821</span>
+  <p class="hero-sub">268 matches now — 39 more than the last read, and the best stretch of
+    Duos either of you has put together. This is what the data says about how
+    <span style="color:var(--accent)">D282</span> and <span style="color:var(--s821)">S821</span>
     actually play PUBG &mdash; the improvement arc, how differently the two of you fight, which
     maps like you back, and a few games worth reliving.</p>
-  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 2 Jun &ndash; 30 Aug 2026</div>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 2 Jun &ndash; 11 Sep 2026</div>
 </div>
 
 <div class="wrap">
@@ -327,7 +328,7 @@
   <div class="intro">
     <p>The other pages on this site track everything live &mdash; every match, every weapon, every
       circle, updated automatically. This one doesn't get touched by that pipeline. It's a hand-built
-      pass through all 229 games looking for the stuff a stat table doesn't say out loud: where
+      pass through all 268 games looking for the stuff a stat table doesn't say out loud: where
       you're actually improving, where the two of you play differently, which maps like you back,
       and what's really going on with your deaths.</p>
   </div>
@@ -337,7 +338,8 @@
     <div class="chapter-num">01</div>
     <h2>The Arc</h2>
     <p class="lede">The single biggest thing in this dataset still isn't a stat &mdash; it's a trend
-      line, though the most recent games have flattened it.</p>
+      line, and this time it isn't flattening. The last read caught a dip; the 39 games since have
+      been the best stretch on record.</p>
 
     <div class="statrow">
       <div class="stat">
@@ -346,9 +348,9 @@
         <div class="sub">Top-10 rate: 4%</div>
       </div>
       <div class="stat ok">
-        <div class="num">23.7<span style="font-size:16px;color:var(--muted)"> avg</span></div>
+        <div class="num">15.8<span style="font-size:16px;color:var(--muted)"> avg</span></div>
         <div class="label">Placement &middot; most recent 25</div>
-        <div class="sub">Top-10 rate: 20%</div>
+        <div class="sub">Top-10 rate: 56%</div>
       </div>
       <div class="stat blue">
         <div class="num">~46</div>
@@ -360,22 +362,26 @@
     <div class="chart-box">
       <div class="cv"><canvas id="arcChart"></canvas></div>
     </div>
-    <div class="chart-cap">10-game rolling average placement, all 229 matches, in chronological order. Lower = better (axis is flipped).</div>
+    <div class="chart-cap">10-game rolling average placement, all 268 matches, in chronological order. Lower = better (axis is flipped).</div>
 
     <div class="panel">
       <h3>What the math says, updated</h3>
       <p>With roughly 46 duo teams in an average lobby, landing in the top 10 by pure chance happens
         about 1 in 4.6 tries &mdash; 22%. Your first 25 games hit it once (4%), which is worse than
-        random and completely normal while everything is new. Your most recent 25 hit it five times
-        (20%), at an average finish of 23.7.</p>
-      <p>Read honestly, that is a real improvement on where you started but <b>not the steep climb the
-        June version of this page suggested</b>. At the 213-match mark the trailing 25 games averaged
-        16.9 with a 44% top-10 rate; the 16 games added on 30 August were a mixed bag and pulled that
-        trailing window back down. The 10-game rolling line finishes around 22 &mdash; much better
-        than the 33 you opened with, and roughly flat for the last hundred games.</p>
+        random and completely normal while everything is new. Your most recent 25 hit it <b>fourteen
+        times &mdash; 56%</b>, at an average finish of 15.8. That is not a typo: this is the best
+        25-game window in the whole dataset, comfortably ahead of the 44% top-10 rate the 213-match
+        read found back in July.</p>
+      <p>The last version of this page flagged a dip &mdash; a mixed session on 30 August had pulled
+        the trailing window back down to 23.7 avg / 20% top-10. That dip is fully gone, and it kept
+        moving after: the rolling line climbed to 25.9 around game 240 (one more rough patch), then
+        fell hard to <b>11.4 at game 250</b> &mdash; the second-best 10-game stretch in the whole
+        dataset, behind only a 9.5 spike back around game 127 &mdash; before settling into the high
+        teens (17.8) for the last handful of games. Sessions on 5 and 11 September carried most of it.</p>
       <p class="muted" style="font-size:13.5px">A trailing-25 window swings hard on one session, so
-        neither the June spike nor this dip should be over-read. The durable claim is the one the whole
-        chart supports: you improved a lot early and have been steady since.</p>
+        don't over-read either the July dip or this run. The durable claim the whole chart supports:
+        you improved a lot early, went flat for a long middle stretch, and are now trending up again
+        for the first time since June.</p>
     </div>
   </section>
 
@@ -383,17 +389,18 @@
   <section class="chapter" id="sessions">
     <div class="chapter-num">02</div>
     <h2>How You Actually Play</h2>
-    <p class="lede">Still not often. Still, when you do, you really play &mdash; and now there's a new
-      wrinkle: you're not just consistent across a session, you're getting <em>better</em> as it goes.</p>
+    <p class="lede">Still not often. Still, when you do, you really play &mdash; and the warm-up
+      pattern from the last read holds, with the gap between a session's start and finish shrinking
+      a little as you both settle in faster.</p>
 
     <div class="statrow">
       <div class="stat">
-        <div class="num">20</div>
+        <div class="num">25</div>
         <div class="label">Days you played, at all</div>
-        <div class="sub">across roughly 13 weeks</div>
+        <div class="sub">across roughly 15 weeks</div>
       </div>
       <div class="stat">
-        <div class="num">96<span style="font-size:16px;color:var(--muted)">h</span></div>
+        <div class="num">112<span style="font-size:16px;color:var(--muted)">h</span></div>
         <div class="label">Total time logged</div>
         <div class="sub">lobby-to-elimination, all matches</div>
       </div>
@@ -406,39 +413,43 @@
 
     <div class="panel">
       <h3>The sessions, ranked</h3>
-      <p>229 games across 20 calendar days, spread from early June into late August. Seven new
-        sessions have landed since the last read, several of them full nights on their own:</p>
+      <p>268 games across 25 calendar days, spread from early June into September. Six new session
+        days have landed since the last read, two of them among the bigger nights on record:</p>
       <p class="muted" style="font-size:14px; line-height:2">
         <b style="color:var(--text)">20 Jun</b> &mdash; 21 games &middot;
         <b style="color:var(--text)">2 Jun</b> &mdash; 19 games &middot;
         <b style="color:var(--text)">22 Jun</b> &mdash; 18 games &middot;
         <b style="color:var(--text)">3 Jun</b> &mdash; 18 games &middot;
+        <b style="color:var(--text)">30 Aug</b> &mdash; 16 games &middot;
         <b style="color:var(--text)">9 Aug</b> &mdash; 14 games &middot;
         <b style="color:var(--text)">7 Jul</b> &mdash; 14 games &middot;
+        <b style="color:var(--text)">11 Sep</b> &mdash; 13 games &middot;
         <b style="color:var(--text)">16 Aug</b> &mdash; 13 games &middot;
         <b style="color:var(--text)">7 Aug</b> &mdash; 13 games &middot;
         <b style="color:var(--text)">17 Jun</b> &mdash; 13 games &middot;
         <b style="color:var(--text)">5 Jun</b> &mdash; 13 games &middot;
+        <b style="color:var(--text)">5 Sep</b> &mdash; 12 games &middot;
+        <b style="color:var(--text)">31 Aug</b> &mdash; 11 games &middot;
         <b style="color:var(--text)">25 Aug</b> &mdash; 11 games &middot;
         <b style="color:var(--text)">24 Aug</b> &mdash; 10 games &middot;
         <b style="color:var(--text)">29 Jun</b> &mdash; 10 games &middot;
         <b style="color:var(--text)">6 Jul</b> &mdash; 9 games &middot;
-        plus five smaller sittings of 1&ndash;5 games.
+        plus seven smaller sittings of 1&ndash;5 games.
       </p>
     </div>
 
     <div class="callout ok">
-      <b>You warm up, you don't wear down.</b> Split every session of 6+ games into thirds and
-      compare: across all of them combined, the first third of a session averages a 26.4 placement
-      and the last third averages 20.7 &mdash; nearly five spots better. Last read of this data found
-      a flat line (no fatigue). With almost double the sessions to check it against, the pattern is
-      actually a mild <em>improvement</em> curve within a sitting &mdash; the first couple of games
-      look like re-acclimating, and you're sharpest in the back half, not the front.
+      <b>You warm up, you don't wear down &mdash; and the warm-up got shorter.</b> Split every session
+      of 6+ games into thirds and compare: the first third now averages a 25.1 placement (was 26.4)
+      and the last third averages 20.7 &mdash; identical to the last read, to one decimal. The back
+      half of a session is a known quantity at this point; what's improved is how quickly you get
+      there. Read together with the Arc above, that's consistent with real, session-independent
+      improvement rather than just "better sessions lately."
     </div>
 
-    <p class="muted" style="font-size:13.5px">In 13 of the 229 games, only one of you shows up in the
+    <p class="muted" style="font-size:13.5px">In 18 of the 268 games, only one of you shows up in the
       data &mdash; the other disconnected, joined solo, or life happened mid-session. Tracked as-is;
-      too small a number to move anything above.</p>
+      too small a share (6.7%) to move anything above.</p>
   </section>
 
   <!-- ============================================================ -->
@@ -450,32 +461,32 @@
     <div class="compare-row">
       <div class="compare-label"><span>D282</span><span>Shots fired / minute alive</span><span>S821</span></div>
       <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:69%"></div></div>
-        <div class="val">3.1 &nbsp;/&nbsp; 4.4</div>
+        <div class="side left"><div class="fill d" style="width:76%"></div></div>
+        <div class="val">3.19 / 4.19</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
     <div class="compare-row">
       <div class="compare-label"><span>D282</span><span>Headshot kill rate</span><span>S821</span></div>
       <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:58%"></div></div>
-        <div class="val">18.2% / 25.2%</div>
+        <div class="side left"><div class="fill d" style="width:67%"></div></div>
+        <div class="val">17.2% / 25.8%</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
     <div class="compare-row">
       <div class="compare-label"><span>D282</span><span>Knock-outs delivered / match</span><span>S821</span></div>
       <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:62%"></div></div>
-        <div class="val">0.40 / 0.60</div>
+        <div class="side left"><div class="fill d" style="width:69%"></div></div>
+        <div class="val">0.43 / 0.62</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
     <div class="compare-row">
       <div class="compare-label"><span>D282</span><span>Times knocked / match (higher = riskier)</span><span>S821</span></div>
       <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:87%"></div></div>
-        <div class="val">0.64 / 0.74</div>
+        <div class="side left"><div class="fill d" style="width:85%"></div></div>
+        <div class="val">0.66 / 0.78</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
@@ -483,81 +494,98 @@
       <div class="compare-label"><span>D282</span><span>Revives given / match</span><span>S821</span></div>
       <div class="compare-track">
         <div class="side left"><div class="fill d" style="width:100%"></div></div>
-        <div class="val">0.21 / 0.14</div>
+        <div class="val">0.25 / 0.17</div>
         <div class="side"><div class="fill s" style="width:68%"></div></div>
       </div>
     </div>
     <div class="compare-row">
       <div class="compare-label"><span>D282</span><span>Boosts used / match</span><span>S821</span></div>
       <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:76%"></div></div>
-        <div class="val">1.10 / 1.45</div>
+        <div class="side left"><div class="fill d" style="width:75%"></div></div>
+        <div class="val">1.14 / 1.52</div>
         <div class="side"><div class="fill s" style="width:100%"></div></div>
       </div>
     </div>
 
     <div class="panel">
-      <h3>Trigger and glue &mdash; and the gap widened a bit</h3>
+      <h3>Trigger and glue &mdash; still true, but D282's K/D is climbing</h3>
       <p><b style="color:var(--s821)">S821</b> is still the trigger: more shots per minute alive, more
-        knock-outs delivered, a genuinely strong 25% headshot rate, and a K/D that's pulled further
-        ahead (0.69 vs 0.48). <b style="color:var(--accent)">D282</b>
-        still shoots less and revives more, and it's D282 who holds the revives-given lead across the
-        whole dataset. The roles haven't changed; S821's aggression has just kept compounding faster
-        than D282's has over these extra 70 games.</p>
+        knock-outs delivered, a genuinely strong 25.8% headshot rate, and the higher K/D (0.70).
+        <b style="color:var(--accent)">D282</b> still shoots less and revives more, and holds the
+        revives-given lead across the whole dataset. The roles haven't changed &mdash; but unlike the
+        last read, the gap between the two isn't just widening: D282's K/D actually <em>improved</em>
+        over these 39 games, from 0.48 to 0.51, even as S821 also ticked up (0.69 to 0.70).</p>
       <p>Neither role is wrong &mdash; a duo where one person only pushes and the other only supports
-        doesn't survive long, and yours still does both. But if there's one thing worth naming plainly:
-        D282's K/D sits at 0.48 against S821's 0.69, and the headshot gap has narrowed (18.2% vs 25.2%).
-        Worth keeping an eye on, not panicking about.</p>
+        doesn't survive long, and yours still does both. The headshot gap did widen slightly (17.2%
+        vs 25.8%, was 18.2% vs 25.2%), so that specific number is still one to watch. But on the stat
+        that matters most for actually winning fights, both of you are moving in the right direction
+        at once.</p>
     </div>
 
     <div class="statrow">
       <div class="stat">
-        <div class="num">42</div>
+        <div class="num">50</div>
         <div class="label">D282 solo kills</div>
-        <div class="sub">38% of D282's 110 career kills</div>
+        <div class="sub">37% of D282's 134 career kills</div>
       </div>
       <div class="stat blue">
-        <div class="num">56</div>
+        <div class="num">64</div>
         <div class="label">S821 solo kills</div>
-        <div class="sub">38% of S821's 147 career kills</div>
+        <div class="sub">36% of S821's 178 career kills</div>
       </div>
       <div class="stat ok">
-        <div class="num">25.4<span style="font-size:16px;color:var(--muted)">s</span></div>
+        <div class="num">26.3<span style="font-size:16px;color:var(--muted)">s</span></div>
         <div class="label">Avg. revive response time</div>
         <div class="sub">fastest: 11.1s &middot; PUBG gives you ~2 min</div>
       </div>
     </div>
     <p class="muted" style="font-size:13.5px">"Solo kill" = landed while the other was down or dead.
       Both of you can still close out a fight alone &mdash; and the fastest rescue on record (11.1s)
-      is identical to the last read, which says something about the ceiling on how fast a revive
-      can actually happen.</p>
+      is identical for a third read running, which says something about the real ceiling on how fast
+      a revive can happen.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="weapons">
     <div class="chapter-num">04</div>
     <h2>Signature Weapons</h2>
-    <p class="lede">Same duo, same guns, and the accuracy story is even clearer with more shots on record.</p>
+    <p class="lede">Same duo, mostly the same guns &mdash; but this read found a gun that was
+      invisible on every previous version of this page, and it isn't a small one.</p>
+
+    <div class="callout blue">
+      <b>S821's real second weapon just appeared out of nowhere: the RPD.</b> 1,730 shots and 17
+      kills, more used than the M249 or HK416 &mdash; and it was completely missing from every earlier
+      cut of this data. The cause was a naming-table bug: PUBG logs a fired shot under one internal ID
+      (<code>Item_Weapon_RPD_C</code>) and a kill under a different one (<code>WeapRPD_C</code>), and
+      the RPD was the one weapon in the whole armory missing the mapping between the two &mdash; so
+      every RPD shot, hit, and kill silently failed to join up and got dropped from every weapon
+      table on the site, including this page and <a href="weapons.html">Weapon Stats</a>. Fixed as
+      part of this refresh (RPD, plus the same gap for Groza, Vector and MG3). Nothing changed in how
+      you played &mdash; only in whether the site could see it.
+    </div>
 
     <div class="panel">
       <h3 style="color:var(--accent)">D282 &mdash; AR / DMR / LMG spread</h3>
-      <p><b>M249</b> &mdash; 2,080 shots, 7.6% acc, 3,808 dmg, 16 kills<br>
-      <b>HK416</b> &mdash; 1,180 shots, 10.8% acc, 2,831 dmg, 15 kills<br>
-      <b>Mk12 SPR</b> &mdash; 820 shots, 14.4% acc, 2,846 dmg, 9 kills</p>
-      <p class="muted" style="font-size:13.5px">Over 2,000 shots on the M249 at under 8% accuracy is
+      <p><b>M249</b> &mdash; 2,480 shots, 7.7% acc, 4,561 dmg, 18 kills<br>
+      <b>HK416</b> &mdash; 1,360 shots, 10.3% acc, 3,136 dmg, 17 kills<br>
+      <b>Mk12 SPR</b> &mdash; 1,060 shots, 12.5% acc, 3,351 dmg, 12 kills</p>
+      <p class="muted" style="font-size:13.5px">Nearly 2,500 shots on the M249 at under 8% accuracy is
         exactly what an LMG is for: holding an angle with volume of fire, not precision. Still the
         same read as before &mdash; a legitimate way to fight, just a different one than S821's.</p>
     </div>
 
     <div class="panel">
-      <h3 style="color:var(--s821)">S821 &mdash; the ACE32, and genuine marksmanship</h3>
-      <p><b>ACE32</b> &mdash; 1,750 shots, 10.1% acc, 4,062 dmg, 27 kills &mdash; still the main damage engine<br>
-      <b>SLR</b> &mdash; 660 shots, 17.0% acc, 3,420 dmg, 10 kills<br>
-      <b>Mk12 SPR</b> &mdash; 680 shots, 12.2% acc, 2,210 dmg, 8 kills</p>
-      <p class="muted" style="font-size:13.5px">The precision numbers have only gotten more convincing:
-        Mini 14 sits at 17.4%, SKS at 20.0%, and the Dragunov &mdash; on a 70-shot sample, small but
-        real &mdash; at 24.3%. Casual full-auto accuracy in PUBG typically runs single digits to low
-        teens; mid-teens and up on a semi-auto gun is a shot being lined up, not sprayed.</p>
+      <h3 style="color:var(--s821)">S821 &mdash; the ACE32, a rediscovered RPD, and one absurd M24</h3>
+      <p><b>ACE32</b> &mdash; 2,520 shots, 9.2% acc, 5,464 dmg, 36 kills &mdash; still the main damage engine<br>
+      <b>RPD</b> &mdash; 1,730 shots, 5.4% acc, 2,456 dmg, 17 kills &mdash; newly visible, see above<br>
+      <b>SLR</b> &mdash; 730 shots, 18.5% acc, 4,036 dmg, 14 kills</p>
+      <p class="muted" style="font-size:13.5px">The single most striking number in this whole dataset:
+        S821's <b>M24</b> sits at <b>52.2% accuracy</b> across 90 shots &mdash; 12 kills, 3,109 damage.
+        That's a genuinely large sample for a bolt-action, and more than double any other gun in the
+        armory. The rest of the precision tier is still strong on its own terms &mdash; SLR 18.5%,
+        Mini 14 17.7%, Dragunov 19.1% on 110 shots &mdash; but the M24 is in a different category
+        entirely. Casual full-auto accuracy in PUBG typically runs single digits to low teens; 52%
+        on a sniper rifle is basically never missing a shot you actually take.</p>
     </div>
   </section>
 
@@ -565,28 +593,44 @@
   <section class="chapter" id="maps">
     <div class="chapter-num">05</div>
     <h2>Where You Shine, Where You Don't</h2>
-    <p class="lede">Average placement by map, best to worst (minimum 10 games played).</p>
+    <p class="lede">Average placement by map, best to worst &mdash; every map on the rotation now has
+      at least 6 games behind it, so for the first time all nine get a real bar instead of a footnote.</p>
 
     <div class="panel" style="padding-top:14px;">
       <div class="maprow">
-        <div class="mname">Karakin<span class="n">25 games</span></div>
+        <div class="mname">Deston<span class="n">9 games</span></div>
         <div class="bar-outer"><div class="bar-inner" style="width:100%"></div></div>
-        <div class="place">10.5</div>
+        <div class="place">10.9</div>
       </div>
       <div class="maprow">
-        <div class="mname">Vikendi<span class="n">20 games</span></div>
+        <div class="mname">Karakin<span class="n">30 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:99%"></div></div>
+        <div class="place">11.0</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Paramo<span class="n">6 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:62%"></div></div>
+        <div class="place">18.5</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Vikendi<span class="n">26 games</span></div>
         <div class="bar-outer"><div class="bar-inner" style="width:55%"></div></div>
-        <div class="place">19.1</div>
-      </div>
-      <div class="maprow">
-        <div class="mname">Erangel<span class="n">97 games</span></div>
-        <div class="bar-outer"><div class="bar-inner" style="width:36%"></div></div>
-        <div class="place">23.4</div>
+        <div class="place">19.9</div>
       </div>
       <div class="maprow">
         <div class="mname">Miramar<span class="n">26 games</span></div>
-        <div class="bar-outer"><div class="bar-inner" style="width:35%"></div></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:37%"></div></div>
         <div class="place">23.5</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Erangel<span class="n">110 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:36%"></div></div>
+        <div class="place">23.6</div>
+      </div>
+      <div class="maprow">
+        <div class="mname">Sanhok<span class="n">30 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:25%"></div></div>
+        <div class="place">25.9</div>
       </div>
       <div class="maprow">
         <div class="mname">Taego<span class="n">23 games</span></div>
@@ -594,49 +638,57 @@
         <div class="place">26.7</div>
       </div>
       <div class="maprow">
-        <div class="mname">Sanhok<span class="n">27 games</span></div>
-        <div class="bar-outer"><div class="bar-inner" style="width:8%; background:linear-gradient(90deg,var(--danger),#a83530)"></div></div>
-        <div class="place">28.0</div>
+        <div class="mname">Rondo<span class="n">8 games</span></div>
+        <div class="bar-outer"><div class="bar-inner" style="width:5%; background:linear-gradient(90deg,var(--danger),#a83530)"></div></div>
+        <div class="place">30.8</div>
       </div>
     </div>
-    <p class="chart-cap" style="text-align:left; margin-top:-6px;">Bar length = better placement (shorter avg. finish position). Karakin is still a different tier from everything else.</p>
+    <p class="chart-cap" style="text-align:left; margin-top:-6px;">Bar length = better placement (shorter avg. finish position). Karakin is no longer alone at the top.</p>
 
     <div class="statrow" style="margin-top:22px;">
+      <div class="stat ok">
+        <div class="num">77.8%</div>
+        <div class="label">Top-10 rate on Deston</div>
+        <div class="sub">9 games, 7 of them top-10 &mdash; new, unproven, but loud</div>
+      </div>
       <div class="stat">
-        <div class="num">60.0%</div>
+        <div class="num">56.7%</div>
         <div class="label">Top-10 rate on Karakin</div>
-        <div class="sub">best of any map, now on 25 games &mdash; still 0 wins there</div>
+        <div class="sub">30 games now &mdash; still 0 wins there</div>
       </div>
       <div class="stat">
         <div class="num">17.4%</div>
         <div class="label">Top-10 rate on Taego</div>
-        <div class="sub">now the worst top-10 rate &mdash; overtook Sanhok</div>
+        <div class="sub">worst top-10 rate on the board, unchanged from last read</div>
       </div>
       <div class="stat blue">
-        <div class="num">2 / 229</div>
+        <div class="num">2 / 268</div>
         <div class="label">Wins, career total</div>
-        <div class="sub">both from June &mdash; nothing since has added a third</div>
+        <div class="sub">both from June &mdash; still nothing since has added a third</div>
       </div>
     </div>
 
     <div class="panel">
       <h3>Why, probably</h3>
-      <p><b>Karakin</b> keeps getting more convincing, not less: best top-10 rate of any map on
-        double the sample size, and still zero wins in 25 tries. The read hasn't changed &mdash; you
-        out-survive the chaos on this tiny map better than anywhere else, but Karakin's final circles
-        are too small to hide in, so the fix is still fighting more once you're inside the top 4&ndash;5,
-        not less.</p>
-      <p><b>Sanhok</b> is still rough (28.0 avg, the worst by placement), and the reasoning from last
-        time still holds &mdash; it's dense and close-range, which fights your patient, mid-range
-        weapon picks. What's new is that <b>Taego</b> has quietly become the worse map by top-10 rate
-        (17.4%) despite a slightly better average placement than Sanhok. Taego is a big, vehicle-heavy
-        forest map &mdash; a very different shape of problem than Sanhok's close-quarters rush, and
-        with 23 games it's a real signal, not noise, even if the "why" isn't as clean yet. Worth
-        another look once there's more Taego data specifically.</p>
-      <p class="muted" style="font-size:13.5px">Paramo (4 games, avg 22.5), Deston (3 games) and Rondo (4 games) don't have
-        enough data for real conclusions. The old "zero kills on Rondo" note from last time is gone,
-        though &mdash; both maps have picked up kills since. Rondo's average placement (40.2) is still
-        the worst on the board, small sample and all.</p>
+      <p><b>Deston has quietly jumped to the top of the board</b> &mdash; 10.9 average placement and
+        a 77.8% top-10 rate across 9 games, edging out Karakin for the first time. Take it with real
+        caution: 9 games is the smallest sample of any map here, and a run like this can still be a
+        hot streak rather than a genuine map read. Worth watching, not yet worth trusting the way the
+        Karakin read is trusted.</p>
+      <p><b>Karakin</b> keeps being the more <em>proven</em> case: best top-10 rate on real volume
+        (30 games) and still zero wins in as many tries. The read hasn't changed &mdash; you
+        out-survive the chaos on this tiny map better than almost anywhere else, but Karakin's final
+        circles are too small to hide in, so the fix is still fighting more once you're inside the
+        top 4&ndash;5, not less.</p>
+      <p><b>Sanhok</b> (25.9 avg) and <b>Taego</b> (26.7 avg, 17.4% top-10 &mdash; still the worst
+        top-10 rate anywhere) remain the two problem maps, and neither number moved meaningfully since
+        the last read. Sanhok is dense and close-range, which fights your patient, mid-range weapon
+        picks; Taego is the opposite shape of problem, a big vehicle-heavy forest map where good average
+        placements aren't converting into top-10 finishes.</p>
+      <p class="muted" style="font-size:13.5px"><b>Rondo</b> (30.8 avg, 8 games) is still the worst map
+        on the board by placement, but it's no longer a 4-game footnote &mdash; the number is starting
+        to mean something. <b>Paramo</b> (18.5 avg, 6 games) has also grown enough to post a real bar
+        for the first time, and it's a promising one.</p>
     </div>
   </section>
 
@@ -645,8 +697,8 @@
     <div class="chapter-num">06</div>
     <h2>Highlight Reel</h2>
     <p class="lede">Click through to relive any of these in the full match replay. Worth saying
-      plainly: both wins below are still the only two wins on record &mdash; nothing in the last 70
-      games has cracked a third yet.</p>
+      plainly: both wins below are still the only two wins on record &mdash; nothing in the last 39
+      games has cracked a third yet. But two other records fell, both in the same game.</p>
 
     <div class="hl-grid">
       <a class="hl win" href="match.html?id=694542fc-2dc3-454a-956d-6f79dd19f891">
@@ -665,28 +717,30 @@
         <span class="tag">Best of the Rest</span>
         <h4>Miramar &middot; 29 Jun</h4>
         <p class="detail">2nd place, 8 combined kills, 1,221 combined damage &mdash; still the best
-          game that didn't end in a dinner, even measured against 70 more games of competition.</p>
+          game that didn't end in a dinner, even measured against 39 more games of competition.</p>
         <span class="link">Watch the replay &rarr;</span>
       </a>
-      <a class="hl" href="match.html?id=8f8cd9cd-14d8-4edd-b0ed-36d092f3dfae">
-        <span class="tag">The Marathon</span>
-        <h4>Erangel &middot; 24 Aug</h4>
-        <p class="detail">27.8 minutes survived, 2nd place. The new deepest run in the dataset without
-          a win &mdash; edges out the old record by about a minute.</p>
+      <a class="hl win" href="match.html?id=c078f791-e7a5-45f6-9ffa-cc040ac54a60">
+        <span class="tag">The Marathon, Pt. 2</span>
+        <h4>Vikendi &middot; 31 Aug</h4>
+        <p class="detail">27:52 survived, 2nd place &mdash; a new deepest run, beating the old record
+          by 74 seconds. S821 tanked a career-high 543 damage before going down at 22:32; D282 carried
+          it solo the rest of the way. Two records, one match.</p>
         <span class="link">Watch the replay &rarr;</span>
       </a>
-      <a class="hl blue" href="match.html?id=71c21364-5ed0-481b-ab31-8e58e831e94b">
+      <a class="hl blue" href="match.html?id=c078f791-e7a5-45f6-9ffa-cc040ac54a60">
         <span class="tag">Tank of the Tape</span>
-        <h4>Karakin &middot; 6 Jul</h4>
-        <p class="detail">D282 absorbed 481 damage and still closed out 2nd place. Still the record,
-          untouched by anything in the last 70 games.</p>
+        <h4>Vikendi &middot; 31 Aug</h4>
+        <p class="detail">S821 absorbed 543 damage and still helped close out 2nd place &mdash; the new
+          record, beating D282's old mark from Karakin (6 Jul) by about 50 damage. Same match as the
+          new Marathon record, above.</p>
         <span class="link">Watch the replay &rarr;</span>
       </a>
-      <a class="hl bad" href="match.html?id=4672a4d2-ea2f-4c62-8e38-cc8d3735c5b5">
+      <a class="hl bad" href="match.html?id=c6f57000-8f8b-4b74-ba0c-7b58f96d18d3">
         <span class="tag">Fastest Wipe</span>
-        <h4>Erangel &middot; 9 Aug</h4>
-        <p class="detail">Dead in 62 seconds &mdash; a new low, beating the old record by 16 seconds.
-          Hot drop, cold luck.</p>
+        <h4>Paramo &middot; 30 Aug</h4>
+        <p class="detail">Dead in 61 seconds &mdash; a new low, one second faster than the old record
+          (Erangel, 9 Aug). S821 got 100 damage in on the way down; D282 got none. Hot drop, cold luck.</p>
         <span class="link">Watch the replay &rarr;</span>
       </a>
     </div>
@@ -701,35 +755,37 @@
 
     <div class="statrow">
       <div class="stat ok">
-        <div class="num">3.9%</div>
+        <div class="num">3.4%</div>
         <div class="label">Games ending &lt;90s</div>
-        <div class="sub">9 of 229 &mdash; down from 7.7% in June</div>
+        <div class="sub">still 9 of 268 &mdash; zero of the 39 newest games ended this fast</div>
       </div>
-      <div class="stat bad">
-        <div class="num">26%</div>
+      <div class="stat ok">
+        <div class="num">30%</div>
         <div class="label">Knockdowns that end in a revive</div>
-        <div class="sub">80 of 306 &mdash; the rest bleed out</div>
+        <div class="sub">110 of 372 &mdash; up from 26% last read, still most bleed out</div>
       </div>
       <div class="stat">
-        <div class="num">25.7<span style="font-size:16px;color:var(--muted)">s</span></div>
+        <div class="num">26.3<span style="font-size:16px;color:var(--muted)">s</span></div>
         <div class="label">Avg. revive response</div>
-        <div class="sub">fast when it happens &mdash; it just rarely happens</div>
+        <div class="sub">fast when it happens &mdash; it's happening a bit more often now</div>
       </div>
     </div>
 
     <div class="panel">
       <h3>Landing isn't the problem</h3>
-      <p>Only 9 of 229 games (3.9%) end inside the first 90 seconds, and that has improved since the
-        last read. Whatever trouble finds you, it mostly finds you later, once the real game has
-        started.</p>
+      <p>The count of quick wipes (games ending inside 90 seconds) hasn't moved at all &mdash; still
+        exactly 9, even with 39 more games added. Every one of those new games survived the opening
+        minute and a half. Whatever trouble finds you, it still mostly finds you later, once the real
+        game has started.</p>
     </div>
 
-    <div class="callout">
-      <b>The recoverable mistake is the un-revived knock.</b> Across 306 knockdowns, only 80 ended
-      with a pickup. When a revive does happen it is fast &mdash; 25.4 seconds on average, against
-      the roughly two minutes PUBG gives you &mdash; so this isn't a reaction-speed problem. It's
-      that in three-quarters of cases the pickup is never attempted or never reachable, and a
-      teammate who stays down is a teammate you are about to lose.
+    <div class="callout ok">
+      <b>The recoverable mistake is still the un-revived knock &mdash; but it's recovering more often.</b>
+      Across 372 knockdowns (up from 306), 110 ended with a pickup &mdash; a 30% conversion rate, up
+      from 26% at the last read. When a revive does happen it is still fast &mdash; 26.3 seconds on
+      average, against the roughly two minutes PUBG gives you &mdash; so this was never a
+      reaction-speed problem. It's still true that most knocks (70%) end with no pickup, but the trend
+      on this specific number is now pointing the right way instead of sitting flat.
     </div>
 
     <p class="muted" style="font-size:13.5px">The <a href="engagements.html">Engagement Report</a>
@@ -741,48 +797,62 @@
   <section class="chapter" id="notes">
     <div class="chapter-num">08</div>
     <h2>Coach's Notes</h2>
-    <p class="lede">Five things the data actually supports &mdash; refreshed for 229 games.</p>
+    <p class="lede">Six things the data actually supports &mdash; refreshed for 268 games.</p>
 
     <ol class="notes">
       <li>
         <div>
-          <h4>Convert more knocks into revives</h4>
-          <p>Only 26% of your 306 knockdowns end in a pickup, and a teammate left down is a teammate
-            about to be lost. When it goes wrong, break line of sight first and reach the body &mdash;
-            or disengage as a pair rather than holding the position solo.</p>
+          <h4>Your recent form is the real story &mdash; don't let one flat summer bury it</h4>
+          <p>Last 25 games: 15.8 average placement, 56% top-10 rate. That's not a fluke reading on a
+            noisy window &mdash; it's the best 25-game stretch in the dataset by a wide margin. Whatever
+            changed in September, keep doing it before looking for anything else to fix.</p>
         </div>
       </li>
       <li>
         <div>
-          <h4>Let fights come to your sightline, not the other way around</h4>
-          <p>SLR (17.0%), Mini 14 (17.4%), SKS (20.0%), Dragunov (24.3%) &mdash; your best accuracy
-            numbers are all single-fire guns used at range, and that pattern only got stronger with
-            more shots on record. Holding an angle and letting the enemy walk into it plays to your
-            actual strengths; pushing into buildings plays against them.</p>
+          <h4>Convert more knocks into revives &mdash; and keep pushing the number that's already moving</h4>
+          <p>30% of your 372 knockdowns now end in a pickup, up from 26% last read. Progress, but still
+            a 70% failure rate on the single most recoverable mistake in the data. When it goes wrong,
+            break line of sight first and reach the body &mdash; or disengage as a pair rather than
+            holding the position solo.</p>
         </div>
       </li>
       <li>
         <div>
-          <h4>On Karakin, finish the job</h4>
-          <p>Best top-10 rate of any map (60%, now on 25 games) but still zero wins. The final circles
-            on a 2&times;2km map are too small to hide in &mdash; treat top-4&ndash;5 there as the
-            moment to fight, not the moment to turtle.</p>
+          <h4>The M24 deserves more time in the loadout</h4>
+          <p>52.2% accuracy across 90 shots is not a small-sample fluke anymore &mdash; it's more than
+            double the accuracy of anything else in the armory, on a real number of shots. SLR (18.5%),
+            Mini 14 (17.7%) and Dragunov (19.1%) round out a genuinely strong precision tier, but the
+            M24 specifically is worth prioritizing when it's on the ground.</p>
         </div>
       </li>
       <li>
         <div>
-          <h4>Taego has quietly become your problem map, not just Sanhok</h4>
-          <p>Sanhok is still the worst by average placement, but Taego now has the worst top-10 rate
-            (17.4%) on a real sample (23 games). Different map, different shape of fight &mdash; worth
-            paying attention to specifically next time it comes up, since the "why" isn't obvious yet.</p>
+          <h4>On Karakin, finish the job &mdash; and take a first look at Deston</h4>
+          <p>Karakin: best-proven top-10 rate (56.7%, 30 games) but still zero wins &mdash; the final
+            circles are too small to hide in, so treat top-4&ndash;5 there as the moment to fight, not
+            the moment to turtle. Deston has posted an even better line (77.8% top-10, 10.9 avg) but
+            on only 9 games &mdash; worth tracking, not yet worth rebuilding a strategy around.</p>
         </div>
       </li>
       <li>
         <div>
-          <h4>You're sharper at the end of a session than the start</h4>
-          <p>Across every 6+ game session combined, the last third averages a 21.0 placement against
-            25.7 for the first third. That's the opposite of fatigue &mdash; treat the first game or
-            two of a sitting as a warm-up, not a data point.</p>
+          <h4>Taego is still the map to figure out</h4>
+          <p>Worst top-10 rate on the board (17.4%) on a real sample (23 games), and that number hasn't
+            budged since the last read despite 39 more games played elsewhere. Sanhok's problem (dense,
+            close-range) is well understood; Taego's isn't yet &mdash; a big vehicle-heavy map converting
+            decent average placements into so few actual top-10s is worth a dedicated look next time
+            it comes up.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h4>You're sharper at the end of a session than the start &mdash; and the warm-up is shrinking</h4>
+          <p>Across every 6+ game session combined, the last third averages a 20.7 placement against
+            25.1 for the first third. Last read had that same last-third number (20.7) paired with a
+            worse first-third (26.4) &mdash; so the back half of a session hasn't gotten any better,
+            you're just getting there faster. Treat game one of a sitting as a warm-up, but expect less
+            of a penalty for it than before.</p>
         </div>
       </li>
     </ol>
@@ -791,7 +861,7 @@
 </div>
 
 <footer>
-  <div class="sign">&mdash; compiled from all 229 shared matches, by request, replacing the June read</div>
+  <div class="sign">&mdash; compiled from all 268 shared matches, by request, replacing the August read</div>
   Not updated automatically. If you want a fresh read after more games, just ask for another one.
 </footer>
 
@@ -804,8 +874,8 @@ document.addEventListener('click', function(e) {
     document.getElementById('siteNavMenu').classList.remove('open');
 });
 
-const placements = [19, 45, 35, 19, 39, 40, 29, 41, 31, 38, 20, 38, 33, 24, 20, 15, 37, 41, 34, 39, 47, 48, 21, 41, 3, 4, 8, 43, 50, 34, 37, 26, 7, 13, 23, 3, 14, 13, 38, 38, 4, 5, 48, 40, 45, 3, 7, 32, 10, 16, 17, 5, 29, 47, 14, 1, 16, 43, 10, 3, 38, 6, 44, 11, 24, 48, 29, 16, 43, 2, 39, 26, 37, 32, 41, 24, 17, 38, 14, 10, 26, 39, 31, 71, 86, 11, 11, 6, 3, 7, 6, 34, 33, 8, 41, 7, 25, 48, 5, 11, 42, 4, 39, 24, 9, 23, 38, 31, 8, 32, 46, 1, 9, 14, 29, 7, 25, 3, 43, 2, 2, 11, 10, 2, 18, 2, 2, 14, 46, 47, 49, 9, 2, 23, 7, 22, 35, 18, 2, 9, 3, 31, 28, 44, 14, 25, 15, 6, 17, 36, 4, 29, 12, 44, 9, 2, 53, 49, 38, 9, 4, 40, 5, 30, 20, 17, 5, 13, 27, 14, 45, 5, 2, 2, 2, 24, 46, 43, 13, 47, 48, 6, 30, 21, 22, 11, 13, 16, 3, 19, 7, 11, 3, 40, 21, 23, 9, 5, 9, 18, 2, 18, 35, 9, 37, 5, 13, 41, 21, 44, 8, 15, 7, 55, 38, 44, 27, 12, 2, 27, 32, 21, 39, 18, 24, 34, 11, 13, 4];
-const roll = [19.0, 32.0, 33.0, 29.5, 31.4, 32.83, 32.29, 33.38, 33.11, 33.6, 33.7, 33.0, 32.8, 33.3, 31.4, 28.9, 29.7, 29.7, 30.0, 30.1, 32.8, 33.8, 32.6, 34.3, 32.6, 31.5, 28.6, 28.8, 30.4, 29.9, 28.9, 26.7, 25.3, 22.5, 24.5, 24.4, 25.0, 22.0, 20.8, 21.2, 17.9, 15.8, 19.9, 22.6, 24.8, 24.8, 24.1, 26.0, 23.2, 21.0, 22.3, 22.3, 20.4, 21.1, 18.0, 17.8, 18.7, 19.8, 19.8, 18.5, 20.6, 20.7, 22.2, 18.6, 19.6, 24.3, 25.6, 22.9, 26.2, 26.1, 26.2, 28.2, 27.5, 29.6, 31.3, 28.9, 27.7, 29.9, 27.0, 27.8, 26.5, 27.8, 27.2, 31.1, 35.6, 34.3, 33.7, 30.5, 29.4, 29.1, 27.1, 26.6, 26.8, 20.5, 16.0, 15.6, 17.0, 21.2, 21.4, 21.8, 25.4, 22.4, 23.0, 24.6, 21.4, 23.0, 24.3, 22.6, 22.9, 25.0, 25.4, 25.1, 22.1, 21.1, 23.1, 21.5, 20.2, 17.4, 20.9, 17.9, 13.5, 14.5, 14.6, 13.4, 12.3, 11.8, 9.5, 10.6, 10.9, 15.4, 20.1, 19.9, 19.1, 21.2, 20.1, 22.1, 25.4, 25.8, 21.4, 17.6, 13.0, 15.2, 17.8, 19.9, 20.6, 20.9, 18.9, 17.7, 19.2, 21.9, 22.0, 21.8, 20.2, 20.2, 19.7, 17.4, 21.2, 25.5, 27.6, 24.9, 24.9, 26.0, 25.3, 23.9, 25.0, 26.5, 21.7, 18.1, 17.0, 17.5, 21.6, 18.1, 17.8, 15.0, 13.2, 13.9, 18.0, 21.0, 19.6, 22.9, 23.2, 23.3, 26.1, 28.0, 30.0, 28.7, 25.4, 22.7, 21.7, 18.9, 14.8, 15.3, 12.6, 14.5, 14.4, 15.6, 15.2, 14.1, 14.7, 14.6, 14.1, 14.8, 18.0, 14.9, 16.5, 14.7, 15.1, 18.7, 19.9, 22.5, 23.1, 22.8, 20.0, 24.6, 24.7, 28.6, 30.0, 27.1, 25.2, 23.5, 25.9, 26.5, 29.7, 26.0, 24.6, 23.6, 22.0, 22.1, 22.3];
+const placements = [19, 45, 35, 19, 39, 40, 29, 41, 31, 38, 20, 38, 33, 24, 20, 15, 37, 41, 34, 39, 47, 48, 21, 41, 3, 4, 8, 43, 50, 34, 37, 26, 7, 13, 23, 3, 14, 13, 38, 38, 4, 5, 48, 40, 45, 3, 7, 32, 10, 16, 17, 5, 29, 47, 14, 1, 16, 43, 10, 3, 38, 6, 44, 11, 24, 48, 29, 16, 43, 2, 39, 26, 37, 32, 41, 24, 17, 38, 14, 10, 26, 39, 31, 71, 86, 11, 11, 6, 3, 7, 6, 34, 33, 8, 41, 7, 25, 48, 5, 11, 42, 4, 39, 24, 9, 23, 38, 31, 8, 32, 46, 1, 9, 14, 29, 7, 25, 3, 43, 2, 2, 11, 10, 2, 18, 2, 2, 14, 46, 47, 49, 9, 2, 23, 7, 22, 35, 18, 2, 9, 3, 31, 28, 44, 14, 25, 15, 6, 17, 36, 4, 29, 12, 44, 9, 2, 53, 49, 38, 9, 4, 40, 5, 30, 20, 17, 5, 13, 27, 14, 45, 5, 2, 2, 2, 24, 46, 43, 13, 47, 48, 6, 30, 21, 22, 11, 13, 16, 3, 19, 7, 11, 3, 40, 21, 23, 9, 5, 9, 18, 2, 18, 35, 9, 37, 5, 13, 41, 21, 44, 8, 15, 7, 55, 38, 44, 27, 12, 2, 27, 32, 21, 39, 18, 24, 34, 11, 13, 4, 16, 60, 4, 33, 45, 17, 2, 4, 24, 45, 25, 3, 11, 5, 33, 7, 4, 3, 3, 39, 6, 16, 49, 19, 6, 3, 2, 2, 24, 31, 6, 41, 10, 22, 11, 3, 9, 38, 7];
+const roll = [19.0, 32.0, 33.0, 29.5, 31.4, 32.83, 32.29, 33.38, 33.11, 33.6, 33.7, 33.0, 32.8, 33.3, 31.4, 28.9, 29.7, 29.7, 30.0, 30.1, 32.8, 33.8, 32.6, 34.3, 32.6, 31.5, 28.6, 28.8, 30.4, 29.9, 28.9, 26.7, 25.3, 22.5, 24.5, 24.4, 25.0, 22.0, 20.8, 21.2, 17.9, 15.8, 19.9, 22.6, 24.8, 24.8, 24.1, 26.0, 23.2, 21.0, 22.3, 22.3, 20.4, 21.1, 18.0, 17.8, 18.7, 19.8, 19.8, 18.5, 20.6, 20.7, 22.2, 18.6, 19.6, 24.3, 25.6, 22.9, 26.2, 26.1, 26.2, 28.2, 27.5, 29.6, 31.3, 28.9, 27.7, 29.9, 27.0, 27.8, 26.5, 27.8, 27.2, 31.1, 35.6, 34.3, 33.7, 30.5, 29.4, 29.1, 27.1, 26.6, 26.8, 20.5, 16.0, 15.6, 17.0, 21.2, 21.4, 21.8, 25.4, 22.4, 23.0, 24.6, 21.4, 23.0, 24.3, 22.6, 22.9, 25.0, 25.4, 25.1, 22.1, 21.1, 23.1, 21.5, 20.2, 17.4, 20.9, 17.9, 13.5, 14.5, 14.6, 13.4, 12.3, 11.8, 9.5, 10.6, 10.9, 15.4, 20.1, 19.9, 19.1, 21.2, 20.1, 22.1, 25.4, 25.8, 21.4, 17.6, 13.0, 15.2, 17.8, 19.9, 20.6, 20.9, 18.9, 17.7, 19.2, 21.9, 22.0, 21.8, 20.2, 20.2, 19.7, 17.4, 21.2, 25.5, 27.6, 24.9, 24.9, 26.0, 25.3, 23.9, 25.0, 26.5, 21.7, 18.1, 17.0, 17.5, 21.6, 18.1, 17.8, 15.0, 13.2, 13.9, 18.0, 21.0, 19.6, 22.9, 23.2, 23.3, 26.1, 28.0, 30.0, 28.7, 25.4, 22.7, 21.7, 18.9, 14.8, 15.3, 12.6, 14.5, 14.4, 15.6, 15.2, 14.1, 14.7, 14.6, 14.1, 14.8, 18.0, 14.9, 16.5, 14.7, 15.1, 18.7, 19.9, 22.5, 23.1, 22.8, 20.0, 24.6, 24.7, 28.6, 30.0, 27.1, 25.2, 23.5, 25.9, 26.5, 29.7, 26.0, 24.6, 23.6, 22.0, 22.1, 22.3, 21.2, 24.0, 22.3, 21.7, 24.4, 23.7, 20.5, 19.8, 20.9, 25.0, 25.9, 20.2, 20.9, 18.1, 16.9, 15.9, 16.1, 16.0, 13.9, 13.3, 11.4, 12.7, 16.5, 17.9, 15.2, 14.8, 14.6, 14.5, 16.6, 15.8, 15.8, 18.3, 14.4, 14.7, 15.2, 15.2, 15.9, 19.5, 17.8];
 const labels = placements.map((_,i)=>i+1);
 
 const ctx = document.getElementById('arcChart').getContext('2d');
