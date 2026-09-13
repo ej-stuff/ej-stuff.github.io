@@ -46,8 +46,8 @@
       "kills": 12,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.25,
-      "hits": 166,
-      "total_damage": 3451.4,
+      "hits": 167,
+      "total_damage": 3481.2,
       "avg_damage_per_hit": 20.8
     },
     {
@@ -106,9 +106,9 @@
       "kills": 3,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 37,
-      "total_damage": 997.6,
-      "avg_damage_per_hit": 27.0
+      "hits": 39,
+      "total_damage": 1028.3,
+      "avg_damage_per_hit": 26.4
     },
     {
       "weapon": "RPD",
@@ -166,9 +166,9 @@
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 20,
-      "total_damage": 556.3,
-      "avg_damage_per_hit": 27.8
+      "hits": 21,
+      "total_damage": 641.6,
+      "avg_damage_per_hit": 30.6
     },
     {
       "weapon": "Beryl M762",
@@ -308,8 +308,8 @@
       "kills": 39,
       "headshot_kills": 9,
       "headshot_kill_pct": 0.231,
-      "hits": 364,
-      "total_damage": 5895.2,
+      "hits": 365,
+      "total_damage": 5923.6,
       "avg_damage_per_hit": 16.2
     },
     {

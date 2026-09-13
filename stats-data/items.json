@@ -4,13 +4,13 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 192,
+        "total": 195,
         "per_match": 0.7
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 87,
+        "total": 88,
         "per_match": 0.32
       },
       {
@@ -22,19 +22,19 @@
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 176,
-        "per_match": 0.64
+        "total": 181,
+        "per_match": 0.65
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 135,
+        "total": 136,
         "per_match": 0.49
       },
       {
         "item": "Med Kit",
         "category": "Heal",
-        "total": 21,
+        "total": 22,
         "per_match": 0.08
       }
     ],
@@ -51,7 +51,7 @@
       },
       {
         "item": "Grenade",
-        "total": 76,
+        "total": 77,
         "per_match": 0.28
       },
       {
@@ -76,14 +76,14 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 197,
-        "per_match": 0.75
+        "total": 202,
+        "per_match": 0.76
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
         "total": 165,
-        "per_match": 0.63
+        "per_match": 0.62
       },
       {
         "item": "Adrenaline Syringe",
@@ -95,13 +95,13 @@
         "item": "First Aid Kit",
         "category": "Heal",
         "total": 191,
-        "per_match": 0.73
+        "per_match": 0.72
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 125,
-        "per_match": 0.48
+        "total": 130,
+        "per_match": 0.49
       },
       {
         "item": "Med Kit",
