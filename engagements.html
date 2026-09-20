@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Engagement Report — D282 &amp; S821</title>
-<meta name="description" content="Every fight from 268 PUBG matches reconstructed beat by beat — the situations that keep repeating, and the one thing that decides them.">
+<meta name="description" content="Every fight from 287 PUBG matches reconstructed beat by beat — the situations that keep repeating, and the one thing that decides them.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -162,134 +162,112 @@
     <a href="records.html">Personal Records</a>
     <a href="debrief.html">The Debrief</a>
     <a href="engagements.html" class="nav-cur">Engagement Report</a>
+    <a href="engagement-stats.html">Engagement Stats</a>
     <a href="pubg.html">Loadout Planner</a>
     <a href="armory.html">The Armory</a>
   </div>
 </div>
 
 <div class="hero">
-  <div class="kicker">720 FIGHTS · RECONSTRUCTED BEAT BY BEAT</div>
+  <div class="kicker">746 FIGHTS · RECONSTRUCTED BEAT BY BEAT</div>
   <h1>The Engagement Report</h1>
-  <p class="hero-sub">Every fight from 268 matches rebuilt from telemetry and replayed shot by shot —
+  <p class="hero-sub">Every fight from 287 matches rebuilt from telemetry and replayed shot by shot —
     who fired, at whom, from how far, and how many seconds passed before the second of you joined in.
-    Fewer averages, more actual fights. This read also has a real answer to the question the last
-    one could only guess at.</p>
-  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> · Duo FPP · 2 Jun – 11 Sep 2026</div>
+    Fewer averages, more actual fights, with the first five minutes of every match excluded so
+    drop-zone chaos doesn't dilute the numbers.</p>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> · Duo FPP · 2 Jun – 20 Sep 2026</div>
 </div>
 
 <div class="wrap">
 
   <div class="intro">
-    <p>This version is built around the fights themselves rather than around averages. Every combat
+    <p>This report is built around the fights themselves rather than around averages. Every combat
       event is grouped into a discrete engagement, reconstructed second by second, and sorted into
       the <b>situation</b> it belongs to. You can read any individual fight in
-      <a href="#browser">Chapter&nbsp;7</a>.</p>
-    <p>Doing it that way also caught a mistake in the previous version, so that comes first.</p>
+      <a href="#browser">Chapter&nbsp;6</a>, or explore the whole dataset live — filterable by game
+      stage, map, weapon and more, with charts that update as you filter — on the
+      <a href="engagement-stats.html">Engagement Stats</a> page.</p>
+    <p>Every chapter below except Chapter&nbsp;6's browser table excludes the first five minutes of
+      each match — drop-zone chaos, 3rd-partying, half-found loadouts, random weapons — before
+      computing anything. 155 of 516 decisive fights fall in that window. Chapter&nbsp;6 and the
+      Engagement Stats page show everything, filterable either way.</p>
+    <p><b>Health</b> is measured from the last position ping <em>strictly before</em> first contact —
+      the closest available read on what each player's HP actually was walking into the fight, rather
+      than a nearby ping that might already include damage taken once the fight was under way.</p>
   </div>
 
   <!-- ============================================================ -->
-  <section class="chapter" id="correction">
-    <div class="chapter-num">00</div>
-    <h2>A Correction</h2>
-    <p class="lede">Three findings from the last version don't survive a closer look. Better to say
-      so plainly than to leave you training against noise.</p>
-
-    <div class="callout bad">
-      <b>The health finding was mostly a measurement artifact.</b> I was reading each player's health
-      from the position ping <em>nearest</em> the start of the fight — and pings land every 10
-      seconds, so that "starting" health was often actually measured a few seconds <em>into</em> the
-      fight. Losers get shot, so their health looked low before the fight had even begun. Measuring
-      strictly from the last ping <em>before</em> first contact, the gap shrinks from
-      +32 points to <b>+13.6</b>, and the "you win 4.2% below 50 health" claim disappears — only
-      <b>32 of 392</b> fights actually start below 75 health, not the quarter I reported.
-    </div>
-
-    <div class="panel">
-      <h3>Also dropped</h3>
-      <p><b>"Stop pushing; let them come."</b> On 229 matches this is dead flat — you win 18.1% of
-        fights whether you closed the distance or not (52.1% of wins involved a push, versus 51.2%
-        of losses). The earlier 11% vs 21% split did not hold up with more data.</p>
-      <p><b>"Vehicles are your worst starting state."</b> Also flat as a general claim (+1.9). There
-        <em>is</em> a real and narrower version of it — being <em>ambushed</em> while mounted is
-        genuinely bad — and that survives as one of the situations below.</p>
-      <p><b>"Multi-team fights are worse."</b> Flat too (+0.8). They're common, not especially lethal.</p>
-    </div>
-
-    <p>What's left after that pruning is a much shorter list, but it's a list you can trust: two
-      things dominate, one matters moderately, and the rest is noise.</p>
-  </section>
-
-  <!-- ============================================================ -->
   <section class="chapter" id="situations">
-    <div class="chapter-num">01</div>
+    <div class="chapter-num">00</div>
     <h2>The Eleven Situations</h2>
-    <p class="lede">Every decisive fight sorted into the situation it actually was. This is the most
-      useful table on the page: the same handful of scenarios keep repeating, and they have wildly
-      different outcomes.</p>
+    <p class="lede">Every decisive fight — outside the first five minutes of the match — sorted into
+      the situation it actually was. This is the most useful table on the page: the same handful of
+      scenarios keep repeating, and they have wildly different outcomes.</p>
 
     <div class="panel">
       <table class="dtable">
         <thead><tr><th>Situation</th><th class="r pad">Fights</th><th class="r pad">Win rate</th>
           <th class="r pad">Damage diff</th><th class="r hide-sm">Median range</th></tr></thead>
         <tbody>
-          <tr><td class="name good">Clean long-range opener</td><td class="r pad">21</td><td class="r pad good">57.1%</td><td class="r pad good">+59</td><td class="r hide-sm dim">153m</td></tr>
-          <tr><td class="name good">Clean opener at mid range</td><td class="r pad">36</td><td class="r pad good">38.9%</td><td class="r pad bad">&minus;9</td><td class="r hide-sm dim">50m</td></tr>
-          <tr><td class="name good">Clean close-range opener</td><td class="r pad">65</td><td class="r pad good">36.9%</td><td class="r pad good">+40</td><td class="r hide-sm dim">13m</td></tr>
-          <tr><td class="name">Multi-team scrap</td><td class="r pad">122</td><td class="r pad">15.6%</td><td class="r pad">&minus;27</td><td class="r hide-sm dim">36m</td></tr>
-          <tr><td class="name">Caught while repositioning</td><td class="r pad">21</td><td class="r pad">14.3%</td><td class="r pad bad">&minus;111</td><td class="r hide-sm dim">75m</td></tr>
-          <tr><td class="name">Went in already hurt</td><td class="r pad">25</td><td class="r pad bad">12.0%</td><td class="r pad">&minus;57</td><td class="r hide-sm dim">21m</td></tr>
-          <tr><td class="name">Ambushed in the open</td><td class="r pad">45</td><td class="r pad bad">11.1%</td><td class="r pad bad">&minus;95</td><td class="r hide-sm dim">50m</td></tr>
-          <tr><td class="name">Ambushed at knife range</td><td class="r pad">82</td><td class="r pad bad">9.8%</td><td class="r pad bad">&minus;107</td><td class="r hide-sm dim">14m</td></tr>
-          <tr><td class="name">Caught in a vehicle</td><td class="r pad">23</td><td class="r pad bad">8.7%</td><td class="r pad bad">&minus;109</td><td class="r hide-sm dim">23m</td></tr>
-          <tr><td class="name">Fighting a man down</td><td class="r pad">15</td><td class="r pad bad">6.7%</td><td class="r pad">&minus;48</td><td class="r hide-sm dim">33m</td></tr>
-          <tr><td class="name">Ambushed inside a building</td><td class="r pad">21</td><td class="r pad bad">0.0%</td><td class="r pad bad">&minus;156</td><td class="r hide-sm dim">43m</td></tr>
+          <tr><td class="name good">Clean long-range opener</td><td class="r pad">22</td><td class="r pad good">59.1%</td><td class="r pad good">+62</td><td class="r hide-sm dim">158m</td></tr>
+          <tr><td class="name good">Clean opener at mid range</td><td class="r pad">29</td><td class="r pad good">37.9%</td><td class="r pad bad">&minus;15</td><td class="r hide-sm dim">48m</td></tr>
+          <tr><td class="name good">Clean close-range opener</td><td class="r pad">32</td><td class="r pad good">34.4%</td><td class="r pad good">+49</td><td class="r hide-sm dim">15m</td></tr>
+          <tr><td class="name">Multi-team scrap</td><td class="r pad">102</td><td class="r pad">17.6%</td><td class="r pad">&minus;27</td><td class="r hide-sm dim">48m</td></tr>
+          <tr><td class="name">Caught while repositioning</td><td class="r pad">19</td><td class="r pad">15.8%</td><td class="r pad bad">&minus;107</td><td class="r hide-sm dim">75m</td></tr>
+          <tr><td class="name">Fighting a man down</td><td class="r pad">9</td><td class="r pad bad">11.1%</td><td class="r pad">&minus;63</td><td class="r hide-sm dim">49m</td></tr>
+          <tr><td class="name">Caught in a vehicle</td><td class="r pad">28</td><td class="r pad bad">10.7%</td><td class="r pad bad">&minus;110</td><td class="r hide-sm dim">23m</td></tr>
+          <tr><td class="name">Went in already hurt</td><td class="r pad">19</td><td class="r pad bad">10.5%</td><td class="r pad">&minus;80</td><td class="r hide-sm dim">25m</td></tr>
+          <tr><td class="name">Ambushed in the open</td><td class="r pad">41</td><td class="r pad bad">7.3%</td><td class="r pad bad">&minus;101</td><td class="r hide-sm dim">50m</td></tr>
+          <tr><td class="name">Ambushed at knife range</td><td class="r pad">45</td><td class="r pad bad">6.7%</td><td class="r pad bad">&minus;114</td><td class="r hide-sm dim">17m</td></tr>
+          <tr><td class="name">Ambushed inside a building</td><td class="r pad">15</td><td class="r pad bad">0.0%</td><td class="r pad bad">&minus;150</td><td class="r hide-sm dim">51m</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout">
-      <b>The table collapses to one sentence, and it collapses harder with more data.</b> The three
-      "clean opener" rows — 122 fights where you started the shooting — win between 37% and 57%. The
-      five "ambushed / caught" rows — 192 fights where they did — win between 0% and 14%. Nothing else
-      on this page is as large as that split, and every single one of those eleven rows moved less
-      than three points from the last read despite 39 more games of evidence. This isn't a pattern
-      that's emerging; it's one that's already settled.
+      <b>The table collapses to one sentence.</b> The three "clean opener" rows — 83 fights where you
+      started the shooting — win between 34% and 59%. The five "ambushed / caught" rows — 148 fights
+      where they did — win between 0% and 16%. Nothing else on this page is as large as that split.
+      With the first five minutes of every match stripped out, the split is if anything a little
+      cleaner than reading the whole match together, since drop-zone chaos was diluting both ends of it.
     </div>
 
-    <p><b>Ambushed inside a building is now 0 for 21.</b> Not one win, with an average damage deficit
-      of 156. Four more attempts landed in the last 39 games and all four went the same way. If you're
-      taking fire indoors and you didn't start it, there is still no recorded instance of that going
-      well — leave immediately, don't trade.</p>
+    <p><b>Ambushed inside a building is 0 for 15</b> once you take out anything in the first five
+      minutes (0 for 21 including drop-phase fights — same story, just fewer of them count as
+      independent evidence). Not one win, with an average damage deficit of 150. If you're taking fire
+      indoors and you didn't start it, there is still no recorded instance of that going well — leave
+      immediately, don't trade.</p>
 
-    <p class="muted" style="font-size:13.5px">One quiet non-finding: <b>clean opener at mid range</b>
-      is the one row that actually got worse (46.4%&rarr;38.9% win rate, damage diff flipped from +6
-      to &minus;9) even as its sample nearly doubled (28&rarr;36 fights). Not enough on its own to
-      chase, but if it keeps sliding on the next read it'll be worth a dedicated look.</p>
+    <p class="muted" style="font-size:13.5px">Worth flagging: <b>multi-team scrap</b>, at 102 fights,
+      is by far the largest sample in the "bad" half of the table, and it's also the least-bad of that
+      half by a clear margin (17.6% vs the next-best caught-while-repositioning's 15.8%, and everything
+      below that in single digits or low teens) — being in a multi-team fight isn't especially lethal
+      on its own, it just happens alongside worse things like being ambushed. <b>Fighting a man down</b>
+      is the smallest sample here (n=9) and its 11.1% shouldn't be trusted much either way.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="firsthit">
-    <div class="chapter-num">02</div>
+    <div class="chapter-num">01</div>
     <h2>Who Lands The First Hit</h2>
     <p class="lede">The one measurement that dwarfs everything else, and the reason the situations
       table looks the way it does.</p>
 
     <div class="chart-box"><div class="cv"><canvas id="initChart"></canvas></div></div>
-    <p class="chart-cap">All 476 decisive fights, split by who landed the first damaging hit.</p>
+    <p class="chart-cap">All 361 decisive fights outside the first five minutes, split by who landed
+      the first damaging hit.</p>
 
     <div class="statrow">
-      <div class="stat ok"><div class="num">33.5%</div><div class="label">You hit first</div><div class="sub">n=209 · +26 damage differential</div></div>
-      <div class="stat bad"><div class="num">7.9%</div><div class="label">They hit first</div><div class="sub">n=267 · &minus;106 damage differential</div></div>
-      <div class="stat"><div class="num">6.5<span style="font-size:16px;color:var(--muted)">s</span></div><div class="label">To shoot back when ambushed</div><div class="sub">median · identical to the last read</div></div>
+      <div class="stat ok"><div class="num">33.3%</div><div class="label">You hit first</div><div class="sub">n=153 · +24.2 damage differential</div></div>
+      <div class="stat bad"><div class="num">8.2%</div><div class="label">They hit first</div><div class="sub">n=208 · &minus;108.8 damage differential</div></div>
+      <div class="stat"><div class="num">6.5<span style="font-size:16px;color:var(--muted)">s</span></div><div class="label">To shoot back when ambushed</div><div class="sub">median, n=115</div></div>
     </div>
 
     <div class="callout bad">
-      <b>In 67% of ambushes, neither of you had fired a shot.</b> 179 of the 267 fights where the
+      <b>In 67.8% of ambushes, neither of you had fired a shot.</b> 141 of the 208 fights where the
       enemy hit first began with both of you completely unaware — no shots fired, no contact made.
-      Those win 6.7%. This isn't a gunfight you're losing; it's a gunfight you didn't know had
-      started until you were already down 40 health. Both headline numbers (33.5% / 7.9%) moved
-      less than a point from the last read on 84 more fights — this finding is as settled as anything
-      on this page gets.
+      Those win 7.8%. This isn't a gunfight you're losing; it's a gunfight you didn't know had started
+      until you were already down 40 health.
     </div>
 
     <p>Worth being precise: PUBG doesn't log misses, so this measures who <em>connects</em> first,
@@ -300,39 +278,38 @@
 
   <!-- ============================================================ -->
   <section class="chapter" id="together">
-    <div class="chapter-num">03</div>
+    <div class="chapter-num">02</div>
     <h2>Both Guns Or One</h2>
-    <p class="lede">You asked whether the "both ready before engaging" idea shows up in the data. It
-      does — and it's the second-largest effect here.</p>
+    <p class="lede">Whether both of you are actually in the fight together shows up in the data as
+      the second-largest effect here.</p>
 
     <div class="statrow">
-      <div class="stat ok"><div class="num">26.7%</div><div class="label">Both of you damage them</div><div class="sub">n=172</div></div>
-      <div class="stat bad"><div class="num">14.8%</div><div class="label">Only one of you fights</div><div class="sub">n=304 — 64% of all fights</div></div>
-      <div class="stat ok"><div class="num">44.4%</div><div class="label">Second gun within 2s</div><div class="sub">n=27 — still the best number on the page</div></div>
+      <div class="stat ok"><div class="num">28.8%</div><div class="label">Both of you damage them</div><div class="sub">n=132</div></div>
+      <div class="stat bad"><div class="num">13.1%</div><div class="label">Only one of you fights</div><div class="sub">n=229 — 63% of all fights</div></div>
+      <div class="stat ok"><div class="num">45.8%</div><div class="label">Second gun within 2s</div><div class="sub">n=24 — still the best number on the page</div></div>
     </div>
 
     <div class="panel">
       <h3>It isn't just "we died before he could shoot"</h3>
       <p>That's the obvious objection so it's worth killing off: restricting to fights that lasted
         more than 30 seconds — plenty of time for both of you to join — fighting together still wins
-        <b>22.2%</b> against <b>8.7%</b> alone. The effect survives the control, essentially unchanged
-        from the last read (21.9% / 6.8%).</p>
+        <b>22.2%</b> (n=99) against <b>9.5%</b> (n=84) alone. The effect survives the control.</p>
       <p>Timing matters more than participation. When the second gun arrives inside 2 seconds you win
-        44.4% (down a little from 50% on 3 more fights in that bucket, still comfortably the best
-        category here). Between 2 and 15 seconds it's still 12–20%. The winning pattern is unchanged:
-        both of you opening essentially at once is what "both ready before we engage" actually buys
-        you.</p>
+        45.8% — comfortably the best category here. Between 2 and 15 seconds it drops to 12–24%, and
+        even joining late (&gt;15s) still beats not joining at all (29.0%). The pattern holds: both of
+        you opening essentially at once is what "both ready before we engage" actually buys you, but
+        showing up at all clearly beats fighting solo at any lag.</p>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="walkthroughs">
-    <div class="chapter-num">04</div>
+    <div class="chapter-num">03</div>
     <h2>Four Fights, Beat By Beat</h2>
     <p class="lede">The averages above are built from these. Reading a few in full is the fastest way
-      to see what the numbers are actually describing. These four are freshly picked by the same
-      script from the current 476-fight pool, not hand-curated — the biggest swing, the worst
-      deficit, a representative solo loss, and the cleanest joint opener on record.</p>
+      to see what the numbers are actually describing. These four are picked automatically from the
+      361-fight pool (early game excluded), not hand-curated — the biggest swing, the worst deficit,
+      a representative solo loss, and the cleanest joint opener on record.</p>
 
     <div class="fight">
       <div class="fhead"><span class="tagpill t">Trade</span>
@@ -377,18 +354,21 @@
     <div class="fight">
       <div class="fhead"><span class="tagpill l">Loss</span>
         <span class="ftitle">Typical solo loss</span>
-        <span class="fmeta">7 Jul · Erangel · Ambushed inside a building · <a href="match.html?id=7c9a5d56-f16e-445d-8291-fda2358cab7e">open match →</a></span></div>
-      <div class="fsetup">30m range · 26m apart · both at full health · 2 enemies, 1 team · on foot</div>
+        <span class="fmeta">22 Jun · Erangel · Multi-team scrap · <a href="match.html?id=737a5596-b48e-4e62-b6fb-21453dade23c">open match →</a></span></div>
+      <div class="fsetup">30m range · 28m apart · 80 health · 3 enemies, 2 teams · on foot</div>
       <div class="beats">
-        <span class="b"><span class="tt">0.0s</span> <span class="them">zxcvbn-_-</span> hits <span class="us">S821</span> for 33 <span class="dim">(Dragunov @37m)</span></span>
-        <span class="b"><span class="tt">29.0s</span> <span class="them">zxcvbn-_-</span> hits <span class="us">S821</span> ×3 for 71 <span class="dim">(Dragunov @32m)</span></span>
-        <span class="b"><span class="tt">29.8s</span> <span class="them big">zxcvbn-_- KNOCKS S821</span> <span class="dim">@32m</span></span>
-        <span class="b"><span class="tt">34.9s</span> <span class="them big">Woody4544 hits D282 for 100 — one-shot kill</span> <span class="dim">(Panzerfaust @23m)</span></span>
+        <span class="b"><span class="tt">0.0s</span> <span class="them">vojteqq</span> hits <span class="us">S821</span> for 83 <span class="dim">(M24 @246m)</span></span>
+        <span class="b"><span class="tt">1.1s</span> <span class="them">Shok_UA</span> hits <span class="us">S821</span> for 15 <span class="dim">(MP5K @6m)</span></span>
+        <span class="b"><span class="tt">1.1s</span> <span class="them big">Shok_UA KNOCKS S821</span> <span class="dim">@6m</span></span>
+        <span class="b"><span class="tt">3.1s</span> <span class="them">RaYzeKoViCh</span> hits <span class="us">D282</span> ×2 for 47 <span class="dim">(AUG A3 @29m)</span></span>
+        <span class="b"><span class="tt">3.2s</span> <span class="us">D282</span> hits RaYzeKoViCh for 51 <span class="dim">(AK-M @29m)</span></span>
+        <span class="b"><span class="tt">3.2s</span> <span class="them">RaYzeKoViCh</span> hits <span class="us">D282</span> ×2 for 35 <span class="dim">(AUG A3 @30m)</span></span>
       </div>
-      <div class="fres">Result: <b class="bad">0 dealt, 204 taken.</b> Never fired a shot. Picked at
-        by a Dragunov through a window, then D282 walked into a rocket launcher indoors. Chosen as a
-        "typical" solo loss precisely because there's nothing unusual about it &mdash; that's what
-        this category looks like most of the time.</div>
+      <div class="fres">Result: <b class="bad">51 dealt, 180 taken.</b> A third team's M24 opened on S821
+        from 246m while a second enemy closed to 6m and knocked him inside two seconds; D282 got one
+        shot back on the close attacker before going down too. Chosen as a "typical" solo loss because
+        nothing about it is unusual — three-sided, one of you already engaged before the other could
+        react, over in three seconds. That's what this category looks like most of the time.</div>
     </div>
 
     <div class="fight">
@@ -405,18 +385,16 @@
         <span class="b"><span class="tt">1.9s</span> <span class="us">S821</span> hits Kozmolog for 19 <span class="dim">(RPD @55m)</span></span>
       </div>
       <div class="fres">Result: <b class="good">153 dealt, 0 taken.</b> Both guns on separate targets
-        inside 0.4 seconds, a knock before the enemy could react, zero damage back. Worth noting:
-        S821's gun here is the RPD &mdash; the weapon this exact refresh discovered had been invisible
-        on every earlier version of this site (see <a href="debrief.html">The Debrief</a>).</div>
+        inside 0.4 seconds, a knock before the enemy could react, zero damage back.</div>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="pairs">
-    <div class="chapter-num">05</div>
+    <div class="chapter-num">04</div>
     <h2>Where The Data Runs Out</h2>
-    <p class="lede">You asked whether there's more to find by comparing fights directly. There is —
-      but it's also worth showing you the limit honestly.</p>
+    <p class="lede">Comparing near-identical fights directly finds real patterns — and also shows the
+      honest limit of what this kind of analysis can explain.</p>
 
     <div class="panel">
       <h3>Matched pairs: same situation, opposite result</h3>
@@ -426,25 +404,29 @@
         <tbody>
           <tr><td class="name">Clean opener, mid range</td><td class="r pad">58.8m</td><td class="r pad">26m</td><td class="r pad">100</td><td class="r pad">no</td><td class="r good">87 dealt, 0 taken</td></tr>
           <tr><td class="name dim">…the near-identical loss</td><td class="r pad">58.7m</td><td class="r pad">24m</td><td class="r pad">80</td><td class="r pad">yes (16.5s late)</td><td class="r bad">225 dealt, 187 taken</td></tr>
-          <tr><td class="name">Ambushed in the open</td><td class="r pad">36.0m</td><td class="r pad">—</td><td class="r pad">100</td><td class="r pad">no</td><td class="r good">77 dealt, 22 taken</td></tr>
-          <tr><td class="name dim">…the near-identical loss</td><td class="r pad">35.3m</td><td class="r pad">5m</td><td class="r pad">88</td><td class="r pad">no</td><td class="r bad">0 dealt, 188 taken</td></tr>
-          <tr><td class="name">Clean close-range opener</td><td class="r pad">9.3m</td><td class="r pad">39m</td><td class="r pad">100</td><td class="r pad">no</td><td class="r good">200 dealt, 0 taken</td></tr>
-          <tr><td class="name dim">…the near-identical loss</td><td class="r pad">10.6m</td><td class="r pad">37m</td><td class="r pad">100</td><td class="r pad">no</td><td class="r bad">61 dealt, 200 taken</td></tr>
-          <tr><td class="name">Ambushed at knife range</td><td class="r pad">17.2m</td><td class="r pad">23m</td><td class="r pad">97</td><td class="r pad">no</td><td class="r good">100 dealt, 82 taken</td></tr>
-          <tr><td class="name dim">…the near-identical loss</td><td class="r pad">17.0m</td><td class="r pad">—</td><td class="r pad">100</td><td class="r pad">no</td><td class="r bad">33 dealt, 100 taken</td></tr>
-          <tr><td class="name">Multi-team scrap</td><td class="r pad">11.8m</td><td class="r pad">76m</td><td class="r pad">100</td><td class="r pad">yes (44.2s late)</td><td class="r good">128 dealt, 98 taken</td></tr>
+          <tr><td class="name">Ambushed at knife range</td><td class="r pad">16.5m</td><td class="r pad">18m</td><td class="r pad">100</td><td class="r pad">no</td><td class="r good">75 dealt, 68 taken</td></tr>
+          <tr><td class="name dim">…the near-identical loss</td><td class="r pad">16.9m</td><td class="r pad">—</td><td class="r pad">100</td><td class="r pad">no</td><td class="r bad">30 dealt, 100 taken</td></tr>
+          <tr><td class="name">Multi-team scrap</td><td class="r pad">10.2m</td><td class="r pad">3m</td><td class="r pad">100</td><td class="r pad">yes (43.4s late)</td><td class="r good">300 dealt, 96 taken</td></tr>
           <tr><td class="name dim">…the near-identical loss</td><td class="r pad">11.2m</td><td class="r pad">—</td><td class="r pad">100</td><td class="r pad">no</td><td class="r bad">146 dealt, 266 taken</td></tr>
+          <tr><td class="name">Ambushed in the open</td><td class="r pad">30.3m</td><td class="r pad">16m</td><td class="r pad">100</td><td class="r pad">yes (0.3s)</td><td class="r good">176 dealt, 25 taken</td></tr>
+          <tr><td class="name dim">…the near-identical loss</td><td class="r pad">31.7m</td><td class="r pad">13m</td><td class="r pad">100</td><td class="r pad">no</td><td class="r bad">24 dealt, 200 taken</td></tr>
+          <tr><td class="name">Clean long-range opener</td><td class="r pad">100.6m</td><td class="r pad">19m</td><td class="r pad">100</td><td class="r pad">yes (16.4s late)</td><td class="r good">116 dealt, 0 taken</td></tr>
+          <tr><td class="name dim">…the near-identical loss</td><td class="r pad">98.5m</td><td class="r pad">—</td><td class="r pad">100</td><td class="r pad">no</td><td class="r bad">40 dealt, 100 taken</td></tr>
+          <tr><td class="name">Caught in a vehicle</td><td class="r pad">7.9m</td><td class="r pad">—</td><td class="r pad">78</td><td class="r pad">no</td><td class="r good">198 dealt, 33 taken</td></tr>
+          <tr><td class="name dim">…the near-identical loss</td><td class="r pad">5.7m</td><td class="r pad">13m</td><td class="r pad">91</td><td class="r pad">no</td><td class="r bad">0 dealt, 190 taken</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout">
-      <b>Sometimes nothing measurable separates them.</b> The close-range pair is still the starkest
-      example — 10 metres, 38 metres apart, both at full health, one player leading — and one ends
-      200-to-0 and the other 61-to-200. The new knife-range pair (added on this refresh) makes the
-      same point at even closer range: 17 metres, near-full health on both sides, and one side walks
-      away having dealt more than it took while the other doesn't. Whatever decided those fights (who
-      saw whom, who was already aiming at the door, who hit their shots) isn't in the telemetry.
+      <b>Sometimes nothing measurable separates them.</b> The knife-range pair is the starkest example
+      here — 16.5m vs 16.9m, both sides at full health, neither player's teammate involved yet, distance
+      to within half a metre — and one side deals more than it takes (75-to-68) while the other is run
+      over (30-to-100). The caught-in-a-vehicle pair is the one exception with a visible tell: the
+      winner went in at 78 health against the loser's 91, so being hurt going in may have sharpened
+      reactions here rather than hurt them — or it's just three data points and noise. Whatever decided
+      the knife-range pair (who saw whom, who was already aiming at the door, who hit their shots)
+      isn't in the telemetry.
     </div>
 
     <p>That's the honest ceiling on this kind of analysis, and it's why the useful findings are the
@@ -455,49 +437,51 @@
 
   <!-- ============================================================ -->
   <section class="chapter" id="lastsession">
-    <div class="chapter-num">06</div>
-    <h2>Did The Last Change Land?</h2>
-    <p class="lede">You said you'd started making sure you were both ready before engaging. Last read,
-      the only evidence was one 27-fight session — encouraging, not proven. It's had three more
-      sessions to hold up since, and it has.</p>
+    <div class="chapter-num">05</div>
+    <h2>Did The Advice Land?</h2>
+    <p class="lede">Making sure you're both ready before engaging is a specific, dated change — it
+      started around 26 August. Splitting the data at that line shows a real effect, but a more
+      textured one than a single headline number would suggest.</p>
 
     <div class="statrow">
-      <div class="stat ok"><div class="num">25.2%</div><div class="label">Win rate since 26 Aug</div><div class="sub">n=111 · vs 17.3% before (n=365)</div></div>
-      <div class="stat ok"><div class="num">52.3%</div><div class="label">You hit first</div><div class="sub">up from 41.4%</div></div>
-      <div class="stat bad"><div class="num">30.6%</div><div class="label">Both actually fired</div><div class="sub">down from 37.8%, same direction as before</div></div>
+      <div class="stat ok"><div class="num">24.5%</div><div class="label">Win rate since 26 Aug</div><div class="sub">n=106 · vs 16.5% before (n=255)</div></div>
+      <div class="stat ok"><div class="num">45.3%</div><div class="label">You hit first</div><div class="sub">up from 41.2%</div></div>
+      <div class="stat bad"><div class="num">29.2%</div><div class="label">Both actually fired</div><div class="sub">down from 39.6%</div></div>
     </div>
 
     <div class="panel">
-      <h3>Four sessions in, not one</h3>
-      <p>30 Aug (27 fights, 29.6% win rate), 31 Aug (19, 21.1%), 5 Sep (33, 27.3%), 11 Sep (32, 21.9%)
-        — every single one of the four sessions since the advice landed above the 17.3% baseline that
-        came before it. That's the difference between "one good night" and a real, repeatable shift:
-        111 fights is more than a quarter of the whole post-advice dataset, spread across a full two
-        weeks, and it hasn't reverted once.</p>
+      <h3>Six sessions in — mostly holding, not uniformly</h3>
+      <p>30 Aug (17 fights, 29.4% win rate), 31 Aug (12, 8.3%), 5 Sep (28, 25.0%), 11 Sep (24, 25.0%),
+        12 Sep (21, 33.3%) — four of those five clear the 16.5% pre-advice baseline comfortably. The
+        exception is 31 Aug: a genuine dip to 8.3%, not just noise around baseline, though on a small
+        sample. Two more sessions since (13 Sep, 20 Sep) are single-digit fight counts (n=1, n=3) and
+        aren't worth reading anything into yet. Taken together, the 106 post-advice fights still average
+        well clear of baseline — but it's no longer accurate to say every session has landed above it.</p>
     </div>
 
     <div class="callout ok">
-      <b>It worked — and the mechanism is now confirmed, not guessed at.</b> The "both fired" number
-      is still <em>down</em> (30.6%, from 37.8%), so this was never about more shared damage. What's
-      up, consistently, across all four sessions, is how often you land the first hit (52.3% vs 41.4%
-      baseline). Being <em>ready</em> together makes you spot people first, and increasingly one of
-      you finishes it alone before the second gun is even needed. The preparation shows up as first
-      contact, not as shared damage — exactly the read from the last version, now backed by four
-      sessions instead of one.
+      <b>The mechanism is first contact, not shared damage.</b> The "both fired" number is <em>down</em>
+      (29.2%, from 39.6%), so this isn't about dealing more damage together. What's up is how often you
+      land the first hit (45.3% vs 41.2% baseline). Being <em>ready</em> together looks like it makes
+      you spot people first, rather than simply adding a second gun to the fight.
     </div>
 
     <p class="muted" style="font-size:13.5px">Still worth a note of caution on "full HP at contact"
-      (64.9%&rarr;59.5%, down) and "started in vehicle" (9.9%&rarr;7.2%, down) &mdash; neither is the
+      (56.5%&rarr;53.8%, down) and "started in vehicle" (14.1%&rarr;13.2%, down) &mdash; neither is the
       mechanism, and both moved slightly the "wrong" way without hurting the win rate, which is a
       useful reminder that not every number needs to move for the important one to.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="browser">
-    <div class="chapter-num">07</div>
+    <div class="chapter-num">06</div>
     <h2>Walk Through Every Fight</h2>
-    <p class="lede">All 476 decisive engagements. Click any row to replay it beat by beat. Filter and
-      sort however you like — the summary line updates to show the win rate of your selection.</p>
+    <p class="lede">All 516 decisive engagements — unlike every other chapter on this page, this table
+      is <b>not</b> early-game-filtered, so the drop-zone fights excluded everywhere else are still in
+      here (sort by "Time" to find them). Click any row to replay it beat by beat. Filter and sort
+      however you like — the summary line updates to show the win rate of your selection. The
+      <a href="engagement-stats.html">Engagement Stats</a> page has the same table with more filters
+      (including a one-click early-game toggle) and live-updating charts.</p>
 
     <div class="filters">
       <label>Situation</label>
@@ -535,98 +519,103 @@
 
   <!-- ============================================================ -->
   <section class="chapter" id="focus">
-    <div class="chapter-num">08</div>
+    <div class="chapter-num">07</div>
     <h2>What To Focus On</h2>
     <p class="lede">Short list, because only a short list survived. Everything here is either the
       dominant effect or a specific situation with a specific answer.</p>
 
     <div class="exp hi">
-      <div class="tag">Dominant · n=476</div>
+      <div class="tag">Dominant · n=361</div>
       <h4>1. Win the first hit, or don't take the fight</h4>
-      <p class="why">You hit first: 33.5%. They hit first: 7.9%. In 67% of ambushes neither of you had
-        fired at all, and it still takes 6.5 seconds to shoot back — identical to the last read. Every
-        situation in the table is downstream of this one number, and it's barely moved on 84 more
-        fights.</p>
+      <p class="why">You hit first: 33.3%. They hit first: 8.2%. In 67.8% of ambushes neither of you had
+        fired at all, and it still takes 6.5 seconds to shoot back. Every situation in the table is
+        downstream of this one number — it holds up whether or not the first five minutes of the match
+        are counted.</p>
       <p class="do"><b>Do:</b> pre-aim the angle you're about to clear at head height so first contact
         needs a small correction, not a sweep. And treat <b>"taking fire from somewhere unknown"</b>
-        as an automatic break-contact call — the 7.9% is what happens when you try to fight it out
+        as an automatic break-contact call — the 8.2% is what happens when you try to fight it out
         instead.</p>
     </div>
 
     <div class="exp hi">
-      <div class="tag">Second largest · n=172 vs 304 · now confirmed over 4 sessions</div>
+      <div class="tag">Second largest · n=132 vs 229 · six sessions since the advice, one a dip</div>
       <h4>2. Keep doing whatever you started on 30 August</h4>
-      <p class="why">Both firing wins 26.7% vs 14.8%, and it holds when you restrict to long fights
-        (22.2% vs 8.7%). Second gun inside 2 seconds still wins the most of any bucket on the page
-        (44.4%). Since the advice landed, first-hit rate is up to 52.3% and win rate to 25.2% — and
-        unlike last read, that's now four sessions and 111 fights confirming it, not one.</p>
+      <p class="why">Both firing wins 28.8% vs 13.1%, and it holds when you restrict to long fights
+        (22.2% vs 9.5%). Second gun inside 2 seconds still wins the most of any bucket on the page
+        (45.8%). Since the advice landed, first-hit rate is up to 45.3% and win rate to 24.5% — real,
+        across 106 fights and six sessions, though one of those sessions (31 Aug) dipped below the old
+        baseline, so this isn't a one-way ratchet.</p>
       <p class="do"><b>Do:</b> keep the "both set before we open" habit — the data still says its real
         payoff is <b>spotting them first</b>, not the second gun. Call the target, confirm you both
         have the angle, then open together.</p>
     </div>
 
     <div class="exp">
-      <div class="tag">Specific · n=21, zero wins</div>
+      <div class="tag">Specific · n=15, zero wins</div>
       <h4>3. Indoors and taking fire = leave, not fight</h4>
-      <p class="why">Ambushed inside a building: 0 wins in 21 attempts now (was 17), average damage
-        deficit 156. Four more of these landed in the last 39 games and all four went the same way.</p>
+      <p class="why">Ambushed inside a building: 0 wins in 15 attempts, average damage deficit 150.</p>
       <p class="do"><b>Do:</b> if the first shot comes while you're in a building you didn't clear,
         <b>get out of the doorway sightline immediately</b> rather than trading. There is still no
-        example in 268 matches of that fight going your way.</p>
+        example in 287 matches of that fight going your way.</p>
     </div>
 
     <div class="exp">
-      <div class="tag">Specific · n=23, unchanged since last read</div>
+      <div class="tag">Specific · n=28</div>
       <h4>4. Dismount before the last stretch</h4>
-      <p class="why">Being ambushed while mounted wins 8.7% with a &minus;109 damage deficit — the
-        exact same 23 fights as the last read; not one new instance in 39 games. (Driving in general
-        is fine, and may even be a slight positive now — it's specifically being caught mounted that
-        hurts.)</p>
+      <p class="why">Being ambushed while mounted wins 10.7% with a &minus;110 damage deficit. (Driving
+        in general is fine — it's specifically being caught while stopped or slow-moving with an enemy
+        already shooting that hurts.)</p>
       <p class="do"><b>Do:</b> stop <b>200–300m short</b> of where you're actually going and walk in.
         You give up nothing but the noise that told everyone you were coming.</p>
     </div>
 
     <div class="exp ok">
-      <div class="tag">Moderate · n=54</div>
+      <div class="tag">Moderate · n=51</div>
       <h4>5. Take the high side when it's free</h4>
-      <p class="why">More than 5m above the enemy: 37.0% win rate, against 18.1% on level ground and
-        just 10.4% when you're the one at a height disadvantage. Cleaner and stronger than the last
-        read's version of this stat, on more fights (54, up from 31) — and you only get it in about
-        11% of fights.</p>
+      <p class="why">More than 5m above the enemy: 39.2% win rate, against 15.7% on level ground. Being
+        at a height <em>disadvantage</em> (14.9%) turns out to be barely worse than level ground once
+        drop-phase fights are excluded — the real edge here is entirely about having the high ground
+        yourself, not about avoiding low ground. You get the advantageous position in about 14% of
+        fights.</p>
       <p class="do"><b>Do:</b> when two positions both cover the angle, take the higher one. Not worth
         a detour; worth the choice.</p>
     </div>
 
     <div class="callout ok">
-      <b>If you only remember one line:</b> your fights are decided before the shooting starts. 192 of
-      476 begin with them shooting first and those win under 15%; 122 begin with you shooting first and
-      those win 37–57%. Everything worth practising is about which of those two you're in — and that
-      split has only gotten sharper with more data, not softer.
+      <b>If you only remember one line:</b> your fights are decided before the shooting starts. 148 of
+      361 begin with them ambushing you and those win 0–16%; 83 begin with a clean opener and those win
+      34–59%. Everything worth practising is about which of those two you're in.
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="method">
-    <div class="chapter-num">09</div>
+    <div class="chapter-num">08</div>
     <h2>Method &amp; Caveats</h2>
     <div class="panel">
       <ul class="method">
-        <li><b>Source:</b> raw PUBG telemetry, 268 matches, 2 Jun – 11 Sep 2026. Position pings every
+        <li><b>Source:</b> raw PUBG telemetry, 287 matches, 2 Jun – 20 Sep 2026. Position pings every
           10s per player plus every damage, knock, kill and shot event.</li>
         <li><b>A fight</b> = combat events involving either player, split whenever 45s pass with no
-          combat. 720 total; 20 bot-only fights excluded; 224 ended with nobody downed and are
-          excluded from win rates. <b>476 decisive fights</b> remain (91 wins, 145 trades, 240 losses;
-          baseline win rate 19.1%, up from 18.1% at the last read).</li>
-        <li><b>Health</b> is the last position ping <em>strictly before</em> first contact. The
-          previous version used the nearest ping either side, which contaminated it with damage taken
-          during the fight — see Chapter 00.</li>
+          combat. 767 total; 21 bot-only fights excluded; 230 ended with nobody downed and are
+          excluded from win rates. <b>516 decisive fights</b> remain.</li>
+        <li><b>Early game</b> = fight starts within 5 minutes of the match beginning (roughly the
+          drop/loot window — 3rd-partying, half-found loadouts, everyone landing in the same three
+          buildings). 155 of the 516 decisive fights fall in that window and are excluded from every
+          chapter above except Chapter&nbsp;6's browser table and the
+          <a href="engagement-stats.html">Engagement Stats</a> page, both of which show everything and
+          let you filter either way. <b>361 fights</b> remain after the cut (68 wins, 104 trades, 189
+          losses; baseline win rate 18.8%).</li>
+        <li><b>Health</b> is the last position ping <em>strictly before</em> first contact — the state
+          each player was in walking into the fight, not contaminated by damage taken once it started.</li>
         <li><b>"Hit first"</b> = landed the first damaging hit. Misses aren't logged, so this is who
           connects, not who fires.</li>
         <li><b>Situations</b> are assigned by priority, most-decisive condition first, so each fight
           appears in exactly one row.</li>
-        <li><b>Small samples</b> are shown inline. Anything under about n=20 (fighting a man down)
-          is indicative, not settled. The post-advice comparison in Chapter&nbsp;06 (n=111 across four
-          sessions) has grown past that threshold since the last read.</li>
+        <li><b>Small samples</b> are shown inline. Anything under about n=20 (fighting a man down,
+          n=9) is indicative, not settled. The post-advice comparison in Chapter&nbsp;5 (n=106 across
+          six sessions) is past that threshold, though its weakest session (31&nbsp;Aug) is not on its
+          own.</li>
         <li><b>These are correlations</b> from your own games, not experiments. The "both fired"
           result is the only one I could control properly; it held.</li>
       </ul>
@@ -636,8 +625,10 @@
 </div>
 
 <footer>
-  <div class="sign">— 720 fights reconstructed from raw telemetry · companion to <a href="debrief.html">The Debrief</a></div>
-  Not updated automatically. Ask for a refresh once there are more games.
+  <div class="sign">— 746 fights reconstructed from raw telemetry · companion to <a href="debrief.html">The Debrief</a></div>
+  This written report is not updated automatically — ask for a refresh once there are more games. The
+  numbers and charts on <a href="engagement-stats.html">Engagement Stats</a> update themselves every
+  time the pipeline runs.
 </footer>
 
 <script>
@@ -658,9 +649,9 @@ new Chart(document.getElementById('initChart'),{
   type:'bar',
   data:{labels:['You land the first hit','They land the first hit'],
     datasets:[
-      {label:'Win',  data:[70,21], backgroundColor:WIN,  borderColor:SURF,borderWidth:2,borderRadius:4},
-      {label:'Trade',data:[88,57], backgroundColor:TRADE,borderColor:SURF,borderWidth:2,borderRadius:4},
-      {label:'Loss', data:[51,189],backgroundColor:LOSS, borderColor:SURF,borderWidth:2,borderRadius:4}]},
+      {label:'Win',  data:[51,17], backgroundColor:WIN,  borderColor:SURF,borderWidth:2,borderRadius:4},
+      {label:'Trade',data:[64,40], backgroundColor:TRADE,borderColor:SURF,borderWidth:2,borderRadius:4},
+      {label:'Loss', data:[38,151],backgroundColor:LOSS, borderColor:SURF,borderWidth:2,borderRadius:4}]},
   options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
     interaction:{mode:'nearest',intersect:true},
     plugins:{legend:{labels:{boxWidth:12,font:{family:'Oswald'}}},

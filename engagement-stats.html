@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engagement Stats — D282 &amp; S821</title>
+<meta name="description" content="Live, auto-refreshing stats over every reconstructed PUBG fight — filter by game stage, map, situation or opener, then drill into any single engagement.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+  :root {
+    --bg:#14130f; --panel:#1e1c17; --panel2:#221f19; --line:#38342c;
+    --text:#e8e3d8; --muted:#9a9385; --accent:#f4a300; --s821:#4a9edd;
+    --win:#a3c76a; --trade:#9a9385; --danger:#d7443e;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; line-height:1.6; }
+  .wrap { max-width:1180px; margin:0 auto; padding:0 24px 80px; }
+  h1,h2,h3 { font-family:Oswald,system-ui,sans-serif; font-weight:600; letter-spacing:.5px; }
+  a { color:var(--accent); }
+  .muted { color:var(--muted); }
+
+  .hero { padding:80px 24px 40px; text-align:center;
+    background:radial-gradient(ellipse 900px 400px at 50% -10%, rgba(244,163,0,.10), transparent 60%), var(--bg);
+    border-bottom:1px solid var(--line); }
+  .kicker { font-family:Oswald,sans-serif; text-transform:uppercase; letter-spacing:4px; font-size:12px; color:var(--muted); margin-bottom:14px; }
+  .hero h1 { font-size:clamp(32px,6vw,52px); text-transform:uppercase; letter-spacing:3px; margin:0 0 14px;
+    background:linear-gradient(135deg,#ffd479,var(--accent) 55%,#c97e00);
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { max-width:700px; margin:0 auto; color:var(--muted); font-size:15.5px; }
+  .hero-meta { margin-top:20px; font-size:13px; color:var(--muted); font-family:Oswald,sans-serif; letter-spacing:1px; text-transform:uppercase; }
+  .hero-meta span.d{color:var(--accent);} .hero-meta span.s{color:var(--s821);}
+
+  .intro { padding:32px 0 6px; font-size:15px; color:var(--muted); }
+  .intro a { color:var(--accent); }
+
+  section.chapter { padding:38px 0 8px; border-top:1px solid var(--line); }
+  .chapter h2 { font-size:22px; text-transform:uppercase; margin:0 0 6px; }
+  .chapter .lede { color:var(--muted); font-size:14.5px; max-width:760px; margin:0 0 20px; }
+
+  /* filter bar */
+  #filterBar { position:sticky; top:0; z-index:50; background:rgba(20,19,15,.96); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); padding:12px 0; margin-bottom:6px; }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .filters select,.filters button { background:var(--panel2); color:var(--text); border:1px solid var(--line);
+    border-radius:7px; padding:7px 10px; font-size:13px; font-family:inherit; cursor:pointer; }
+  .filters select:hover,.filters button:hover { border-color:var(--accent); }
+  .filters label { font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); font-family:Oswald,sans-serif; }
+  .filters .grp { display:flex; flex-direction:column; gap:2px; }
+  #filterSummary { font-size:12.5px; color:var(--muted); margin-top:8px; }
+  #filterSummary b { color:var(--text); }
+
+  .statrow { display:flex; flex-wrap:wrap; gap:14px; margin:20px 0 30px; }
+  .stat { flex:1 1 130px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 15px; }
+  .stat .num { font-family:Oswald,sans-serif; font-weight:700; font-size:28px; color:var(--accent); line-height:1; }
+  .stat.blue .num{color:var(--s821);} .stat.ok .num{color:var(--win);} .stat.bad .num{color:var(--danger);}
+  .stat .label { color:var(--muted); font-size:12px; margin-top:6px; text-transform:uppercase; letter-spacing:.5px; }
+  .stat .sub { color:var(--muted); font-size:11.5px; margin-top:2px; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:760px){ .grid2{grid-template-columns:1fr;} }
+
+  .chart-box { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px 8px; margin:0 0 18px; }
+  .chart-box .cv { position:relative; height:300px; }
+  .chart-box.short .cv { height:220px; }
+  .chart-box.tall .cv { height:420px; }
+  .chart-box canvas { width:100%!important; height:100%!important; }
+  .chart-box h3 { margin:0 0 2px; font-size:14.5px; color:var(--text); text-transform:uppercase; letter-spacing:.4px; }
+  .chart-cap { color:var(--muted); font-size:12px; margin:4px 0 0; }
+
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin-bottom:18px; }
+  .panel h3 { margin:0 0 10px; font-size:14.5px; color:var(--accent); text-transform:uppercase; letter-spacing:.5px; }
+
+  .dtable { width:100%; border-collapse:collapse; font-size:13.5px; }
+  .dtable th { text-align:left; font-family:Oswald,sans-serif; font-weight:500; font-size:11px;
+    text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:6px 10px 7px 0; border-bottom:1px solid var(--line);
+    cursor:pointer; white-space:nowrap; }
+  .dtable th:hover { color:var(--accent); }
+  .dtable th.r,.dtable td.r { text-align:right; }
+  .dtable td { padding:8px 10px 8px 0; border-bottom:1px solid rgba(56,52,44,.55); }
+  .dtable tr:last-child td { border-bottom:none; }
+  .dtable td.name { font-family:Oswald,sans-serif; letter-spacing:.3px; }
+  .good{color:var(--win);} .bad{color:var(--danger);} .flat{color:var(--muted);}
+
+  .etable-wrap { max-height:600px; overflow:auto; border:1px solid var(--line); border-radius:12px; background:var(--panel); }
+  .etable { width:100%; border-collapse:collapse; font-size:13px; }
+  .etable th { position:sticky; top:0; background:var(--panel2); z-index:2; text-align:left;
+    font-family:Oswald,sans-serif; font-weight:500; font-size:11px; text-transform:uppercase;
+    letter-spacing:.5px; color:var(--muted); padding:9px 8px; border-bottom:1px solid var(--line);
+    cursor:pointer; white-space:nowrap; }
+  .etable th:hover { color:var(--accent); }
+  .etable th.sorted { color:var(--accent); }
+  .etable th.sorted::after { content:' \25BC'; font-size:9px; }
+  .etable th.sorted.asc::after { content:' \25B2'; font-size:9px; }
+  .etable td { padding:8px; border-bottom:1px solid rgba(56,52,44,.45); white-space:nowrap; }
+  .etable tr.row { cursor:pointer; }
+  .etable tr.row:hover td { background:rgba(244,163,0,.05); }
+  .etable tr.detail td { background:var(--panel2); white-space:normal; }
+  .ow{color:var(--win);font-weight:600;} .ol{color:var(--danger);font-weight:600;} .ot{color:var(--muted);font-weight:600;}
+  .dim{color:var(--muted);}
+  .beats { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; line-height:1.85; }
+  .beats .b { display:block; white-space:nowrap; overflow-x:auto; }
+  .beats .tt { color:var(--muted); display:inline-block; min-width:52px; }
+  .beats .us { color:var(--accent); }
+  .beats .them { color:var(--danger); }
+  .beats .big { font-weight:700; }
+
+  footer { text-align:center; padding:50px 24px 30px; color:var(--muted); font-size:13px; border-top:1px solid var(--line); margin-top:30px; }
+  footer .sign { font-family:Oswald,sans-serif; color:var(--accent); font-size:15px; letter-spacing:.5px; margin-bottom:6px; }
+  @media (max-width:620px){ .hero{padding:70px 18px 36px;} .hide-sm{display:none;} }
+
+  #siteNav { position:fixed; top:10px; left:10px; z-index:9000; }
+  #siteNavBtn { width:34px; height:34px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; color:var(--accent); font-size:17px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; }
+  #siteNavBtn:hover { border-color:var(--accent); }
+  #siteNavMenu { display:none; position:absolute; top:40px; left:0; background:var(--panel);
+    border:1px solid var(--line); border-radius:10px; padding:6px; min-width:210px; box-shadow:0 8px 24px rgba(0,0,0,.6); }
+  #siteNavMenu.open { display:block; }
+  #siteNavMenu a { display:block; padding:9px 14px; color:var(--text); text-decoration:none; border-radius:7px;
+    font-size:13px; font-family:Oswald,system-ui,sans-serif; text-transform:uppercase; letter-spacing:.5px; }
+  #siteNavMenu a:hover { background:rgba(244,163,0,.12); color:var(--accent); }
+  #siteNavMenu a.nav-cur { color:var(--accent); pointer-events:none; }
+  #siteNavMenu .nav-sep { height:1px; background:var(--line); margin:5px 8px; }
+</style>
+</head>
+<body>
+
+<div id="siteNav">
+  <button id="siteNavBtn" onclick="toggleSiteNav()" title="Navigate">&#9776;</button>
+  <div id="siteNavMenu">
+    <a href="index.html">Home</a>
+    <div class="nav-sep"></div>
+    <a href="stats.html">PUBG Stats</a>
+    <a href="mapanalysis.html">Map Analysis</a>
+    <a href="match.html">Match Analysis</a>
+    <a href="weapons.html">Weapon Stats</a>
+    <a href="records.html">Personal Records</a>
+    <a href="debrief.html">The Debrief</a>
+    <a href="engagements.html">Engagement Report</a>
+    <a href="engagement-stats.html" class="nav-cur">Engagement Stats</a>
+    <a href="pubg.html">Loadout Planner</a>
+    <a href="armory.html">The Armory</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="kicker">AUTO-REFRESHING &middot; NO HAND-EDITING, EVER</div>
+  <h1>Engagement Stats</h1>
+  <p class="hero-sub">The full fight-level dataset behind <a href="engagements.html">The Engagement Report</a>,
+    live and filterable. Every number, chart and table below is computed in your browser straight from
+    the current <code>engagements.json</code> feed — when the pipeline runs again with more games, this
+    page updates itself, nothing here is hand-written. Filter by game stage, map, situation or who opened
+    the fight, then click any row at the bottom to replay it beat by beat.</p>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> · Duo FPP ·
+    <span id="lastUpdated">loading…</span></div>
+</div>
+
+<div class="wrap">
+
+  <div id="filterBar">
+    <div class="filters">
+      <div class="grp"><label>Game stage</label>
+        <select id="fStage">
+          <option value="excl_early" selected>Mid+late only (excl. drop/loot)</option>
+          <option value="all">All stages</option>
+          <option value="A">A · 0-5min drop/loot</option>
+          <option value="B">B · 5-12min early rot</option>
+          <option value="C">C · 12-18min mid</option>
+          <option value="D">D · 18min+ endgame</option>
+        </select>
+      </div>
+      <div class="grp"><label>Led by</label><select id="fLed"><option value="">Both</option><option value="D282">D282</option><option value="S821">S821</option></select></div>
+      <div class="grp"><label>Map</label><select id="fMap"><option value="">All</option></select></div>
+      <div class="grp"><label>Situation</label><select id="fArch"><option value="">All</option></select></div>
+      <div class="grp"><label>Outcome</label><select id="fOutcome"><option value="">All</option><option value="win">Win</option><option value="trade">Trade</option><option value="loss">Loss</option></select></div>
+      <div class="grp"><label>Opened by</label><select id="fInit"><option value="">All</option><option value="we_hit_first">Us</option><option value="they_hit_first">Them</option></select></div>
+      <div class="grp"><label>Both fired</label><select id="fBoth"><option value="">All</option><option value="1">Yes</option><option value="0">No</option></select></div>
+      <div class="grp"><label>&nbsp;</label><button id="fReset">Reset</button></div>
+    </div>
+    <p id="filterSummary">Loading…</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="overview">
+    <h2>Overview</h2>
+    <p class="lede">Every tile and chart on this page reacts to the filter bar above — this reads the
+      current selection.</p>
+    <div class="statrow" id="statTiles"></div>
+
+    <div class="grid2">
+      <div class="chart-box">
+        <h3>Who Lands The First Hit</h3>
+        <div class="cv"><canvas id="initChart"></canvas></div>
+        <p class="chart-cap">Outcome split by who landed the first damaging hit.</p>
+      </div>
+      <div class="chart-box">
+        <h3>Win Rate By Game Stage</h3>
+        <div class="cv"><canvas id="stageChart"></canvas></div>
+        <p class="chart-cap">A=0-5min drop/loot, B=5-12min, C=12-18min, D=18min+. Ignores the stage
+          filter above so you can always see the full spread.</p>
+      </div>
+    </div>
+
+    <div class="chart-box tall">
+      <h3>Win Rate Over Time</h3>
+      <div class="cv"><canvas id="trendChart"></canvas></div>
+      <p class="chart-cap">One point per session (calendar day). Point size scales with how many fights
+        happened that session — small points are small samples, read them cautiously. Dashed line is the
+        overall rate for the current filter.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="situations">
+    <h2>Situations</h2>
+    <p class="lede">Every fight sorted into the recurring scenario it actually was — the same
+      classification as Chapter&nbsp;1 of the written report.</p>
+    <div class="chart-box tall">
+      <div class="cv"><canvas id="archChart"></canvas></div>
+      <p class="chart-cap">Sorted by fight count. Click a bar's legend entry to isolate wins/trades/losses.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="range">
+    <h2>Range &amp; Geometry</h2>
+    <p class="lede">Outcome by engagement distance.</p>
+    <div class="chart-box">
+      <div class="cv"><canvas id="rangeChart"></canvas></div>
+      <p class="chart-cap">Median fight range, bucketed. &lt;30m / 30-80m / 80-200m / 200m+.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="weapons">
+    <h2>Weapons &amp; Maps</h2>
+    <p class="lede">Which weapon led the fight when a player did most of the damage (n&ge;3 in the
+      current filter), and how each map has played out.</p>
+    <div class="grid2">
+      <div class="panel">
+        <h3>D282 — primary weapon</h3>
+        <table class="dtable" id="wD282"><thead><tr><th>Weapon</th><th class="r">n</th><th class="r">Win%</th><th class="r hide-sm">Dmg diff</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="panel">
+        <h3>S821 — primary weapon</h3>
+        <table class="dtable" id="wS821"><thead><tr><th>Weapon</th><th class="r">n</th><th class="r">Win%</th><th class="r hide-sm">Dmg diff</th></tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>By map</h3>
+      <table class="dtable" id="wMap"><thead><tr><th>Map</th><th class="r">n</th><th class="r">Win%</th><th class="r">Trade%</th><th class="r">Loss%</th><th class="r hide-sm">Dmg diff</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="browser">
+    <h2>Every Fight, One By One</h2>
+    <p class="lede">The same fights driving everything above, row by row. Click any row to replay it;
+      click a column header to sort.</p>
+    <div class="etable-wrap">
+      <table class="etable">
+        <thead><tr>
+          <th data-k="chrono">Date</th><th data-k="stage_s">Time</th><th data-k="map">Map</th>
+          <th data-k="archetype">Situation</th><th data-k="outcome">Result</th>
+          <th data-k="initiated">Opened</th><th data-k="range_med">Range</th>
+          <th data-k="hp_min">HP</th><th data-k="both_engaged">Both</th>
+          <th data-k="dealt">Dealt</th><th data-k="taken">Taken</th>
+        </tr></thead>
+        <tbody id="engBody"></tbody>
+      </table>
+    </div>
+    <p class="chart-cap" style="margin:8px 0 0">"HP" = the lower of your two health values immediately
+      before contact; 0 means one of you was already downed.</p>
+  </section>
+
+</div>
+
+<footer>
+  <div class="sign">Companion to <a href="engagements.html">The Engagement Report</a></div>
+  Refreshes automatically from <code>stats-data/engagements.json</code> — re-run the engagement pipeline
+  and reload this page, nothing here needs editing.
+</footer>
+
+<script>
+function toggleSiteNav(){document.getElementById('siteNavMenu').classList.toggle('open');}
+document.addEventListener('click',function(e){
+  if(!document.getElementById('siteNav').contains(e.target))
+    document.getElementById('siteNavMenu').classList.remove('open');
+});
+
+/* ── palette (matches the rest of the site) ─────────────────────────── */
+const INK='#9a9385',GRID='#26241d',SURF='#1e1c17',LINE='#38342c';
+const WIN='#a3c76a',TRADE='#9a9385',LOSS='#d7443e',ACCENT='#f4a300',S821='#4a9edd';
+Chart.defaults.color=INK;
+Chart.defaults.font.family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
+const TT={backgroundColor:SURF,borderColor:LINE,borderWidth:1,titleColor:'#e8e3d8',
+  bodyColor:'#e8e3d8',padding:10,titleFont:{family:'Oswald',size:13},boxPadding:4};
+
+/* ── helpers ─────────────────────────────────────────────────────────── */
+const $=id=>document.getElementById(id);
+function pctf(a,b,nd=1){ if(!b) return 0; const m=Math.pow(10,nd); return Math.round(a/b*100*m)/m; }
+function mean(xs){ xs=xs.filter(v=>v!=null); return xs.length? xs.reduce((a,b)=>a+b,0)/xs.length : null; }
+function median(xs){ xs=xs.filter(v=>v!=null).sort((a,b)=>a-b); if(!xs.length) return null;
+  const n=xs.length; return n%2 ? xs[(n-1)/2] : (xs[n/2-1]+xs[n/2])/2; }
+function fmt1(v){ return v==null?'—':(Math.round(v*10)/10).toFixed(1); }
+const mmss=s=>s==null?'—':Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+const num=(v,s='')=>v==null?'<span class="dim">—</span>':(Math.round(v*10)/10)+s;
+
+function stageBucket(s){
+  if(s==null) return null;
+  if(s<300) return 'A';
+  if(s<720) return 'B';
+  if(s<1080) return 'C';
+  return 'D';
+}
+const STAGE_LABEL={A:'A 0-5min',B:'B 5-12min',C:'C 12-18min',D:'D 18min+'};
+
+function outcomeCounts(items){
+  const w=items.filter(e=>e.outcome==='win').length,
+        t=items.filter(e=>e.outcome==='trade').length,
+        l=items.filter(e=>e.outcome==='loss').length,
+        n=items.length;
+  return {n,w,t,l,winPct:pctf(w,n),dmgDiff:mean(items.map(e=>e.dealt-e.taken))};
+}
+
+/* ── state ───────────────────────────────────────────────────────────── */
+let ENG=[],sortKey='chrono',sortAsc=false,openKey=null;
+let charts={};
+
+function filtered(){
+  const stage=$('fStage').value, led=$('fLed').value, m=$('fMap').value, a=$('fArch').value,
+        o=$('fOutcome').value, i=$('fInit').value, b=$('fBoth').value;
+  return ENG.filter(e=>{
+    const sb=stageBucket(e.stage_s);
+    if(stage==='excl_early' && sb==='A') return false;
+    if(stage!=='all' && stage!=='excl_early' && sb!==stage) return false;
+    if(led && e.primary_player!==led) return false;
+    if(m && e.map!==m) return false;
+    if(a && e.archetype!==a) return false;
+    if(o && e.outcome!==o) return false;
+    if(i && e.initiated!==i) return false;
+    if(b && String(e.both_engaged?1:0)!==b) return false;
+    return true;
+  });
+}
+
+function destroyChart(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
+
+/* ── stat tiles ──────────────────────────────────────────────────────── */
+function renderTiles(rows){
+  const c=outcomeCounts(rows);
+  const hitFirst=rows.filter(e=>e.initiated==='we_hit_first').length;
+  const both=rows.filter(e=>e.both_engaged).length;
+  const rng=median(rows.map(e=>e.range_med));
+  const tiles=[
+    {cls:'',num:c.n,label:'Fights',sub:`${c.w}W · ${c.t}T · ${c.l}L`},
+    {cls:'ok',num:c.winPct+'%',label:'Win rate'},
+    {cls:c.dmgDiff>=0?'ok':'bad',num:(c.dmgDiff>=0?'+':'')+fmt1(c.dmgDiff),label:'Avg damage diff'},
+    {cls:'',num:pctf(hitFirst,c.n)+'%',label:'We hit first'},
+    {cls:'blue',num:pctf(both,c.n)+'%',label:'Both engaged'},
+    {cls:'',num:rng==null?'—':Math.round(rng)+'m',label:'Median range'},
+  ];
+  $('statTiles').innerHTML=tiles.map(t=>`<div class="stat ${t.cls}"><div class="num">${t.num}</div>
+    <div class="label">${t.label}</div>${t.sub?`<div class="sub">${t.sub}</div>`:''}</div>`).join('');
+}
+
+/* ── generic stacked win/trade/loss bar over arbitrary buckets ─────────── */
+function stackedBar(id, labels, groups, opts){
+  destroyChart(id);
+  const ctx=$(id);
+  charts[id]=new Chart(ctx,{
+    type:'bar',
+    data:{labels, datasets:[
+      {label:'Win',  data:groups.map(g=>g.w), backgroundColor:WIN,  borderColor:SURF,borderWidth:2,borderRadius:3},
+      {label:'Trade',data:groups.map(g=>g.t), backgroundColor:TRADE,borderColor:SURF,borderWidth:2,borderRadius:3},
+      {label:'Loss', data:groups.map(g=>g.l), backgroundColor:LOSS, borderColor:SURF,borderWidth:2,borderRadius:3},
+    ]},
+    options:Object.assign({
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'nearest',intersect:true},
+      plugins:{legend:{labels:{boxWidth:12,font:{family:'Oswald'}}},
+        tooltip:{...TT, callbacks:{
+          label:c=>{ const tot=c.chart.data.datasets.reduce((s,d)=>s+d.data[c.dataIndex],0);
+            return ` ${c.dataset.label}: ${c.raw} (${tot?Math.round(c.raw/tot*100):0}%)`; },
+          afterBody:c=>{ const g=groups[c[0].dataIndex]; return g?`n=${g.n} · win ${g.winPct}%`:''; }
+        }}},
+      scales:{x:{stacked:true,grid:{color:GRID},title:{display:true,text:'Fights',color:INK}},
+        y:{stacked:true,grid:{display:false},ticks:{font:{family:'Oswald',size:11.5}}}}
+    }, opts||{})
+  });
+}
+
+/* ── charts ──────────────────────────────────────────────────────────── */
+function updateInitChart(rows){
+  const us=rows.filter(e=>e.initiated==='we_hit_first'), them=rows.filter(e=>e.initiated==='they_hit_first');
+  const g=[outcomeCounts(us),outcomeCounts(them)];
+  stackedBar('initChart', ['You hit first','They hit first'], g);
+}
+
+function updateStageChart(allRows){
+  // always shows the full stage spread regardless of the stage filter
+  const order=['A','B','C','D'];
+  const g=order.map(k=>outcomeCounts(allRows.filter(e=>stageBucket(e.stage_s)===k)));
+  stackedBar('stageChart', order.map(k=>STAGE_LABEL[k]), g);
+}
+
+function updateArchChart(rows){
+  const by={};
+  rows.forEach(e=>{ (by[e.archetype]=by[e.archetype]||[]).push(e); });
+  const arr=Object.entries(by).map(([k,v])=>[k,outcomeCounts(v)]).sort((a,b)=>b[1].n-a[1].n);
+  stackedBar('archChart', arr.map(a=>a[0]), arr.map(a=>a[1]), {maintainAspectRatio:false});
+}
+
+function rangeBucket(r){
+  if(r==null) return null;
+  if(r<30) return 'A <30m'; if(r<80) return 'B 30-80m'; if(r<200) return 'C 80-200m'; return 'D 200m+';
+}
+function updateRangeChart(rows){
+  const order=['A <30m','B 30-80m','C 80-200m','D 200m+'];
+  const g=order.map(k=>outcomeCounts(rows.filter(e=>rangeBucket(e.range_med)===k)));
+  stackedBar('rangeChart', order, g);
+}
+
+function updateTrendChart(rows){
+  destroyChart('trendChart');
+  const by={};
+  rows.forEach(e=>{ (by[e.date]=by[e.date]||[]).push(e); });
+  const dates=Object.keys(by).sort();
+  const pts=dates.map(d=>{ const c=outcomeCounts(by[d]); return {x:d,y:c.winPct,n:c.n}; });
+  const overall=outcomeCounts(rows).winPct;
+  charts.trendChart=new Chart($('trendChart'),{
+    type:'line',
+    data:{labels:dates, datasets:[
+      {label:'Session win rate', data:pts, borderColor:ACCENT, backgroundColor:'rgba(244,163,0,.12)',
+        pointBackgroundColor:ACCENT, pointBorderColor:SURF, pointBorderWidth:1.5,
+        pointRadius:pts.map(p=>Math.max(3,Math.min(11,Math.sqrt(p.n)*1.8))),
+        tension:.25, fill:true, borderWidth:2},
+      {label:'Overall (current filter)', data:dates.map(d=>overall), borderColor:INK,
+        borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false},
+    ]},
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{boxWidth:12,font:{family:'Oswald'}}},
+        tooltip:{...TT, callbacks:{
+          label:c=>c.datasetIndex===0? ` ${c.raw.y}% win rate (n=${c.raw.n})` : ` overall ${c.raw}%`
+        }}},
+      scales:{x:{grid:{display:false},ticks:{font:{family:'Oswald',size:10.5},maxRotation:60,minRotation:60}},
+        y:{min:0,max:100,grid:{color:GRID},title:{display:true,text:'Win rate %',color:INK}}}}
+  });
+}
+
+/* ── weapon / map tables ────────────────────────────────────────────── */
+function weaponTable(rows, player){
+  const by={};
+  rows.filter(e=>e.primary_player===player && e.primary_weapon).forEach(e=>{
+    (by[e.primary_weapon]=by[e.primary_weapon]||[]).push(e);
+  });
+  const arr=Object.entries(by).map(([k,v])=>[k,outcomeCounts(v)]).filter(a=>a[1].n>=3)
+    .sort((a,b)=>b[1].winPct-a[1].winPct);
+  const tbody=document.querySelector(`#w${player} tbody`);
+  tbody.innerHTML = arr.length ? arr.map(([wp,c])=>`<tr><td class="name">${wp}</td>
+    <td class="r">${c.n}</td><td class="r ${c.winPct>=25?'good':c.winPct<10?'bad':''}">${c.winPct}%</td>
+    <td class="r hide-sm ${c.dmgDiff>=0?'good':'bad'}">${c.dmgDiff>=0?'+':''}${fmt1(c.dmgDiff)}</td></tr>`).join('')
+    : `<tr><td colspan="4" class="dim">No weapon with n&ge;3 in this filter.</td></tr>`;
+}
+
+function mapTable(rows){
+  const by={};
+  rows.forEach(e=>{ (by[e.map]=by[e.map]||[]).push(e); });
+  const arr=Object.entries(by).map(([k,v])=>[k,outcomeCounts(v)]).sort((a,b)=>b[1].n-a[1].n);
+  document.querySelector('#wMap tbody').innerHTML = arr.map(([mp,c])=>`<tr><td class="name">${mp}</td>
+    <td class="r">${c.n}</td><td class="r ${c.winPct>=25?'good':c.winPct<10?'bad':''}">${c.winPct}%</td>
+    <td class="r">${pctf(c.t,c.n)}%</td><td class="r">${pctf(c.l,c.n)}%</td>
+    <td class="r hide-sm ${c.dmgDiff>=0?'good':'bad'}">${c.dmgDiff>=0?'+':''}${fmt1(c.dmgDiff)}</td></tr>`).join('');
+}
+
+/* ── fight browser (drill-down) ─────────────────────────────────────── */
+function beatHTML(st){
+  if(!st||!st.length) return '<span class="dim">No detailed events recorded for this fight.</span>';
+  return '<div class="beats">'+st.map(b=>{
+    const cls=b.side==='us'?'us':(b.side==='them'?'them':'dim');
+    const rng=b.rng!=null?` <span class="dim">@${Math.round(b.rng)}m</span>`:'';
+    const t=`<span class="tt">${b.t.toFixed(1)}s</span>`;
+    if(b.kind==='damage'){
+      const h=b.hits>1?` ×${b.hits}`:'';
+      const gun=(b.wpn||'?')+(b.rng!=null?` @${Math.round(b.rng)}m`:'');
+      return `<span class="b">${t} <span class="${cls}">${b.actor}</span> hits ${b.target}${h} for ${Math.round(b.dmg)} <span class="dim">(${gun})</span></span>`;
+    }
+    const verb=b.kind==='groggy'?'KNOCKS':'KILLS';
+    return `<span class="b">${t} <span class="${cls} big">${b.actor} ${verb} ${b.target}</span>${rng}</span>`;
+  }).join('')+'</div>';
+}
+
+function renderTable(rows){
+  const chrono=(a,b)=> a.created_at===b.created_at ? a.idx-b.idx : (a.created_at<b.created_at?-1:1);
+  const sorted=rows.slice().sort((a,b)=>{
+    if(sortKey==='chrono') return sortAsc?chrono(a,b):-chrono(a,b);
+    let x=a[sortKey],y=b[sortKey];
+    if(typeof x==='boolean'){x=x?1:0;y=y?1:0;}
+    let c;
+    if(x==null&&y==null) c=0;
+    else if(x==null) c=1;
+    else if(y==null) c=-1;
+    else if(typeof x==='string') c=sortAsc?x.localeCompare(y):y.localeCompare(x);
+    else c=sortAsc?x-y:y-x;
+    return c!==0 ? c : chrono(a,b);
+  });
+  $('engBody').innerHTML=sorted.map(e=>{
+    const key=e.match_id+'#'+e.idx;
+    const oc=e.outcome==='win'?'<span class="ow">WIN</span>'
+            :e.outcome==='loss'?'<span class="ol">LOSS</span>':'<span class="ot">trade</span>';
+    const init=e.initiated==='we_hit_first'?'<span class="good">us</span>':'<span class="bad">them</span>';
+    const both=e.both_engaged?'<span class="good">yes</span>':'<span class="bad">no</span>';
+    const hp=e.hp_min==null?'<span class="dim">—</span>'
+      :`<span class="${e.hp_min>=99?'good':e.hp_min<50?'bad':''}">${e.hp_min}</span>`;
+    let html=`<tr class="row" data-k="${key}">
+      <td class="dim">${e.date.slice(5)}</td><td>${mmss(e.stage_s)}</td><td class="dim">${e.map}</td>
+      <td>${e.archetype}</td><td>${oc}</td><td>${init}</td>
+      <td>${num(e.range_med,'m')}</td><td>${hp}</td><td>${both}</td>
+      <td>${Math.round(e.dealt)}</td><td>${Math.round(e.taken)}</td></tr>`;
+    if(openKey===key){
+      const dealtBy=e.dealt_by?Object.entries(e.dealt_by).map(([p,v])=>`${p} ${Math.round(v)}`).join(' · '):'';
+      const takenBy=e.taken_by?Object.entries(e.taken_by).map(([p,v])=>`${p} ${Math.round(v)}`).join(' · '):'';
+      html+=`<tr class="detail"><td colspan="11">
+        <div style="margin-bottom:8px"><b>${e.archetype}</b> · ${e.n_enemies} enemies / ${e.n_enemy_teams} team(s)
+        · ${e.in_vehicle?'in a vehicle':'on foot'} · lead ${e.primary_player||'—'} ${e.primary_weapon?'('+e.primary_weapon+')':''}
+        · <a href="match.html?id=${e.match_id}">open this match on the map →</a></div>
+        ${beatHTML(e.story)}
+        <div style="margin-top:8px" class="dim">Dealt: ${dealtBy||Math.round(e.dealt)} &middot; Taken: ${takenBy||Math.round(e.taken)}</div>
+      </td></tr>`;
+    }
+    return html;
+  }).join('');
+  document.querySelectorAll('#engBody tr.row').forEach(tr=>{
+    tr.addEventListener('click',()=>{ openKey = openKey===tr.dataset.k ? null : tr.dataset.k; renderTable(filtered()); });
+  });
+}
+function markSorted(){
+  document.querySelectorAll('.etable th[data-k]').forEach(th=>{
+    th.classList.toggle('sorted', th.dataset.k===sortKey);
+    th.classList.toggle('asc', th.dataset.k===sortKey && sortAsc);
+  });
+}
+document.querySelectorAll('.etable th[data-k]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const k=th.dataset.k;
+    if(sortKey===k) sortAsc=!sortAsc; else {sortKey=k; sortAsc=(k!=='chrono');}
+    markSorted(); renderTable(filtered());
+  });
+});
+
+/* ── wire everything to the filter bar ──────────────────────────────── */
+function renderAll(){
+  const rows=filtered();
+  const c=outcomeCounts(rows);
+  $('filterSummary').innerHTML = rows.length
+    ? `<b>${c.n}</b> fights — <b>${c.w}</b> won, <b>${c.t}</b> traded, <b>${c.l}</b> lost · win rate <b>${c.winPct}%</b>`
+    : 'No fights match those filters.';
+  renderTiles(rows);
+  updateInitChart(rows);
+  updateStageChart(ENG.filter(e=>{
+    // stage chart always spans everything else the OTHER filters select
+    const led=$('fLed').value, m=$('fMap').value, a=$('fArch').value, o=$('fOutcome').value,
+          i=$('fInit').value, b=$('fBoth').value;
+    if(led && e.primary_player!==led) return false;
+    if(m && e.map!==m) return false;
+    if(a && e.archetype!==a) return false;
+    if(o && e.outcome!==o) return false;
+    if(i && e.initiated!==i) return false;
+    if(b && String(e.both_engaged?1:0)!==b) return false;
+    return true;
+  }));
+  updateArchChart(rows);
+  updateRangeChart(rows);
+  updateTrendChart(rows);
+  weaponTable(rows,'D282'); weaponTable(rows,'S821');
+  mapTable(rows);
+  markSorted(); renderTable(rows);
+}
+
+['fStage','fLed','fMap','fArch','fOutcome','fInit','fBoth'].forEach(id=>$(id).addEventListener('change',renderAll));
+$('fReset').addEventListener('click',()=>{
+  $('fStage').value='excl_early';
+  ['fLed','fMap','fArch','fOutcome','fInit','fBoth'].forEach(id=>$(id).value='');
+  openKey=null; renderAll();
+});
+
+fetch('stats-data/engagements.json').then(r=>r.json()).then(d=>{
+  ENG=d;
+  const maps=[...new Set(d.map(e=>e.map))].sort();
+  $('fMap').innerHTML='<option value="">All</option>'+maps.map(m=>`<option>${m}</option>`).join('');
+  const arch=[...new Set(d.map(e=>e.archetype))].sort();
+  $('fArch').innerHTML='<option value="">All</option>'+arch.map(a=>`<option>${a}</option>`).join('');
+  renderAll();
+}).catch(()=>{$('filterSummary').textContent='Could not load engagement data.';});
+
+fetch('stats-data/last_updated.json').then(r=>r.json()).then(d=>{
+  const dt=new Date(d.ts);
+  $('lastUpdated').textContent='Updated '+dt.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})+
+    ' '+dt.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+}).catch(()=>{$('lastUpdated').textContent='2 Jun – 20 Sep 2026';});
+</script>
+
+</body>
+</html>
