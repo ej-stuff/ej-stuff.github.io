@@ -6,8 +6,8 @@
       "kills": 20,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.1,
-      "hits": 141,
-      "total_damage": 3394.4,
+      "hits": 142,
+      "total_damage": 3420.3,
       "avg_damage_per_hit": 24.1
     },
     {
@@ -26,9 +26,9 @@
       "kills": 18,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.056,
-      "hits": 191,
-      "total_damage": 3276.5,
-      "avg_damage_per_hit": 17.2
+      "hits": 201,
+      "total_damage": 3492.4,
+      "avg_damage_per_hit": 17.4
     },
     {
       "weapon": "Mini 14",
@@ -61,6 +61,16 @@
       "avg_damage_per_hit": 11.5
     },
     {
+      "weapon": "SKS",
+      "category": "DMR",
+      "kills": 5,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.2,
+      "hits": 37,
+      "total_damage": 978.0,
+      "avg_damage_per_hit": 26.4
+    },
+    {
       "weapon": "SCAR-L",
       "category": "AR",
       "kills": 5,
@@ -79,16 +89,6 @@
       "hits": 29,
       "total_damage": 522.0,
       "avg_damage_per_hit": 18.0
-    },
-    {
-      "weapon": "SKS",
-      "category": "DMR",
-      "kills": 4,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.25,
-      "hits": 34,
-      "total_damage": 861.3,
-      "avg_damage_per_hit": 25.3
     },
     {
       "weapon": "Tommy Gun",
@@ -166,9 +166,9 @@
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 21,
-      "total_damage": 641.6,
-      "avg_damage_per_hit": 30.6
+      "hits": 22,
+      "total_damage": 646.0,
+      "avg_damage_per_hit": 29.4
     },
     {
       "weapon": "Beryl M762",
@@ -308,9 +308,9 @@
       "kills": 39,
       "headshot_kills": 9,
       "headshot_kill_pct": 0.231,
-      "hits": 365,
-      "total_damage": 5923.6,
-      "avg_damage_per_hit": 16.2
+      "hits": 372,
+      "total_damage": 6051.7,
+      "avg_damage_per_hit": 16.3
     },
     {
       "weapon": "RPD",
@@ -355,12 +355,12 @@
     {
       "weapon": "M24",
       "category": "SR",
-      "kills": 14,
-      "headshot_kills": 10,
-      "headshot_kill_pct": 0.714,
-      "hits": 60,
-      "total_damage": 3299.7,
-      "avg_damage_per_hit": 55.0
+      "kills": 15,
+      "headshot_kills": 11,
+      "headshot_kill_pct": 0.733,
+      "hits": 61,
+      "total_damage": 3374.7,
+      "avg_damage_per_hit": 55.3
     },
     {
       "weapon": "M249",

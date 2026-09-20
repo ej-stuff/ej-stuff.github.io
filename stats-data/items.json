@@ -4,13 +4,13 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 195,
+        "total": 196,
         "per_match": 0.7
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 88,
+        "total": 90,
         "per_match": 0.32
       },
       {
@@ -22,13 +22,13 @@
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 181,
+        "total": 183,
         "per_match": 0.65
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 136,
+        "total": 137,
         "per_match": 0.49
       },
       {
@@ -42,16 +42,16 @@
       {
         "item": "Snowball",
         "total": 113,
-        "per_match": 0.41
+        "per_match": 0.4
       },
       {
         "item": "Smoke Grenade",
         "total": 86,
-        "per_match": 0.31
+        "per_match": 0.3
       },
       {
         "item": "Grenade",
-        "total": 77,
+        "total": 78,
         "per_match": 0.28
       },
       {
@@ -76,13 +76,13 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 202,
+        "total": 203,
         "per_match": 0.76
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 165,
+        "total": 167,
         "per_match": 0.62
       },
       {
@@ -95,7 +95,7 @@
         "item": "First Aid Kit",
         "category": "Heal",
         "total": 191,
-        "per_match": 0.72
+        "per_match": 0.71
       },
       {
         "item": "Bandage",
@@ -106,14 +106,14 @@
       {
         "item": "Med Kit",
         "category": "Heal",
-        "total": 20,
+        "total": 21,
         "per_match": 0.08
       }
     ],
     "throwables": [
       {
         "item": "Smoke Grenade",
-        "total": 117,
+        "total": 119,
         "per_match": 0.44
       },
       {
@@ -139,7 +139,7 @@
       {
         "item": "Snowball",
         "total": 4,
-        "per_match": 0.02
+        "per_match": 0.01
       }
     ]
   }
