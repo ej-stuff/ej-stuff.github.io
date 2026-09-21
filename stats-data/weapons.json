@@ -6,8 +6,8 @@
       "kills": 20,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.1,
-      "hits": 142,
-      "total_damage": 3420.3,
+      "hits": 146,
+      "total_damage": 3518.0,
       "avg_damage_per_hit": 24.1
     },
     {
@@ -43,12 +43,12 @@
     {
       "weapon": "Mk12 SPR",
       "category": "DMR",
-      "kills": 12,
+      "kills": 13,
       "headshot_kills": 3,
-      "headshot_kill_pct": 0.25,
-      "hits": 167,
-      "total_damage": 3481.2,
-      "avg_damage_per_hit": 20.8
+      "headshot_kill_pct": 0.231,
+      "hits": 171,
+      "total_damage": 3612.8,
+      "avg_damage_per_hit": 21.1
     },
     {
       "weapon": "MP5K",
@@ -89,6 +89,16 @@
       "hits": 29,
       "total_damage": 522.0,
       "avg_damage_per_hit": 18.0
+    },
+    {
+      "weapon": "UMP45",
+      "category": "SMG",
+      "kills": 4,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.5,
+      "hits": 34,
+      "total_damage": 631.6,
+      "avg_damage_per_hit": 18.6
     },
     {
       "weapon": "Tommy Gun",
@@ -139,16 +149,6 @@
       "hits": 30,
       "total_damage": 534.2,
       "avg_damage_per_hit": 17.8
-    },
-    {
-      "weapon": "UMP45",
-      "category": "SMG",
-      "kills": 3,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.333,
-      "hits": 31,
-      "total_damage": 531.6,
-      "avg_damage_per_hit": 17.1
     },
     {
       "weapon": "ACE32",
@@ -305,12 +305,12 @@
     {
       "weapon": "ACE32",
       "category": "AR",
-      "kills": 39,
-      "headshot_kills": 9,
-      "headshot_kill_pct": 0.231,
-      "hits": 372,
-      "total_damage": 6051.7,
-      "avg_damage_per_hit": 16.3
+      "kills": 40,
+      "headshot_kills": 10,
+      "headshot_kill_pct": 0.25,
+      "hits": 381,
+      "total_damage": 6170.9,
+      "avg_damage_per_hit": 16.2
     },
     {
       "weapon": "RPD",
@@ -348,9 +348,9 @@
       "kills": 15,
       "headshot_kills": 5,
       "headshot_kill_pct": 0.333,
-      "hits": 166,
-      "total_damage": 4336.2,
-      "avg_damage_per_hit": 26.1
+      "hits": 170,
+      "total_damage": 4483.3,
+      "avg_damage_per_hit": 26.4
     },
     {
       "weapon": "M24",
@@ -393,6 +393,16 @@
       "avg_damage_per_hit": 21.7
     },
     {
+      "weapon": "AK-M",
+      "category": "AR",
+      "kills": 6,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 56,
+      "total_damage": 1263.9,
+      "avg_damage_per_hit": 22.6
+    },
+    {
       "weapon": "Beryl M762",
       "category": "AR",
       "kills": 6,
@@ -401,16 +411,6 @@
       "hits": 42,
       "total_damage": 841.8,
       "avg_damage_per_hit": 20.0
-    },
-    {
-      "weapon": "AK-M",
-      "category": "AR",
-      "kills": 5,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 55,
-      "total_damage": 1253.9,
-      "avg_damage_per_hit": 22.8
     },
     {
       "weapon": "UMP45",
@@ -488,9 +488,9 @@
       "kills": 1,
       "headshot_kills": 1,
       "headshot_kill_pct": 1.0,
-      "hits": 27,
-      "total_damage": 747.3,
-      "avg_damage_per_hit": 27.7
+      "hits": 35,
+      "total_damage": 1025.4,
+      "avg_damage_per_hit": 29.3
     },
     {
       "weapon": "Grenade",
