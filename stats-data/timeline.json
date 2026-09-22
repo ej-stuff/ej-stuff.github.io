@@ -4911,5 +4911,192 @@
       "damage": 266.3,
       "placement": 22
     }
+  },
+  {
+    "match_id": "0b08e1df-c910-405d-b215-f2361942fe9b",
+    "created_at": "2026-09-22T17:54:28Z",
+    "date": "2026-09-22",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 4,
+      "damage": 514.8,
+      "placement": 1
+    },
+    "S821": {
+      "kills": 4,
+      "damage": 414.4,
+      "placement": 1
+    }
+  },
+  {
+    "match_id": "3a766188-4d39-4ac9-8c19-8ce7b4c2a2b1",
+    "created_at": "2026-09-22T18:24:34Z",
+    "date": "2026-09-22",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 39
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 23.2,
+      "placement": 39
+    }
+  },
+  {
+    "match_id": "e7217bff-8cd2-4352-8412-0d678a1ea856",
+    "created_at": "2026-09-22T18:29:40Z",
+    "date": "2026-09-22",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 25
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 25
+    }
+  },
+  {
+    "match_id": "d799bb68-24a9-48da-b4d3-63870f2058bb",
+    "created_at": "2026-09-22T18:40:56Z",
+    "date": "2026-09-22",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 21
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 21
+    }
+  },
+  {
+    "match_id": "0149dff8-3cd9-40e2-b828-09ae0ab96ec9",
+    "created_at": "2026-09-22T18:57:14Z",
+    "date": "2026-09-22",
+    "map": "Paramo",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 15
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 202.0,
+      "placement": 15
+    }
+  },
+  {
+    "match_id": "a6768caa-dc9b-4f16-84f8-4a5ea2b745d1",
+    "created_at": "2026-09-22T19:05:06Z",
+    "date": "2026-09-22",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 20.1,
+      "placement": 41
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 193.5,
+      "placement": 41
+    }
+  },
+  {
+    "match_id": "e2393218-7e4f-4eda-9cdb-17b3e9cb4b8b",
+    "created_at": "2026-09-22T19:11:40Z",
+    "date": "2026-09-22",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 265.7,
+      "placement": 18
+    },
+    "S821": {
+      "kills": 3,
+      "damage": 361.8,
+      "placement": 18
+    }
+  },
+  {
+    "match_id": "f9e65061-3b96-4931-81cd-bbcbc12fd64d",
+    "created_at": "2026-09-22T19:27:47Z",
+    "date": "2026-09-22",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 2,
+      "damage": 224.7,
+      "placement": 6
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 269.6,
+      "placement": 6
+    }
+  },
+  {
+    "match_id": "9d261a67-f4cd-4c90-adc4-701fec011122",
+    "created_at": "2026-09-22T19:52:09Z",
+    "date": "2026-09-22",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 116.0,
+      "placement": 32
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 102.0,
+      "placement": 32
+    }
+  },
+  {
+    "match_id": "7d7ef0dd-93fe-4365-b0ec-b0a05512c1cd",
+    "created_at": "2026-09-22T19:59:35Z",
+    "date": "2026-09-22",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 48.0,
+      "placement": 4
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 94.0,
+      "placement": 4
+    }
+  },
+  {
+    "match_id": "894493b7-1d85-4d2a-90e0-cb41b395507f",
+    "created_at": "2026-09-22T20:26:28Z",
+    "date": "2026-09-22",
+    "map": "Taego",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 210.0,
+      "placement": 28
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 159.1,
+      "placement": 28
+    }
   }
 ]
