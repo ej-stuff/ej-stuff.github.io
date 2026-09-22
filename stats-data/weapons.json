@@ -116,9 +116,9 @@
       "kills": 3,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 39,
-      "total_damage": 1028.3,
-      "avg_damage_per_hit": 26.4
+      "hits": 44,
+      "total_damage": 1123.0,
+      "avg_damage_per_hit": 25.5
     },
     {
       "weapon": "RPD",
@@ -335,12 +335,12 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 17,
+      "kills": 18,
       "headshot_kills": 2,
-      "headshot_kill_pct": 0.118,
-      "hits": 171,
-      "total_damage": 2114.5,
-      "avg_damage_per_hit": 12.4
+      "headshot_kill_pct": 0.111,
+      "hits": 176,
+      "total_damage": 2215.5,
+      "avg_damage_per_hit": 12.6
     },
     {
       "weapon": "M24",
@@ -383,6 +383,16 @@
       "avg_damage_per_hit": 17.4
     },
     {
+      "weapon": "Mini 14",
+      "category": "DMR",
+      "kills": 10,
+      "headshot_kills": 3,
+      "headshot_kill_pct": 0.3,
+      "hits": 121,
+      "total_damage": 2505.8,
+      "avg_damage_per_hit": 20.7
+    },
+    {
       "weapon": "Mk12 SPR",
       "category": "DMR",
       "kills": 8,
@@ -391,16 +401,6 @@
       "hits": 104,
       "total_damage": 2376.1,
       "avg_damage_per_hit": 22.8
-    },
-    {
-      "weapon": "Mini 14",
-      "category": "DMR",
-      "kills": 8,
-      "headshot_kills": 2,
-      "headshot_kill_pct": 0.25,
-      "hits": 108,
-      "total_damage": 2286.1,
-      "avg_damage_per_hit": 21.2
     },
     {
       "weapon": "Beryl M762",
