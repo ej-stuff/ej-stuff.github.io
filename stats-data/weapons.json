@@ -26,8 +26,8 @@
       "kills": 18,
       "headshot_kills": 7,
       "headshot_kill_pct": 0.389,
-      "hits": 214,
-      "total_damage": 4369.9,
+      "hits": 215,
+      "total_damage": 4395.1,
       "avg_damage_per_hit": 20.4
     },
     {
@@ -36,8 +36,8 @@
       "kills": 18,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.056,
-      "hits": 202,
-      "total_damage": 3540.4,
+      "hits": 203,
+      "total_damage": 3558.4,
       "avg_damage_per_hit": 17.5
     },
     {
@@ -388,9 +388,9 @@
       "kills": 11,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.273,
-      "hits": 127,
-      "total_damage": 2549.6,
-      "avg_damage_per_hit": 20.1
+      "hits": 133,
+      "total_damage": 2742.4,
+      "avg_damage_per_hit": 20.6
     },
     {
       "weapon": "Mk12 SPR",

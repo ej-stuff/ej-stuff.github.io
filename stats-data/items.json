@@ -23,7 +23,7 @@
         "item": "Bandage",
         "category": "Heal",
         "total": 188,
-        "per_match": 0.63
+        "per_match": 0.62
       },
       {
         "item": "First Aid Kit",
@@ -46,12 +46,12 @@
       },
       {
         "item": "Smoke Grenade",
-        "total": 94,
-        "per_match": 0.31
+        "total": 96,
+        "per_match": 0.32
       },
       {
         "item": "Grenade",
-        "total": 84,
+        "total": 85,
         "per_match": 0.28
       },
       {
@@ -66,8 +66,8 @@
       },
       {
         "item": "Flare Gun",
-        "total": 1,
-        "per_match": 0.0
+        "total": 2,
+        "per_match": 0.01
       }
     ]
   },
@@ -82,7 +82,7 @@
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 179,
+        "total": 181,
         "per_match": 0.63
       },
       {
@@ -95,7 +95,7 @@
         "item": "First Aid Kit",
         "category": "Heal",
         "total": 205,
-        "per_match": 0.72
+        "per_match": 0.71
       },
       {
         "item": "Bandage",
@@ -113,8 +113,8 @@
     "throwables": [
       {
         "item": "Smoke Grenade",
-        "total": 126,
-        "per_match": 0.44
+        "total": 129,
+        "per_match": 0.45
       },
       {
         "item": "Grenade",
@@ -127,12 +127,12 @@
         "per_match": 0.07
       },
       {
-        "item": "Rock",
-        "total": 7,
-        "per_match": 0.02
+        "item": "Flare Gun",
+        "total": 8,
+        "per_match": 0.03
       },
       {
-        "item": "Flare Gun",
+        "item": "Rock",
         "total": 7,
         "per_match": 0.02
       },

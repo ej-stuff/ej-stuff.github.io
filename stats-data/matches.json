@@ -1,5 +1,55 @@
 [
   {
+    "match_id": "fc2a3b68-905f-4bab-af65-b378321340e8",
+    "created_at": "2026-09-23T21:02:32Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1598,
+    "duo_survival_s": 1570,
+    "players": {
+      "D282": {
+        "present": true,
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 0,
+        "damage": 43.1,
+        "placement": 3,
+        "survival_s": 1570,
+        "revives": 1,
+        "heals": 0,
+        "boosts": 0,
+        "blue_chips": 0,
+        "damage_taken": 100.0,
+        "times_knocked": 0,
+        "shots_fired": 40,
+        "parachute_dist": 376.0,
+        "throwables": 4,
+        "revive_response_s": null
+      },
+      "S821": {
+        "present": true,
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 192.8,
+        "placement": 3,
+        "survival_s": 1570,
+        "revives": 0,
+        "heals": 0,
+        "boosts": 2,
+        "blue_chips": 0,
+        "damage_taken": 113.7,
+        "times_knocked": 2,
+        "shots_fired": 40,
+        "parachute_dist": 354.0,
+        "throwables": 4,
+        "revive_response_s": 31.8
+      }
+    }
+  },
+  {
     "match_id": "3899912f-b804-4fa9-bb86-02ee8426d7bd",
     "created_at": "2026-09-23T20:54:25Z",
     "map": "Miramar",
