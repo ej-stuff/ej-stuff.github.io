@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Armory — D282 &amp; S821</title>
-<meta name="description" content="Which weapon actually wins engagements, not just which has the best accuracy — a main (AR/LMG) and long gun (DMR/SR) pick for each player, plus a full SMG breakdown, built from 511 reconstructed fights.">
+<meta name="description" content="Which guns actually win fights for D282 and S821: win rate by weapon across 529 decisive duo fights, and the recommended loadout.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -176,580 +176,274 @@
 </div>
 
 <div class="hero">
-  <div class="kicker">511 FIGHTS &middot; WHICH GUN ACTUALLY WINS</div>
+  <div class="kicker">529 FIGHTS &middot; WHICH GUN ACTUALLY WINS</div>
   <h1>The Armory</h1>
-  <p class="hero-sub">The <a href="weapons.html">Weapon Stats</a> page ranks guns by accuracy and damage. This
-    page asks a harder, more useful question: when a weapon was doing the work in a real fight, how often did
-    that fight end in a win? One main (AR or LMG) and one long gun (DMR or SR) each &mdash; plus a full look at
-    every SMG either of you has picked up &mdash; here's what the data says you should actually be carrying.</p>
-  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; built from 511 decisive engagements, 284 matches</div>
+  <p class="hero-sub">Not accuracy, but results: when a gun did most of the work in a fight, how often
+    did we win that fight? One main (AR or LMG) and one long gun (DMR or SR) per player, plus every SMG.</p>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 529 decisive fights &middot; 285 matches &middot; 2 Jun &ndash; 23 Sep 2026</div>
 </div>
 
 <div class="wrap">
 
   <div class="intro">
-    <p>Every gun on this site so far has been scored the same way: shots, hits, accuracy, damage per minute.
-      Those numbers say how well you shoot a weapon. They don't say whether carrying it makes you more likely
-      to win the fight it's in &mdash; a gun can look great on a range-test stat line and still be the reason
-      you keep losing 1-on-1s, if it's mostly used in situations that were already bad news.</p>
-    <p>This page uses the <a href="engagements.html">Engagement Report</a>'s 511 reconstructed fights instead.
-      Every one of them already has a "primary weapon" attached &mdash; whichever gun did most of a player's
-      damage in that specific fight &mdash; so we can ask, weapon by weapon: when this gun led the fight, what
-      fraction of the time did you actually win it? That's a different, and for choosing a loadout, more useful
-      number than accuracy.</p>
+    <p>Each fight is credited to the player who did the most damage in it, and to the gun he used most in
+      that fight. <b>Win%</b> = wins ÷ all decisive fights that gun led; trades and losses both count against it.
+      <b>We opened</b> = we landed the first hit. Guns with fewer than 5 fights are left out, except in the SMG
+      tables. Anything under ~15 fights is a hint, not a result.</p>
+    <p>The obvious catch: a DMR mostly fights at range, where we see people first. An LMG mostly fights up
+      close, where ambushes happen. So each section also checks the gun in fights <i>we</i> opened versus
+      fights where we were ambushed.</p>
   </div>
-
-  <!-- ============================================================ -->
-  <section class="chapter" id="method">
-    <div class="chapter-num">00</div>
-    <h2>The Method, In Short</h2>
-    <p class="lede">Three things worth knowing before any of the numbers below mean anything.</p>
-
-    <div class="panel">
-      <h3>What "win rate" means here</h3>
-      <p>Every fight gets a "primary weapon": whichever gun a player fired most often in that specific fight.
-        The fight then counts as a <b>win</b>, <b>trade</b> (both sides took a knock/kill) or <b>loss</b> for
-        that weapon. A weapon's win% is wins &divide; all decisive fights it led &mdash; trades and losses both
-        count against it, same convention as the Engagement Report.</p>
-    </div>
-
-    <div class="callout">
-      <b>The obvious confound: it's not a controlled experiment.</b> A DMR mostly gets used at range, where you
-      have time to see the enemy coming; an LMG mostly gets used up close, where ambushes happen. Some of the
-      gap between weapons below is genuinely about the gun. Some of it is about the situations that gun tends
-      to get pulled into. Every chapter below checks this by also splitting each weapon's fights into <b>you
-      opened it</b> vs <b>you got ambushed</b> &mdash; if a weapon still looks bad within just the "you opened
-      it" bucket, that's a real weapon problem, not a confound.
-    </div>
-
-    <p class="muted" style="font-size:13.5px">Sample sizes below mostly run from n=5 to n=80, with one
-      deliberate exception: Chapter&nbsp;06's SMG breakdown goes down to n=1 to show every gun either of you
-      has tried, clearly flagged as single data points, not findings. Read every percentage next to its n, not
-      instead of it. Full method notes in Chapter&nbsp;09.</p>
-  </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="bigpicture">
     <div class="chapter-num">01</div>
-    <h2>The Big Picture: AR Beats LMG, DMR/SR Beats Everything</h2>
-    <p class="lede">Before the individual guns, the category-level result that frames all of it &mdash; pooling
-      every AR together, every LMG together, and so on, for a much bigger sample than any single gun gets.</p>
+    <h2>By Category</h2>
 
     <div class="chart-box"><div class="cv"><canvas id="catChart"></canvas></div></div>
-    <div class="chart-cap">Engagement win rate by weapon category, each player's fights where that category led the damage.</div>
+    <div class="chart-cap">Win rate in fights where each category did most of the player's damage.</div>
 
-    <div class="statrow">
-      <div class="stat">
-        <div class="num">16.2<span style="font-size:16px;color:var(--muted)">%</span></div>
-        <div class="label">D282 · AR win rate</div>
-        <div class="sub">n=80 vs LMG's 10.9% (n=46)</div>
-      </div>
-      <div class="stat blue">
-        <div class="num">43.5<span style="font-size:16px;color:var(--muted)">%</span></div>
-        <div class="label">S821 · SR win rate</div>
-        <div class="sub">n=23, his best category by far</div>
-      </div>
-      <div class="stat bad">
-        <div class="num">10.9<span style="font-size:16px;color:var(--muted)">/13.8%</span></div>
-        <div class="label">LMG win rate, both players</div>
-        <div class="sub">the worst category for D282 and S821 alike</div>
-      </div>
+    <div class="panel wrap-scroll">
+      <table class="dtable">
+        <thead><tr><th>Category</th><th class="r pad">D282 n</th><th class="r pad">D282 win%</th>
+          <th class="r pad">S821 n</th><th class="r">S821 win%</th></tr></thead>
+        <tbody>
+          <tr><td class="name">SR</td><td class="r pad dim">&lt;5</td><td class="r pad dim">&mdash;</td><td class="r pad">25</td><td class="r good">44.0%</td></tr>
+          <tr><td class="name">DMR</td><td class="r pad">59</td><td class="r pad good">28.8%</td><td class="r pad">55</td><td class="r good">38.2%</td></tr>
+          <tr><td class="name">AR</td><td class="r pad">69</td><td class="r pad">20.3%</td><td class="r pad">75</td><td class="r">32.0%</td></tr>
+          <tr><td class="name">SMG</td><td class="r pad">22</td><td class="r pad">22.7%</td><td class="r pad">29</td><td class="r">27.6%</td></tr>
+          <tr><td class="name">LMG</td><td class="r pad">40</td><td class="r pad">17.5%</td><td class="r pad">32</td><td class="r bad">15.6%</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="panel">
-      <h3>The pattern holds for both of you, separately</h3>
-      <p>For <b style="color:var(--accent)">D282</b>: AR 16.2% beats LMG 10.9%, and DMR (25.5%) beats both. For
-        <b style="color:var(--s821)">S821</b>: AR 30.9% beats LMG 13.8%, and SR (43.5%) plus DMR (38.3%) both
-        beat AR by a wide margin. Neither of you has a single category where the LMG comes out ahead &mdash;
-        it's the worst pick on the board for both of you, by a large margin, every time it's measured. D282's
-        AR number has actually slipped since the last read (was 18.2%) &mdash; almost entirely because his
-        AK-M got much worse on more data, see Chapter&nbsp;02.</p>
-      <p>This isn't just about carrying an LMG being unlucky. Look at initiation rate (how often you're the one
-        who opens the fight) alongside win rate: D282's LMG fights open only 41.3% of the time (his lowest of
-        any category, against AR's 46.2%) and convert worse too &mdash; worse on both counts. S821's case is
-        more telling: his LMG fights actually open <em>more</em> often than his AR fights (58.6% vs 52.9%) and
-        still convert at less than half the rate (13.8% vs 30.9%). For him it isn't a story about missed
-        openers at all &mdash; it really is the weapon.</p>
+    <div class="callout">
+      <b>Long guns win most for both of us.</b> They also open the fight far more often (D282 DMR 80%,
+      S821 SR 72%). That matches the Engagement Report: fights that start with our knock are the ones we win.
+      <b>LMGs are S821's worst category by a distance</b> (15.6% vs 32.0% for his ARs). For D282, AR and LMG
+      are now roughly level (20.3% vs 17.5%).
     </div>
-
-    <p class="muted" style="font-size:13.5px">SMG sits between LMG and AR for both of you (D282 22.2%, S821
-      28.6%) but isn't a valid main-weapon slot under your own rule (AR or LMG main, DMR or SR long) &mdash;
-      Chapter&nbsp;06 below covers every SMG either of you has picked up in full.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="d-main">
     <div class="chapter-num">02</div>
-    <h2>D282's Main Weapon: AR or LMG</h2>
-    <p class="lede">The M249 is D282's single most-carried weapon on the whole site &mdash; 43.9 combat-minutes,
-      more than any other gun he owns. It's also his second-worst performer in an actual fight. And the gun
-      that used to look like a reasonable alternative to HK416 just got a lot worse on more data.</p>
+    <h2>D282 &middot; Main Gun</h2>
 
-    <div class="panel" style="padding-top:14px;">
-      <div class="wrap-scroll">
+    <div class="panel wrap-scroll" style="padding-top:14px;">
       <table class="dtable">
         <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
-          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+          <th class="r pad">We opened</th><th class="r pad">Win% when we opened</th><th class="r pad">Win% when ambushed</th><th class="r">Dmg diff</th></tr></thead>
         <tbody>
-          <tr><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">39</td><td class="r pad">12.8%</td><td class="r pad">46.2%</td><td class="r pad dim">21.1m</td><td class="r bad">&minus;69.1</td></tr>
-          <tr class="pick"><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">24</td><td class="r pad good">12.5%</td><td class="r pad">45.8%</td><td class="r pad dim">19.1m</td><td class="r bad">&minus;34.0</td></tr>
-          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">32</td><td class="r pad bad">6.2%</td><td class="r pad">37.5%</td><td class="r pad dim">19.8m</td><td class="r bad">&minus;98.0</td></tr>
-          <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">7</td><td class="r pad bad">0.0%</td><td class="r pad">14.3%</td><td class="r pad dim">22.7m</td><td class="r bad">&minus;59.0</td></tr>
+          <tr class="pick"><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">34</td><td class="r pad good">20.6%</td><td class="r pad">52.9%</td><td class="r pad">33.3%</td><td class="r pad bad">6.2% <span class="dim">(of 16)</span></td><td class="r bad">&minus;42.9</td></tr>
+          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">20</td><td class="r pad">15.0%</td><td class="r pad">45.0%</td><td class="r pad">33.3%</td><td class="r pad bad">0% <span class="dim">(of 11)</span></td><td class="r bad">&minus;48.2</td></tr>
+          <tr><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">25</td><td class="r pad bad">12.0%</td><td class="r pad">48.0%</td><td class="r pad bad">8.3%</td><td class="r pad">15.4% <span class="dim">(of 13)</span></td><td class="r bad">&minus;34.1</td></tr>
+          <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">6</td><td class="r pad bad">0.0%</td><td class="r pad">16.7%</td><td class="r pad">0%</td><td class="r pad bad">0%</td><td class="r bad">&minus;57.1</td></tr>
         </tbody>
       </table>
-      </div>
-    </div>
-
-    <div class="callout bad">
-      <b>AK-M has fallen off a cliff.</b> Last read this was a near-coin-flip with HK416 (10.5% on n=19). Thirteen
-      more fights later it's at <b>6.2% (n=32)</b> &mdash; roughly half of HK416's rate &mdash; and the damage
-      differential is now the worst of any weapon on this entire page (&minus;98.0). It also opens the fight less
-      often than it used to (37.5%, down from 47.4%). Whatever this was before, on the current evidence AK-M is
-      D282's weakest main-slot option, not a coin flip with HK416.
-    </div>
-
-    <div class="callout bad">
-      <b>M249 still collapses completely when D282 is ambushed.</b> Split by initiation: when D282 opens the
-      fight with the M249, he wins 27.8% of the time (18 fights) &mdash; not great, but workable. When he's
-      ambushed with it in his hands, he has won <b>zero of 21</b>. That's not a small-sample fluke; 21 is one
-      of the bigger buckets on this whole page. A 71-pound belt-fed gun that's supposed to be your suppression
-      tool is instead your single worst ambush weapon.
     </div>
 
     <div class="panel">
-      <h3>HK416 is the pick &mdash; not the highest raw win rate, but the only one that survives an ambush</h3>
-      <p>M249 technically edges HK416 on overall win rate (12.8% vs 12.5%), but that's before you split by who
-        opened the fight. Ambushed with the <b>M249</b>: zero of 21. Ambushed with the <b>AK-M</b>: zero of 20
-        (worse than last read's zero of 10 &mdash; still zero, now on double the sample). Ambushed with the
-        <b>HK416</b>: <b>15.4% of 13</b> &mdash; still not good, but not a wall of zeroes. Since you can't choose
-        when you get ambushed, the gun that gives you <em>any</em> chance in that situation is the better
-        default, even though its headline win rate isn't the highest of the three.</p>
-      <p class="muted" style="font-size:13.5px">RPD remains a clear no &mdash; still 0% in 7 fights, and still
-        the worst initiation rate of anything on this page (14.3%).</p>
+      <h3>M249 is now his best main — narrowly</h3>
+      <p>Last refresh the HK416 was the pick. On more fights it dropped to 12.0%, and only 1 of 12 fights D282
+        opened with it was won. The M249 is his most-used gun and converts a third of the fights he opens with it.
+        Reading his fights, the M249 shows up in many of his best moments: point-blank knocks and kills after
+        S821 is down (the chicken dinner on 22 Sep ended with an M249 knock at 13m and a kill at 7m on 17 HP).</p>
+      <p>The gaps are small and every option is bad when he's ambushed (M249 1 win in 16, AK-M 0 in 11).
+        What decides his close-range fights is who hits first, not the gun. Avoid the RPD.</p>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="d-long">
     <div class="chapter-num">03</div>
-    <h2>D282's Long Gun: DMR or SR</h2>
-    <p class="lede">D282's whole DMR category is his best and has only gotten better (25.5%, and it opens fights
-      76.5% of the time &mdash; by far his highest), but the guns inside it still tell different stories.</p>
+    <h2>D282 &middot; Long Gun</h2>
 
-    <div class="panel" style="padding-top:14px;">
-      <div class="wrap-scroll">
+    <div class="panel wrap-scroll" style="padding-top:14px;">
       <table class="dtable">
         <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
-          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+          <th class="r pad">We opened</th><th class="r pad">Win% when we opened</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
         <tbody>
-          <tr class="pick"><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">20</td><td class="r pad good">35.0%</td><td class="r pad">70.0%</td><td class="r pad dim">65.3m</td><td class="r bad">&minus;12.9</td></tr>
-          <tr><td class="name">Dragunov</td><td><span class="cat-pill">DMR</span></td><td class="r pad">6</td><td class="r pad">16.7%</td><td class="r pad">100.0%</td><td class="r pad dim">67.3m</td><td class="r bad">&minus;46.1</td></tr>
-          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">18</td><td class="r pad">16.7%</td><td class="r pad">83.3%</td><td class="r pad dim">53.6m</td><td class="r good">+15.7</td></tr>
+          <tr class="pick"><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">25</td><td class="r pad good">40.0%</td><td class="r pad">76.0%</td><td class="r pad good">52.6%</td><td class="r pad dim">68.5m</td><td class="r flat">&minus;8.6</td></tr>
+          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">20</td><td class="r pad">20.0%</td><td class="r pad">85.0%</td><td class="r pad">23.5%</td><td class="r pad dim">55.8m</td><td class="r good">+22.0</td></tr>
+          <tr><td class="name">SKS</td><td><span class="cat-pill">DMR</span></td><td class="r pad">5</td><td class="r pad">20.0%</td><td class="r pad">60.0%</td><td class="r pad">33.3%</td><td class="r pad dim">33.7m</td><td class="r bad">&minus;52.7</td></tr>
+          <tr><td class="name">Dragunov</td><td><span class="cat-pill">DMR</span></td><td class="r pad">6</td><td class="r pad">16.7%</td><td class="r pad">100%</td><td class="r pad">16.7%</td><td class="r pad dim">67.3m</td><td class="r bad">&minus;46.1</td></tr>
         </tbody>
       </table>
-      </div>
     </div>
 
     <div class="panel">
-      <h3>Mk12 SPR wins the opener, then stalls</h3>
-      <p>D282 opens the fight with the Mk12 SPR 83.3% of the time (was 88.2% on one fewer fight) &mdash; still
-        the highest initiation rate of any weapon either of you carries &mdash; and still only converts 20.0%
-        of those openers into wins (3 of 15). The damage differential is positive (+15.7, still one of his best),
-        so he's landing real hits first. The fight just isn't closing out: 8 of his 18 Mk12 SPR fights end in a
-        trade. That reads like a gun that opens well but doesn't have the follow-up rate to finish before the
-        enemy recovers.</p>
-      <p><b>Mini 14 does what the SPR promises.</b> Same role, similar initiation rate (70.0%), and it actually
-        converts &mdash; 35.0% overall and 50.0% within just the fights D282 opens himself. It's still the only
-        weapon on this page where D282's win rate clears 30%, and nothing changed for it this refresh &mdash;
-        no new Mini 14 fights landed in the last 16 games.</p>
-      <p class="muted" style="font-size:13.5px">New this refresh: a 6-fight look at the <b>Dragunov</b>, a
-        semi-auto DMR. Opens every single fight (100%, small n) but converts at only 16.7% with a rough damage
-        differential (&minus;46.1). Too thin to act on either way &mdash; noted, not recommended.</p>
-    </div>
-
-    <div class="callout">
-      <b>D282 has still never carried a real bolt-action sniper rifle long enough to get a read on it.</b> No
-      Kar98k, M24, AWM or Win94 shows up with enough shots to make this page's n&ge;5 cutoff, even with 16 more
-      games in the bank. That's not a finding against SRs &mdash; it's a genuine, persistent gap in the data.
-      Worth a deliberate session or two actually testing one, especially given what S821's M24 does in the next
-      chapter.
+      <h3>Mini 14, clearly</h3>
+      <p>40% overall and 53% in fights he opens: his best gun on this page by a distance. It's the gun behind
+        most of his long-range knocks in the fight review (headshot knocks at 191m, 225m and 255m).
+        The Mk12 opens even more often (85%) and wins the damage, but only 1 opener in 4 becomes a win. It hurts
+        without finishing.</p>
+      <p class="muted" style="font-size:13.5px">D282 still has no bolt-action sniper with 5+ fights.</p>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter s821" id="s-main">
     <div class="chapter-num">04</div>
-    <h2 style="color:var(--s821)">S821's Main Weapon: AR or LMG</h2>
-    <p class="lede">ACE32 is S821's signature gun by volume &mdash; more shots, more kills, more combat time
-      than anything else he owns. By engagement win rate, it's merely his fourth-best AR.</p>
+    <h2 style="color:var(--s821)">S821 &middot; Main Gun</h2>
 
-    <div class="panel s821" style="padding-top:14px;">
-      <div class="wrap-scroll">
+    <div class="panel s821 wrap-scroll" style="padding-top:14px;">
       <table class="dtable">
         <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
-          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+          <th class="r pad">We opened</th><th class="r pad">Win% when we opened</th><th class="r pad">Win% when ambushed</th><th class="r">Dmg diff</th></tr></thead>
         <tbody>
-          <tr><td class="name">Beryl M762</td><td><span class="cat-pill">AR</span></td><td class="r pad">5</td><td class="r pad good">80.0%</td><td class="r pad">60.0%</td><td class="r pad dim">14.8m</td><td class="r good">+109.2</td></tr>
-          <tr class="pick"><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">12</td><td class="r pad good">41.7%</td><td class="r pad">41.7%</td><td class="r pad dim">20.0m</td><td class="r bad">&minus;4.5</td></tr>
-          <tr><td class="name">ACE32</td><td><span class="cat-pill">AR</span></td><td class="r pad">29</td><td class="r pad">24.1%</td><td class="r pad">51.7%</td><td class="r pad dim">20.8m</td><td class="r good">+17.6</td></tr>
-          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">10</td><td class="r pad">20.0%</td><td class="r pad">70.0%</td><td class="r pad dim">10.3m</td><td class="r bad">&minus;39.6</td></tr>
-          <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">18</td><td class="r pad bad">11.1%</td><td class="r pad">50.0%</td><td class="r pad dim">23.8m</td><td class="r bad">&minus;56.8</td></tr>
-          <tr><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">10</td><td class="r pad bad">10.0%</td><td class="r pad">70.0%</td><td class="r pad dim">38.0m</td><td class="r flat">+0.4</td></tr>
+          <tr><td class="name">Beryl M762</td><td><span class="cat-pill">AR</span></td><td class="r pad">6</td><td class="r pad good">83.3%</td><td class="r pad">50.0%</td><td class="r pad">66.7%</td><td class="r pad good">100% <span class="dim">(of 3)</span></td><td class="r good">+102.7</td></tr>
+          <tr><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">13</td><td class="r pad good">38.5%</td><td class="r pad">38.5%</td><td class="r pad">60.0%</td><td class="r pad">25.0%</td><td class="r flat">&minus;4.5</td></tr>
+          <tr class="pick"><td class="name">ACE32</td><td><span class="cat-pill">AR</span></td><td class="r pad">33</td><td class="r pad">24.2%</td><td class="r pad">57.6%</td><td class="r pad">26.3%</td><td class="r pad">21.4%</td><td class="r good">+13.4</td></tr>
+          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">10</td><td class="r pad">20.0%</td><td class="r pad">70.0%</td><td class="r pad">28.6%</td><td class="r pad">0%</td><td class="r bad">&minus;39.6</td></tr>
+          <tr><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">11</td><td class="r pad">18.2%</td><td class="r pad">72.7%</td><td class="r pad">25.0%</td><td class="r pad">0%</td><td class="r good">+16.9</td></tr>
+          <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">20</td><td class="r pad bad">10.0%</td><td class="r pad">45.0%</td><td class="r pad">22.2%</td><td class="r pad bad">0% <span class="dim">(of 11)</span></td><td class="r bad">&minus;62.2</td></tr>
         </tbody>
       </table>
-      </div>
     </div>
 
     <div class="panel s821">
-      <h3>The workhorse isn't the weak link, it's just not the sharpest tool</h3>
-      <p>ACE32 is not a bad gun for S821 &mdash; positive damage differential (+17.6), a healthy 51.7% initiation
-        rate, and by far his most combat time (33.4 minutes, over 50% more than his next-busiest gun) and most
-        kills (41, career-high). It's the reliable default and there's no case for dropping it. But per
-        <em>fight</em>, it converts at 24.1% &mdash; worse than HK416's 41.7% on nearly identical range and role,
-        and nowhere close to the small-sample Beryl M762 flash.</p>
-      <p><b>Beryl M762 (80.0%, n=5) is the single most interesting number on this page</b> and the most fragile.
-        Five fights is not a loadout decision on its own &mdash; but a +109.2 damage differential on top of an
-        80% win rate is a big enough signal to deliberately pick it up more often and see if it holds at n=15
-        or 20, rather than writing it off as noise.</p>
-    </div>
-
-    <div class="callout bad">
-      <b>Both LMGs are S821's floor, exactly like D282's.</b> RPD (11.1%, and it's his second most-used weapon
-      on the whole site at 1,730 shots) and M249 (10.0%) are his two worst performers regardless of role or
-      range. RPD's damage differential (&minus;56.8) is nearly as bad as D282's M249. High volume, low
-      conversion &mdash; heavy LMG usage for either of you has not been buying wins.
+      <h3>ACE32 as the default, HK416 or Beryl when they're there</h3>
+      <p>The ACE32 is his most-used gun and the one behind most of his close-range clutches in the fight review
+        (e.g. two kills at 10m and 3m on 2 HP on 9 Aug). It holds up when ambushed (21%) better than anything
+        else he carries often. The HK416 and Beryl win more per fight on smaller samples. The Beryl is now 5 wins
+        in 6. Take them when they drop.</p>
+      <p><b>RPD: drop it.</b> 20 fights, 2 wins, 0 of 11 when ambushed, worst damage difference on the page.</p>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter s821" id="s-long">
     <div class="chapter-num">05</div>
-    <h2 style="color:var(--s821)">S821's Long Gun: DMR or SR</h2>
-    <p class="lede">Still the easiest call on the entire page for raw output &mdash; S821's M24 numbers are the
-      best weapon-player fit anywhere in the dataset. But SLR has quietly caught up on engagement win rate, and
-      is worth knowing about too.</p>
+    <h2 style="color:var(--s821)">S821 &middot; Long Gun</h2>
 
-    <div class="panel s821" style="padding-top:14px;">
-      <div class="wrap-scroll">
+    <div class="panel s821 wrap-scroll" style="padding-top:14px;">
       <table class="dtable">
         <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
-          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
+          <th class="r pad">We opened</th><th class="r pad">Win% when we opened</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
         <tbody>
-          <tr><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">9</td><td class="r pad good">55.6%</td><td class="r pad">77.8%</td><td class="r pad dim">112.5m</td><td class="r good">+56.5</td></tr>
-          <tr class="pick"><td class="name">M24</td><td><span class="cat-pill">SR</span></td><td class="r pad">20</td><td class="r pad good">35.0%</td><td class="r pad">75.0%</td><td class="r pad dim">108.1m</td><td class="r bad">&minus;22.5</td></tr>
-          <tr><td class="name">SLR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">20</td><td class="r pad good">35.0%</td><td class="r pad">65.0%</td><td class="r pad dim">70.7m</td><td class="r good">+17.3</td></tr>
-          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">10</td><td class="r pad bad">10.0%</td><td class="r pad">60.0%</td><td class="r pad dim">59.6m</td><td class="r bad">&minus;34.0</td></tr>
+          <tr><td class="name">Dragunov</td><td><span class="cat-pill">DMR</span></td><td class="r pad">6</td><td class="r pad good">66.7%</td><td class="r pad">50.0%</td><td class="r pad">66.7%</td><td class="r pad dim">113.9m</td><td class="r good">+51.3</td></tr>
+          <tr><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">14</td><td class="r pad good">50.0%</td><td class="r pad">78.6%</td><td class="r pad good">63.6%</td><td class="r pad dim">109.5m</td><td class="r good">+31.8</td></tr>
+          <tr class="pick"><td class="name">M24</td><td><span class="cat-pill">SR</span></td><td class="r pad">22</td><td class="r pad good">36.4%</td><td class="r pad">72.7%</td><td class="r pad">43.8%</td><td class="r pad dim">81.5m</td><td class="r bad">&minus;19.2</td></tr>
+          <tr><td class="name">SLR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">21</td><td class="r pad">33.3%</td><td class="r pad">66.7%</td><td class="r pad">28.6%</td><td class="r pad dim">68.0m</td><td class="r good">+13.2</td></tr>
+          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">10</td><td class="r pad bad">10.0%</td><td class="r pad">60.0%</td><td class="r pad">16.7%</td><td class="r pad dim">59.6m</td><td class="r bad">&minus;34.0</td></tr>
         </tbody>
       </table>
-      </div>
-    </div>
-
-    <div class="callout ok">
-      <b>52.7% accuracy. 305 damage per combat-minute. 80.8 kills per combat-hour.</b> All from the <a href="weapons.html">Weapon
-      Stats</a> page's own numbers, on a genuinely usable 110-shot sample &mdash; more than double the damage
-      output of literally any other gun either of you owns, and it isn't close. In-fight, the M24's win rate has
-      settled to 35.0% (was 36.8% on one fewer fight) but at an even longer real, honest sniper range than
-      before (108.1m median, up from 87.2m) and it still opens the fight three-quarters of the time (75.0%).
-      This is what "using a DMR/SR as intended" looks like when it works.
     </div>
 
     <div class="panel s821">
-      <h3>SLR has caught up to the M24 on win rate &mdash; but not on anything else</h3>
-      <p>SLR's win rate jumped from 29.4% to <b>35.0%</b> on three more fights (n=20 now) &mdash; exactly tying
-        the M24. It also carries a positive damage differential (+17.3) where the M24's is negative (&minus;22.5).
-        On engagement win rate and damage differential alone, SLR now looks like the equal or better pick. But
-        the M24's individual output (52.7% accuracy vs SLR's 18.1%, more than 100 more damage per combat-minute)
-        is in an entirely different tier &mdash; the M24 is landing far more of its shots and doing far more per
-        minute carried, it's just not converting that into as clean a damage differential per fight. Read
-        together: <b>M24 stays the pick</b>, but SLR is now a genuinely strong second option, not just a
-        fallback.</p>
-      <p><b>Mini 14 remains a real contender on a small sample</b> &mdash; still 55.6% win rate and +56.5 damage
-        differential on 9 fights, unchanged this refresh, at an even longer median range (112.5m) than the M24.
-        <b>Mk12 SPR is still S821's worst long gun by a wide margin</b> (10.0%, &minus;34.0 diff) despite a 60%
-        initiation rate &mdash; the same "wins the opener, loses the fight" pattern D282 has with the identical
-        weapon (see Chapter&nbsp;07).</p>
+      <h3>M24 stays, Mini 14 has caught up</h3>
+      <p>The M24 is still his best individual weapon on the whole site: 53% accuracy, 288 damage per combat-minute,
+        79 kills per combat-hour. Most of his headshot knocks in the fight review come from it (157m, 173m, 185m,
+        210m, 236m). The Mini 14 now wins more fights per fight (50% vs 36%, 64% when he opens) on a smaller
+        sample. Either is a good pick. The FAL (SLR) is a solid third.</p>
+      <p>The Mk12 is his worst long gun (1 win in 10) — same "hurts but doesn't finish" pattern as for D282.</p>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="smg">
     <div class="chapter-num">06</div>
-    <h2>The SMG Question</h2>
-    <p class="lede">Not a valid main-slot pick under your own rule, but you asked how you actually do with them
-      &mdash; and against AR/LMG, the honest answer is "better than you'd think, on not much evidence."</p>
+    <h2>SMGs</h2>
 
-    <div class="statrow">
-      <div class="stat">
-        <div class="num">22.2<span style="font-size:16px;color:var(--muted)">%</span></div>
-        <div class="label">D282 · SMG win rate</div>
-        <div class="sub">n=18 &mdash; beats his AR (16.2%) and LMG (10.9%)</div>
-      </div>
-      <div class="stat blue">
-        <div class="num">28.6<span style="font-size:16px;color:var(--muted)">%</span></div>
-        <div class="label">S821 · SMG win rate</div>
-        <div class="sub">n=28 &mdash; close behind his AR (30.9%), clear of LMG (13.8%)</div>
-      </div>
-      <div class="stat ok">
-        <div class="num">8</div>
-        <div class="label">Different SMGs tried between you</div>
-        <div class="sub">MP5K, UMP45, Vector, Micro UZI, PP-19 Bizon, Tommy Gun, JS9, P90</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>The category actually beats AR for D282 &mdash; on a fifth of the sample</h3>
-      <p>SMG sits <em>above</em> AR in engagement win rate for D282 (22.2% vs 16.2%) and close behind it for
-        S821 (28.6% vs 30.9%). For both of you it clears LMG by a wide margin. Read that carefully, though:
-        D282's entire SMG category is 18 fights &mdash; a third of his AR sample &mdash; spread across six
-        different guns, most represented by a handful of fights each. It's a real, positive signal, not yet a
-        reason to reach for an SMG over your AR in the main slot.</p>
-    </div>
-
-    <div class="panel">
-      <h3 style="color:var(--accent)">D282 &mdash; every SMG tried</h3>
-      <div class="wrap-scroll">
+    <div class="panel wrap-scroll">
       <table class="dtable">
-        <thead><tr><th>Weapon</th><th class="r pad">n</th><th class="r pad">Win%</th>
-          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r pad">Dmg diff</th>
-          <th class="r">Acc% <span class="dim" style="font-weight:400;">(career)</span></th></tr></thead>
+        <thead><tr><th>Weapon</th><th class="r pad">D282 n</th><th class="r pad">D282 W-T-L</th>
+          <th class="r pad">S821 n</th><th class="r">S821 W-T-L</th></tr></thead>
         <tbody>
-          <tr><td class="name">MP5K</td><td class="r pad">6</td><td class="r pad">16.7%</td><td class="r pad">66.7%</td><td class="r pad dim">20.4m</td><td class="r flat">+1.9</td><td class="r dim">9.1%</td></tr>
-          <tr><td class="name">UMP45</td><td class="r pad">4</td><td class="r pad good">50.0%</td><td class="r pad">50.0%</td><td class="r pad dim">15.5m</td><td class="r good">+24.5</td><td class="r dim">10.0%</td></tr>
-          <tr><td class="name">Tommy Gun</td><td class="r pad">4</td><td class="r pad bad">0.0%</td><td class="r pad">25.0%</td><td class="r pad dim">8.3m</td><td class="r bad">&minus;58.7</td><td class="r dim">10.0%</td></tr>
-          <tr><td class="name">Micro UZI</td><td class="r pad">2</td><td class="r pad bad">0.0%</td><td class="r pad">50.0%</td><td class="r pad dim">8.2m</td><td class="r bad">&minus;94.6</td><td class="r dim">18.2%</td></tr>
-          <tr><td class="name">Vector</td><td class="r pad">1</td><td class="r pad dim">&mdash;</td><td class="r pad dim">&mdash;</td><td class="r pad dim">20.9m</td><td class="r good">+39.3</td><td class="r dim">10.0%</td></tr>
-          <tr><td class="name">P90</td><td class="r pad">1</td><td class="r pad dim">&mdash;</td><td class="r pad dim">&mdash;</td><td class="r pad dim">25.8m</td><td class="r bad">&minus;100.0</td><td class="r dim">5.0%</td></tr>
+          <tr><td class="name">MP5K</td><td class="r pad">9</td><td class="r pad">2-3-4</td><td class="r pad">19</td><td class="r">4-9-6</td></tr>
+          <tr class="pick"><td class="name">UMP45</td><td class="r pad">5</td><td class="r pad good">2-3-0</td><td class="r pad">3</td><td class="r good">3-0-0</td></tr>
+          <tr><td class="name">Tommy Gun</td><td class="r pad">4</td><td class="r pad bad">0-3-1</td><td class="r pad">2</td><td class="r">1-1-0</td></tr>
+          <tr><td class="name">Micro UZI</td><td class="r pad">2</td><td class="r pad bad">0-0-2</td><td class="r pad">3</td><td class="r">0-3-0</td></tr>
+          <tr><td class="name">Vector</td><td class="r pad">1</td><td class="r pad">1-0-0</td><td class="r pad">1</td><td class="r">0-1-0</td></tr>
+          <tr><td class="name">P90 / JS9</td><td class="r pad">1</td><td class="r pad">0-1-0</td><td class="r pad">1</td><td class="r">0-1-0</td></tr>
         </tbody>
       </table>
-      </div>
-      <p class="muted" style="font-size:13.5px; margin-top:10px;">n=1&ndash;2 rows are a single data point, not a
-        finding &mdash; shown for completeness. PP-19 Bizon (20 career shots, never led a fight on its own) isn't
-        shown at all &mdash; pure curiosity at this sample size.</p>
     </div>
-
-    <div class="panel s821">
-      <h3 style="color:var(--s821)">S821 &mdash; every SMG tried</h3>
-      <div class="wrap-scroll">
-      <table class="dtable">
-        <thead><tr><th>Weapon</th><th class="r pad">n</th><th class="r pad">Win%</th>
-          <th class="r pad">We opened it</th><th class="r pad">Med. range</th><th class="r pad">Dmg diff</th>
-          <th class="r">Acc% <span class="dim" style="font-weight:400;">(career)</span></th></tr></thead>
-        <tbody>
-          <tr><td class="name">MP5K</td><td class="r pad">19</td><td class="r pad">21.1%</td><td class="r pad">36.8%</td><td class="r pad dim">25.2m</td><td class="r bad">&minus;54.7</td><td class="r dim">8.2%</td></tr>
-          <tr><td class="name">UMP45</td><td class="r pad">3</td><td class="r pad good">100.0%</td><td class="r pad">66.7%</td><td class="r pad dim">5.8m</td><td class="r good">+146.3</td><td class="r dim">8.1%</td></tr>
-          <tr><td class="name">Tommy Gun</td><td class="r pad">2</td><td class="r pad">50.0%</td><td class="r pad">0.0%</td><td class="r pad dim">22.9m</td><td class="r good">+22.4</td><td class="r dim">5.6%</td></tr>
-          <tr><td class="name">Micro UZI</td><td class="r pad">2</td><td class="r pad bad">0.0%</td><td class="r pad">50.0%</td><td class="r pad dim">18.5m</td><td class="r good">+37.8</td><td class="r dim">25.0%</td></tr>
-          <tr><td class="name">JS9</td><td class="r pad">1</td><td class="r pad dim">&mdash;</td><td class="r pad dim">&mdash;</td><td class="r pad dim">20.8m</td><td class="r bad">&minus;122.5</td><td class="r dim">30.0%</td></tr>
-          <tr><td class="name">Vector</td><td class="r pad">1</td><td class="r pad dim">&mdash;</td><td class="r pad dim">&mdash;</td><td class="r pad dim">6.4m</td><td class="r bad">&minus;28.6</td><td class="r dim">15.0%</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
-    <div class="callout ok">
-      <b>UMP45 is the standout for both of you &mdash; and the sample size for both of you is tiny.</b> D282:
-      50.0% win rate, +24.5 damage differential, n=4. S821: 3-for-3, +146.3 damage differential, n=3. Neither
-      is remotely enough to promote over an established pick, but seven fights combined without a single loss
-      between two players who otherwise struggle to break 25% with most SMGs is the kind of thing worth
-      deliberately testing rather than dismissing as noise. If an UMP45 is on the ground and your main slot
-      pick isn't, it looks like a genuinely reasonable pickup.
-    </div>
-
-    <div class="panel">
-      <h3>MP5K: the only SMG either of you has really used, and it's just fine</h3>
-      <p>MP5K is the one SMG with enough volume to say something ordinary about &mdash; 16.7% for D282 (n=6),
-        21.1% for S821 (n=19). That's above D282's LMG floor and roughly in line with a below-average AR for
-        both of you: not a weapon that wins you fights, not a weapon that loses them for you either. S821's
-        damage differential with it is rough (&minus;54.7), driven by a low initiation rate (36.8%, his lowest
-        of any SMG with real volume) &mdash; it's a gun he mostly finds himself using after the enemy has
-        already started shooting, not one he's opening fights with.</p>
-      <p class="muted" style="font-size:13.5px">Tommy Gun, Micro UZI, JS9, P90, Vector and PP-19 Bizon all
-        show flashes in individual output (several clear 15&ndash;30% accuracy readings, well above either
-        player's AR/LMG norm) but none has enough carried time or engagements to trust. Interesting for a
-        highlight reel; not yet a loadout decision.</p>
-    </div>
+    <p>As a category SMGs sit between AR and LMG for both of us (D282 22.7% of 22, S821 27.6% of 29).
+      The MP5K is the only one with volume: about average, and S821 mostly uses it after being hit first
+      (opens 37%). The UMP45 is 8 fights between us, 5 wins and no losses. Pick it up if it's there.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="crossplayer">
     <div class="chapter-num">07</div>
-    <h2>Same Gun, Different Player: Is It The Weapon Or The Person?</h2>
-    <p class="lede">Seven weapons show up in both of your hands with enough fights to compare directly. The
-      answer is: sometimes the gun travels, sometimes it very much doesn't.</p>
+    <h2>Same Gun, Different Player</h2>
 
-    <div class="compare-row">
-      <div class="compare-label"><span>D282</span><span>HK416 — win rate</span><span>S821</span></div>
-      <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:30%"></div></div>
-        <div class="val">12.5% / 41.7%</div>
-        <div class="side"><div class="fill s" style="width:100%"></div></div>
-      </div>
+    <div class="panel wrap-scroll">
+      <table class="dtable">
+        <thead><tr><th>Weapon</th><th class="r pad">D282</th><th class="r">S821</th></tr></thead>
+        <tbody>
+          <tr><td class="name">HK416</td><td class="r pad bad">12.0% <span class="dim">(25)</span></td><td class="r good">38.5% <span class="dim">(13)</span></td></tr>
+          <tr><td class="name">Dragunov</td><td class="r pad">16.7% <span class="dim">(6)</span></td><td class="r good">66.7% <span class="dim">(6)</span></td></tr>
+          <tr><td class="name">Mini 14</td><td class="r pad good">40.0% <span class="dim">(25)</span></td><td class="r good">50.0% <span class="dim">(14)</span></td></tr>
+          <tr><td class="name">AK-M</td><td class="r pad">15.0% <span class="dim">(20)</span></td><td class="r">20.0% <span class="dim">(10)</span></td></tr>
+          <tr><td class="name">MP5K</td><td class="r pad">22.2% <span class="dim">(9)</span></td><td class="r">21.1% <span class="dim">(19)</span></td></tr>
+          <tr><td class="name">M249</td><td class="r pad">20.6% <span class="dim">(34)</span></td><td class="r">18.2% <span class="dim">(11)</span></td></tr>
+          <tr class=""><td class="name">Mk12 SPR</td><td class="r pad">20.0% <span class="dim">(20)</span></td><td class="r bad">10.0% <span class="dim">(10)</span></td></tr>
+          <tr><td class="name">RPD</td><td class="r pad bad">0.0% <span class="dim">(6)</span></td><td class="r bad">10.0% <span class="dim">(20)</span></td></tr>
+        </tbody>
+      </table>
     </div>
-    <div class="compare-row">
-      <div class="compare-label"><span>D282</span><span>Mini 14 — win rate</span><span>S821</span></div>
-      <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:63%"></div></div>
-        <div class="val">35.0% / 55.6%</div>
-        <div class="side"><div class="fill s" style="width:100%"></div></div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-label"><span>S821</span><span>Mk12 SPR — win rate</span><span>D282</span></div>
-      <div class="compare-track">
-        <div class="side left"><div class="fill s" style="width:60%"></div></div>
-        <div class="val">10.0% / 16.7%</div>
-        <div class="side"><div class="fill d" style="width:100%"></div></div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-label"><span>S821</span><span>AK-M — win rate</span><span>D282</span></div>
-      <div class="compare-track">
-        <div class="side left"><div class="fill s" style="width:100%"></div></div>
-        <div class="val">20.0% / 6.2%</div>
-        <div class="side"><div class="fill d" style="width:31%"></div></div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-label"><span>D282</span><span>M249 — win rate</span><span>S821</span></div>
-      <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:100%"></div></div>
-        <div class="val">12.8% / 10.0%</div>
-        <div class="side"><div class="fill s" style="width:78%"></div></div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-label"><span>D282</span><span>RPD — win rate</span><span>S821</span></div>
-      <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:1%"></div></div>
-        <div class="val">0.0% / 11.1%</div>
-        <div class="side"><div class="fill s" style="width:100%"></div></div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="compare-label"><span>D282</span><span>MP5K — win rate</span><span>S821</span></div>
-      <div class="compare-track">
-        <div class="side left"><div class="fill d" style="width:79%"></div></div>
-        <div class="val">16.7% / 21.1%</div>
-        <div class="side"><div class="fill s" style="width:100%"></div></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>The HK416 gap is the loudest signal on this whole page</h3>
-      <p>Same gun, similar range (19&ndash;20m), nearly identical initiation rate (~42&ndash;46%) &mdash; and
-        S821 wins the fight <b>more than three times as often</b> (41.7% vs 12.5%). Range and situation are
-        controlled for here about as well as this dataset allows; what's left is positioning, target
-        prioritization, or just raw gunskill with this specific weapon. <b>If only one HK416 drops, it should
-        go to S821</b>, not by default to whoever calls it first.</p>
-      <p><b>AK-M shows almost the same gap, and it's new this refresh.</b> S821 wins 20.0% with it, D282 wins
-        6.2% &mdash; more than three times the difference, on real samples now (n=10 and n=32). D282's AK-M range
-        and initiation rate (19.8m, 37.5%) aren't wildly different from S821's (10.3m, 70.0%), so this isn't
-        purely a "S821 uses it more sensibly" story either. Between this and HK416, the pattern is now two-for-two:
-        when an AR is in question, it's worth defaulting to S821 unless there's a specific reason not to.</p>
-      <p>Mini 14 goes the same direction (S821 ahead, 55.6% vs 35.0%) but both of you clear 30%+ &mdash; it's a
-        gun that rewards whoever's holding it, just more so for S821. <b>Mk12 SPR still flips</b>: D282's the
-        better pick there (16.7% vs 10.0%), for the same reason detailed in Chapter&nbsp;03 &mdash; S821 doesn't
-        open with it as reliably (60.0% vs D282's 83.3%) and both of you show the "wins the opener, loses the
-        fight" pattern with it, S821 just more severely.</p>
-      <p>Meanwhile <b>M249 and RPD don't meaningfully change hands</b> &mdash; whoever's carrying them, the
-        outcome sits in the same bad range for both of you. <b>MP5K drifts a little toward S821</b> (21.1% vs
-        16.7%) but not by nearly as much as the ARs above &mdash; treat it as roughly weapon-neutral, same
-        conclusion as Chapter&nbsp;06's read on it.</p>
-    </div>
+    <p><b>HK416 goes to S821</b>: 38.5% in his hands vs 12.0% in D282's, at the same range. <b>M249 goes to
+      D282</b>. The Mini 14 works for both, so whoever needs a long gun takes it. The Mk12 is weak for both.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="loadout">
     <div class="chapter-num">08</div>
-    <h2>The Recommended Loadout</h2>
-    <p class="lede">Putting it together — one main, one long gun, per player, with the reasoning compressed to
-      a sentence each.</p>
+    <h2>Loadout</h2>
 
     <div class="loadout-grid">
       <div class="loadout-card d">
         <h3>D282</h3>
         <div class="slot">
           <div class="slot-label">Main &middot; AR/LMG</div>
-          <div class="slot-gun">HK416</div>
-          <div class="slot-why">Not the highest win rate (12.5%), but the only main-slot option that doesn't
-            collapse to 0% when ambushed (15.4% of 13) &mdash; and the two alternatives got worse this refresh:
-            M249 (his most-carried gun) is still his worst by damage differential (&minus;69.1), and AK-M has
-            fallen to 6.2% win rate on a real sample (n=32), half of HK416's rate.</div>
+          <div class="slot-gun">M249</div>
+          <div class="slot-why">20.6% on 34 fights, a third of the fights he opens. Narrow edge over the AK-M; the HK416 has dropped to 12%.</div>
         </div>
         <div class="slot">
           <div class="slot-label">Long &middot; DMR/SR</div>
           <div class="slot-gun">Mini 14</div>
-          <div class="slot-why">Clear best by win rate (35.0%, 50.0% in fights he opens) and the only weapon
-            of his that clears 30%. The Mk12 SPR opens fights even more often (83.3%) but stalls out after
-            &mdash; keep it as a fallback, not the default.</div>
+          <div class="slot-why">40% overall, 53% when he opens. His best gun, twice the Mk12's rate.</div>
         </div>
-        <div class="try"><b>Worth testing:</b> an actual bolt-action sniper rifle (Kar98k / M24 / AWM) &mdash;
-          D282 has never carried one long enough to get a read (a 6-fight look at the Dragunov this refresh
-          didn't move the needle, 16.7% win rate), and S821's results with the M24 suggest the slot has real
-          upside untested.</div>
+        <div class="try"><b>Worth testing:</b> UMP45 if it drops (2-3-0). A bolt-action sniper — still no data.</div>
       </div>
 
       <div class="loadout-card s">
         <h3>S821</h3>
         <div class="slot">
-          <div class="slot-label">Main &middot; AR/LMG</div>
-          <div class="slot-gun">ACE32 <span style="font-size:13px;color:var(--muted);font-family:system-ui;">(keep as default) &mdash; rotate in HK416</span></div>
-          <div class="slot-why">ACE32 stays the reliable workhorse (positive damage diff, most combat time,
-            career-high kills) &mdash; there's no case for dropping it. But HK416 wins the actual fight more
-            often on a smaller sample (41.7% vs 24.1%) at nearly the same range, so take it when it's a choice
-            between the two.</div>
+          <div class="slot-label">Main &middot; AR</div>
+          <div class="slot-gun">ACE32 <span style="font-size:13px;color:var(--muted);font-family:system-ui;">&rarr; HK416 / Beryl if found</span></div>
+          <div class="slot-why">ACE32 is the reliable default. HK416 (38.5%) and Beryl (5 of 6) win more per fight. No LMGs.</div>
         </div>
         <div class="slot">
           <div class="slot-label">Long &middot; DMR/SR</div>
-          <div class="slot-gun">M24</div>
-          <div class="slot-why">Still the best individual weapon-player fit in the whole dataset &mdash; 52.7%
-            accuracy, 305 dmg/combat-min, 80.8 kills/combat-hour, and a 35.0% engagement win rate at a genuine
-            108m median range. SLR has caught up to tie it on win rate this refresh (also 35.0%, see
-            Chapter&nbsp;05) but doesn't touch it on raw output &mdash; still the pick.</div>
+          <div class="slot-gun">M24 <span style="font-size:13px;color:var(--muted);font-family:system-ui;">or Mini 14</span></div>
+          <div class="slot-why">M24 has the best individual numbers on the site. Mini 14 now wins 50% of its fights. Skip the Mk12.</div>
         </div>
-        <div class="try"><b>Worth testing:</b> Beryl M762 as a main-slot pick (80.0% win rate, +109.2 damage
-          diff, still just 5 fights &mdash; unchanged this refresh) and more reps on Mini 14 at range (55.6% win
-          rate on 9 fights, also unchanged &mdash; higher than the M24's win rate, though nowhere near its
-          accuracy or damage output) &mdash; both too thin to promote above, both too good to ignore.</div>
+        <div class="try"><b>Worth testing:</b> more Beryl and Dragunov — both look great on 6 fights each.</div>
       </div>
     </div>
 
     <div class="callout">
-      <b>The one-sentence version:</b> drop the LMGs entirely if you can help it &mdash; they're the worst
-      category for both of you, every time it's measured &mdash; and lean into DMR/SR play, which is already
-      both of your best category and is carrying most of your engagement wins.
+      <b>Short version:</b> both of us win most with a long gun in hand, because that's when we open fights.
+      S821 should never carry an LMG. D282's close-range gun matters less than landing the first hit.
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="caveats">
     <div class="chapter-num">09</div>
-    <h2>Method &amp; Caveats</h2>
+    <h2>Method</h2>
     <div class="panel">
       <ul class="method">
-        <li><b>Source:</b> the 511 decisive engagements from <a href="engagements.html">The Engagement
-          Report</a> (built from raw telemetry, 284 matches, 2 Jun &ndash; 13 Sep 2026), cross-referenced with
-          the per-weapon combat-time stats behind <a href="weapons.html">Weapon Stats</a>.</li>
-        <li><b>"Primary weapon"</b> = the gun a player fired most often within one specific fight. A fight's
-          outcome (win/trade/loss) is attributed to whichever player dealt the most damage in it, and to that
-          player's primary weapon. This means a weapon gets credit or blame for fights it merely <em>led</em>,
-          not necessarily fights where it landed the killing blow.</li>
-        <li><b>Category roll-ups</b> (Chapter 01) pool every fight led by any weapon in that category (e.g. all
-          AR fights together) for a larger, more stable sample than any single gun gets on its own.</li>
-        <li><b>The initiation split</b> (we-opened-it vs ambushed) is the main confound control used throughout
-          &mdash; see Chapter&nbsp;00. It isn't a perfect control: multi-team fights, enemy skill, and plain
-          variance in a small sample all still move these numbers around.</li>
-        <li><b>Small samples are named inline.</b> Anything under n=10 (Beryl M762, both Dragunov and Mk12 SPR
-          at the low end, most of Chapter&nbsp;06's SMGs) is a genuine finding worth acting on cautiously, not a
-          settled one. The Beryl M762 and Mini&nbsp;14-for-S821 results in particular are exciting but fragile
-          &mdash; treat them as "test more," not "switch now." The same goes double for UMP45 in Chapter&nbsp;06
-          (n=3&ndash;4 per player).</li>
-        <li><b>Individual output stats</b> (accuracy, damage/combat-minute, kills/combat-hour, cited for the
-          M24 and elsewhere) come from <code>weapon_stats.json</code> and include a handful of matches where
-          only one of you was in the squad; the engagement win-rate figures are always duo fights, sourced
-          directly from the Engagement Report's 511.</li>
-        <li><b>These are correlations from your own games</b>, same as the Engagement Report &mdash; not a
-          controlled test. Treat this page as a strong prior for what to carry, not a guarantee.</li>
+        <li><b>Source:</b> all 529 decisive duo fights (including the first 5 minutes) from 285 matches,
+          2 Jun – 23 Sep 2026. Individual accuracy/damage numbers come from the <a href="weapons.html">Weapon Stats</a> data.</li>
+        <li><b>Credit:</b> each fight goes to the player who did the most damage in it and his most-fired gun.
+          A gun gets credit or blame for fights it led, not only fights where it got the kill.</li>
+        <li><b>Samples</b> are shown next to every number. Under ~15 fights, treat it as "try more", not "switch".</li>
+        <li>Correlations from our own games, not a controlled test.</li>
       </ul>
     </div>
   </section>
@@ -757,8 +451,8 @@
 </div>
 
 <footer>
-  <div class="sign">&mdash; built from 511 engagements and 284 matches &middot; companion to <a href="engagements.html">The Engagement Report</a> and <a href="weapons.html">Weapon Stats</a></div>
-  Not updated automatically. Ask for a refresh once there's more data, especially on the small-sample picks.
+  <div class="sign">529 fights &middot; companion to <a href="engagements.html">The Engagement Report</a> and <a href="weapons.html">Weapon Stats</a></div>
+  Written from matches up to 23 Sep 2026. Not updated automatically.
 </footer>
 
 <script>
@@ -779,8 +473,8 @@ new Chart(document.getElementById('catChart'),{
   data:{
     labels:['AR','LMG','DMR','SR'],
     datasets:[
-      {label:'D282', data:[16.2,10.9,25.5,null], backgroundColor:'#f4a300', borderRadius:4, borderSkipped:false},
-      {label:'S821', data:[30.9,13.8,38.3,43.5], backgroundColor:'#4a9edd', borderRadius:4, borderSkipped:false},
+      {label:'D282', data:[20.3,17.5,28.8,null], backgroundColor:'#f4a300', borderRadius:4, borderSkipped:false},
+      {label:'S821', data:[32.0,15.6,38.2,44.0], backgroundColor:'#4a9edd', borderRadius:4, borderSkipped:false},
     ]
   },
   options:{
