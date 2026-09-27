@@ -476,9 +476,20 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
 .fight-beat:hover { background: rgba(255,255,255,0.05); }
 .fight-beat .fb-t { color: var(--muted); font-variant-numeric: tabular-nums; }
 .fight-beat .fb-sub { color: var(--muted); }
+.fight-beat.big { background: rgba(255,255,255,0.03); }
 .fight-actions { display: flex; gap: 6px; margin-top: 8px; }
 .fight-actions .nav-btn { flex: 1; justify-content: center; }
 .fight-legend { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 10px; color: var(--muted); }
+
+/* ── Overall stats (below the map) ───────────────────────────────────────── */
+.ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; align-items: start; }
+.ov-box { background: rgba(0,0,0,0.12); border: 1px solid rgba(56,52,44,0.5); border-radius: 8px; padding: 10px 12px; min-width: 0; }
+.ov-wide { grid-column: 1 / -1; }
+.ov-wide .player-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; }
+.ov-title { font-family: Oswald, system-ui, sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.fight-toggle { cursor: pointer; user-select: none; margin-bottom: 0; }
+#fightBody { margin-top: 10px; }
+.fight-beats { position: relative; }
 </style>
 </head>
 <body>
@@ -597,44 +608,50 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <div id="loadout821" class="loadout-box"></div>
         </div>
       </div>
+
+      <div class="panel" id="overallStats">
+        <div class="panel-title">Overall Stats</div>
+        <div class="ov-grid">
+          <div class="ov-box ov-wide">
+            <div class="ov-title">Match Summary</div>
+            <div class="player-cards" id="playerCards"><p class="loading">Loading…</p></div>
+          </div>
+          <div class="ov-box">
+            <div class="ov-title">Game Phases</div>
+            <div id="phaseStats"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
+          </div>
+          <div class="ov-box" id="weaponBreakdown">
+            <div class="ov-title">Weapon Damage</div>
+            <div id="weaponBreakdownContent"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
+          </div>
+          <div class="ov-box">
+            <div class="ov-title">Key Moments <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">— click to jump</span></div>
+            <div id="keyMoments" style="max-height:280px;overflow-y:auto"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
+          </div>
+          <div class="ov-box">
+            <div class="ov-title">Engagements</div>
+            <div id="engagementList"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="sidebar">
 
       <div class="panel" id="fightPanel" style="display:none">
-        <div class="panel-title">Fight Replay <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">— pick a fight</span></div>
-        <div class="fight-list" id="fightList"></div>
-        <div id="fightDetail"></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">Match Summary</div>
-        <div class="player-cards" id="playerCards"><p class="loading">Loading…</p></div>
+        <div class="panel-title fight-toggle" onclick="toggleFightPanel()">
+          <span id="fightCaret">▸</span> Fight Replay
+          <span id="fightCount" style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0"></span>
+        </div>
+        <div id="fightBody" style="display:none">
+          <div class="fight-list" id="fightList"></div>
+          <div id="fightDetail"></div>
+        </div>
       </div>
 
       <div class="panel">
         <div class="panel-title">Layers</div>
         <div class="layer-grid" id="layerGrid"></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">Game Phases</div>
-        <div id="phaseStats"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">Key Moments <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">— click to jump</span></div>
-        <div id="keyMoments" style="max-height:280px;overflow-y:auto"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">Engagements</div>
-        <div id="engagementList"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
-      </div>
-
-      <div id="weaponBreakdown" class="panel">
-        <div class="panel-title">Weapon Damage</div>
-        <div id="weaponBreakdownContent"><span style="color:var(--muted);font-size:12px">Loading…</span></div>
       </div>
 
     </div>
@@ -1350,6 +1367,12 @@ async function boot() {
   document.getElementById('matchMeta').textContent =
     `${MD.created_at.slice(0, 10)} · ${mmss(MD.duration_s || 0)} match`;
 
+  // Events keep coming after the official end (e.g. a revive on the winner screen).
+  // Stretch the page's timeline so they can be reached on the slider.
+  const lastT = Math.max(0, ...MD.events.map(e => e.t || 0),
+                         ...Object.values(MD.positions).map(p => p.length ? p[p.length - 1].t : 0));
+  if (lastT > (MD.duration_s || 0)) MD.duration_s = Math.ceil(lastT) + 2;
+
   // Reveal "Matches ▸ [current]" breadcrumb trail
   document.getElementById('bcMatchSep').style.display = '';
   const bcCur = document.getElementById('bcCur');
@@ -1441,8 +1464,7 @@ async function boot() {
 
   renderMatchTable('matchListContainer', id);
   setTimeout(() => {
-    const row = document.getElementById(`mrow-${id}`);
-    if (row) row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    scrollListToRow(id);
   }, 150);
 }
 
@@ -2822,15 +2844,21 @@ function drawEngagements(maxT) {
    FIGHT REPLAY MODE
    One fight from stats-data/engagements.json (written by engagement_stories.py).
    t0g/t1g are on this page's game clock. While a fight is open, the slider,
-   timeline, HP and score charts cover only the fight window, the map zooms to
-   the fight, and only fight layers are drawn: trails for us and the enemies
-   involved, damage lines that stay on the map, knocks and kills.
+   timeline and HP chart cover only the fight window, the map zooms to the
+   fight, and only fight layers are drawn: trails for us and the enemies
+   involved, damage lines that stay on the map, knocks, kills and revives.
+   The beat list is built here from MD.events / killfeed / revives (not from
+   the engagement's pre-made story), so it has every hit, knock, kill, death
+   and revive and each beat knows exactly which map events it stands for.
 ============================================================================ */
 const FIGHT_PREROLL_S  = 20;   // movement shown before the first hit
 const FIGHT_POSTROLL_S = 8;
+const FIGHT_PICKUP_S   = 120;  // extend the window to show a knocked teammate's revive/death
 const FIGHT_ENEMY_COLS = ['#ff4d4d', '#ff8a3d', '#e05cff', '#ffd23d'];
 let FIGHTS = [];      // this match's fights, chronological
-let FIGHT  = null;    // { f, t0, t1, w0, w1, enemies: Map(name -> {en, col}) }
+let FIGHT  = null;    // { f, t0, t1, w0, w1, enemies: Map(name -> {en, col}), beats, selBeat }
+let FIGHT_OPEN = false;
+let _ourDown = {};    // player -> [{ from, to, dead }] knocked / dead intervals from events
 
 function tRange() {
   return FIGHT ? [FIGHT.w0, FIGHT.w1] : [0, MD ? (MD.duration_s || 1800) : 1800];
@@ -2845,12 +2873,42 @@ async function loadFights(matchId) {
     FIGHTS = all.filter(f => f.match_id === matchId && f.t0g != null)
                 .sort((a, b) => a.t0g - b.t0g);
   } catch { FIGHTS = []; }
-  buildFightPanel();
+  _buildOurDown();
   const want = new URLSearchParams(location.search).get('fight');
-  if (want != null) {
-    const f = FIGHTS.find(x => String(x.idx) === want);
-    if (f) enterFight(f.idx, true);
+  const f = want != null ? FIGHTS.find(x => String(x.idx) === want) : null;
+  FIGHT_OPEN = !!f;             // open when arriving from an engagement link, collapsed otherwise
+  buildFightPanel();
+  if (f) enterFight(f.idx, true);
+}
+
+function toggleFightPanel(open) {
+  FIGHT_OPEN = open == null ? !FIGHT_OPEN : open;
+  document.getElementById('fightBody').style.display = FIGHT_OPEN ? '' : 'none';
+  document.getElementById('fightCaret').textContent  = FIGHT_OPEN ? '▾' : '▸';
+}
+
+/* Knocked/dead intervals for OUR players, from events. Position samples carry a dbno
+   flag too, but they arrive every few seconds, so a revived player would stay a
+   triangle until the next sample. */
+function _buildOurDown() {
+  _ourDown = {};
+  const evs = MD.events.slice().sort((a, b) => a.t - b.t);
+  for (const ev of evs) {
+    const p = ev.type === 'revive' || ev.type === 'blue_chip_revive' ? ev.target : ev.player;
+    if (!(p in PLAYER_COLOR)) continue;
+    const arr = _ourDown[p] || (_ourDown[p] = []);
+    const open = arr.length && arr[arr.length - 1].to == null ? arr[arr.length - 1] : null;
+    if (ev.type === 'knocked' && !open) arr.push({ from: ev.t, to: null, dead: false });
+    else if (ev.type === 'death') {
+      if (open) open.to = ev.t;
+      arr.push({ from: ev.t, to: null, dead: true });
+    } else if ((ev.type === 'revive' || ev.type === 'blue_chip_revive') && open) open.to = ev.t;
   }
+}
+function ourStateAt(player, t) {
+  for (const iv of (_ourDown[player] || []))
+    if (t >= iv.from && (iv.to == null || t < iv.to)) return iv.dead ? 'dead' : 'knocked';
+  return 'up';
 }
 
 const FIGHT_OUTCOME = { win: ['W', 'fo-win', 'Win'], trade: ['T', 'fo-trade', 'Trade'], loss: ['L', 'fo-loss', 'Loss'] };
@@ -2860,10 +2918,14 @@ function buildFightPanel() {
   if (!FIGHTS.length) { panel.style.display = 'none'; return; }
   panel.style.display = '';
   panel.classList.toggle('active', !!FIGHT);
+  document.getElementById('fightCount').textContent =
+    `— ${FIGHTS.length} fight${FIGHTS.length === 1 ? '' : 's'}${FIGHT ? ' · replaying' : ''}`;
+  toggleFightPanel(FIGHT_OPEN);
   document.getElementById('fightList').innerHTML = FIGHTS.map(f => {
     const [o, cls] = FIGHT_OUTCOME[f.outcome] || ['?', ''];
-    const sel = FIGHT && FIGHT.f.idx === f.idx ? ' sel' : '';
-    return `<button class="fight-chip${sel}" onclick="enterFight(${f.idx})" title="${f.archetype} — dealt ${Math.round(f.dealt)}, took ${Math.round(f.taken)}">
+    const sel = FIGHT && FIGHT.f.idx === f.idx;
+    return `<button class="fight-chip${sel ? ' sel' : ''}" onclick="onFightChip(${f.idx})"
+      title="${sel ? 'Click again to leave fight replay' : `${f.archetype} — dealt ${Math.round(f.dealt)}, took ${Math.round(f.taken)}`}">
       <span class="fc-t">${mmss(f.t0g)}</span><span class="fo ${cls}">${o}</span>
       <span class="fc-arch">${f.archetype}</span>
       <span class="fc-dmg">${Math.round(f.dealt)}/${Math.round(f.taken)}</span></button>`;
@@ -2871,9 +2933,90 @@ function buildFightPanel() {
   renderFightDetail();
 }
 
+function onFightChip(idx) {
+  if (FIGHT && FIGHT.f.idx === idx) exitFight();   // clicking the selected fight leaves replay
+  else enterFight(idx);
+}
+
 function _fightName(n) {
   const col = PLAYER_COLOR[n] || ((FIGHT && FIGHT.enemies.get(n)) || {}).col || '#ff6b6b';
   return `<b style="color:${col}">${n}</b>`;
+}
+
+/* ── Beats ──────────────────────────────────────────────────────────────── */
+function _dist(ev) {
+  return ev.ex != null ? Math.round(Math.hypot(ev.x - ev.ex, ev.y - ev.ey) / 100) : null;
+}
+
+function _buildFightBeats() {
+  const { w0, w1, enemies } = FIGHT;
+  const lo = FIGHT.t0 - 1;
+  const raw = [];
+  const add = (b) => raw.push(Object.assign({ hits: 1, evs: [] }, b));
+  for (const ev of MD.events) {
+    if (ev.t < lo || ev.t > w1) continue;
+    switch (ev.type) {
+      case 'dmg_dealt':
+        add({ t: ev.t, kind: 'hit', actor: ev.player, target: ev.target, wpn: ev.weapon,
+              dmg: ev.damage || 0, rng: _dist(ev), hs: ev.reason === 'HeadShot', evs: [ev] }); break;
+      case 'dmg_taken':
+        if (!ev.attacker) break;
+        add({ t: ev.t, kind: 'hit', actor: ev.attacker, target: ev.player, wpn: ev.weapon,
+              dmg: ev.damage || 0, rng: _dist(ev), hs: ev.reason === 'HeadShot', evs: [ev] }); break;
+      case 'knockdown': add({ t: ev.t, kind: 'knock', actor: ev.player, target: ev.victim, wpn: ev.weapon, rng: _dist(ev), evs: [ev] }); break;
+      case 'knocked':   add({ t: ev.t, kind: 'knock', actor: ev.attacker || '?', target: ev.player, evs: [ev] }); break;
+      case 'kill':      add({ t: ev.t, kind: 'kill',  actor: ev.player, target: ev.victim, wpn: ev.weapon, rng: _dist(ev), evs: [ev] }); break;
+      case 'death':     add({ t: ev.t, kind: 'kill',  actor: ev.killer || '?', target: ev.player, wpn: ev.weapon, evs: [ev] }); break;
+      case 'revive':           add({ t: ev.t, kind: 'revive', actor: ev.player, target: ev.target, evs: [ev] }); break;
+      case 'blue_chip_revive': add({ t: ev.t, kind: 'bluechip', actor: ev.player, target: ev.target, evs: [ev] }); break;
+    }
+  }
+  // Third parties: knocks/kills of the enemies in this fight made by someone other than us
+  for (const kf of (MD.killfeed || [])) {
+    if (kf.our || kf.t < lo || kf.t > w1) continue;
+    if (!enemies.has(kf.victim) && !enemies.has(kf.killer)) continue;
+    add({ t: kf.t, kind: kf.is_knock ? 'knock' : 'kill', actor: kf.killer || '?', target: kf.victim, wpn: kf.weapon, third: true });
+  }
+  for (const rv of (MD.revives || [])) {
+    if (rv.t < lo || rv.t > w1 || !enemies.has(rv.victim)) continue;
+    add({ t: rv.t, kind: 'revive', actor: null, target: rv.victim });
+  }
+  const ORDER = { hit: 0, knock: 1, kill: 2, revive: 3, bluechip: 3 };
+  raw.sort((a, b) => a.t - b.t || ORDER[a.kind] - ORDER[b.kind]);
+
+  // One beat per burst: same shooter → same target, same gun, ≤ 4 s between hits
+  const beats = [];
+  for (const b of raw) {
+    const p = beats[beats.length - 1];
+    if (b.kind === 'hit' && p && p.kind === 'hit' && p.actor === b.actor && p.target === b.target
+        && p.wpn === b.wpn && b.t - p.tEnd <= 4) {
+      p.hits++; p.dmg += b.dmg; p.hs = p.hs || b.hs; p.tEnd = b.t; p.evs.push(...b.evs);
+      if (b.rng != null) p.rng = b.rng;
+      continue;
+    }
+    b.tEnd = b.t;
+    beats.push(b);
+  }
+  return beats;
+}
+
+function _beatHTML(b) {
+  const sub = (s) => s ? ` <span class="fb-sub">${s}</span>` : '';
+  const gun = [b.wpn, b.rng != null ? `${b.rng} m` : null].filter(Boolean).join(' · ');
+  switch (b.kind) {
+    case 'hit':
+      return `${_fightName(b.actor)} hits ${_fightName(b.target)}${b.hits > 1 ? ` ×${b.hits}` : ''} for ${Math.round(b.dmg)}${b.hs ? ' ◎' : ''}${sub(gun)}`;
+    case 'knock':
+      return `${_fightName(b.actor)} <b>KNOCKS</b> ${_fightName(b.target)}${sub(b.third ? `${b.wpn || ''} · third party` : gun)}`;
+    case 'kill':
+      return `${_fightName(b.actor)} <b>KILLS</b> ${_fightName(b.target)}${sub(b.third ? `${b.wpn || ''} · third party` : gun)}`;
+    case 'revive':
+      return b.actor ? `${_fightName(b.actor)} <b class="fo-win">REVIVES</b> ${_fightName(b.target)}`
+                     : `${_fightName(b.target)} <b>is revived</b>`;
+    case 'bluechip':
+      return `${_fightName(b.actor)} <b class="fo-win">BLUE-CHIPS</b> ${_fightName(b.target)}`;
+  }
+  return '';
 }
 
 function renderFightDetail() {
@@ -2895,29 +3038,21 @@ function renderFightDetail() {
     ['Dealt', `${Math.round(f.dealt)} <span style="color:var(--muted)">(${by(f.dealt_by)})</span>`],
     ['Taken', `${Math.round(f.taken)} <span style="color:var(--muted)">(${by(f.taken_by)})</span>`],
     ['Knocks', `${f.enemy_knocked} of theirs · ${f.us_knocked} of ours`],
+    ['Kills', `${f.enemy_killed} of theirs · ${f.us_killed} of ours`],
     ['Enemies', f.enemies && f.enemies.length ? f.enemies.map(_fightName).join(', ') : `${f.n_enemies}`],
     ['Their guns', (f.enemy_weapons || []).join(', ') || '—'],
   ];
-  const beats = (f.story || []).map((b, i) => {
-    let txt;
-    if (b.kind === 'damage') {
-      const h = b.hits > 1 ? ` ×${b.hits}` : '';
-      txt = `${_fightName(b.actor)} hits ${_fightName(b.target)}${h} for ${Math.round(b.dmg)}
-             <span class="fb-sub">${b.wpn || '?'}${b.rng != null ? ` · ${Math.round(b.rng)} m` : ''}</span>`;
-    } else {
-      txt = `${_fightName(b.actor)} <b>${b.kind === 'groggy' ? 'KNOCKS' : 'KILLS'}</b> ${_fightName(b.target)}
-             <span class="fb-sub">${b.wpn || ''}</span>`;
-    }
-    return `<div class="fight-beat" data-i="${i}" onclick="jumpToMoment(${(f.t0g + b.t).toFixed(1)})">
-      <span class="fb-t">+${b.t.toFixed(1)}s</span><span>${txt}</span></div>`;
-  }).join('');
+  const beats = FIGHT.beats.map((b, i) =>
+    `<div class="fight-beat${b.kind !== 'hit' ? ' big' : ''}" data-i="${i}" onclick="selectBeat(${i})">
+      <span class="fb-t">${b.t >= FIGHT.t0 ? '+' : ''}${(b.t - FIGHT.t0).toFixed(1)}s</span><span>${_beatHTML(b)}</span></div>`
+  ).join('');
   el.innerHTML = `<div class="fight-card">
       <div class="fight-card-hd"><b class="${cls}">${word}</b><span>${f.archetype}</span></div>
       <div class="fight-facts">${facts.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>
       <div class="fight-legend">
-        <span><span style="color:var(--accent)">━</span>/<span style="color:var(--blue)">━</span> our hits</span>
-        <span><span style="color:#ff4444">━</span> their hits</span>
-        <span>┄ before first hit</span><span>◯ headshot</span>
+        <span><span style="color:var(--accent)">╍</span>/<span style="color:var(--blue)">╍</span> our hits</span>
+        <span><span style="color:#ff4444">╍</span> their hits</span>
+        <span>┄ before first hit</span><span>◎ headshot</span>
       </div>
       <div class="fight-beats" id="fightBeats">${beats || '<div style="color:var(--muted);padding:4px">No beats recorded.</div>'}</div>
       <div class="fight-actions">
@@ -2927,28 +3062,48 @@ function renderFightDetail() {
       </div></div>`;
 }
 
-function updateFightBeats(maxT) {
-  const box = document.getElementById('fightBeats');
-  if (!box || !FIGHT) return;
-  const story = FIGHT.f.story || [];
-  let cur = -1;
-  story.forEach((b, i) => { if (FIGHT.t0 + b.t <= maxT + 0.05) cur = i; });
-  const live = state.time !== Infinity;
-  box.querySelectorAll('.fight-beat').forEach(el => {
-    const i = +el.dataset.i;
-    el.classList.toggle('past', i <= cur);
-    el.classList.toggle('now', live && i === cur);
-  });
+/* Clicking a beat selects exactly that beat (several beats can share a timestamp)
+   and jumps to its last hit so the whole burst is on the map. */
+function selectBeat(i) {
+  if (!FIGHT) return;
+  FIGHT.selBeat = i;
+  jumpToMoment(FIGHT.beats[i].tEnd);
 }
 
-function _setFightSlider() {
+function _currentBeat(maxT) {
+  const sel = FIGHT.selBeat;
+  if (sel != null && isFinite(state.time) && Math.abs(state.time - FIGHT.beats[sel].tEnd) < 0.05) return sel;
+  FIGHT.selBeat = null;
+  let cur = -1;
+  FIGHT.beats.forEach((b, i) => { if (b.t <= maxT + 0.05) cur = i; });
+  return cur;
+}
+
+function updateFightBeats(maxT, cur) {
+  const box = document.getElementById('fightBeats');
+  if (!box || !FIGHT) return;
+  const live = state.time !== Infinity;
+  let nowEl = null;
+  box.querySelectorAll('.fight-beat').forEach(el => {
+    const i = +el.dataset.i;
+    el.classList.toggle('past', FIGHT.beats[i].t <= maxT + 0.05);
+    el.classList.toggle('now', live && i === cur);
+    if (live && i === cur) nowEl = el;
+  });
+  // keep the current beat visible inside the list (never scrolls the page)
+  if (nowEl && (nowEl.offsetTop < box.scrollTop || nowEl.offsetTop + nowEl.offsetHeight > box.scrollTop + box.clientHeight))
+    box.scrollTop = nowEl.offsetTop - box.clientHeight / 3;
+}
+
+/* ── Enter / exit ───────────────────────────────────────────────────────── */
+function _setSlider(lo, hi, t) {
   const sl = document.getElementById('timeSlider');
-  const [lo, hi] = tRange();
-  sl.min   = Math.floor(lo);
-  sl.max   = Math.ceil(hi);
-  sl.value = sl.max;
-  state.time = Infinity;
-  document.getElementById('timeDisplay').textContent = fullLabel();
+  sl.min = Math.floor(lo);
+  sl.max = Math.ceil(hi);
+  const atEnd = t == null || t >= +sl.max;
+  sl.value   = atEnd ? sl.max : Math.round(t);
+  state.time = atEnd ? Infinity : t;
+  document.getElementById('timeDisplay').textContent = atEnd ? fullLabel() : mmss(t);
 }
 
 function enterFight(idx, fromUrl) {
@@ -2964,29 +3119,39 @@ function enterFight(idx, fromUrl) {
     if (!teamCol.has(en.team)) teamCol.set(en.team, FIGHT_ENEMY_COLS[teamCol.size % FIGHT_ENEMY_COLS.length]);
     enemies.set(name, { en, col: teamCol.get(en.team) });
   }
-  FIGHT = { f, t0: f.t0g, t1: f.t1g, enemies,
-            w0: Math.max(0, f.t0g - FIGHT_PREROLL_S), w1: Math.min(dur, f.t1g + FIGHT_POSTROLL_S) };
+  // Stretch the window past the last hit so a teammate knocked in this fight is seen
+  // getting picked up (or dying).
+  let w1 = f.t1g + FIGHT_POSTROLL_S;
+  for (const k of MD.events) {
+    if (k.type !== 'knocked' || k.t < f.t0g - 1 || k.t > f.t1g + 1) continue;
+    const end = MD.events.find(e => e.t > k.t && e.t <= k.t + FIGHT_PICKUP_S &&
+      ((e.type === 'revive' && e.target === k.player) || (e.type === 'death' && e.player === k.player)));
+    if (end) w1 = Math.max(w1, end.t + 4);
+  }
+  FIGHT = { f, t0: f.t0g, t1: f.t1g, enemies, selBeat: null,
+            w0: Math.max(0, f.t0g - FIGHT_PREROLL_S), w1: Math.min(dur, w1) };
+  FIGHT.beats = _buildFightBeats();
   if (!fromUrl) {
     const u = new URL(location.href);
     u.searchParams.set('fight', idx);
     history.replaceState(null, '', u);
   }
-  _setFightSlider();
+  FIGHT_OPEN = true;
+  _setSlider(FIGHT.w0, FIGHT.w1, null);
   buildFightPanel();
   fitFightView();
   draw(); drawTimeline(); drawHpChart(); drawScoreChart();
-  if (fromUrl) document.getElementById('mapWrap').scrollIntoView({ block: 'start' });
 }
 
 function exitFight() {
   if (!FIGHT) return;
   pausePlayback();
+  const t = state.time === Infinity ? FIGHT.w1 : state.time;   // stay at the same moment
   FIGHT = null;
   const u = new URL(location.href);
   u.searchParams.delete('fight');
   history.replaceState(null, '', u);
-  document.getElementById('timeSlider').min = 0;
-  _setFightSlider();
+  _setSlider(0, MD.duration_s || 1800, t);
   buildFightPanel();
   resetView();
   drawTimeline(); drawHpChart(); drawScoreChart();
@@ -2999,6 +3164,7 @@ function replayFight() {
   startPlayback();
 }
 
+/* ── Geometry helpers ───────────────────────────────────────────────────── */
 /* Linear position between samples. pts: [{t,x,y}] sorted by t. */
 function _lerpPos(pts, t) {
   if (!pts.length || t < pts[0].t) return null;
@@ -3045,8 +3211,9 @@ function fitFightView() {
   clampView();
 }
 
+/* ── Drawing ────────────────────────────────────────────────────────────── */
 function _trail(pts, t0, maxT, col, lw) {
-  // dashed before the first hit, solid once the fight is on
+  // thin and light so the damage lines stay readable; dashed before the first hit
   const vis = pts.filter(p => p.t >= FIGHT.w0 && p.t <= maxT);
   const now = _lerpPos(pts, maxT);
   if (now && (!vis.length || vis[vis.length - 1].t < maxT)) vis.push({ ...now, t: maxT });
@@ -3056,9 +3223,9 @@ function _trail(pts, t0, maxT, col, lw) {
     ctx.beginPath();
     ctx.moveTo(a.cx, a.cy); ctx.lineTo(b.cx, b.cy);
     ctx.strokeStyle = col;
-    ctx.lineWidth   = (pre ? lw * 0.7 : lw) / view.scale;
-    ctx.globalAlpha = pre ? 0.5 : 0.9;
-    ctx.setLineDash(pre ? [5 / view.scale, 4 / view.scale] : []);
+    ctx.lineWidth   = lw / view.scale;
+    ctx.globalAlpha = pre ? 0.3 : 0.55;
+    ctx.setLineDash(pre ? [4 / view.scale, 4 / view.scale] : []);
     ctx.stroke();
   }
   ctx.setLineDash([]);
@@ -3076,15 +3243,26 @@ function _label(txt, cx, cy, col) {
   ctx.fillText(txt, cx + 8 / view.scale, cy);
 }
 
+function _ring(cx, cy, r, col) {
+  ctx.beginPath();
+  ctx.arc(cx, cy, r / view.scale, 0, Math.PI * 2);
+  ctx.strokeStyle = col;
+  ctx.lineWidth   = 2.5 / view.scale;
+  ctx.globalAlpha = 0.95;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
 function drawFight(maxT) {
   const { t0 } = FIGHT;
+  const cur = _currentBeat(maxT);
   markers = [];
 
   // Enemy trails and current dots
   for (const [name, { en, col }] of FIGHT.enemies) {
     const pts  = _enemyPts(en);
     const endT = en.death_t != null ? Math.min(maxT, en.death_t) : maxT;
-    _trail(pts, t0, endT, col, 2);
+    _trail(pts, t0, endT, col, 1.3);
     const p = _lerpPos(pts, endT);
     if (!p || endT - p.last > STALE_POS_S) continue;
     const { cx, cy } = w2c(p.x, p.y);
@@ -3110,10 +3288,11 @@ function drawFight(maxT) {
   // Our trails
   for (const [player, pts] of Object.entries(MD.positions)) {
     if (!playerVis(player)) continue;
-    _trail(pts, t0, maxT, pColor(player), 2.5);
+    _trail(pts, t0, maxT, pColor(player), 1.6);
   }
 
-  // Damage lines stay on the map; the last 2 s are drawn brighter
+  // Damage lines stay on the map. Dash pattern as in the normal replay:
+  // solid ≥ 100 dmg, long dashes ≥ 40, dotted below. The last 2 s are drawn brighter.
   for (const ev of _fightEvents()) {
     if (ev.type !== 'dmg_dealt' && ev.type !== 'dmg_taken') continue;
     if (ev.ex == null || ev.t > maxT || !playerVis(ev.player)) continue;
@@ -3121,19 +3300,21 @@ function drawFight(maxT) {
     const [from, to] = ev.type === 'dmg_dealt' ? [us, them] : [them, us];
     const col   = ev.type === 'dmg_dealt' ? pColor(ev.player) : '#ff4444';
     const fresh = isFinite(state.time) && maxT - ev.t <= 2;
-    const lw    = Math.min(1 + (ev.damage || 0) / 25, 5);
+    const dmg   = ev.damage || 0;
+    ctx.setLineDash(dmg >= 100 ? [] : dmg >= 40 ? [8 / view.scale, 3 / view.scale] : [3 / view.scale, 6 / view.scale]);
     ctx.beginPath();
     ctx.moveTo(from.cx, from.cy); ctx.lineTo(to.cx, to.cy);
     ctx.strokeStyle = col;
-    ctx.lineWidth   = (fresh ? lw + 1 : lw) / view.scale;
-    ctx.globalAlpha = fresh ? 0.95 : 0.45;
+    ctx.lineWidth   = (fresh ? 2.4 : 1.5) / view.scale;
+    ctx.globalAlpha = fresh ? 0.95 : 0.6;
     ctx.stroke();
-    ctx.globalAlpha = fresh ? 1 : 0.7;
+    ctx.setLineDash([]);
+    ctx.globalAlpha = fresh ? 1 : 0.75;
     ctx.fillStyle = col;
-    ctx.beginPath(); ctx.arc(to.cx, to.cy, 2.2 / view.scale, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(to.cx, to.cy, 2 / view.scale, 0, Math.PI * 2); ctx.fill();
     if (ev.reason === 'HeadShot') {
-      ctx.lineWidth = 1.3 / view.scale;
-      ctx.beginPath(); ctx.arc(to.cx, to.cy, 5.5 / view.scale, 0, Math.PI * 2); ctx.stroke();
+      ctx.lineWidth = 1.2 / view.scale; ctx.strokeStyle = col;
+      ctx.beginPath(); ctx.arc(to.cx, to.cy, 5 / view.scale, 0, Math.PI * 2); ctx.stroke();
     }
     ctx.globalAlpha = 1;
     markers.push({ cx: to.cx, cy: to.cy, ev });
@@ -3150,27 +3331,44 @@ function drawFight(maxT) {
     markers.push({ cx, cy, ev });
   }
 
-  // Our current positions (interpolated between samples)
+  // Our current positions (interpolated); knocked/dead state comes from events
   for (const [player, pts] of Object.entries(MD.positions)) {
     if (!playerVis(player)) continue;
     const p = _lerpPos(pts, maxT);
     if (!p) continue;
     const { cx, cy } = w2c(p.x, p.y);
+    const st = player in PLAYER_COLOR ? ourStateAt(player, maxT) : (p.dbno ? 'knocked' : 'up');
     ctx.fillStyle = pColor(player); ctx.strokeStyle = '#fff';
     ctx.lineWidth = 1.2 / view.scale;
     const r = 6 / view.scale;
     ctx.beginPath();
-    if (p.dbno || p.hp === 0) {
-      ctx.moveTo(cx - r * 0.866, cy - r * 0.5); ctx.lineTo(cx + r * 0.866, cy - r * 0.5); ctx.lineTo(cx, cy + r);
-      ctx.closePath();
+    if (st === 'dead') {
+      ctx.strokeStyle = pColor(player); ctx.lineWidth = 2.2 / view.scale;
+      ctx.moveTo(cx - r, cy - r); ctx.lineTo(cx + r, cy + r);
+      ctx.moveTo(cx + r, cy - r); ctx.lineTo(cx - r, cy + r);
+      ctx.stroke();
     } else {
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      if (st === 'knocked') {
+        ctx.moveTo(cx - r * 0.866, cy - r * 0.5); ctx.lineTo(cx + r * 0.866, cy - r * 0.5); ctx.lineTo(cx, cy + r);
+        ctx.closePath();
+      } else {
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      }
+      ctx.fill(); ctx.stroke();
     }
-    ctx.fill(); ctx.stroke();
     _label(player, cx, cy, pColor(player));
   }
 
-  updateFightBeats(maxT);
+  // Ring the selected beat's events so it is clear which line/marker it means
+  if (cur >= 0 && isFinite(state.time)) {
+    for (const ev of FIGHT.beats[cur].evs) {
+      const onThem = ev.type === 'dmg_dealt' || ev.type === 'kill' || ev.type === 'knockdown';
+      const pos = onThem && ev.ex != null ? w2c(ev.ex, ev.ey) : w2c(ev.x, ev.y);
+      _ring(pos.cx, pos.cy, 11, '#ffffff');
+    }
+  }
+
+  updateFightBeats(maxT, cur);
 }
 
 /* ============================================================================
@@ -3979,8 +4177,17 @@ function toggleMatchList() {
   if (!document.getElementById('matchListContainer').firstChild) {
     renderMatchTable('matchListContainer', id);
   }
+  setTimeout(() => scrollListToRow(id), 50);
+}
+
+// Centre the current match inside the list box only. scrollIntoView() scrolled the whole
+// page down to the match list on every load, hiding the map.
+function scrollListToRow(id) {
   const row = document.getElementById(`mrow-${id}`);
-  if (row) setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  const box = document.getElementById('matchListContainer');
+  if (!row || !box) return;
+  box.scrollTop += row.getBoundingClientRect().top - box.getBoundingClientRect().top
+                   - box.clientHeight / 2 + row.clientHeight / 2;
 }
 
 /* ============================================================================
