@@ -519,7 +519,7 @@ function renderTable(rows){
     const hp=e.hp_min==null?'<span class="dim">—</span>'
       :`<span class="${e.hp_min>=99?'good':e.hp_min<50?'bad':''}">${e.hp_min}</span>`;
     let html=`<tr class="row" data-k="${key}">
-      <td class="dim">${e.date.slice(5)}</td><td>${mmss(e.stage_s)}</td><td class="dim">${e.map}</td>
+      <td class="dim">${e.date.slice(5)}</td><td>${mmss(e.t0g ?? e.stage_s)}</td><td class="dim">${e.map}</td>
       <td>${e.archetype}</td><td>${oc}</td><td>${init}</td>
       <td>${num(e.range_med,'m')}</td><td>${hp}</td><td>${both}</td>
       <td>${Math.round(e.dealt)}</td><td>${Math.round(e.taken)}</td></tr>`;
@@ -529,7 +529,7 @@ function renderTable(rows){
       html+=`<tr class="detail"><td colspan="11">
         <div style="margin-bottom:8px"><b>${e.archetype}</b> · ${e.n_enemies} enemies / ${e.n_enemy_teams} team(s)
         · ${e.in_vehicle?'in a vehicle':'on foot'} · lead ${e.primary_player||'—'} ${e.primary_weapon?'('+e.primary_weapon+')':''}
-        · <a href="match.html?id=${e.match_id}">open this match on the map →</a></div>
+        · <a href="match.html?id=${e.match_id}&fight=${e.idx}" style="font-weight:700">▶ replay this fight on the map</a></div>
         ${beatHTML(e.story)}
         <div style="margin-top:8px" class="dim">Dealt: ${dealtBy||Math.round(e.dealt)} &middot; Taken: ${takenBy||Math.round(e.taken)}</div>
       </td></tr>`;

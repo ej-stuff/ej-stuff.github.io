@@ -444,6 +444,41 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
 #siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
 #siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
 #siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+
+/* ── Fight replay mode ───────────────────────────────────────────────────── */
+#fightPanel.active { border-color: rgba(244,163,0,0.55); }
+.fight-list { display: flex; flex-direction: column; gap: 3px; max-height: 190px; overflow-y: auto; }
+.fight-chip {
+  display: grid; grid-template-columns: 34px 16px minmax(0,1fr) auto; gap: 6px; align-items: center;
+  font-size: 11px; padding: 4px 6px; border-radius: 5px; cursor: pointer;
+  border: 1px solid transparent; background: rgba(0,0,0,0.12); color: var(--text);
+  text-align: left; font-family: inherit; width: 100%;
+}
+.fight-chip:hover { border-color: var(--line); }
+.fight-chip.sel { border-color: var(--accent); background: rgba(244,163,0,0.10); }
+.fight-chip .fc-t { color: var(--muted); font-variant-numeric: tabular-nums; }
+.fight-chip .fc-arch { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fight-chip .fc-dmg { color: var(--muted); font-variant-numeric: tabular-nums; }
+.fo { font-weight: 700; text-align: center; }
+.fo-win { color: var(--ok); } .fo-trade { color: #d6b25a; } .fo-loss { color: var(--danger); }
+.fight-card { margin-top: 10px; font-size: 11px; line-height: 1.5; }
+.fight-card-hd { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.fight-card-hd b { font-size: 13px; }
+.fight-facts { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; color: var(--muted); }
+.fight-facts span:nth-child(even) { color: var(--text); }
+.fight-beats { margin-top: 8px; max-height: 300px; overflow-y: auto; border-top: 1px solid var(--line); }
+.fight-beat {
+  display: grid; grid-template-columns: 36px minmax(0,1fr); gap: 6px; font-size: 11px;
+  padding: 3px 4px; cursor: pointer; border-bottom: 1px solid rgba(56,52,44,0.25); opacity: .45;
+}
+.fight-beat.past { opacity: .85; }
+.fight-beat.now  { opacity: 1; background: rgba(244,163,0,0.12); }
+.fight-beat:hover { background: rgba(255,255,255,0.05); }
+.fight-beat .fb-t { color: var(--muted); font-variant-numeric: tabular-nums; }
+.fight-beat .fb-sub { color: var(--muted); }
+.fight-actions { display: flex; gap: 6px; margin-top: 8px; }
+.fight-actions .nav-btn { flex: 1; justify-content: center; }
+.fight-legend { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 10px; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -565,6 +600,12 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
     </div>
 
     <div class="sidebar">
+
+      <div class="panel" id="fightPanel" style="display:none">
+        <div class="panel-title">Fight Replay <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">— pick a fight</span></div>
+        <div class="fight-list" id="fightList"></div>
+        <div id="fightDetail"></div>
+      </div>
 
       <div class="panel">
         <div class="panel-title">Match Summary</div>
@@ -944,13 +985,13 @@ function resizeTimeline() {
 }
 
 function tlX(t) {
-  const dur = MD ? (MD.duration_s || 1800) : 1800;
-  return TL_PAD_L + (Math.max(0, t) / dur) * (tlCanvas.width - TL_PAD_L - 4);
+  const [lo, hi] = tRange();
+  return TL_PAD_L + ((Math.max(lo, t) - lo) / (hi - lo)) * (tlCanvas.width - TL_PAD_L - 4);
 }
 
 function tlXToTime(px) {
-  const dur = MD ? (MD.duration_s || 1800) : 1800;
-  return Math.max(0, (px - TL_PAD_L) / (tlCanvas.width - TL_PAD_L - 4) * dur);
+  const [lo, hi] = tRange();
+  return Math.max(lo, lo + (px - TL_PAD_L) / (tlCanvas.width - TL_PAD_L - 4) * (hi - lo));
 }
 
 function drawTimeline() {
@@ -963,6 +1004,12 @@ function drawTimeline() {
   tlCtx.fillRect(TL_PAD_L, TL_STRIP_H, w - TL_PAD_L, TL_DIV_Y - TL_STRIP_H);
   tlCtx.fillStyle = 'rgba(74,158,221,0.04)';
   tlCtx.fillRect(TL_PAD_L, TL_DIV_Y, w - TL_PAD_L, h - TL_DIV_Y);
+
+  // Fight replay: shade the fight itself (first to last hit) inside the pre/post-roll
+  if (FIGHT) {
+    tlCtx.fillStyle = 'rgba(244,163,0,0.10)';
+    tlCtx.fillRect(tlX(FIGHT.t0), TL_STRIP_H, Math.max(2, tlX(FIGHT.t1) - tlX(FIGHT.t0)), h - TL_STRIP_H);
+  }
 
   // Game-phase strip along the top: drop / hot drop / combat / loot / rotate / hold
   for (const s of _gamePhases) {
@@ -1088,11 +1135,11 @@ function onTlClick(e) {
   const t       = Math.round(tlXToTime(x));
   const sl      = document.getElementById('timeSlider');
   const max     = parseInt(sl.max, 10);
-  const clamped = Math.max(0, Math.min(t, max));
+  const clamped = Math.max(+sl.min, Math.min(t, max));
   sl.value      = clamped;
   state.time    = clamped >= max ? Infinity : clamped;
   document.getElementById('timeDisplay').textContent =
-    state.time === Infinity ? 'Full match' : mmss(clamped);
+    state.time === Infinity ? fullLabel() : mmss(clamped);
   if (state.time === Infinity && playback.playing) { pausePlayback(); return; }
   playback.lastTs = null;
   draw();
@@ -1390,6 +1437,7 @@ async function boot() {
   buildEngagementSummary();
   buildScoreChart();
   buildWeaponBreakdown();
+  loadFights(id);
 
   renderMatchTable('matchListContainer', id);
   setTimeout(() => {
@@ -1469,8 +1517,14 @@ function draw() {
     ctx.fillRect(0, 0, sz, sz);
   }
 
-  const maxT = state.time;
+  const maxT = FIGHT ? Math.min(state.time, FIGHT.w1) : state.time;
   if (state.layers.circles)      drawCircles(maxT);
+  if (FIGHT) {
+    drawFight(maxT);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    updateLoadout(maxT);
+    return;
+  }
   if (state.layers.enemy_deaths) drawEnemyDeaths(maxT);
   if (state.layers.enemies)      drawEnemies(maxT);
   if (state.layers.paths)      drawPaths(maxT);
@@ -1896,7 +1950,7 @@ function clampView() {
 }
 
 function applyZoom(factor, cx, cy) {
-  const newScale = Math.max(1.0, Math.min(view.scale * factor, 24));
+  const newScale = Math.max(1.0, Math.min(view.scale * factor, maxZoom()));
   view.offsetX = cx - (cx - view.offsetX) * (newScale / view.scale);
   view.offsetY = cy - (cy - view.offsetY) * (newScale / view.scale);
   view.scale   = newScale;
@@ -1935,7 +1989,7 @@ function onTimeInput(e) {
   const max = parseInt(e.target.max,   10);
   state.time = val >= max ? Infinity : val;
   document.getElementById('timeDisplay').textContent =
-    state.time === Infinity ? 'Full match' : mmss(val);
+    state.time === Infinity ? fullLabel() : mmss(val);
   if (state.time === Infinity && playback.playing) { pausePlayback(); return; }
   playback.lastTs = null; // prevent time-jump on next RAF tick after scrub
   draw();
@@ -1950,7 +2004,7 @@ function resetTime() {
   const sl   = document.getElementById('timeSlider');
   sl.value   = sl.max;
   state.time = Infinity;
-  document.getElementById('timeDisplay').textContent = 'Full match';
+  document.getElementById('timeDisplay').textContent = fullLabel();
   draw();
   drawTimeline();
   drawHpChart();
@@ -1962,11 +2016,11 @@ function jumpTime(delta) {
   const sl  = document.getElementById('timeSlider');
   const max = parseInt(sl.max, 10);
   const cur = state.time === Infinity ? max : state.time;
-  const nv  = Math.max(0, Math.min(cur + delta, max));
+  const nv  = Math.max(+sl.min, Math.min(cur + delta, max));
   sl.value  = nv;
   state.time = nv >= max ? Infinity : nv;
   document.getElementById('timeDisplay').textContent =
-    state.time === Infinity ? 'Full match' : mmss(nv);
+    state.time === Infinity ? fullLabel() : mmss(nv);
   if (state.time === Infinity && playback.playing) { pausePlayback(); return; }
   playback.lastTs = null;
   draw();
@@ -1991,9 +2045,9 @@ function startPlayback() {
   const max = parseInt(sl.max, 10);
   // Restart from beginning if already at end
   if (state.time === Infinity || (typeof state.time === 'number' && state.time >= max)) {
-    state.time = 0;
-    sl.value   = 0;
-    document.getElementById('timeDisplay').textContent = mmss(0);
+    state.time = +sl.min;
+    sl.value   = sl.min;
+    document.getElementById('timeDisplay').textContent = mmss(+sl.min);
   }
   playback.playing = true;
   playback.lastTs  = null;
@@ -2016,13 +2070,13 @@ function playTick(ts) {
     const dt  = (ts - playback.lastTs) / 1000;
     const sl  = document.getElementById('timeSlider');
     const max = parseInt(sl.max, 10);
-    const cur = (state.time === Infinity || state.time >= max) ? 0 : state.time;
+    const cur = (state.time === Infinity || state.time >= max) ? +sl.min : state.time;
     const nxt = cur + dt * playback.speed;
 
     if (nxt >= max) {
       state.time = Infinity;
       sl.value   = max;
-      document.getElementById('timeDisplay').textContent = 'Full match';
+      document.getElementById('timeDisplay').textContent = fullLabel();
       playback.playing = false;
       playback.rafId   = null;
       document.getElementById('playBtn').textContent = '▶';
@@ -2613,11 +2667,14 @@ function drawHpChart() {
   const dur   = MD.duration_s || 1800;
   const plotW = w - PAD_L - PAD_R;
   const plotH = h - PAD_T - PAD_B;
-  const tx    = t  => PAD_L + (Math.max(0, t) / dur) * plotW;
+  const [lo, hi] = tRange();
+  const tx    = t  => PAD_L + ((Math.max(lo, t) - lo) / (hi - lo)) * plotW;
   const ty    = hp => PAD_T + (1 - (hp / 100)) * plotH;
 
   hpCtx.fillStyle = 'rgba(0,0,0,0.15)';
   hpCtx.fillRect(PAD_L, PAD_T, plotW, plotH);
+  hpCtx.save();
+  hpCtx.beginPath(); hpCtx.rect(PAD_L, 0, plotW, h); hpCtx.clip();
 
   // Blue zone bands — check for blue zone damage in events
   const blueEvs = (MD.events || []).filter(ev =>
@@ -2692,6 +2749,7 @@ function drawHpChart() {
     hpCtx.stroke();
   }
   hpCtx.globalAlpha = 1;
+  hpCtx.restore();
 
   hpCtx.font = 'bold 10px system-ui, sans-serif';
   hpCtx.textBaseline = 'middle';
@@ -2761,17 +2819,372 @@ function drawEngagements(maxT) {
 }
 
 /* ============================================================================
+   FIGHT REPLAY MODE
+   One fight from stats-data/engagements.json (written by engagement_stories.py).
+   t0g/t1g are on this page's game clock. While a fight is open, the slider,
+   timeline, HP and score charts cover only the fight window, the map zooms to
+   the fight, and only fight layers are drawn: trails for us and the enemies
+   involved, damage lines that stay on the map, knocks and kills.
+============================================================================ */
+const FIGHT_PREROLL_S  = 20;   // movement shown before the first hit
+const FIGHT_POSTROLL_S = 8;
+const FIGHT_ENEMY_COLS = ['#ff4d4d', '#ff8a3d', '#e05cff', '#ffd23d'];
+let FIGHTS = [];      // this match's fights, chronological
+let FIGHT  = null;    // { f, t0, t1, w0, w1, enemies: Map(name -> {en, col}) }
+
+function tRange() {
+  return FIGHT ? [FIGHT.w0, FIGHT.w1] : [0, MD ? (MD.duration_s || 1800) : 1800];
+}
+// Fights are often <50 m across; allow a closer zoom than the whole-match view
+function maxZoom() { return FIGHT ? 64 : 24; }
+function fullLabel() { return FIGHT ? 'End of fight' : 'Full match'; }
+
+async function loadFights(matchId) {
+  try {
+    const all = await fetch('stats-data/engagements.json').then(r => r.json());
+    FIGHTS = all.filter(f => f.match_id === matchId && f.t0g != null)
+                .sort((a, b) => a.t0g - b.t0g);
+  } catch { FIGHTS = []; }
+  buildFightPanel();
+  const want = new URLSearchParams(location.search).get('fight');
+  if (want != null) {
+    const f = FIGHTS.find(x => String(x.idx) === want);
+    if (f) enterFight(f.idx, true);
+  }
+}
+
+const FIGHT_OUTCOME = { win: ['W', 'fo-win', 'Win'], trade: ['T', 'fo-trade', 'Trade'], loss: ['L', 'fo-loss', 'Loss'] };
+
+function buildFightPanel() {
+  const panel = document.getElementById('fightPanel');
+  if (!FIGHTS.length) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+  panel.classList.toggle('active', !!FIGHT);
+  document.getElementById('fightList').innerHTML = FIGHTS.map(f => {
+    const [o, cls] = FIGHT_OUTCOME[f.outcome] || ['?', ''];
+    const sel = FIGHT && FIGHT.f.idx === f.idx ? ' sel' : '';
+    return `<button class="fight-chip${sel}" onclick="enterFight(${f.idx})" title="${f.archetype} — dealt ${Math.round(f.dealt)}, took ${Math.round(f.taken)}">
+      <span class="fc-t">${mmss(f.t0g)}</span><span class="fo ${cls}">${o}</span>
+      <span class="fc-arch">${f.archetype}</span>
+      <span class="fc-dmg">${Math.round(f.dealt)}/${Math.round(f.taken)}</span></button>`;
+  }).join('');
+  renderFightDetail();
+}
+
+function _fightName(n) {
+  const col = PLAYER_COLOR[n] || ((FIGHT && FIGHT.enemies.get(n)) || {}).col || '#ff6b6b';
+  return `<b style="color:${col}">${n}</b>`;
+}
+
+function renderFightDetail() {
+  const el = document.getElementById('fightDetail');
+  if (!FIGHT) { el.innerHTML = ''; return; }
+  const f = FIGHT.f;
+  const [, cls, word] = FIGHT_OUTCOME[f.outcome] || ['', '', f.outcome];
+  const by = o => o ? Object.entries(o).map(([p, v]) => `<span style="color:${PLAYER_COLOR[p]}">${Math.round(v)}</span>`).join(' / ') : '';
+  const elev = f.elev_delta == null ? '—'
+    : Math.abs(f.elev_delta) < 2 ? 'level'
+    : `${Math.abs(f.elev_delta).toFixed(0)} m ${f.elev_delta > 0 ? 'above them' : 'below them'}`;
+  const facts = [
+    ['Started', `${mmss(f.t0g)} · lasted ${Math.round(f.dur_s)}s`],
+    ['Opened by', f.initiated === 'we_hit_first' ? 'us' : 'them'],
+    ['Range', f.range_med != null ? `${Math.round(f.range_med)} m (median)` : '—'],
+    ['Height', elev],
+    ['Terrain', `${f.terrain || '—'}${f.in_vehicle ? ', in vehicle' : ''}`],
+    ['Duo gap', f.spacing != null ? `${Math.round(f.spacing)} m apart` : '—'],
+    ['Dealt', `${Math.round(f.dealt)} <span style="color:var(--muted)">(${by(f.dealt_by)})</span>`],
+    ['Taken', `${Math.round(f.taken)} <span style="color:var(--muted)">(${by(f.taken_by)})</span>`],
+    ['Knocks', `${f.enemy_knocked} of theirs · ${f.us_knocked} of ours`],
+    ['Enemies', f.enemies && f.enemies.length ? f.enemies.map(_fightName).join(', ') : `${f.n_enemies}`],
+    ['Their guns', (f.enemy_weapons || []).join(', ') || '—'],
+  ];
+  const beats = (f.story || []).map((b, i) => {
+    let txt;
+    if (b.kind === 'damage') {
+      const h = b.hits > 1 ? ` ×${b.hits}` : '';
+      txt = `${_fightName(b.actor)} hits ${_fightName(b.target)}${h} for ${Math.round(b.dmg)}
+             <span class="fb-sub">${b.wpn || '?'}${b.rng != null ? ` · ${Math.round(b.rng)} m` : ''}</span>`;
+    } else {
+      txt = `${_fightName(b.actor)} <b>${b.kind === 'groggy' ? 'KNOCKS' : 'KILLS'}</b> ${_fightName(b.target)}
+             <span class="fb-sub">${b.wpn || ''}</span>`;
+    }
+    return `<div class="fight-beat" data-i="${i}" onclick="jumpToMoment(${(f.t0g + b.t).toFixed(1)})">
+      <span class="fb-t">+${b.t.toFixed(1)}s</span><span>${txt}</span></div>`;
+  }).join('');
+  el.innerHTML = `<div class="fight-card">
+      <div class="fight-card-hd"><b class="${cls}">${word}</b><span>${f.archetype}</span></div>
+      <div class="fight-facts">${facts.map(([k, v]) => `<span>${k}</span><span>${v}</span>`).join('')}</div>
+      <div class="fight-legend">
+        <span><span style="color:var(--accent)">━</span>/<span style="color:var(--blue)">━</span> our hits</span>
+        <span><span style="color:#ff4444">━</span> their hits</span>
+        <span>┄ before first hit</span><span>◯ headshot</span>
+      </div>
+      <div class="fight-beats" id="fightBeats">${beats || '<div style="color:var(--muted);padding:4px">No beats recorded.</div>'}</div>
+      <div class="fight-actions">
+        <button class="nav-btn" onclick="replayFight()">▶ Replay</button>
+        <button class="nav-btn" onclick="fitFightView(); draw()">⤢ Refit</button>
+        <button class="nav-btn" onclick="exitFight()">✕ Exit</button>
+      </div></div>`;
+}
+
+function updateFightBeats(maxT) {
+  const box = document.getElementById('fightBeats');
+  if (!box || !FIGHT) return;
+  const story = FIGHT.f.story || [];
+  let cur = -1;
+  story.forEach((b, i) => { if (FIGHT.t0 + b.t <= maxT + 0.05) cur = i; });
+  const live = state.time !== Infinity;
+  box.querySelectorAll('.fight-beat').forEach(el => {
+    const i = +el.dataset.i;
+    el.classList.toggle('past', i <= cur);
+    el.classList.toggle('now', live && i === cur);
+  });
+}
+
+function _setFightSlider() {
+  const sl = document.getElementById('timeSlider');
+  const [lo, hi] = tRange();
+  sl.min   = Math.floor(lo);
+  sl.max   = Math.ceil(hi);
+  sl.value = sl.max;
+  state.time = Infinity;
+  document.getElementById('timeDisplay').textContent = fullLabel();
+}
+
+function enterFight(idx, fromUrl) {
+  const f = FIGHTS.find(x => x.idx === idx);
+  if (!f) return;
+  pausePlayback();
+  const dur = MD.duration_s || 1800;
+  const enemies = new Map();
+  const teamCol = new Map();
+  for (const name of (f.enemies || [])) {
+    const en = (MD.enemies || []).find(e => e.name === name);
+    if (!en) continue;
+    if (!teamCol.has(en.team)) teamCol.set(en.team, FIGHT_ENEMY_COLS[teamCol.size % FIGHT_ENEMY_COLS.length]);
+    enemies.set(name, { en, col: teamCol.get(en.team) });
+  }
+  FIGHT = { f, t0: f.t0g, t1: f.t1g, enemies,
+            w0: Math.max(0, f.t0g - FIGHT_PREROLL_S), w1: Math.min(dur, f.t1g + FIGHT_POSTROLL_S) };
+  if (!fromUrl) {
+    const u = new URL(location.href);
+    u.searchParams.set('fight', idx);
+    history.replaceState(null, '', u);
+  }
+  _setFightSlider();
+  buildFightPanel();
+  fitFightView();
+  draw(); drawTimeline(); drawHpChart(); drawScoreChart();
+  if (fromUrl) document.getElementById('mapWrap').scrollIntoView({ block: 'start' });
+}
+
+function exitFight() {
+  if (!FIGHT) return;
+  pausePlayback();
+  FIGHT = null;
+  const u = new URL(location.href);
+  u.searchParams.delete('fight');
+  history.replaceState(null, '', u);
+  document.getElementById('timeSlider').min = 0;
+  _setFightSlider();
+  buildFightPanel();
+  resetView();
+  drawTimeline(); drawHpChart(); drawScoreChart();
+}
+
+function replayFight() {
+  if (!FIGHT) return;
+  pausePlayback();
+  state.time = Infinity;   // startPlayback restarts from the slider minimum
+  startPlayback();
+}
+
+/* Linear position between samples. pts: [{t,x,y}] sorted by t. */
+function _lerpPos(pts, t) {
+  if (!pts.length || t < pts[0].t) return null;
+  let lo = 0, hi = pts.length - 1;
+  while (lo < hi) { const m = (lo + hi + 1) >> 1; if (pts[m].t <= t) lo = m; else hi = m - 1; }
+  const a = pts[lo], b = pts[lo + 1];
+  if (!b || b.t === a.t) return { ...a, last: a.t };
+  const k = (t - a.t) / (b.t - a.t);
+  return { ...a, x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k, last: a.t };
+}
+
+function _enemyPts(en) {
+  if (!en._pts) en._pts = (en.pos || []).map(p => ({ t: p[0], x: p[1], y: p[2] }));
+  return en._pts;
+}
+
+function _fightEvents() {
+  return MD.events.filter(ev => ev.t >= FIGHT.w0 && ev.t <= FIGHT.w1);
+}
+
+function fitFightView() {
+  if (!FIGHT) return;
+  // Frame where the shooting happened: our own movement plus both ends of every hit.
+  // Enemy trails are left out on purpose, since one enemy driving in from far away
+  // would shrink the actual fight to a dot.
+  const lo = FIGHT.t0 - 3, hi = FIGHT.t1 + 3;
+  const pts = [];
+  for (const p of Object.values(MD.positions)) for (const q of p) if (q.t >= lo && q.t <= hi) pts.push(q);
+  for (const ev of _fightEvents()) {
+    if (ev.t < lo || ev.t > hi) continue;
+    if (ev.x != null) pts.push(ev);
+    if (ev.ex != null) pts.push({ x: ev.ex, y: ev.ey });
+  }
+  if (!pts.length) return;
+  const cs = pts.map(p => w2c(p.x, p.y));
+  const xs = cs.map(c => c.cx), ys = cs.map(c => c.cy);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const sz = canvas.width / (window.devicePixelRatio || 1);
+  const minSpan = w2c(12000, 0).cx - w2c(0, 0).cx;   // never closer than ~120 m across
+  const span = Math.max(maxX - minX, maxY - minY, minSpan) * 1.35;
+  view.scale   = Math.max(1, Math.min(sz / span, maxZoom()));
+  view.offsetX = sz / 2 - view.scale * (minX + maxX) / 2;
+  view.offsetY = sz / 2 - view.scale * (minY + maxY) / 2;
+  clampView();
+}
+
+function _trail(pts, t0, maxT, col, lw) {
+  // dashed before the first hit, solid once the fight is on
+  const vis = pts.filter(p => p.t >= FIGHT.w0 && p.t <= maxT);
+  const now = _lerpPos(pts, maxT);
+  if (now && (!vis.length || vis[vis.length - 1].t < maxT)) vis.push({ ...now, t: maxT });
+  for (let i = 1; i < vis.length; i++) {
+    const a = w2c(vis[i-1].x, vis[i-1].y), b = w2c(vis[i].x, vis[i].y);
+    const pre = vis[i].t <= t0;
+    ctx.beginPath();
+    ctx.moveTo(a.cx, a.cy); ctx.lineTo(b.cx, b.cy);
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = (pre ? lw * 0.7 : lw) / view.scale;
+    ctx.globalAlpha = pre ? 0.5 : 0.9;
+    ctx.setLineDash(pre ? [5 / view.scale, 4 / view.scale] : []);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+}
+
+function _label(txt, cx, cy, col) {
+  ctx.font         = `bold ${10 / view.scale}px system-ui, sans-serif`;
+  ctx.textAlign    = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.lineWidth    = 3 / view.scale;
+  ctx.strokeStyle  = 'rgba(0,0,0,0.75)';
+  ctx.strokeText(txt, cx + 8 / view.scale, cy);
+  ctx.fillStyle    = col;
+  ctx.fillText(txt, cx + 8 / view.scale, cy);
+}
+
+function drawFight(maxT) {
+  const { t0 } = FIGHT;
+  markers = [];
+
+  // Enemy trails and current dots
+  for (const [name, { en, col }] of FIGHT.enemies) {
+    const pts  = _enemyPts(en);
+    const endT = en.death_t != null ? Math.min(maxT, en.death_t) : maxT;
+    _trail(pts, t0, endT, col, 2);
+    const p = _lerpPos(pts, endT);
+    if (!p || endT - p.last > STALE_POS_S) continue;
+    const { cx, cy } = w2c(p.x, p.y);
+    const dead = en.death_t != null && maxT >= en.death_t;
+    const r = 5 / view.scale;
+    ctx.fillStyle = col; ctx.strokeStyle = col;
+    if (dead) {
+      ctx.lineWidth = 2 / view.scale;
+      ctx.beginPath();
+      ctx.moveTo(cx - r, cy - r); ctx.lineTo(cx + r, cy + r);
+      ctx.moveTo(cx + r, cy - r); ctx.lineTo(cx - r, cy + r);
+      ctx.stroke();
+    } else if (isEnemyKnockedAt(name, maxT)) {
+      ctx.beginPath();
+      ctx.moveTo(cx, cy + r); ctx.lineTo(cx + r, cy - r * 0.7); ctx.lineTo(cx - r, cy - r * 0.7);
+      ctx.closePath(); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+    }
+    _label(name, cx, cy, col);
+  }
+
+  // Our trails
+  for (const [player, pts] of Object.entries(MD.positions)) {
+    if (!playerVis(player)) continue;
+    _trail(pts, t0, maxT, pColor(player), 2.5);
+  }
+
+  // Damage lines stay on the map; the last 2 s are drawn brighter
+  for (const ev of _fightEvents()) {
+    if (ev.type !== 'dmg_dealt' && ev.type !== 'dmg_taken') continue;
+    if (ev.ex == null || ev.t > maxT || !playerVis(ev.player)) continue;
+    const us = w2c(ev.x, ev.y), them = w2c(ev.ex, ev.ey);
+    const [from, to] = ev.type === 'dmg_dealt' ? [us, them] : [them, us];
+    const col   = ev.type === 'dmg_dealt' ? pColor(ev.player) : '#ff4444';
+    const fresh = isFinite(state.time) && maxT - ev.t <= 2;
+    const lw    = Math.min(1 + (ev.damage || 0) / 25, 5);
+    ctx.beginPath();
+    ctx.moveTo(from.cx, from.cy); ctx.lineTo(to.cx, to.cy);
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = (fresh ? lw + 1 : lw) / view.scale;
+    ctx.globalAlpha = fresh ? 0.95 : 0.45;
+    ctx.stroke();
+    ctx.globalAlpha = fresh ? 1 : 0.7;
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(to.cx, to.cy, 2.2 / view.scale, 0, Math.PI * 2); ctx.fill();
+    if (ev.reason === 'HeadShot') {
+      ctx.lineWidth = 1.3 / view.scale;
+      ctx.beginPath(); ctx.arc(to.cx, to.cy, 5.5 / view.scale, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    markers.push({ cx: to.cx, cy: to.cy, ev });
+  }
+
+  // Knocks, kills, deaths, revives, heals and throwables in the window
+  const MARK = new Set(['kill', 'knockdown', 'knocked', 'death', 'revive', 'blue_chip_revive', 'heal', 'boost', 'throwable']);
+  for (const ev of _fightEvents()) {
+    if (!MARK.has(ev.type) || ev.t > maxT || !playerVis(ev.player)) continue;
+    if (ev.type === 'throwable' && (ev.weapon === 'Snowball' || ev.weapon === 'Rock')) continue;
+    const onEnemy = (ev.type === 'kill' || ev.type === 'knockdown') && ev.ex != null;
+    const { cx, cy } = onEnemy ? w2c(ev.ex, ev.ey) : w2c(ev.x, ev.y);
+    drawMarker(ev, cx, cy);
+    markers.push({ cx, cy, ev });
+  }
+
+  // Our current positions (interpolated between samples)
+  for (const [player, pts] of Object.entries(MD.positions)) {
+    if (!playerVis(player)) continue;
+    const p = _lerpPos(pts, maxT);
+    if (!p) continue;
+    const { cx, cy } = w2c(p.x, p.y);
+    ctx.fillStyle = pColor(player); ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.2 / view.scale;
+    const r = 6 / view.scale;
+    ctx.beginPath();
+    if (p.dbno || p.hp === 0) {
+      ctx.moveTo(cx - r * 0.866, cy - r * 0.5); ctx.lineTo(cx + r * 0.866, cy - r * 0.5); ctx.lineTo(cx, cy + r);
+      ctx.closePath();
+    } else {
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    }
+    ctx.fill(); ctx.stroke();
+    _label(player, cx, cy, pColor(player));
+  }
+
+  updateFightBeats(maxT);
+}
+
+/* ============================================================================
    KEY MOMENTS  (sidebar jump list)
 ============================================================================ */
 function jumpToMoment(t) {
   pausePlayback();
   const sl  = document.getElementById('timeSlider');
   const max = parseInt(sl.max, 10);
-  const nv  = Math.max(0, Math.min(Math.round(t), max));
-  sl.value  = nv;
+  const nv  = Math.max(+sl.min, Math.min(t, max));   // keep fractions: fight beats are sub-second
+  sl.value  = Math.round(nv);
   state.time = nv >= max ? Infinity : nv;
   document.getElementById('timeDisplay').textContent =
-    state.time === Infinity ? 'Full match' : mmss(nv);
+    state.time === Infinity ? fullLabel() : mmss(nv);
   playback.lastTs = null;
   draw(); drawTimeline(); drawHpChart(); drawScoreChart();
 }
