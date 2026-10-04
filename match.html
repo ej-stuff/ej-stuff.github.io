@@ -3226,7 +3226,10 @@ function exitFight() {
   history.replaceState(null, '', u);
   _setSlider(0, MD.duration_s || 1800, t);
   buildFightPanel();
-  resetView();
+  // Keep the zoom so you can look around the same spot. Fight mode allows a closer
+  // zoom than the normal view, so step back to the normal limit around the centre.
+  const sz = canvas.width / (window.devicePixelRatio || 1);
+  applyZoom(1, sz / 2, sz / 2);
   drawTimeline(); drawHpChart(); drawScoreChart();
 }
 
