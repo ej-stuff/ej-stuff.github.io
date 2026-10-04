@@ -1143,7 +1143,7 @@ function drawTimeline() {
         const ev  = evs[i];
         const cy  = rowY + stackDir * i * TL_DOT_SEP;
         if (cy < TL_DOT_R + 1 || cy > h - TL_DOT_R - 1) break;
-        const usePCol = ['kill','death','dmg_dealt','dmg_taken','throwable'].includes(ev.type);
+        const usePCol = ['kill','knockdown','death','dmg_dealt','dmg_taken','throwable'].includes(ev.type);
         const ld  = LAYER_DEFS.find(l => l.id === ev.type);
         const col = usePCol ? PLAYER_COLOR[player] : ((ld && ld.color) ? ld.color : PLAYER_COLOR[player]);
         tlCtx.save();
@@ -1906,7 +1906,7 @@ function isEnemyKnockedAt(name, T) {
 const LAYER_COLOR = Object.fromEntries(LAYER_DEFS.map(l => [l.id, l.color]));
 
 function markerColor(ev) {
-  if (['kill','death','dmg_dealt','dmg_taken','throwable'].includes(ev.type))
+  if (['kill','knockdown','death','dmg_dealt','dmg_taken','throwable'].includes(ev.type))
     return pColor(ev.player);
   return LAYER_COLOR[ev.type] || pColor(ev.player);
 }
