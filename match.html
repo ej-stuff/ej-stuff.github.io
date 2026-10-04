@@ -151,6 +151,7 @@ h1 {
   display: flex; align-items: center; gap: 4px;
 }
 .fight-nav .map-ctrl-btn { font-size: 11px; }
+.fight-nav .fight-enter { width: auto; padding: 0 9px; font-size: 12px; gap: 4px; white-space: nowrap; }
 .fight-nav-pos {
   background: rgba(30,28,23,0.88); border: 1px solid var(--line); border-radius: 6px;
   height: 30px; padding: 0 8px; display: flex; align-items: center;
@@ -501,6 +502,18 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
 .fight-toggle { cursor: pointer; user-select: none; margin-bottom: 0; }
 #fightBody { margin-top: 10px; }
 .fight-beats { position: relative; }
+
+/* ── Phone width: nothing may be wider than the screen, or mobile browsers zoom
+      the whole page out to fit it ─────────────────────────────────────────── */
+.breadcrumb, #matchNavBtns, .tl-hdr, .tl-jumps, .tl-play-row { flex-wrap: wrap; }
+.main-layout > *, .map-col > *, .sidebar > * { min-width: 0; }
+#matchListContainer { overflow-x: auto; }
+@media (max-width: 600px) {
+  body { padding: 10px; }
+  .tl-btn { padding: 3px 5px; }
+  .tl-flex-spacer { display: none; }
+  .breadcrumb { padding-left: 40px; }   /* clear the fixed ☰ site-nav button */
+}
 </style>
 </head>
 <body>
@@ -558,6 +571,8 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
           <button class="map-ctrl-btn" id="fightPrev" onclick="stepFight(-1)" title="Previous fight">&#9664;</button>
           <span class="fight-nav-pos" id="fightNavPos"></span>
           <button class="map-ctrl-btn" id="fightNext" onclick="stepFight(1)" title="Next fight">&#9654;</button>
+          <button class="map-ctrl-btn" id="fightExit" onclick="exitFight()" title="Leave fight replay">&#10005;</button>
+          <button class="map-ctrl-btn fight-enter" id="fightEnter" onclick="enterNearestFight()" title="Replay the fights in this match">&#9876; Fights</button>
         </div>
         <div id="tooltip" class="tooltip" style="display:none"></div>
       </div>
@@ -2931,7 +2946,7 @@ const FIGHT_OUTCOME = { win: ['W', 'fo-win', 'Win'], trade: ['T', 'fo-trade', 'T
 
 function buildFightPanel() {
   const panel = document.getElementById('fightPanel');
-  if (!FIGHTS.length) { panel.style.display = 'none'; return; }
+  if (!FIGHTS.length) { panel.style.display = 'none'; _updateFightNav(); return; }
   panel.style.display = '';
   panel.classList.toggle('active', !!FIGHT);
   document.getElementById('fightCount').textContent =
@@ -2957,11 +2972,27 @@ function stepFight(dir) {
   enterFight(FIGHTS[i].idx);
 }
 
+/* Map shortcut into fight replay (the sidebar sits far below the map on a phone):
+   the fight under the current slider time, or the next one after it; the first
+   fight when the slider is at "Full match"; the last one if all are earlier. */
+function enterNearestFight() {
+  if (!FIGHTS.length) return;
+  const t = state.time;
+  const f = !isFinite(t) ? FIGHTS[0]
+          : (FIGHTS.find(x => x.t1g + FIGHT_POSTROLL_S >= t) || FIGHTS[FIGHTS.length - 1]);
+  enterFight(f.idx);
+}
+
 function _updateFightNav() {
   const nav = document.getElementById('fightNav');
-  if (!FIGHT) { nav.style.display = 'none'; return; }
-  const i = FIGHTS.findIndex(f => f.idx === FIGHT.f.idx);
+  if (!FIGHTS.length) { nav.style.display = 'none'; return; }
   nav.style.display = '';
+  const inFight = !!FIGHT;
+  document.getElementById('fightEnter').style.display = inFight ? 'none' : '';
+  for (const id of ['fightPrev', 'fightNavPos', 'fightNext', 'fightExit'])
+    document.getElementById(id).style.display = inFight ? '' : 'none';
+  if (!inFight) return;
+  const i = FIGHTS.findIndex(f => f.idx === FIGHT.f.idx);
   document.getElementById('fightNavPos').textContent = `Fight ${i + 1} / ${FIGHTS.length}`;
   document.getElementById('fightPrev').disabled = i <= 0;
   document.getElementById('fightNext').disabled = i >= FIGHTS.length - 1;
