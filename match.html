@@ -3104,7 +3104,9 @@ function renderFightDetail() {
     ['Taken', `${Math.round(f.taken)} <span style="color:var(--muted)">(${by(f.taken_by)})</span>`],
     ['Knocks', `${f.enemy_knocked} of theirs · ${f.us_knocked} of ours`],
     ['Kills', `${f.enemy_killed} of theirs · ${f.us_killed} of ours`],
-    ['Enemies', f.enemies && f.enemies.length ? f.enemies.map(_fightName).join(', ') : `${f.n_enemies}`],
+    ['Enemies', (f.enemies && f.enemies.length ? f.enemies.map(_fightName).join(', ') : `${f.n_enemies}`)
+      + [...FIGHT.enemies].filter(([, v]) => !v.involved)
+          .map(([n]) => ` <span style="color:var(--muted)">· teammate</span> ${_fightName(n)}`).join('')],
     ['Their guns', (f.enemy_weapons || []).join(', ') || '—'],
   ];
   const beats = FIGHT.beats.map((b, i) =>
@@ -3182,7 +3184,13 @@ function enterFight(idx, fromUrl) {
     const en = (MD.enemies || []).find(e => e.name === name);
     if (!en) continue;
     if (!teamCol.has(en.team)) teamCol.set(en.team, FIGHT_ENEMY_COLS[teamCol.size % FIGHT_ENEMY_COLS.length]);
-    enemies.set(name, { en, col: teamCol.get(en.team) });
+    enemies.set(name, { en, col: teamCol.get(en.team), involved: true });
+  }
+  // Their teammates too, even if they never shot or got hit: where the second
+  // player was is often the whole story of the fight.
+  for (const en of (MD.enemies || [])) {
+    if (!teamCol.has(en.team) || enemies.has(en.name)) continue;
+    enemies.set(en.name, { en, col: teamCol.get(en.team), involved: false });
   }
   // Stretch the window past the last hit so a teammate knocked in this fight is seen
   // getting picked up (or dying).
@@ -3289,7 +3297,7 @@ function _trail(pts, t0, maxT, col, lw) {
     ctx.moveTo(a.cx, a.cy); ctx.lineTo(b.cx, b.cy);
     ctx.strokeStyle = col;
     ctx.lineWidth   = lw / view.scale;
-    ctx.globalAlpha = pre ? 0.3 : 0.55;
+    ctx.globalAlpha = (pre ? 0.3 : 0.55) * (lw < 1.2 ? 0.6 : 1);
     ctx.setLineDash(pre ? [4 / view.scale, 4 / view.scale] : []);
     ctx.stroke();
   }
@@ -3324,10 +3332,10 @@ function drawFight(maxT) {
   markers = [];
 
   // Enemy trails and current dots
-  for (const [name, { en, col }] of FIGHT.enemies) {
+  for (const [name, { en, col, involved }] of FIGHT.enemies) {
     const pts  = _enemyPts(en);
     const endT = en.death_t != null ? Math.min(maxT, en.death_t) : maxT;
-    _trail(pts, t0, endT, col, 1.3);
+    _trail(pts, t0, endT, col, involved ? 1.3 : 1);   // lw < 1.2 = dimmed teammate trail
     const p = _lerpPos(pts, endT);
     if (!p || endT - p.last > STALE_POS_S) continue;
     const { cx, cy } = w2c(p.x, p.y);
@@ -3344,6 +3352,9 @@ function drawFight(maxT) {
       ctx.beginPath();
       ctx.moveTo(cx, cy + r); ctx.lineTo(cx + r, cy - r * 0.7); ctx.lineTo(cx - r, cy - r * 0.7);
       ctx.closePath(); ctx.fill();
+    } else if (!involved) {
+      ctx.lineWidth = 1.6 / view.scale;
+      ctx.beginPath(); ctx.arc(cx, cy, r * 0.85, 0, Math.PI * 2); ctx.stroke();
     } else {
       ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
     }
