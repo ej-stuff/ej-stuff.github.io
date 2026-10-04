@@ -594,9 +594,9 @@ tr.match-row.current td:first-child { border-left: 2px solid var(--accent); }
         </div>
         <div class="tl-play-row">
           <button class="tl-btn play-btn" id="playBtn" onclick="playToggle()" title="Play / Pause (Space)">▶</button>
-          <button class="tl-btn speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1×</button>
+          <button class="tl-btn speed-btn" data-speed="1" onclick="setPlaybackSpeed(1)">1×</button>
           <button class="tl-btn speed-btn" data-speed="2" onclick="setPlaybackSpeed(2)">2×</button>
-          <button class="tl-btn speed-btn" data-speed="4" onclick="setPlaybackSpeed(4)">4×</button>
+          <button class="tl-btn speed-btn active" data-speed="4" onclick="setPlaybackSpeed(4)">4×</button>
           <button class="tl-btn speed-btn" data-speed="8" onclick="setPlaybackSpeed(8)">8×</button>
         </div>
         <div class="tl-slider-row">
@@ -2086,7 +2086,7 @@ function jumpTime(delta) {
 /* ============================================================================
    PLAYBACK
 ============================================================================ */
-const playback = { playing: false, speed: 1, rafId: null, lastTs: null };
+const playback = { playing: false, speed: 4, rafId: null, lastTs: null };
 let _lastChartSec = -1;
 
 function playToggle() {
