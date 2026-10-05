@@ -2835,6 +2835,7 @@ function drawEngagements(maxT) {
   for (const ev of MD.events) {
     if (ev.type !== 'dmg_dealt' && ev.type !== 'dmg_taken') continue;
     if (!ev.ex && !ev.ey) continue; // no enemy position
+    if (!_fromPlayer(ev)) continue;  // zone/bombing damage has no shooter to draw a line to
     if (ev.t > maxT) continue;
     // When scrubbing, only show events in the recent window
     if (isFinite(maxT) && ev.t < maxT - WINDOW) continue;
@@ -2890,6 +2891,19 @@ let FIGHTS = [];      // this match's fights, chronological
 let FIGHT  = null;    // { f, t0, t1, w0, w1, enemies: Map(name -> {en, col}), beats, selBeat }
 let FIGHT_OPEN = false;
 let _ourDown = {};    // player -> [{ from, to, dead }] knocked / dead intervals from events
+
+// Damage from the blue/red zone, bombing, falling or drowning has no real shooter;
+// its "attacker position" can be kilometres away (the bombing field's origin).
+const _NON_PLAYER_DMG = /zone|bomb|fall|drown/i;
+function _fromPlayer(ev) {
+  if (ev.type !== 'dmg_taken') return true;
+  return !!ev.attacker && !_NON_PLAYER_DMG.test(ev.weapon || '') && !_NON_PLAYER_DMG.test(ev.attacker);
+}
+function _nonPlayerName(ev) {
+  const w = `${ev.weapon || ''} ${ev.attacker || ''}`;
+  return /redzone|bomb/i.test(w) ? 'Red zone' : /blue|zone/i.test(w) ? 'Blue zone'
+       : /fall/i.test(w) ? 'Fall' : /drown/i.test(w) ? 'Drowning' : (ev.attacker || '?');
+}
 
 function tRange() {
   return FIGHT ? [FIGHT.w0, FIGHT.w1] : [0, MD ? (MD.duration_s || 1800) : 1800];
@@ -3026,8 +3040,9 @@ function _buildFightBeats() {
               dmg: ev.damage || 0, rng: _dist(ev), hs: ev.reason === 'HeadShot', evs: [ev] }); break;
       case 'dmg_taken':
         if (!ev.attacker) break;
-        add({ t: ev.t, kind: 'hit', actor: ev.attacker, target: ev.player, wpn: ev.weapon,
-              dmg: ev.damage || 0, rng: _dist(ev), hs: ev.reason === 'HeadShot', evs: [ev] }); break;
+        add({ t: ev.t, kind: 'hit', actor: _fromPlayer(ev) ? ev.attacker : _nonPlayerName(ev),
+              target: ev.player, wpn: _fromPlayer(ev) ? ev.weapon : null,
+              dmg: ev.damage || 0, rng: _fromPlayer(ev) ? _dist(ev) : null, hs: ev.reason === 'HeadShot', evs: [ev] }); break;
       case 'knockdown': add({ t: ev.t, kind: 'knock', actor: ev.player, target: ev.victim, wpn: ev.weapon, rng: _dist(ev), evs: [ev] }); break;
       case 'knocked':   add({ t: ev.t, kind: 'knock', actor: ev.attacker || '?', target: ev.player, evs: [ev] }); break;
       case 'kill':      add({ t: ev.t, kind: 'kill',  actor: ev.player, target: ev.victim, wpn: ev.weapon, rng: _dist(ev), evs: [ev] }); break;
@@ -3263,17 +3278,25 @@ function _fightEvents() {
 
 function fitFightView() {
   if (!FIGHT) return;
-  // Frame where the shooting happened: our own movement plus both ends of every hit.
-  // Enemy trails are left out on purpose, since one enemy driving in from far away
-  // would shrink the actual fight to a dot.
+  // Frame the hits: both ends of every hit, knock and kill by or on us. Movement and
+  // non-player damage are left out: one long drive inside a fight, a red-zone bomb
+  // "4 km away" or a care package landing elsewhere would shrink the fight to a dot.
   const lo = FIGHT.t0 - 3, hi = FIGHT.t1 + 3;
-  const pts = [];
-  for (const p of Object.values(MD.positions)) for (const q of p) if (q.t >= lo && q.t <= hi) pts.push(q);
-  for (const ev of _fightEvents()) {
-    if (ev.t < lo || ev.t > hi) continue;
-    if (ev.x != null) pts.push(ev);
-    if (ev.ex != null) pts.push({ x: ev.ex, y: ev.ey });
+  const COMBAT = new Set(['dmg_dealt', 'dmg_taken', 'knockdown', 'knocked', 'kill', 'death']);
+  const hits = _fightEvents().filter(ev => ev.t >= lo && ev.t <= hi && ev.player in PLAYER_COLOR
+                                       && COMBAT.has(ev.type) && _fromPlayer(ev) && ev.x != null);
+  const toPts = evs => evs.flatMap(ev => ev.ex != null ? [ev, { x: ev.ex, y: ev.ey }] : [ev]);
+  let pts = toPts(hits);
+  const spanM = q => q.length ? Math.max(Math.max(...q.map(p => p.x)) - Math.min(...q.map(p => p.x)),
+                                         Math.max(...q.map(p => p.y)) - Math.min(...q.map(p => p.y))) / 100 : 0;
+  // A long running fight can cover a kilometre or more; then frame where it starts,
+  // which is where the replay begins (zoom out or pan for the rest).
+  if (spanM(pts) > 600) {
+    const early = toPts(hits.filter(ev => ev.t <= FIGHT.t0 + 30));
+    if (early.length) pts = early;
   }
+  if (!pts.length)   // no usable hits: fall back to our own movement
+    for (const q of Object.values(MD.positions).flat()) if (q.t >= lo && q.t <= hi) pts.push(q);
   if (!pts.length) return;
   const cs = pts.map(p => w2c(p.x, p.y));
   const xs = cs.map(c => c.cx), ys = cs.map(c => c.cy);
@@ -3374,7 +3397,7 @@ function drawFight(maxT) {
   // solid ≥ 100 dmg, long dashes ≥ 40, dotted below. The last 2 s are drawn brighter.
   for (const ev of _fightEvents()) {
     if (ev.type !== 'dmg_dealt' && ev.type !== 'dmg_taken') continue;
-    if (ev.ex == null || ev.t > maxT || !playerVis(ev.player)) continue;
+    if (ev.ex == null || ev.t > maxT || !playerVis(ev.player) || !_fromPlayer(ev)) continue;
     const us = w2c(ev.x, ev.y), them = w2c(ev.ex, ev.ey);
     const [from, to] = ev.type === 'dmg_dealt' ? [us, them] : [them, us];
     const col   = ev.type === 'dmg_dealt' ? pColor(ev.player) : '#ff4444';
