@@ -6,8 +6,8 @@
       "kills": 21,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.048,
-      "hits": 277,
-      "total_damage": 4842.5,
+      "hits": 283,
+      "total_damage": 4961.0,
       "avg_damage_per_hit": 17.5
     },
     {
@@ -46,9 +46,9 @@
       "kills": 14,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.214,
-      "hits": 188,
-      "total_damage": 3987.9,
-      "avg_damage_per_hit": 21.2
+      "hits": 190,
+      "total_damage": 4042.1,
+      "avg_damage_per_hit": 21.3
     },
     {
       "weapon": "MP5K",
@@ -335,12 +335,12 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 18,
+      "kills": 19,
       "headshot_kills": 2,
-      "headshot_kill_pct": 0.111,
-      "hits": 179,
-      "total_damage": 2279.9,
-      "avg_damage_per_hit": 12.7
+      "headshot_kill_pct": 0.105,
+      "hits": 198,
+      "total_damage": 2585.9,
+      "avg_damage_per_hit": 13.1
     },
     {
       "weapon": "M24",
@@ -368,8 +368,8 @@
       "kills": 15,
       "headshot_kills": 5,
       "headshot_kill_pct": 0.333,
-      "hits": 170,
-      "total_damage": 4483.3,
+      "hits": 171,
+      "total_damage": 4514.2,
       "avg_damage_per_hit": 26.4
     },
     {
@@ -398,9 +398,9 @@
       "kills": 8,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.25,
-      "hits": 106,
-      "total_damage": 2409.8,
-      "avg_damage_per_hit": 22.7
+      "hits": 107,
+      "total_damage": 2435.5,
+      "avg_damage_per_hit": 22.8
     },
     {
       "weapon": "Beryl M762",
@@ -413,6 +413,16 @@
       "avg_damage_per_hit": 19.6
     },
     {
+      "weapon": "UMP45",
+      "category": "SMG",
+      "kills": 7,
+      "headshot_kills": 2,
+      "headshot_kill_pct": 0.286,
+      "hits": 53,
+      "total_damage": 903.4,
+      "avg_damage_per_hit": 17.0
+    },
+    {
       "weapon": "AK-M",
       "category": "AR",
       "kills": 6,
@@ -421,16 +431,6 @@
       "hits": 56,
       "total_damage": 1263.9,
       "avg_damage_per_hit": 22.6
-    },
-    {
-      "weapon": "UMP45",
-      "category": "SMG",
-      "kills": 5,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.2,
-      "hits": 46,
-      "total_damage": 703.4,
-      "avg_damage_per_hit": 15.3
     },
     {
       "weapon": "SKS",

@@ -5200,5 +5200,107 @@
       "damage": 192.8,
       "placement": 3
     }
+  },
+  {
+    "match_id": "6ccdd786-8485-4329-9ca0-1ff1b016378f",
+    "created_at": "2026-10-02T16:34:00Z",
+    "date": "2026-10-02",
+    "map": "Erangel",
+    "game_mode": "sdm-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 1873.3,
+      "placement": 2
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": null
+    }
+  },
+  {
+    "match_id": "dc1f7042-178e-4f90-90a8-37832d34e933",
+    "created_at": "2026-10-06T14:07:36Z",
+    "date": "2026-10-06",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 32
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 49.7,
+      "placement": 32
+    }
+  },
+  {
+    "match_id": "ba5af2c1-bf3b-4fca-b92b-de6f2b54321c",
+    "created_at": "2026-10-06T14:16:05Z",
+    "date": "2026-10-06",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 39
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 39
+    }
+  },
+  {
+    "match_id": "6e102373-7f10-4b60-839f-81344ecc8ce8",
+    "created_at": "2026-10-06T14:20:54Z",
+    "date": "2026-10-06",
+    "map": "Karakin",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 54.2,
+      "placement": 8
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 30.9,
+      "placement": 8
+    }
+  },
+  {
+    "match_id": "a6813bb3-d90e-4292-8901-f0cacf6dc1d6",
+    "created_at": "2026-10-06T14:31:19Z",
+    "date": "2026-10-06",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 36
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 282.0,
+      "placement": 36
+    }
+  },
+  {
+    "match_id": "7864018b-44e7-4781-81c8-39e8a6215cae",
+    "created_at": "2026-10-06T14:38:34Z",
+    "date": "2026-10-06",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 118.5,
+      "placement": 6
+    },
+    "S821": {
+      "kills": 2,
+      "damage": 200.0,
+      "placement": 6
+    }
   }
 ]
