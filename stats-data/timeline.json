@@ -5625,5 +5625,22 @@
       "damage": 177.4,
       "placement": 15
     }
+  },
+  {
+    "match_id": "eabf113a-22ce-4c6e-9808-fd1e28c84705",
+    "created_at": "2026-10-06T19:41:12Z",
+    "date": "2026-10-06",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 2,
+      "damage": 286.9,
+      "placement": 3
+    },
+    "S821": {
+      "kills": 3,
+      "damage": 466.9,
+      "placement": 3
+    }
   }
 ]
