@@ -11,6 +11,16 @@
       "avg_damage_per_hit": 17.5
     },
     {
+      "weapon": "AK-M",
+      "category": "AR",
+      "kills": 21,
+      "headshot_kills": 3,
+      "headshot_kill_pct": 0.143,
+      "hits": 150,
+      "total_damage": 3650.1,
+      "avg_damage_per_hit": 24.3
+    },
+    {
       "weapon": "Mini 14",
       "category": "DMR",
       "kills": 20,
@@ -19,16 +29,6 @@
       "hits": 236,
       "total_damage": 4789.5,
       "avg_damage_per_hit": 20.3
-    },
-    {
-      "weapon": "AK-M",
-      "category": "AR",
-      "kills": 20,
-      "headshot_kills": 2,
-      "headshot_kill_pct": 0.1,
-      "hits": 146,
-      "total_damage": 3518.0,
-      "avg_damage_per_hit": 24.1
     },
     {
       "weapon": "HK416",
@@ -156,9 +156,9 @@
       "kills": 3,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.333,
-      "hits": 30,
-      "total_damage": 534.2,
-      "avg_damage_per_hit": 17.8
+      "hits": 31,
+      "total_damage": 590.6,
+      "avg_damage_per_hit": 19.1
     },
     {
       "weapon": "ACE32",
@@ -271,6 +271,16 @@
       "avg_damage_per_hit": 7.7
     },
     {
+      "weapon": "M24",
+      "category": "SR",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 2,
+      "total_damage": 100.0,
+      "avg_damage_per_hit": 50.0
+    },
+    {
       "weapon": "P90",
       "category": "SMG",
       "kills": 0,
@@ -355,11 +365,11 @@
     {
       "weapon": "MP5K",
       "category": "SMG",
-      "kills": 16,
+      "kills": 17,
       "headshot_kills": 5,
-      "headshot_kill_pct": 0.312,
-      "hits": 203,
-      "total_damage": 3000.4,
+      "headshot_kill_pct": 0.294,
+      "hits": 206,
+      "total_damage": 3058.5,
       "avg_damage_per_hit": 14.8
     },
     {
@@ -373,6 +383,16 @@
       "avg_damage_per_hit": 26.4
     },
     {
+      "weapon": "Mini 14",
+      "category": "DMR",
+      "kills": 15,
+      "headshot_kills": 6,
+      "headshot_kill_pct": 0.4,
+      "hits": 157,
+      "total_damage": 3125.4,
+      "avg_damage_per_hit": 19.9
+    },
+    {
       "weapon": "M249",
       "category": "LMG",
       "kills": 15,
@@ -383,23 +403,13 @@
       "avg_damage_per_hit": 17.4
     },
     {
-      "weapon": "Mini 14",
-      "category": "DMR",
-      "kills": 14,
-      "headshot_kills": 5,
-      "headshot_kill_pct": 0.357,
-      "hits": 143,
-      "total_damage": 2892.2,
-      "avg_damage_per_hit": 20.2
-    },
-    {
       "weapon": "Beryl M762",
       "category": "AR",
       "kills": 9,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.222,
-      "hits": 64,
-      "total_damage": 1233.2,
+      "hits": 67,
+      "total_damage": 1294.6,
       "avg_damage_per_hit": 19.3
     },
     {
@@ -493,6 +503,16 @@
       "avg_damage_per_hit": 22.2
     },
     {
+      "weapon": "AUG A3",
+      "category": "AR",
+      "kills": 2,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 18,
+      "total_damage": 356.8,
+      "avg_damage_per_hit": 19.8
+    },
+    {
       "weapon": "Micro UZI",
       "category": "SMG",
       "kills": 2,
@@ -501,6 +521,16 @@
       "hits": 32,
       "total_damage": 320.3,
       "avg_damage_per_hit": 10.0
+    },
+    {
+      "weapon": "Vector",
+      "category": "SMG",
+      "kills": 2,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 18,
+      "total_damage": 269.7,
+      "avg_damage_per_hit": 15.0
     },
     {
       "weapon": "Mk47 Mutant",
@@ -513,16 +543,6 @@
       "avg_damage_per_hit": 19.2
     },
     {
-      "weapon": "Vector",
-      "category": "SMG",
-      "kills": 2,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 11,
-      "total_damage": 169.7,
-      "avg_damage_per_hit": 15.4
-    },
-    {
       "weapon": "Grenade",
       "category": "Throwable",
       "kills": 1,
@@ -531,16 +551,6 @@
       "hits": 16,
       "total_damage": 553.8,
       "avg_damage_per_hit": 34.6
-    },
-    {
-      "weapon": "AUG A3",
-      "category": "AR",
-      "kills": 1,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 15,
-      "total_damage": 287.4,
-      "avg_damage_per_hit": 19.2
     },
     {
       "weapon": "Tommy Gun",
@@ -603,6 +613,16 @@
       "avg_damage_per_hit": 9.0
     },
     {
+      "weapon": "SCAR-L",
+      "category": "AR",
+      "kills": 0,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0,
+      "hits": 8,
+      "total_damage": 127.3,
+      "avg_damage_per_hit": 15.9
+    },
+    {
       "weapon": "JS9",
       "category": "SMG",
       "kills": 0,
@@ -611,16 +631,6 @@
       "hits": 8,
       "total_damage": 112.5,
       "avg_damage_per_hit": 14.1
-    },
-    {
-      "weapon": "SCAR-L",
-      "category": "AR",
-      "kills": 0,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0,
-      "hits": 7,
-      "total_damage": 104.6,
-      "avg_damage_per_hit": 14.9
     },
     {
       "weapon": "VSS",
