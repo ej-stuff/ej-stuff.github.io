@@ -29,7 +29,7 @@
         "item": "First Aid Kit",
         "category": "Heal",
         "total": 171,
-        "per_match": 0.5
+        "per_match": 0.49
       },
       {
         "item": "Med Kit",
@@ -52,7 +52,7 @@
       {
         "item": "Grenade",
         "total": 102,
-        "per_match": 0.3
+        "per_match": 0.29
       },
       {
         "item": "Rock",
@@ -83,7 +83,7 @@
         "item": "Energy Drink",
         "category": "Boost",
         "total": 200,
-        "per_match": 0.61
+        "per_match": 0.6
       },
       {
         "item": "Adrenaline Syringe",
