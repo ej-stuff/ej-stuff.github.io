@@ -5965,5 +5965,141 @@
       "damage": 0,
       "placement": 42
     }
+  },
+  {
+    "match_id": "2ed5aee6-a58a-4626-b290-daa6c4f44495",
+    "created_at": "2026-11-02T19:07:27Z",
+    "date": "2026-11-02",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 24.0,
+      "placement": 10
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 16.5,
+      "placement": 10
+    }
+  },
+  {
+    "match_id": "3e6c001e-2976-490d-9ea2-43d8736d8b5c",
+    "created_at": "2026-11-02T19:30:22Z",
+    "date": "2026-11-02",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 33
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 37.0,
+      "placement": 33
+    }
+  },
+  {
+    "match_id": "0ddb899b-66cb-4312-b951-09854ff18350",
+    "created_at": "2026-11-02T19:38:19Z",
+    "date": "2026-11-02",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 80.1,
+      "placement": 23
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 100.0,
+      "placement": 23
+    }
+  },
+  {
+    "match_id": "c972d815-aaa8-4bb5-bcce-80e6c94956b2",
+    "created_at": "2026-11-02T19:50:04Z",
+    "date": "2026-11-02",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 2,
+      "damage": 207.8,
+      "placement": 2
+    },
+    "S821": {
+      "kills": 2,
+      "damage": 362.5,
+      "placement": 2
+    }
+  },
+  {
+    "match_id": "df1901b2-11f4-4b42-90ea-70f935966938",
+    "created_at": "2026-11-02T20:20:23Z",
+    "date": "2026-11-02",
+    "map": "Paramo",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 77.2,
+      "placement": 11
+    },
+    "S821": {
+      "kills": 1,
+      "damage": 159.7,
+      "placement": 11
+    }
+  },
+  {
+    "match_id": "9fd73f9f-a37f-405a-8c5f-2397406b1e35",
+    "created_at": "2026-11-02T20:34:49Z",
+    "date": "2026-11-02",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 63.4,
+      "placement": 40
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 40
+    }
+  },
+  {
+    "match_id": "fb0138a9-aca6-4b43-9a46-b24ae068cea6",
+    "created_at": "2026-11-02T20:44:36Z",
+    "date": "2026-11-02",
+    "map": "Miramar",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 0,
+      "damage": 55.6,
+      "placement": 35
+    },
+    "S821": {
+      "kills": 0,
+      "damage": 0,
+      "placement": 35
+    }
+  },
+  {
+    "match_id": "bfa4cc0a-b5ec-43fe-9271-dfad96bd5b23",
+    "created_at": "2026-11-02T20:51:14Z",
+    "date": "2026-11-02",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "D282": {
+      "kills": 1,
+      "damage": 213.8,
+      "placement": 3
+    },
+    "S821": {
+      "kills": 3,
+      "damage": 405.7,
+      "placement": 3
+    }
   }
 ]
