@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Armory — D282 &amp; S821</title>
-<meta name="description" content="Which guns actually win fights for D282 and S821: win rate by weapon across 652 decisive duo fights, and the recommended loadout.">
+<meta name="description" content="Which guns actually win fights for D282 and S821: win rate by weapon across 687 decisive duo fights, and the recommended loadout.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -82,7 +82,7 @@
   .callout { border-left: 3px solid var(--accent); background: rgba(244,163,0,.06); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 18px 0; font-size: 15px; }
   .callout.blue { border-color: var(--s821); background: rgba(74,158,221,.07); }
   .callout.ok { border-color: var(--ok); background: rgba(163,199,106,.08); }
-  .callout.bad { border-color: var(--danger); background: rgba(215,68,62,.07); }
+  .callout.bad { border-color: var(--danger); background: rgba(215,68,62,.07); color: var(--text); }
 
   .dtable { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   .dtable th { text-align: left; font-family: Oswald, sans-serif; font-weight: 500; font-size: 11px;
@@ -176,11 +176,11 @@
 </div>
 
 <div class="hero">
-  <div class="kicker">652 FIGHTS &middot; WHICH GUN ACTUALLY WINS</div>
+  <div class="kicker">687 FIGHTS &middot; WHICH GUN ACTUALLY WINS</div>
   <h1>The Armory</h1>
   <p class="hero-sub">Not accuracy, but results: when a gun did most of the work in a fight, how often
     did we win that fight? One main (AR or LMG) and one long gun (DMR or SR) per player, plus every SMG.</p>
-  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 652 decisive fights &middot; 329 matches &middot; 2 Jun &ndash; 29 Oct 2026</div>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> &middot; Duo FPP &middot; 687 decisive fights &middot; 344 matches &middot; 2 Jun &ndash; 5 Nov 2026</div>
 </div>
 
 <div class="wrap">
@@ -193,19 +193,76 @@
     <p>The obvious catch: a DMR mostly fights at range, where we see people first. An LMG mostly fights up
       close, where ambushes happen. So each section also checks the gun in fights <i>we</i> opened versus
       fights where we were ambushed.</p>
-    <div class="callout">
-      <b>Since the last update (6 Oct):</b> 39 new fights from 19 games on 26&ndash;29 October, and no pick
-      changed. D282's M249 crept up (25.0% &rarr; 27.0%) and is now the best of his three regular mains, while
-      the AK-M and HK416 slipped a little. S821's new fights were mostly on the RPD (19 &rarr; 26 fights) and the
-      M416 (listed as HK416 here, 21 &rarr; 26); both held their win rates. Two guns reached 5 fights for the first
-      time: D282's SCAR-L (3 wins) and S821's Kar98k (4 wins). The M24 dipped from 50% to 48% and is still his
-      best long gun with real volume.
-    </div>
   </div>
 
   <!-- ============================================================ -->
-  <section class="chapter" id="bigpicture">
+  <section class="chapter" id="lately">
     <div class="chapter-num">01</div>
+    <h2>Since 6 October</h2>
+    <p class="lede">74 fights in 34 games since the 6 October update (26 Oct &ndash; 5 Nov). Has any gun got better or
+      worse in either player's hands? Fights the gun led before and since, plus accuracy and damage per
+      combat-minute from the <a href="weapons.html">Weapon Stats</a> data. The "since" samples are small: read them
+      as hot and cold, not as new verdicts.</p>
+
+    <div class="statrow">
+      <div class="stat ok"><div class="num">5-0-3</div><div class="label">S821 &middot; Mini 14</div><div class="sub">since 6 Oct &middot; 50% before</div></div>
+      <div class="stat bad"><div class="num">0-1-4</div><div class="label">D282 &middot; Mini 14</div><div class="sub">since 6 Oct &middot; 51% before</div></div>
+      <div class="stat blue"><div class="num">31%</div><div class="label">Fights led by D282</div><div class="sub">20 of 65 since 6 Oct &middot; 46% before</div></div>
+    </div>
+
+    <div class="panel wrap-scroll" style="padding-top:14px;">
+      <table class="dtable">
+        <thead><tr><th>D282</th><th class="r pad">Before 6 Oct</th><th class="r pad">Since</th><th class="r pad">Accuracy</th><th class="r pad">Dmg / combat-min</th><th>Trend</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Mini 14</td><td class="r pad">18-8-9 <span class="dim">(35)</span></td><td class="r pad bad">0-1-4 <span class="dim">(5)</span></td><td class="r pad">15.1% &rarr; 9.2%</td><td class="r pad">147 &rarr; 82</td><td class="bad"><b>Cold</b></td></tr>
+          <tr><td class="name">M249</td><td class="r pad">9-17-10 <span class="dim">(36)</span></td><td class="r pad">1-0-1 <span class="dim">(2)</span></td><td class="r pad">7.3% &rarr; 6.8%</td><td class="r pad">143 &rarr; 111</td><td class=""><b>About the same</b></td></tr>
+          <tr><td class="name">HK416</td><td class="r pad">6-13-7 <span class="dim">(26)</span></td><td class="r pad bad">0-0-2 <span class="dim">(2)</span></td><td class="r pad">10.4% &rarr; 7.5%</td><td class="r pad">150 &rarr; 110</td><td class="bad"><b>Colder</b></td></tr>
+          <tr><td class="name">SCAR-L</td><td class="r pad">3-1-0 <span class="dim">(4)</span></td><td class="r pad">0-1-0 <span class="dim">(1)</span></td><td class="r pad">8.8% &rarr; 5.5%</td><td class="r pad">152 &rarr; 79</td><td class="bad"><b>Colder</b></td></tr>
+          <tr><td class="name">Beryl M762</td><td class="r pad">2-1-0 <span class="dim">(3)</span></td><td class="r pad">1-0-1 <span class="dim">(2)</span></td><td class="r pad">17.5% &rarr; 7.1%</td><td class="r pad">257 &rarr; 111</td><td class=""><b>Too few shots</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel s821 wrap-scroll" style="padding-top:14px;">
+      <table class="dtable">
+        <thead><tr><th>S821</th><th class="r pad">Before 6 Oct</th><th class="r pad">Since</th><th class="r pad">Accuracy</th><th class="r pad">Dmg / combat-min</th><th>Trend</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Mini 14</td><td class="r pad">8-4-4 <span class="dim">(16)</span></td><td class="r pad good">5-0-3 <span class="dim">(8)</span></td><td class="r pad">14.6% &rarr; 12.1%</td><td class="r pad">165 &rarr; 136</td><td class="good"><b>Wins more</b></td></tr>
+          <tr><td class="name">M416 (HK416)</td><td class="r pad">10-6-5 <span class="dim">(21)</span></td><td class="r pad">3-2-2 <span class="dim">(7)</span></td><td class="r pad good">8.3% &rarr; 12.7%</td><td class="r pad good">135 &rarr; 210</td><td class="good"><b>Hot</b></td></tr>
+          <tr><td class="name">RPD</td><td class="r pad">8-7-4 <span class="dim">(19)</span></td><td class="r pad">3-1-3 <span class="dim">(7)</span></td><td class="r pad">5.4% &rarr; 5.5%</td><td class="r pad">148 &rarr; 179</td><td class=""><b>About the same</b></td></tr>
+          <tr><td class="name">M16A4</td><td class="r pad">1-2-2 <span class="dim">(5)</span></td><td class="r pad good">3-1-0 <span class="dim">(4)</span></td><td class="r pad good">13.7% &rarr; 25.0%</td><td class="r pad good">184 &rarr; 296</td><td class="good"><b>Hot</b></td></tr>
+          <tr><td class="name">Mk12 SPR</td><td class="r pad">5-4-6 <span class="dim">(15)</span></td><td class="r pad">2-0-1 <span class="dim">(3)</span></td><td class="r pad">12.7% &rarr; 9.1%</td><td class="r pad">129 &rarr; 62</td><td class=""><b>Mixed</b></td></tr>
+          <tr><td class="name">M249</td><td class="r pad">7-4-3 <span class="dim">(14)</span></td><td class="r pad">1-1-0 <span class="dim">(2)</span></td><td class="r pad">6.5% &rarr; 5.2%</td><td class="r pad">168 &rarr; 130</td><td class=""><b>About the same</b></td></tr>
+          <tr><td class="name">AUG A3</td><td class="r pad">2-2-0 <span class="dim">(4)</span></td><td class="r pad">0-1-1 <span class="dim">(2)</span></td><td class="r pad bad">11.8% &rarr; 4.5%</td><td class="r pad bad">282 &rarr; 78</td><td class="bad"><b>Cold</b></td></tr>
+          <tr><td class="name">M24 / ACE32</td><td class="r pad">13-8-5 / 14-18-5</td><td class="r pad">1-1-1 / 0-2-0</td><td class="r pad dim">&mdash;</td><td class="r pad dim">&mdash;</td><td class=""><b>Barely used lately</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="chart-cap" style="text-align:left">W-T-L of the fights each gun led (fight count in brackets). Accuracy and damage
+      per combat-minute: duo games only, before 6 Oct &rarr; since; guns with under ~100 shots since are noisy.</p>
+
+    <div class="callout ok">
+      <b>Better in S821's hands.</b> The M416 is the clearest case: accuracy 8% &rarr; 13%, damage per combat-minute
+      135 &rarr; 210 and kills per combat-hour 58 &rarr; 105, on 370 shots since 6 October. The M16A4 won 3 of the 4 fights
+      it led, at 25% accuracy, including shots at 160&ndash;210m on 5 November. And his Mini 14 wins more than ever (5 of 8).
+      All in all S821 led 45 of the 65 fights since 6 October, against 54% of them before.
+    </div>
+    <div class="callout bad">
+      <b>Worse in D282's hands: the Mini 14.</b> His best gun until October has led 5 fights since and won none, and
+      his accuracy with it dropped from 15% to 9%. Four of those five started with D282 hit first by a sniper or caught
+      far from S821 (Engagement Report, Chapter 01), so it's partly where the fights happened, not only the aim. His
+      other guns are colder too, on small samples: HK416 and SCAR-L accuracy both down about a third.
+    </div>
+    <div class="callout">
+      <b>Same gun, opposite runs.</b> Before 6 October the Mini 14 won about half its fights for both of you (50% / 51%).
+      Since then it's 5-0-3 for S821 and 0-1-4 for D282. If one Mini 14 drops, give it to S821 for now, and D282 takes the
+      M249 or an AR.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section class="chapter" id="bigpicture">
+    <div class="chapter-num">02</div>
     <h2>By Category</h2>
 
     <div class="chart-box"><div class="cv"><canvas id="catChart"></canvas></div></div>
@@ -217,26 +274,26 @@
           <th class="r pad">S821 n</th><th class="r">S821 win%</th></tr></thead>
         <tbody>
           <tr><td class="name">SR</td><td class="r pad dim">&lt;5</td><td class="r pad dim">&mdash;</td><td class="r pad">34</td><td class="r good">52.9%</td></tr>
-          <tr><td class="name">DMR</td><td class="r pad">77</td><td class="r pad good">41.6%</td><td class="r pad">68</td><td class="r">42.6%</td></tr>
-          <tr><td class="name">AR</td><td class="r pad">88</td><td class="r pad">35.2%</td><td class="r pad">106</td><td class="r">42.5%</td></tr>
-          <tr><td class="name">SMG</td><td class="r pad">23</td><td class="r pad">39.1%</td><td class="r pad">33</td><td class="r bad">33.3%</td></tr>
-          <tr><td class="name">LMG</td><td class="r pad">45</td><td class="r pad bad">26.7%</td><td class="r pad">43</td><td class="r">46.5%</td></tr>
+          <tr><td class="name">DMR</td><td class="r pad">81</td><td class="r pad good">39.5%</td><td class="r pad">77</td><td class="r">45.5%</td></tr>
+          <tr><td class="name">AR</td><td class="r pad">91</td><td class="r pad">34.1%</td><td class="r pad">117</td><td class="r">42.7%</td></tr>
+          <tr><td class="name">SMG</td><td class="r pad">23</td><td class="r pad">39.1%</td><td class="r pad">34</td><td class="r bad">32.4%</td></tr>
+          <tr><td class="name">LMG</td><td class="r pad">46</td><td class="r pad bad">26.1%</td><td class="r pad">43</td><td class="r">46.5%</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout">
-      <b>D282 wins most with a long gun</b> (DMR 41.6%), and his DMRs open 77% of their fights. That matches
+      <b>D282 wins most with a long gun</b> (DMR 39.5%), and his DMRs open 74% of their fights. That matches
       the Engagement Report: fights that start with our knock are the ones we win. His LMGs are his weakest
-      category (26.7%).
+      category (26.1%).
       <b>For S821 the bolt-action snipers lead</b> (52.9%); LMG, AR and DMR all sit between 42% and 47%.
-      Only his SMGs lag (33.3%).
+      Only his SMGs lag (32.4%).
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="d-main">
-    <div class="chapter-num">02</div>
+    <div class="chapter-num">03</div>
     <h2>D282 &middot; Main Gun</h2>
 
     <div class="panel wrap-scroll" style="padding-top:14px;">
@@ -246,32 +303,33 @@
         <tbody>
           <tr><td class="name">SCAR-L</td><td><span class="cat-pill">AR</span></td><td class="r pad">5</td><td class="r pad">60.0%</td><td class="r pad">80.0%</td><td class="r pad">75.0%</td><td class="r pad">0% <span class="dim">(of 1)</span></td><td class="r flat">+8.4</td></tr>
           <tr><td class="name">G36C</td><td><span class="cat-pill">AR</span></td><td class="r pad">5</td><td class="r pad">60.0%</td><td class="r pad">80.0%</td><td class="r pad">50.0%</td><td class="r pad">100% <span class="dim">(of 1)</span></td><td class="r bad">&minus;50.9</td></tr>
+          <tr><td class="name">Beryl M762</td><td><span class="cat-pill">AR</span></td><td class="r pad">5</td><td class="r pad">60.0%</td><td class="r pad">60.0%</td><td class="r pad">66.7%</td><td class="r pad">50.0% <span class="dim">(of 2)</span></td><td class="r good">+32.1</td></tr>
           <tr><td class="name">AUG A3</td><td><span class="cat-pill">AR</span></td><td class="r pad">6</td><td class="r pad">50.0%</td><td class="r pad">83.3%</td><td class="r pad">60.0%</td><td class="r pad">0% <span class="dim">(of 1)</span></td><td class="r good">+19.0</td></tr>
           <tr><td class="name">ACE32</td><td><span class="cat-pill">AR</span></td><td class="r pad">6</td><td class="r pad">33.3%</td><td class="r pad">33.3%</td><td class="r pad">50.0%</td><td class="r pad">25.0% <span class="dim">(of 4)</span></td><td class="r bad">&minus;25.5</td></tr>
-          <tr class="pick"><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">37</td><td class="r pad">27.0%</td><td class="r pad">56.8%</td><td class="r pad">38.1%</td><td class="r pad">12.5% <span class="dim">(of 16)</span></td><td class="r bad">&minus;44.8</td></tr>
+          <tr class="pick"><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">38</td><td class="r pad">26.3%</td><td class="r pad">57.9%</td><td class="r pad">36.4%</td><td class="r pad">12.5% <span class="dim">(of 16)</span></td><td class="r bad">&minus;46.5</td></tr>
           <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">8</td><td class="r pad">25.0%</td><td class="r pad">37.5%</td><td class="r pad">66.7%</td><td class="r pad">0% <span class="dim">(of 5)</span></td><td class="r bad">&minus;34.9</td></tr>
           <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">25</td><td class="r pad">24.0%</td><td class="r pad">44.0%</td><td class="r pad">45.5%</td><td class="r pad">7.1% <span class="dim">(of 14)</span></td><td class="r bad">&minus;40.9</td></tr>
-          <tr><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">27</td><td class="r pad bad">22.2%</td><td class="r pad">48.1%</td><td class="r pad">15.4%</td><td class="r pad">28.6% <span class="dim">(of 14)</span></td><td class="r bad">&minus;32.6</td></tr>
+          <tr><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">28</td><td class="r pad bad">21.4%</td><td class="r pad">50.0%</td><td class="r pad">14.3%</td><td class="r pad">28.6% <span class="dim">(of 14)</span></td><td class="r bad">&minus;37.3</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="panel">
       <h3>No clear main: M249, AK-M and HK416 all win about a quarter</h3>
-      <p>The M249 (27.0% of 37), AK-M (24.0% of 25) and HK416 (22.2% of 27) are within five points of each
-        other. The M249 is still the one he carries most, and wins 38% of the fights he opens with it. The
-        HK416 is odd: poor when he opens (2 wins in 13) but his best gun when ambushed (4 in 14). Reading his fights, the M249 shows up in many of his best moments:
+      <p>The M249 (26.3% of 38), AK-M (24.0% of 25) and HK416 (21.4% of 28) are within five points of each
+        other. The M249 is still the one he carries most, and wins 36% of the fights he opens with it. The
+        HK416 is odd: poor when he opens (2 wins in 14) but his best gun when ambushed (4 in 14). Reading his fights, the M249 shows up in many of his best moments:
         point-blank knocks and kills after S821 is down (the chicken dinner on 22 Sep ended with an M249 knock
         at 13m and a kill at 7m on 17 HP).</p>
       <p>Ambushed, the M249 wins 2 in 16 and the AK-M 1 in 14. For those two, who hits first decides the
-        fight more than the gun. The SCAR-L and G36C (3 wins in 5 each) and AUG A3 (3 in 6) look good but
+        fight more than the gun. The SCAR-L, G36C and Beryl (3 wins in 5 each) and AUG A3 (3 in 6) look good but
         have only 5&ndash;6 fights each. The RPD (2 in 8) has never won a fight he was ambushed in (0 of 5).</p>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="d-long">
-    <div class="chapter-num">03</div>
+    <div class="chapter-num">04</div>
     <h2>D282 &middot; Long Gun</h2>
 
     <div class="panel wrap-scroll" style="padding-top:14px;">
@@ -279,7 +337,7 @@
         <thead><tr><th>Weapon</th><th>Cat</th><th class="r pad">n</th><th class="r pad">Win%</th>
           <th class="r pad">We opened</th><th class="r pad">Win% when we opened</th><th class="r pad">Med. range</th><th class="r">Dmg diff</th></tr></thead>
         <tbody>
-          <tr class="pick"><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">36</td><td class="r pad good">50.0%</td><td class="r pad">69.4%</td><td class="r pad">64.0%</td><td class="r pad"><span class="dim">72.3m</span></td><td class="r flat">&minus;9.9</td></tr>
+          <tr class="pick"><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">40</td><td class="r pad good">45.0%</td><td class="r pad">65.0%</td><td class="r pad">61.5%</td><td class="r pad"><span class="dim">72.3m</span></td><td class="r bad">&minus;22.6</td></tr>
           <tr><td class="name">SKS</td><td><span class="cat-pill">DMR</span></td><td class="r pad">7</td><td class="r pad">42.9%</td><td class="r pad">71.4%</td><td class="r pad">60.0%</td><td class="r pad"><span class="dim">46.8m</span></td><td class="r bad">&minus;18.9</td></tr>
           <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">24</td><td class="r pad">33.3%</td><td class="r pad">83.3%</td><td class="r pad">35.0%</td><td class="r pad"><span class="dim">55.8m</span></td><td class="r good">+27.3</td></tr>
           <tr><td class="name">Dragunov</td><td><span class="cat-pill">DMR</span></td><td class="r pad">6</td><td class="r pad bad">16.7%</td><td class="r pad">100%</td><td class="r pad">16.7%</td><td class="r pad"><span class="dim">67.3m</span></td><td class="r bad">&minus;46.1</td></tr>
@@ -289,7 +347,7 @@
 
     <div class="panel">
       <h3>Mini 14, clearly</h3>
-      <p>50% overall and 64% in fights he opens: his best gun with real volume on this page, by a distance. It's the gun behind
+      <p>45% overall and 62% in fights he opens: still his best gun with real volume, though it has gone cold since 6 October (Chapter 01). It's the gun behind
         most of his long-range knocks in the fight review (headshot knocks at 191m, 225m and 255m).
         The Mk12 opens even more often (83%) and wins the damage by the most (+27.3), but only about 1 opener in
         3 becomes a win. It hurts without finishing.</p>
@@ -299,7 +357,7 @@
 
   <!-- ============================================================ -->
   <section class="chapter s821" id="s-main">
-    <div class="chapter-num">04</div>
+    <div class="chapter-num">05</div>
     <h2 style="color:var(--s821)">S821 &middot; Main Gun</h2>
 
     <div class="panel s821 wrap-scroll" style="padding-top:14px;">
@@ -309,12 +367,12 @@
         <tbody>
           <tr><td class="name">Beryl M762</td><td><span class="cat-pill">AR</span></td><td class="r pad">7</td><td class="r pad good">71.4%</td><td class="r pad">42.9%</td><td class="r pad">66.7%</td><td class="r pad">75.0% <span class="dim">(of 4)</span></td><td class="r good">+70.9</td></tr>
           <tr><td class="name">M249</td><td><span class="cat-pill">LMG</span></td><td class="r pad">16</td><td class="r pad">50.0%</td><td class="r pad">81.2%</td><td class="r pad">53.8%</td><td class="r pad">33.3% <span class="dim">(of 3)</span></td><td class="r good">+26.4</td></tr>
-          <tr class="pick"><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">26</td><td class="r pad good">46.2%</td><td class="r pad">53.8%</td><td class="r pad">64.3%</td><td class="r pad">25.0% <span class="dim">(of 12)</span></td><td class="r flat">0.0</td></tr>
-          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">11</td><td class="r pad">45.5%</td><td class="r pad">72.7%</td><td class="r pad">50.0%</td><td class="r pad">33.3% <span class="dim">(of 3)</span></td><td class="r bad">&minus;26.9</td></tr>
+          <tr class="pick"><td class="name">HK416</td><td><span class="cat-pill">AR</span></td><td class="r pad">28</td><td class="r pad good">46.4%</td><td class="r pad">53.6%</td><td class="r pad">60.0%</td><td class="r pad">30.8% <span class="dim">(of 13)</span></td><td class="r flat">&minus;5.1</td></tr>
+          <tr><td class="name">M16A4</td><td><span class="cat-pill">AR</span></td><td class="r pad">9</td><td class="r pad">44.4%</td><td class="r pad">77.8%</td><td class="r pad">57.1%</td><td class="r pad">0% <span class="dim">(of 2)</span></td><td class="r good">+18.6</td></tr>
           <tr><td class="name">RPD</td><td><span class="cat-pill">LMG</span></td><td class="r pad">26</td><td class="r pad">42.3%</td><td class="r pad">50.0%</td><td class="r pad">61.5%</td><td class="r pad">23.1% <span class="dim">(of 13)</span></td><td class="r bad">&minus;46.1</td></tr>
-          <tr><td class="name">AUG A3</td><td><span class="cat-pill">AR</span></td><td class="r pad">5</td><td class="r pad">40.0%</td><td class="r pad">100%</td><td class="r pad">40.0%</td><td class="r pad"><span class="dim">&mdash; (of 0)</span></td><td class="r good">+15.2</td></tr>
-          <tr class="pick"><td class="name">ACE32</td><td><span class="cat-pill">AR</span></td><td class="r pad">38</td><td class="r pad">36.8%</td><td class="r pad">63.2%</td><td class="r pad">41.7%</td><td class="r pad">28.6% <span class="dim">(of 14)</span></td><td class="r good">+19.4</td></tr>
-          <tr><td class="name">M16A4</td><td><span class="cat-pill">AR</span></td><td class="r pad">5</td><td class="r pad bad">20.0%</td><td class="r pad">60.0%</td><td class="r pad">33.3%</td><td class="r pad">0% <span class="dim">(of 2)</span></td><td class="r bad">&minus;56.9</td></tr>
+          <tr><td class="name">AK-M</td><td><span class="cat-pill">AR</span></td><td class="r pad">12</td><td class="r pad">41.7%</td><td class="r pad">66.7%</td><td class="r pad">50.0%</td><td class="r pad">25.0% <span class="dim">(of 4)</span></td><td class="r bad">&minus;40.2</td></tr>
+          <tr class="pick"><td class="name">ACE32</td><td><span class="cat-pill">AR</span></td><td class="r pad">39</td><td class="r pad">35.9%</td><td class="r pad">61.5%</td><td class="r pad">41.7%</td><td class="r pad">26.7% <span class="dim">(of 15)</span></td><td class="r good">+20.1</td></tr>
+          <tr><td class="name">AUG A3</td><td><span class="cat-pill">AR</span></td><td class="r pad">6</td><td class="r pad bad">33.3%</td><td class="r pad">100%</td><td class="r pad">33.3%</td><td class="r pad"><span class="dim">&mdash; (of 0)</span></td><td class="r flat">&minus;7.4</td></tr>
         </tbody>
       </table>
     </div>
@@ -323,10 +381,10 @@
       <h3>HK416 or Beryl when found, ACE32 otherwise. The LMGs are fine.</h3>
       <p>The previous version said "no LMGs, drop the RPD". That came from data that missed our kills. Many of
         S821's RPD and M249 fights end with him killing the last enemy after D282 went down, and those were
-        counted as losses. With kills counted, his main guns sit between 37% and 50% (the Beryl is 5 of 7 and
-        the M16A4 1 of 5, both small samples).</p>
-      <p>Among the common ones the HK416 wins most (46% of 26, 64% when he opens). The ACE32 is his most-used
-        gun (38 fights, 37%) and the one behind most of his close-range clutches in the fight review (e.g. two
+        counted as losses. With kills counted, his main guns sit between 36% and 50% (the Beryl is 5 of 7 and
+        the M16A4 4 of 9, both small samples).</p>
+      <p>Among the common ones the HK416 wins most (46% of 28, 60% when he opens), and it has been his best gun lately (Chapter 01). The ACE32 is his most-used
+        gun (39 fights, 36%), though he has barely used it since 6 October, and the one behind most of his close-range clutches in the fight review (e.g. two
         kills at 10m and 3m on 2 HP on 9 Aug). The RPD (26 fights now) still loses the damage race badly (&minus;46.1 per fight).
         It wins by finishing, not by trading.</p>
     </div>
@@ -334,7 +392,7 @@
 
   <!-- ============================================================ -->
   <section class="chapter s821" id="s-long">
-    <div class="chapter-num">05</div>
+    <div class="chapter-num">06</div>
     <h2 style="color:var(--s821)">S821 &middot; Long Gun</h2>
 
     <div class="panel s821 wrap-scroll" style="padding-top:14px;">
@@ -344,28 +402,28 @@
         <tbody>
           <tr><td class="name">Kar98k</td><td><span class="cat-pill">SR</span></td><td class="r pad">5</td><td class="r pad good">80.0%</td><td class="r pad">60.0%</td><td class="r pad">66.7%</td><td class="r pad"><span class="dim">48.3m</span></td><td class="r good">+50.8</td></tr>
           <tr><td class="name">Dragunov</td><td><span class="cat-pill">DMR</span></td><td class="r pad">6</td><td class="r pad good">66.7%</td><td class="r pad">50.0%</td><td class="r pad">66.7%</td><td class="r pad"><span class="dim">113.9m</span></td><td class="r good">+51.3</td></tr>
-          <tr><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">18</td><td class="r pad good">50.0%</td><td class="r pad">83.3%</td><td class="r pad">60.0%</td><td class="r pad"><span class="dim">109.5m</span></td><td class="r good">+46.9</td></tr>
-          <tr class="pick"><td class="name">M24</td><td><span class="cat-pill">SR</span></td><td class="r pad">29</td><td class="r pad good">48.3%</td><td class="r pad">79.3%</td><td class="r pad">47.8%</td><td class="r pad"><span class="dim">81.0m</span></td><td class="r flat">&minus;0.1</td></tr>
+          <tr class="pick"><td class="name">Mini 14</td><td><span class="cat-pill">DMR</span></td><td class="r pad">24</td><td class="r pad good">54.2%</td><td class="r pad">83.3%</td><td class="r pad">65.0%</td><td class="r pad"><span class="dim">102.8m</span></td><td class="r good">+46.4</td></tr>
+          <tr><td class="name">M24</td><td><span class="cat-pill">SR</span></td><td class="r pad">29</td><td class="r pad good">48.3%</td><td class="r pad">79.3%</td><td class="r pad">47.8%</td><td class="r pad"><span class="dim">81.0m</span></td><td class="r flat">&minus;0.1</td></tr>
           <tr><td class="name">SKS</td><td><span class="cat-pill">DMR</span></td><td class="r pad">5</td><td class="r pad">40.0%</td><td class="r pad">80.0%</td><td class="r pad">50.0%</td><td class="r pad"><span class="dim">60.9m</span></td><td class="r bad">&minus;13.1</td></tr>
+          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">18</td><td class="r pad">38.9%</td><td class="r pad">66.7%</td><td class="r pad">50.0%</td><td class="r pad"><span class="dim">82.9m</span></td><td class="r bad">&minus;10.7</td></tr>
           <tr><td class="name">SLR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">24</td><td class="r pad">37.5%</td><td class="r pad">70.8%</td><td class="r pad">35.3%</td><td class="r pad"><span class="dim">85.8m</span></td><td class="r good">+14.8</td></tr>
-          <tr><td class="name">Mk12 SPR</td><td><span class="cat-pill">DMR</span></td><td class="r pad">15</td><td class="r pad bad">33.3%</td><td class="r pad">60.0%</td><td class="r pad">44.4%</td><td class="r pad"><span class="dim">60.5m</span></td><td class="r bad">&minus;13.4</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="panel s821">
-      <h3>M24 or Mini 14</h3>
+      <h3>Mini 14 or M24</h3>
       <p>The M24 is still his best individual weapon on the whole site: 58% accuracy, 299 damage per combat-minute,
         77 kills per combat-hour. Most of his headshot knocks in the fight review come from it (157m, 173m, 185m,
-        210m, 236m). The M24 (48% of 29) and Mini 14 (50% of 18) are level. Either
-        is a good pick. The FAL (SLR, 38%) is a solid third, and the Kar98k won 4 of its first 5.</p>
-      <p>The Mk12 is his worst long gun (5 wins in 15). It's the same "hurts but doesn't finish" pattern as for D282.</p>
+        210m, 236m). On results the Mini 14 has now pulled ahead (54% of 24, 5 of 8 since 6 October), while the M24 (48% of 29)
+        has barely been used lately. Either is a good pick. The Kar98k won 4 of its first 5.</p>
+      <p>The Mk12 (7 wins in 18) and the FAL (SLR, 9 in 24) trail. The Mk12 has the same "hurts but doesn't finish" pattern as for D282.</p>
     </div>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="smg">
-    <div class="chapter-num">06</div>
+    <div class="chapter-num">07</div>
     <h2>SMGs</h2>
 
     <div class="panel wrap-scroll">
@@ -373,7 +431,7 @@
         <thead><tr><th>Weapon</th><th class="r pad">D282 n</th><th class="r pad">D282 W-T-L</th>
           <th class="r pad">S821 n</th><th class="r">S821 W-T-L</th></tr></thead>
         <tbody>
-          <tr><td class="name">MP5K</td><td class="r pad">9</td><td class="r pad">4-4-1</td><td class="r pad">21</td><td class="r">6-9-6</td></tr>
+          <tr><td class="name">MP5K</td><td class="r pad">9</td><td class="r pad">4-4-1</td><td class="r pad">22</td><td class="r">6-10-6</td></tr>
           <tr class="pick"><td class="name">UMP45</td><td class="r pad">5</td><td class="r pad good">3-2-0</td><td class="r pad">4</td><td class="r good">4-0-0</td></tr>
           <tr><td class="name">Tommy Gun</td><td class="r pad">5</td><td class="r pad">1-2-2</td><td class="r pad">2</td><td class="r">1-1-0</td></tr>
           <tr><td class="name">Micro UZI</td><td class="r pad">2</td><td class="r pad bad">0-1-1</td><td class="r pad">3</td><td class="r">0-3-0</td></tr>
@@ -383,42 +441,44 @@
       </table>
     </div>
     <p>SMGs are D282's best close-range category (39.1% of 23, ahead of his ARs and LMGs) and S821's weakest
-      (33.3% of 33). The MP5K is the only one with volume: good for D282 (4-4-1), below average for S821 (28.6%), who
-      mostly uses it after being hit first (opens 33%). The UMP45 is 9 fights between us, 7 wins and no losses.
+      (32.4% of 34). The MP5K is the only one with volume: good for D282 (4-4-1), below average for S821 (27.3%), who
+      mostly uses it after being hit first (opens 36%). The UMP45 is 9 fights between us, 7 wins and no losses.
       Pick it up if it's there.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="crossplayer">
-    <div class="chapter-num">07</div>
+    <div class="chapter-num">08</div>
     <h2>Same Gun, Different Player</h2>
 
     <div class="panel wrap-scroll">
       <table class="dtable">
         <thead><tr><th>Weapon</th><th class="r pad">D282</th><th class="r">S821</th></tr></thead>
         <tbody>
-          <tr><td class="name">HK416</td><td class="r pad bad">22.2% <span class="dim">(27)</span></td><td class="r good">46.2% <span class="dim">(26)</span></td></tr>
+          <tr><td class="name">HK416</td><td class="r pad bad">21.4% <span class="dim">(28)</span></td><td class="r good">46.4% <span class="dim">(28)</span></td></tr>
           <tr><td class="name">Dragunov</td><td class="r pad">16.7% <span class="dim">(6)</span></td><td class="r good">66.7% <span class="dim">(6)</span></td></tr>
-          <tr><td class="name">M249</td><td class="r pad">27.0% <span class="dim">(37)</span></td><td class="r good">50.0% <span class="dim">(16)</span></td></tr>
+          <tr><td class="name">M249</td><td class="r pad">26.3% <span class="dim">(38)</span></td><td class="r good">50.0% <span class="dim">(16)</span></td></tr>
           <tr><td class="name">RPD</td><td class="r pad bad">25.0% <span class="dim">(8)</span></td><td class="r">42.3% <span class="dim">(26)</span></td></tr>
-          <tr><td class="name">AK-M</td><td class="r pad">24.0% <span class="dim">(25)</span></td><td class="r">45.5% <span class="dim">(11)</span></td></tr>
-          <tr><td class="name">ACE32</td><td class="r pad">33.3% <span class="dim">(6)</span></td><td class="r">36.8% <span class="dim">(38)</span></td></tr>
-          <tr><td class="name">AUG A3</td><td class="r pad">50.0% <span class="dim">(6)</span></td><td class="r">40.0% <span class="dim">(5)</span></td></tr>
-          <tr><td class="name">Mini 14</td><td class="r pad good">50.0% <span class="dim">(36)</span></td><td class="r good">50.0% <span class="dim">(18)</span></td></tr>
-          <tr><td class="name">Mk12 SPR</td><td class="r pad">33.3% <span class="dim">(24)</span></td><td class="r">33.3% <span class="dim">(15)</span></td></tr>
-          <tr><td class="name">MP5K</td><td class="r pad">44.4% <span class="dim">(9)</span></td><td class="r">28.6% <span class="dim">(21)</span></td></tr>
+          <tr><td class="name">AK-M</td><td class="r pad">24.0% <span class="dim">(25)</span></td><td class="r">41.7% <span class="dim">(12)</span></td></tr>
+          <tr><td class="name">Beryl M762</td><td class="r pad">60.0% <span class="dim">(5)</span></td><td class="r good">71.4% <span class="dim">(7)</span></td></tr>
+          <tr><td class="name">ACE32</td><td class="r pad">33.3% <span class="dim">(6)</span></td><td class="r">35.9% <span class="dim">(39)</span></td></tr>
+          <tr><td class="name">AUG A3</td><td class="r pad">50.0% <span class="dim">(6)</span></td><td class="r">33.3% <span class="dim">(6)</span></td></tr>
+          <tr><td class="name">Mini 14</td><td class="r pad">45.0% <span class="dim">(40)</span></td><td class="r good">54.2% <span class="dim">(24)</span></td></tr>
+          <tr><td class="name">Mk12 SPR</td><td class="r pad">33.3% <span class="dim">(24)</span></td><td class="r">38.9% <span class="dim">(18)</span></td></tr>
+          <tr><td class="name">MP5K</td><td class="r pad">44.4% <span class="dim">(9)</span></td><td class="r">27.3% <span class="dim">(22)</span></td></tr>
         </tbody>
       </table>
     </div>
-    <p><b>S821 wins more with almost every close-range gun they share</b>: HK416 46% vs 22%, M249 50% vs 27%,
+    <p><b>S821 wins more with almost every close-range gun they share</b>: HK416 46% vs 21%, M249 50% vs 26%,
       RPD, AK-M. So in close fights it's more about who holds the gun, and when, than the gun itself. The long
-      guns are even: the Mini 14 works for both (50% / 50%) and the Mk12 is weak for both (33% each). The MP5K is the one
+      guns used to be even. The Mini 14 is now 54% for S821 against 45% for D282 after their opposite runs since
+      6 October (Chapter 01), and the Mk12 is weak for both (39% / 33%). The MP5K is the one
       shared gun that does better for D282.</p>
   </section>
 
   <!-- ============================================================ -->
   <section class="chapter" id="loadout">
-    <div class="chapter-num">08</div>
+    <div class="chapter-num">09</div>
     <h2>Loadout</h2>
 
     <div class="loadout-grid">
@@ -427,14 +487,14 @@
         <div class="slot">
           <div class="slot-label">Main &middot; AR/LMG</div>
           <div class="slot-gun">M249 <span style="font-size:13px;color:var(--muted);font-family:system-ui;">or AK-M</span></div>
-          <div class="slot-why">All three ARs/LMGs win about a quarter: M249 27.0%, AK-M 24.0%, HK416 22.2%. The M249 is his most-used and wins 38% of the fights he opens.</div>
+          <div class="slot-why">All three ARs/LMGs win about a quarter: M249 26.3%, AK-M 24.0%, HK416 21.4%. The M249 is his most-used and wins 36% of the fights he opens.</div>
         </div>
         <div class="slot">
           <div class="slot-label">Long &middot; DMR/SR</div>
           <div class="slot-gun">Mini 14</div>
-          <div class="slot-why">50% overall, 64% when he opens. His best gun, well ahead of the Mk12 (33%).</div>
+          <div class="slot-why">45% overall, 62% when he opens. Still his best long gun, but 0 of 5 since 6 October: if only one drops, S821 takes it.</div>
         </div>
-        <div class="try"><b>Worth testing:</b> UMP45 or MP5K up close (SMGs win 39% for him), and more SCAR-L or G36C (3 of 5 each). A bolt-action sniper, still no data.</div>
+        <div class="try"><b>Worth testing:</b> UMP45 or MP5K up close (SMGs win 39% for him), and more Beryl, SCAR-L or G36C (3 of 5 each). A bolt-action sniper, still no data.</div>
       </div>
 
       <div class="loadout-card s">
@@ -442,14 +502,14 @@
         <div class="slot">
           <div class="slot-label">Main &middot; AR/LMG</div>
           <div class="slot-gun">HK416 / Beryl <span style="font-size:13px;color:var(--muted);font-family:system-ui;">&rarr; ACE32 otherwise</span></div>
-          <div class="slot-why">HK416 (46% of 26) and Beryl (5 of 7) win most. ACE32 (37% of 38) is the reliable default. M249 (50% of 16) and RPD (42% of 26) are fine too.</div>
+          <div class="slot-why">HK416 (46% of 28, hot lately) and Beryl (5 of 7) win most. ACE32 (36% of 39) is the reliable default. M249 (50% of 16) and RPD (42% of 26) are fine too.</div>
         </div>
         <div class="slot">
           <div class="slot-label">Long &middot; DMR/SR</div>
-          <div class="slot-gun">M24 <span style="font-size:13px;color:var(--muted);font-family:system-ui;">or Mini 14</span></div>
-          <div class="slot-why">Both win about half their fights (48% / 50%), and the M24 has the best individual numbers on the site. Skip the Mk12.</div>
+          <div class="slot-gun">Mini 14 <span style="font-size:13px;color:var(--muted);font-family:system-ui;">or M24</span></div>
+          <div class="slot-why">Mini 14 54% of 24 (5 of 8 lately), M24 48% of 29 and still the best individual numbers on the site. Skip the Mk12.</div>
         </div>
-        <div class="try"><b>Worth testing:</b> more Beryl, Dragunov and Kar98k. All three look great on only 5–7 fights each.</div>
+        <div class="try"><b>Worth testing:</b> more Beryl, Dragunov, Kar98k and M16A4 (3 of 4 lately). All look good on only 5–9 fights each.</div>
       </div>
     </div>
 
@@ -462,12 +522,12 @@
 
   <!-- ============================================================ -->
   <section class="chapter" id="caveats">
-    <div class="chapter-num">09</div>
+    <div class="chapter-num">10</div>
     <h2>Method</h2>
     <div class="panel">
       <ul class="method">
-        <li><b>Source:</b> all 652 decisive duo fights (including the first 5 minutes) from 329 matches,
-          2 Jun – 29 Oct 2026. Individual accuracy/damage numbers come from the <a href="weapons.html">Weapon Stats</a> data.</li>
+        <li><b>Source:</b> all 687 decisive duo fights (including the first 5 minutes) from 344 matches,
+          2 Jun – 5 Nov 2026. Individual accuracy/damage numbers come from the <a href="weapons.html">Weapon Stats</a> data.</li>
         <li><b>Credit:</b> each fight goes to the player who did the most damage in it and his most-fired gun.
           A gun gets credit or blame for fights it led, not only fights where it got the kill.</li>
         <li><b>Win:</b> nobody on our side went down, or every enemy in the fight was killed and nobody on our
@@ -481,8 +541,8 @@
 </div>
 
 <footer>
-  <div class="sign">652 fights &middot; companion to <a href="engagements.html">The Engagement Report</a> and <a href="weapons.html">Weapon Stats</a></div>
-  Written from matches up to 29 Oct 2026. Not updated automatically.
+  <div class="sign">687 fights &middot; companion to <a href="engagements.html">The Engagement Report</a> and <a href="weapons.html">Weapon Stats</a></div>
+  Written from matches up to 5 Nov 2026. Not updated automatically.
 </footer>
 
 <script>
@@ -503,8 +563,8 @@ new Chart(document.getElementById('catChart'),{
   data:{
     labels:['AR','LMG','DMR','SR'],
     datasets:[
-      {label:'D282', data:[35.2,26.7,41.6,null], backgroundColor:'#f4a300', borderRadius:4, borderSkipped:false},
-      {label:'S821', data:[42.5,46.5,42.6,52.9], backgroundColor:'#4a9edd', borderRadius:4, borderSkipped:false},
+      {label:'D282', data:[34.1,26.1,39.5,null], backgroundColor:'#f4a300', borderRadius:4, borderSkipped:false},
+      {label:'S821', data:[42.7,46.5,45.5,52.9], backgroundColor:'#4a9edd', borderRadius:4, borderSkipped:false},
     ]
   },
   options:{

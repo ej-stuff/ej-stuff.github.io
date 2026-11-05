@@ -46,9 +46,9 @@
       "kills": 14,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.214,
-      "hits": 197,
-      "total_damage": 4260.2,
-      "avg_damage_per_hit": 21.6
+      "hits": 206,
+      "total_damage": 4404.9,
+      "avg_damage_per_hit": 21.4
     },
     {
       "weapon": "MP5K",
@@ -186,9 +186,9 @@
       "kills": 2,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 28,
-      "total_damage": 799.7,
-      "avg_damage_per_hit": 28.6
+      "hits": 29,
+      "total_damage": 806.6,
+      "avg_damage_per_hit": 27.8
     },
     {
       "weapon": "S686",
@@ -335,11 +335,11 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 28,
+      "kills": 30,
       "headshot_kills": 3,
-      "headshot_kill_pct": 0.107,
-      "hits": 268,
-      "total_damage": 3767.6,
+      "headshot_kill_pct": 0.1,
+      "hits": 286,
+      "total_damage": 4035.9,
       "avg_damage_per_hit": 14.1
     },
     {
@@ -448,9 +448,9 @@
       "kills": 6,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 48,
-      "total_damage": 1071.3,
-      "avg_damage_per_hit": 22.3
+      "hits": 60,
+      "total_damage": 1400.4,
+      "avg_damage_per_hit": 23.3
     },
     {
       "weapon": "Panzerfaust",

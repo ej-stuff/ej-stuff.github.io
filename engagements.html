@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Engagement Report — D282 &amp; S821</title>
-<meta name="description" content="471 mid- and late-game fights, 441 of them read one by one: what changed since the last update, the mistakes that keep costing us, the plays that keep working, and what to change.">
+<meta name="description" content="505 mid- and late-game fights, 475 of them read one by one: what changed since the last update, the mistakes that keep costing us, the plays that keep working, and what to change.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -176,11 +176,11 @@
 </div>
 
 <div class="hero">
-  <div class="kicker">471 FIGHTS · 441 READ ONE BY ONE</div>
+  <div class="kicker">505 FIGHTS · 475 READ ONE BY ONE</div>
   <h1>The Engagement Report</h1>
   <p class="hero-sub">Every mid- and late-game fight, written out second by second and read one at a time.
     What changed since the last update, what we keep getting wrong, what keeps working, and what to change next session.</p>
-  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> · Duo FPP · 329 matches · 2 Jun – 29 Oct 2026</div>
+  <div class="hero-meta"><span class="d">D282</span> &amp; <span class="s">S821</span> · Duo FPP · 344 matches · 2 Jun – 5 Nov 2026</div>
 </div>
 
 <div class="wrap">
@@ -189,11 +189,11 @@
     <p>Each fight was turned into a timeline: where both of us were, how far apart, every shot,
       hit, knock, revive, grenade, heal and vehicle entry, from 60 seconds before the first hit to
       60 seconds after the last. I read every fight that started after the 5-minute mark (379 up to
-      23 September, 37 from the 6 October session and 25 from 26–29 October), noted what decided each one,
+      23 September, 37 from the 6 October session and 59 from 26 October – 5 November), noted what decided each one,
       then counted how often each pattern happens. A data fix in September found kills of ours the old data
       had missed, which added 30 more fights (almost all clean kills) that are counted but weren't read.
-      So the counts below cover 471 fights, 441 of them read by hand.</p>
-    <p>Across those 471 fights: <b>147 won, 135 traded, 189 lost</b> (31.2% win rate). A <i>win</i>
+      So the counts below cover 505 fights, 475 of them read by hand.</p>
+    <p>Across those 505 fights: <b>158 won, 141 traded, 206 lost</b> (31.3% win rate). A <i>win</i>
       means we downed at least one enemy and nobody on our side went down, or we killed every enemy in
       the fight and nobody on our side died. A <i>trade</i> means both sides lost someone. Links open
       the match on the map.</p>
@@ -202,110 +202,116 @@
   <!-- ============================================================ -->
   <section class="chapter" id="since-last">
     <div class="chapter-num">01</div>
-    <h2>Since Last Update · 26–29 October</h2>
-    <p class="lede">Three sessions, 19 games and 25 mid- and late-game fights since the 6 October review:
-      <b>9 won, 5 traded, 11 lost</b>. The win rate (36%) sits between 6 October (41%) and everything before
-      it (30%), but more fights ended in a loss (44%) than in either. What got better, what got worse, and
-      did last time's two fixes stick?</p>
+    <h2>Since 6 October · 26 Oct – 5 Nov</h2>
+    <p class="lede">Five evenings, 34 games and 59 mid- and late-game fights since the 6 October review:
+      <b>20 won, 11 traded, 28 lost</b>. The win rate (34%) is up on everything before 6 October (30%), but so
+      is the loss rate (47% against 40%): fewer fights end in a trade, more go one way or the other. What do we do
+      better, what's the same, what got worse, and what's new?</p>
 
     <div class="statrow">
-      <div class="stat ok"><div class="num">68%</div><div class="label">Fights we opened</div><div class="sub">17 of 25 · 48% before, 43% on 6 Oct</div></div>
-      <div class="stat ok"><div class="num">9</div><div class="label">Opening knocks</div><div class="sub">36% of fights · none of them lost</div></div>
-      <div class="stat ok"><div class="num">0 of 5</div><div class="label">Revives re-knocked</div><div class="sub">within 15 s · 3 of 4 on 6 Oct</div></div>
-      <div class="stat bad"><div class="num">5</div><div class="label">Fights given back</div><div class="sub">ahead, then stayed put · 3 lost, 2 traded</div></div>
+      <div class="stat ok"><div class="num">66%</div><div class="label">Fights we opened</div><div class="sub">39 of 59 · 48% before 6 Oct</div></div>
+      <div class="stat ok"><div class="num">16</div><div class="label">Opening knocks</div><div class="sub">27% of fights · none of them lost</div></div>
+      <div class="stat bad"><div class="num">9 of 10</div><div class="label">Caught alone, lost</div><div class="sub">one of us down 40m+ from the other · 50% before</div></div>
+      <div class="stat bad"><div class="num">7 of 10</div><div class="label">First fights lost</div><div class="sub">5&ndash;10 min, 2 &amp; 5 Nov · 38% before</div></div>
     </div>
 
     <div class="panel">
-      <h3>Last time's two fixes</h3>
-      <p><b class="good">&#10003; S821 stays within 40m before finishing a knock.</b> S821 was caught alone in 1 of 25
-        fights (4%), against 5 of 37 (14%) on 6 October, and that one was walking into a truck team on open
-        ground, not chasing a knock (<a class="fref" href="match.html?id=719ebccd-daa4-4748-8d92-584f2b0078c8&amp;fight=0">29 Oct · Miramar</a>). Pushing with D282 close behind
-        worked: S821 pushed a knocked player and was knocked by his teammate at 16m, and D282, about 30m back,
-        killed that player and revived him (<a class="fref" href="match.html?id=07970374-fe29-4b5e-b3ce-dc06c9cf2792&amp;fight=2">26 Oct · Erangel</a>).</p>
-      <p><b class="good">&#10003; No revive in the enemy's sight.</b> None of the 5 revives was re-knocked within 15
-        seconds, after 3 of 4 on 6 October. The one that went wrong took longer: in the final seven, D282
-        revived S821 with their player 25m away and still up, and was knocked 18 seconds later
-        (<a class="fref" href="match.html?id=07970374-fe29-4b5e-b3ce-dc06c9cf2792&amp;fight=5">26 Oct · Erangel</a>).</p>
+      <h3>The latest two evenings (2 &amp; 5 Nov) against last update's advice</h3>
+      <p>15 games and 34 fights (11 won, 6 traded, 17 lost), with four top-5 finishes: 2nd, 3rd, 3rd and 4th.
+        All three things the last update asked for got better:</p>
+      <p><b class="good">&#10003; After a fight, move before you heal.</b> We gave a won fight back 3 times in 34 fights,
+        after 5 in 25 in late October.</p>
+      <p><b class="good">&#10003; One car, stopped short.</b> Only 1 of 34 fights started from a vehicle (late October: 3 of 25,
+        none won), and that one was won. One slip: two pickup trucks 120m apart, S821 knocked inside his on 26 HP,
+        D282 then fighting the pair alone (<a class="fref" href="match.html?id=9fd73f9f-a37f-405a-8c5f-2397406b1e35&amp;fight=1">2 Nov · Miramar</a>).</p>
+      <p><b class="good">&#10003; If a long shot doesn't knock, move.</b> Fights we opened from 80m+ went 7 won, 2 traded, 2 lost,
+        after 4 of 8 lost in late October.</p>
+      <p><b class="good">&#10003; Fights after 18 minutes</b> improved too: 6 of 14 won, after 0 of 7 in late October.</p>
+      <p><b class="bad">&#10007; The first fights after looting</b> went the other way: 7 of the 10 fights between 5 and 10 minutes
+        were lost (Mistakes table below).</p>
     </div>
 
     <div class="panel" style="overflow-x:auto">
       <table class="dtable">
-        <thead><tr><th>Mistake</th><th class="pad">Before 6 Oct (409 fights)</th><th class="pad">6 Oct (37)</th><th class="pad">26–29 Oct (25)</th><th>Trend</th></tr></thead>
+        <thead><tr><th>Mistake</th><th class="pad">Before 6 Oct (409 fights)</th><th class="pad">6 Oct (37)</th><th class="pad">Since 6 Oct (59)</th><th>Trend</th></tr></thead>
         <tbody>
-          <tr><td class="name">Knocked alone, 40m+ apart</td><td class="pad">17% of fights · 50% lost</td><td class="pad">6 (16%) · 3 lost</td><td class="pad">3 (12%) · all 3 lost</td><td class="good"><b>Rarer</b></td></tr>
-          <tr><td class="name">Starting 50m+ apart</td><td class="pad">24% of fights · 51% lost</td><td class="pad">11 (30%) · 4 lost</td><td class="pad">6 (24%) · 2 lost, 2 traded, 2 won</td><td class="good"><b>Costs less, again</b></td></tr>
-          <tr><td class="name">Arriving by vehicle</td><td class="pad">14% of fights · 47% lost</td><td class="pad">5 (14%) · 2 lost</td><td class="pad">3 (12%) · 2 lost, 1 traded</td><td class="bad"><b>No better</b></td></tr>
-          <tr><td class="name">Bolt-action one-shot on us</td><td class="pad">16% of fights · 61% lost</td><td class="pad">1 (3%) · lost</td><td class="pad">2 (8%) · both lost</td><td class=""><b>Still rarer than June–Sep</b></td></tr>
-          <tr><td class="name">Enemy 10m+ above us</td><td class="pad">8% of fights · 58% lost</td><td class="pad">2 (5%) · both lost</td><td class="pad">2 (8%) · 1 lost, 1 won</td><td class=""><b>About the same</b></td></tr>
-          <tr><td class="name">Revive re-knocked within 15 s</td><td class="pad">18 of 62 revives (29%)</td><td class="pad">3 of 4</td><td class="pad">0 of 5</td><td class="good"><b>Fixed, for now</b></td></tr>
-          <tr><td class="name">Giving a won fight back</td><td class="pad">seen often while reading</td><td class="pad">2 clear cases</td><td class="pad">5 · 3 lost, 2 traded</td><td class="bad"><b>Worse</b></td></tr>
+          <tr><td class="name">Knocked alone, 40m+ apart</td><td class="pad">17% of fights · 50% lost</td><td class="pad">6 (16%) · 3 lost</td><td class="pad">10 (17%) · 9 lost</td><td class="bad"><b>Same rate, costs more</b></td></tr>
+          <tr><td class="name">Starting 50m+ apart</td><td class="pad">24% of fights · 51% lost</td><td class="pad">11 (30%) · 4 lost</td><td class="pad">13 (22%) · 6 lost, 3 traded, 4 won</td><td class=""><b>About the same</b></td></tr>
+          <tr><td class="name">Arriving by vehicle</td><td class="pad">14% of fights · 47% lost</td><td class="pad">5 (14%) · 2 lost</td><td class="pad">4 (7%) · 2 lost, 1 traded, 1 won</td><td class="good"><b>Half as often</b></td></tr>
+          <tr><td class="name">Bolt-action one-shot on us</td><td class="pad">16% of fights · 61% lost</td><td class="pad">1 (3%) · lost</td><td class="pad">7 (12%) · 6 lost, 1 traded</td><td class="bad"><b>Back in November</b></td></tr>
+          <tr><td class="name">Enemy 10m+ above us</td><td class="pad">8% of fights · 58% lost</td><td class="pad">2 (5%) · both lost</td><td class="pad">4 (7%) · 2 lost, 2 won</td><td class=""><b>About the same</b></td></tr>
+          <tr><td class="name">Revive re-knocked within 15 s</td><td class="pad">18 of 62 revives (29%)</td><td class="pad">3 of 4</td><td class="pad">2 of 13 (15%)</td><td class="good"><b>Better</b></td></tr>
+          <tr><td class="name">Giving a won fight back</td><td class="pad">seen often while reading</td><td class="pad">2 clear cases</td><td class="pad">8 · 5 lost, 3 traded</td><td class="bad"><b>Still happening, less lately</b></td></tr>
+          <tr><td class="name">Fights at 5&ndash;10 min</td><td class="pad">112 · 38% lost</td><td class="pad">16 · 6 lost</td><td class="pad">17 · 9 lost (7 of 10 in Nov)</td><td class="bad"><b>New: worse</b></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="panel" style="overflow-x:auto">
       <table class="dtable">
-        <thead><tr><th>Good habit</th><th class="pad">Before 6 Oct</th><th class="pad">6 Oct</th><th class="pad">26–29 Oct</th><th>Trend</th></tr></thead>
+        <thead><tr><th>Good habit</th><th class="pad">Before 6 Oct</th><th class="pad">6 Oct</th><th class="pad">Since 6 Oct</th><th>Trend</th></tr></thead>
         <tbody>
-          <tr><td class="name">We hit first</td><td class="pad">48% of fights</td><td class="pad">43%</td><td class="pad">68% (17 of 25)</td><td class="good"><b>Much more often</b></td></tr>
-          <tr><td class="name">Opening with a knock</td><td class="pad">23% of fights · 59% won, 1% lost</td><td class="pad">6 (16%) · 4 won, 0 lost</td><td class="pad">9 (36%) · 6 won, 3 traded, 0 lost</td><td class="good"><b>Most often yet, still never lost</b></td></tr>
-          <tr><td class="name">Both shooting the same player</td><td class="pad">15% of fights · 51% won</td><td class="pad">9 (24%) · 7 won</td><td class="pad">4 (16%) · 3 won, 1 lost</td><td class=""><b>Back to normal</b></td></tr>
-          <tr><td class="name">Hitting a team in their vehicle</td><td class="pad">4% of fights · none lost</td><td class="pad">0</td><td class="pad">3 (12%) · 2 won, 1 lost</td><td class="good"><b>More often</b></td></tr>
-          <tr><td class="name">Third-partying a fight</td><td class="pad">10% of fights</td><td class="pad">1 (3%)</td><td class="pad">1 (4%) · lost</td><td class=""><b>Rarely had the chance</b></td></tr>
+          <tr><td class="name">We hit first</td><td class="pad">48% of fights</td><td class="pad">43%</td><td class="pad">66% (39 of 59)</td><td class="good"><b>Much more often</b></td></tr>
+          <tr><td class="name">Opening with a knock</td><td class="pad">23% of fights · 59% won, 1% lost</td><td class="pad">6 (16%) · 4 won, 0 lost</td><td class="pad">16 (27%) · 10 won, 6 traded, 0 lost</td><td class="good"><b>More often, still never lost</b></td></tr>
+          <tr><td class="name">Both shooting the same player</td><td class="pad">15% of fights · 51% won</td><td class="pad">9 (24%) · 7 won</td><td class="pad">10 (17%) · 7 won, 1 lost</td><td class="good"><b>Same rate, still works</b></td></tr>
+          <tr><td class="name">Hitting a team in their vehicle</td><td class="pad">4% of fights · none lost</td><td class="pad">0</td><td class="pad">3 (5%) · 2 won, 1 lost</td><td class=""><b>About the same</b></td></tr>
+          <tr><td class="name">Fights after 18 minutes</td><td class="pad">149 · 26% won</td><td class="pad">10 · 2 won</td><td class="pad">21 · 6 won (all 6 in Nov)</td><td class="good"><b>Better lately</b></td></tr>
+          <tr><td class="name">Third-partying a fight</td><td class="pad">10% of fights · 18% lost</td><td class="pad">1 (3%)</td><td class="pad">8 (14%) · 3 won, 1 traded, 4 lost</td><td class="bad"><b>New: stopped working</b></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout ok">
-      <b>What got better: starting fights.</b> 17 of 25 fights began with our hit, against under half in both
-      earlier periods, and 9 began with a knock. None of those 9 was lost, and S821 landed 7 of them. The
-      cleanest: a car team on a hill at 120–136m, D282's Mini 14 and S821's FAL on the same player inside a
-      second, both dead in 10 seconds, 200–0 (<a class="fref" href="match.html?id=b94242fa-a613-4330-844d-66837e607407&amp;fight=0">29 Oct · Miramar</a>). A motorbike pair hit from 94m and 49m,
-      then S821 finished both with the M416, 199–0 (<a class="fref" href="match.html?id=43d31890-12dc-42d8-a636-ab48e2343383&amp;fight=2">29 Oct · Erangel</a>). S821 knocked and killed a
-      player at 183–219m with the Mini 14 while D282 covered from 150m away (<a class="fref" href="match.html?id=0cb09c42-0648-4e1c-9095-a9c6bc74fef0&amp;fight=0">28 Oct · Erangel</a>). Up close,
-      S821 won four fights at 2–30m with the RPD, M249 and M416 (<a class="fref" href="match.html?id=ca2ada98-9c6f-4377-b221-7fea8c2b8754&amp;fight=0">Paramo</a>, <a class="fref" href="match.html?id=3599fd3b-1d01-4954-a2f2-e4586e12eea1&amp;fight=3">Erangel</a>,
-      <a class="fref" href="match.html?id=17b657a0-99de-48d3-b066-f9326c7fa58e&amp;fight=1">Paramo</a>, <a class="fref" href="match.html?id=f3675fbd-ae3e-4557-8c2c-b92001240f2b&amp;fight=3">Erangel</a>). Before the 18-minute mark we won 9 of 18 fights, against a third before.
+      <b>Better: starting fights, and finishing games.</b> Two in three fights now start with our hit, and none of the
+      16 that started with a knock was lost. The best ones: on Miramar S821's Mini 14 on a team up a hill at 220m, D282's
+      SCAR-L kill at 52m, an S821 knock at 92m and the last kill with the M249 at 38m, three kills for 386–72, on the way
+      to 2nd place (<a class="fref" href="match.html?id=c972d815-aaa8-4bb5-bcce-80e6c94956b2&amp;fight=1">2 Nov · Miramar</a>). D282's M249 knock and S821's QBZ kill in the same second at 48–52m, 180–0
+      (<a class="fref" href="match.html?id=ba4c7b1d-568c-480a-ac99-7932dda2c2cf&amp;fight=3">5 Nov · Rondo</a>), and in the same game, from 40m below a team, both on the Mini 14 at 173–185m and then
+      100 patient seconds at 95–115m until both were dead, 230–0 (<a class="fref" href="match.html?id=ba4c7b1d-568c-480a-ac99-7932dda2c2cf&amp;fight=4">5 Nov · Rondo</a>, 3rd). Revives are safer
+      (2 of 13 re-knocked against 29%), we arrive by car half as often, and in November 6 of the 14 fights after the
+      18-minute mark were won, after 0 of 7 in late October.
     </div>
 
     <div class="callout bad">
-      <b>What got worse: giving fights back.</b> Five times we were ahead and stayed where we were. Twice we
-      killed a whole team and were both dead within a minute, in the same spot: a third team's M249 58 seconds
-      after S821's double kill (<a class="fref" href="match.html?id=17b657a0-99de-48d3-b066-f9326c7fa58e&amp;fight=2">29 Oct · Paramo</a>), and a Kar98k from a truck team 52 seconds after
-      the car-team kill above. He knocked S821 at 163m, then hit D282 twice while he stayed next to him
-      (<a class="fref" href="match.html?id=b94242fa-a613-4330-844d-66837e607407&amp;fight=1">29 Oct · Miramar</a>). In the final four, standing 1m apart 40 seconds after a kill, one grenade did 94
-      and 58 and an RPD finished both (<a class="fref" href="match.html?id=a5824f19-5793-4991-8a95-71f09ca56ee8&amp;fight=5">29 Oct · Erangel</a>, finished 3rd). The other two: two minutes
-      spent 25–30m from a team that had just revived its player, until both of us were dead
-      (<a class="fref" href="match.html?id=ca2ada98-9c6f-4377-b221-7fea8c2b8754&amp;fight=2">28 Oct · Paramo</a>), and a fresh team knocking D282 9 seconds after S821's kill
-      (<a class="fref" href="match.html?id=a5824f19-5793-4991-8a95-71f09ca56ee8&amp;fight=3">29 Oct · Erangel</a>).
+      <b>Worse: getting caught alone, and the first fight after looting.</b> One of us went down with the other 40m+ away in
+      10 fights since 6 October, the same rate as always, but 9 of them were lost. In November it was mostly D282 (4 of 7),
+      and mostly early: running across open ground 71–80m apart, S821 knocked by an MP5K at 32m and D282 killed by an RPD
+      10 seconds later (<a class="fref" href="match.html?id=fb0138a9-aca6-4b43-9a46-b24ae068cea6&amp;fight=0">2 Nov · Miramar</a>); an Emergency Pickup landing next to a team, then 130–370m apart for a
+      minute until a Groza killed D282 (<a class="fref" href="match.html?id=2ed5aee6-a58a-4626-b290-daa6c4f44495&amp;fight=0">2 Nov · Erangel</a>); driving to 115m of a team that had just landed, then walking in
+      68m apart: D282 knocked at 43m, S821 killed alone 20 seconds after he died (<a class="fref" href="match.html?id=6612d1b3-f7ce-4228-a8e6-c32ee85a7147&amp;fight=1">2 Nov · Erangel</a>). The fights between
+      5 and 10 minutes went 1 won, 2 traded, 7 lost in November. Besides the three above: both of us on 75 HP running
+      across a field until a Mini 14 knocked S821 at 146m and killed D282 7 seconds later
+      (<a class="fref" href="match.html?id=19948a70-f629-4612-abb3-9f8d19a63f33&amp;fight=3">5 Nov · Rondo</a>), and D282 firing the Dragunov at range for half a minute until an M24 30m above
+      headshot him at 208m (<a class="fref" href="match.html?id=3e6c001e-2976-490d-9ea2-43d8736d8b5c&amp;fight=2">2 Nov · Miramar</a>).
     </div>
 
     <div class="callout bad">
-      <b>Also worse: the endgame and the cars.</b> None of the 7 fights after 18 minutes was won (4 traded, 3 lost),
-      against 26% before. The three deepest runs each ended on something from Chapter 03: in and out of the car
-      next to the final seven, then the revive above (<a class="fref" href="match.html?id=07970374-fe29-4b5e-b3ce-dc06c9cf2792&amp;fight=5">26 Oct · Erangel</a>, 5th); two cars 104m apart and
-      D282 driving to 14m of a team (<a class="fref" href="match.html?id=0cb09c42-0648-4e1c-9095-a9c6bc74fef0&amp;fight=4">28 Oct · Erangel</a>, 5th); and the grenade above (3rd). All
-      three fights that started in a vehicle were lost or traded. Besides that final-five one, two UAZs arrived
-      100m apart at a compound and a Dragunov headshot D282 through the car, 0 damage dealt
-      (<a class="fref" href="match.html?id=f3675fbd-ae3e-4557-8c2c-b92001240f2b&amp;fight=4">28 Oct · Erangel</a>), and we chased a car team at 19 m/s and fought them at 13–17m (<a class="fref" href="match.html?id=3599fd3b-1d01-4954-a2f2-e4586e12eea1&amp;fight=5">26 Oct · Erangel</a>).
+      <b>Back again: the sniper.</b> Bolt-action one-shots were rare in October (3 in 62 fights) and came back in November
+      (5 in 34). Three of the four top-5 runs turned on an M24 headshot on D282: the final four at 52m
+      (<a class="fref" href="match.html?id=c972d815-aaa8-4bb5-bcce-80e6c94956b2&amp;fight=3">2 Nov · Miramar</a>, 2nd), the final three at 104m (<a class="fref" href="match.html?id=bfa4cc0a-b5ec-43fe-9271-dfad96bd5b23&amp;fight=8">2 Nov · Erangel</a>, 3rd) and
+      the final four from 28m above at 91m (<a class="fref" href="match.html?id=ba4c7b1d-568c-480a-ac99-7932dda2c2cf&amp;fight=5">5 Nov · Rondo</a>, 3rd; S821 then left the last player on 4 HP).
+      And one long-range duel ran for four minutes at 300–400m against the same team, until their Kar98k headshot S821
+      at 373m (<a class="fref" href="match.html?id=bfa4cc0a-b5ec-43fe-9271-dfad96bd5b23&amp;fight=4">2 Nov · Erangel</a>).
     </div>
 
     <div class="callout">
-      <b>New this time: long-range shots that don't knock.</b> Opening from 80m+ used to be our safest kind of
-      fight: about 1 in 5 lost before. This time 4 of 8 were lost, and all four started with chip damage at
-      107–433m that downed nobody. Then we stayed. An M24 on a hill 85m above us hit D282 at 343m; he healed in
-      the same spot, kept shooting, and the same M24 headshot him 90 seconds later
-      (<a class="fref" href="match.html?id=d5e0e474-cb08-40ee-957c-19adc51c31ba&amp;fight=2">28 Oct · Miramar</a>). Three minutes later in the same game, while we traded shots at 350m, a team we hadn't seen
-      walked up and killed both of us from 40–60m (<a class="fref" href="match.html?id=d5e0e474-cb08-40ee-957c-19adc51c31ba&amp;fight=3">28 Oct · Miramar</a>). The long-range openers that
-      did knock someone went 3 won, 1 traded.
+      <b>New: third-partying cuts both ways now.</b> Shooting into someone else's fight used to be our safest kind of
+      fight (18% lost). Since 6 October it's 4 lost out of 8. While we shot into a fight at 340m, a team we hadn't seen
+      walked up and killed both of us at 20m in 3 seconds (<a class="fref" href="match.html?id=2ed5aee6-a58a-4626-b290-daa6c4f44495&amp;fight=2">2 Nov · Erangel</a>), the same thing that happened on
+      28 October. And on Rondo, in the final nine, we were the ones caught between two teams in a compound: UMP, Mk12 and
+      Mk14 hits on D282 inside half a second, then grenades, 0 damage dealt (<a class="fref" href="match.html?id=37128ab5-5466-4c20-a390-57310761b639&amp;fight=2">5 Nov · Rondo</a>).
+      Two one-offs worth knowing: S821's AK spray at the player standing over knocked D282 killed D282
+      (<a class="fref" href="match.html?id=3e6c001e-2976-490d-9ea2-43d8736d8b5c&amp;fight=3">2 Nov · Miramar</a>), and D282 used a blue chip 25m from a team and was killed 3 seconds later
+      (<a class="fref" href="match.html?id=b98d90b1-ef42-4b1b-bea7-7171cb01f443&amp;fight=3">5 Nov · Rondo</a>).
     </div>
 
-    <p><b>Next session, two things:</b> after a fight, move before you heal (50–100m, behind cover, and say how
-      many are left). And one car, stopped 150–300m short. If a long shot doesn't knock, change position before
-      the next one.</p>
-    <p class="dim" style="font-size:13.5px">25 fights over three evenings is a small sample: one fight moves these
-      percentages by 4 points, and a pattern that came up 2–9 times by 10–50 points. Treat it as a direction, not a
-      verdict. Mistake counts come from the same automatic tags as the rest of this report; "giving a won fight
-      back" comes from reading the fights. The middle column is the 6 October review this chapter replaces.</p>
+    <p><b>Next session, two things:</b> stay within 40m of each other from the first fight on, especially when moving
+      after loot, and heal to full before crossing open ground. And after a sniper hit, both of you break the line before
+      anything else; in the final circles it decided three top-5 runs.</p>
+    <p class="dim" style="font-size:13.5px">59 fights over five evenings is still a small sample: one fight moves these percentages
+      by about 2 points, and a pattern that came up 4–17 times by 6–25 points. Treat it as a direction, not a verdict. Mistake
+      counts come from the same automatic tags as the rest of this report; "giving a won fight back" comes from reading the
+      fights. The middle column is the 6 October session the first review looked at.</p>
   </section>
 
   <!-- ============================================================ -->
@@ -314,34 +320,34 @@
     <h2>The Short Version</h2>
 
     <div class="statrow">
-      <div class="stat bad"><div class="num">77</div><div class="label">Knocked alone</div><div class="sub">teammate 40m+ away · in 22% of fights where one of us went down</div></div>
-      <div class="stat bad"><div class="num">70</div><div class="label">Sniper one-shots</div><div class="sub">Kar98k / M24 / AWM / L6 / Win94</div></div>
-      <div class="stat bad"><div class="num">30%</div><div class="label">Revives re-knocked</div><div class="sub">21 of 71 within 15 seconds</div></div>
-      <div class="stat ok"><div class="num">60%</div><div class="label">Win rate after an opening knock</div><div class="sub">vs 22% without · 111 fights</div></div>
+      <div class="stat bad"><div class="num">84</div><div class="label">Knocked alone</div><div class="sub">teammate 40m+ away · in 23% of fights where one of us went down</div></div>
+      <div class="stat bad"><div class="num">75</div><div class="label">Sniper one-shots</div><div class="sub">Kar98k / M24 / AWM / L6 / Win94</div></div>
+      <div class="stat bad"><div class="num">29%</div><div class="label">Revives re-knocked</div><div class="sub">23 of 79 within 15 seconds</div></div>
+      <div class="stat ok"><div class="num">60%</div><div class="label">Win rate after an opening knock</div><div class="sub">vs 22% without · 118 fights</div></div>
     </div>
 
     <div class="chart-box"><div class="cv"><canvas id="patChart"></canvas></div></div>
     <p class="chart-cap">Result split for fights where each pattern showed up. "All fights" is the baseline.
       Loss is the useful number here — a fight with an opening knock ends in a loss 1% of the time,
-      a fight fought from 10m+ below the enemy 60% of the time.</p>
+      a fight fought from 10m+ below the enemy 59% of the time.</p>
 
     <div class="panel">
       <h3>Stop doing</h3>
-      <p><b>1. Getting caught alone.</b> One of us goes down with the other 40m+ away in 77 fights.
+      <p><b>1. Getting caught alone.</b> One of us goes down with the other 40m+ away in 84 fights.
         It usually starts with pushing a knock or walking ahead.</p>
-      <p><b>2. Driving into teams.</b> We're in a vehicle in the 10 seconds before 67 fights. 48% of those are losses, and several were over in under 3 seconds.</p>
+      <p><b>2. Driving into teams.</b> We're in a vehicle in the 10 seconds before 68 fights. 47% of those are losses, and several were over in under 3 seconds.</p>
       <p><b>3. Staying where the sniper can see you.</b> The second bolt-action shot usually lands on the same spot a few seconds after the first.</p>
       <p><b>4. Reviving in the line of fire.</b> Smoke doesn't fix it. Smoked revives were re-knocked just as often.</p>
-      <p><b>5. Fighting from below.</b> 37 fights with the enemy 10m+ higher: 6 wins.</p>
-      <p><b>6. Hanging around after a win.</b> Third teams arrive while we bandage in the same spot. The biggest problem in the latest games (Chapter 01).</p>
+      <p><b>5. Fighting from below.</b> 39 fights with the enemy 10m+ higher: 7 wins.</p>
+      <p><b>6. Hanging around after a win.</b> Third teams arrive while we bandage in the same spot. Less often lately, but still happening (Chapter 01).</p>
     </div>
 
     <div class="panel">
       <h3>Keep doing</h3>
-      <p><b>1. Opening with a knock.</b> S821 did it 70 times and only one of those fights was lost. D282 did it 41 times without a single loss.</p>
-      <p><b>2. Both shooting the same player.</b> 55% win and 7% loss, against 27% and 46% otherwise. It only happens in 1 fight in 6.</p>
+      <p><b>1. Opening with a knock.</b> S821 did it 74 times and only one of those fights was lost. D282 did it 44 times without a single loss.</p>
+      <p><b>2. Both shooting the same player.</b> 56% win and 6% loss, against 27% and 47% otherwise. It only happens in 1 fight in 6.</p>
       <p><b>3. Shooting teams in or leaving their car.</b> 18 fights: 10 wins, 7 trades, 1 loss (and that one was us driving into them).</p>
-      <p><b>4. Third-partying.</b> Loss rate drops to 20% (from 42%) when the first enemy we hit was already fighting someone else.</p>
+      <p><b>4. Third-partying.</b> Loss rate drops to 23% (from 43%) when the first enemy we hit was already fighting someone else. Since 6 October it has gone wrong half the time, though (Chapter 01).</p>
       <p><b>5. Healing before the push, and the clutches.</b> Several of our best fights come from this. See Chapter 04.</p>
     </div>
   </section>
@@ -353,12 +359,12 @@
     <p class="lede">In rough order of how many fights it costs. Each has real examples from the list.</p>
 
     <div class="exp hi">
-      <div class="tag">77 fights · S821 43 · D282 34</div>
+      <div class="tag">84 fights · S821 46 · D282 38</div>
       <h4>Knocked with the teammate 40m+ away</h4>
       <p class="why">The most common single way we lose fights. The typical case: one of us knocks
         someone and runs to finish him, or walks ahead through open ground. His teammate is still up
-        and kills whoever arrives. A quarter of all fights (117) also <i>start</i> with us more than
-        50m apart, and those end in a loss 49% of the time against 37% otherwise.</p>
+        and kills whoever arrives. A quarter of all fights (124) also <i>start</i> with us more than
+        50m apart, and those end in a loss 49% of the time against 38% otherwise.</p>
       <ul class="ex">
         <li><a class="fref" href="match.html?id=a64fec7e-4f9c-4908-a8cc-302cad205095">7 Aug · Erangel</a> — <b>final two teams</b>, S821 alone. FAL knock at 71m, then ran
           to 23m to finish him; the knocked player's teammate killed S821 with an M416. Finished 2nd.</li>
@@ -376,6 +382,10 @@
           knocked at 34m. D282 knocked one back with the SKS at 126m, but both of us died after the revives.</li>
         <li><a class="fref" href="match.html?id=719ebccd-daa4-4748-8d92-584f2b0078c8&amp;fight=0">29 Oct · Miramar</a> — a truck team stopped 25m from us on open ground, 42m apart. S821 knocked,
           D282 killed, both dead in 5 seconds, 0 dealt.</li>
+        <li><a class="fref" href="match.html?id=fb0138a9-aca6-4b43-9a46-b24ae068cea6&amp;fight=0">2 Nov · Miramar</a> — running across open ground 71–80m apart. MP5K knock on S821 at 32m, then an RPD
+          killed D282 at 46m 10 seconds later.</li>
+        <li><a class="fref" href="match.html?id=6612d1b3-f7ce-4228-a8e6-c32ee85a7147&amp;fight=1">2 Nov · Erangel</a> — walked in on a team 68m apart. D282 knocked at 43m and finished; S821 killed
+          alone at 16m 20 seconds later.</li>
         <li>D282's other versions: <a class="fref" href="match.html?id=0149dff8-3cd9-40e2-b828-09ae0ab96ec9">22 Sep · Paramo</a> (walked into an RPD at 11m, S821 133m away),
           <a class="fref" href="match.html?id=11e478b7-4b3a-465c-8387-9e9735fb6c3c">5 Sep · Erangel</a>, <a class="fref" href="match.html?id=cf2e4539-3f7c-4698-94ed-01f5f9e620f2">20 Jun · Erangel</a>.</li>
       </ul>
@@ -385,7 +395,7 @@
     </div>
 
     <div class="exp hi">
-      <div class="tag">67 fights start in a vehicle · 48% lost</div>
+      <div class="tag">68 fights start in a vehicle · 47% lost</div>
       <h4>Driving into teams and bailing in the open</h4>
       <p class="why">The pattern: drive straight at or past a team we can see, stop 15–60m from them,
         get out in the open. Or get shot in the car, then hop in and out while they reload. A lot of
@@ -415,7 +425,7 @@
     </div>
 
     <div class="exp hi">
-      <div class="tag">70 fights with a bolt-action one-shot on us</div>
+      <div class="tag">75 fights with a bolt-action one-shot on us</div>
       <h4>Staying in the sniper's sightline</h4>
       <p class="why">One knock from a Kar98k, M24, AWM or L6 is often unavoidable. The second one
         isn't. Again and again the same sniper hits the other player, or the same player after the
@@ -433,6 +443,10 @@
           shooting; 90 seconds later the same M24 headshot knocked him.</li>
         <li><a class="fref" href="match.html?id=b94242fa-a613-4330-844d-66837e607407&amp;fight=1">29 Oct · Miramar</a> — Kar98k headshot knock on S821 at 163m. D282 smoked and stayed next to him;
           the same player killed D282 with two more shots, 23 seconds after the first.</li>
+        <li><a class="fref" href="match.html?id=bfa4cc0a-b5ec-43fe-9271-dfad96bd5b23&amp;fight=4">2 Nov · Erangel</a> — four minutes trading shots at 300–400m with the same team from the same
+          spot, until their Kar98k headshot knocked S821 at 373m.</li>
+        <li>Final circles: M24 headshots on D282 at 52m (<a class="fref" href="match.html?id=c972d815-aaa8-4bb5-bcce-80e6c94956b2&amp;fight=3">2 Nov · Miramar</a>, <b>2nd</b>), 104m (<a class="fref" href="match.html?id=bfa4cc0a-b5ec-43fe-9271-dfad96bd5b23&amp;fight=8">2 Nov · Erangel</a>, <b>3rd</b>)
+          and 91m (<a class="fref" href="match.html?id=ba4c7b1d-568c-480a-ac99-7932dda2c2cf&amp;fight=5">5 Nov · Rondo</a>, <b>3rd</b>).</li>
       </ul>
       <p class="do"><b>Instead:</b> after the first sniper hit, the next thing either of you does is
         get out of that line — behind something solid, not a smoke, and not healing in place.
@@ -440,11 +454,11 @@
     </div>
 
     <div class="exp hi">
-      <div class="tag">71 revives in fights · 21 re-knocked within 15 s</div>
+      <div class="tag">79 revives in fights · 23 re-knocked within 15 s</div>
       <h4>Reviving in the line of fire</h4>
       <p class="why">We revive a lot, and usually fast. Almost one revive in three ends with one of us
-        down again within 15 seconds. Smoke doesn't change that: 6 of 20 smoked revives were
-        re-knocked, against 15 of 51 without smoke. The latest games were better (none of 5 re-knocked, Chapter 01). The problem is where the revive happens.</p>
+        down again within 15 seconds. Smoke doesn't change that: 8 of 25 smoked revives were
+        re-knocked, against 15 of 54 without smoke. Since 6 October it has been better (2 of 13, Chapter 01). The problem is where the revive happens.</p>
       <ul class="ex">
         <li><a class="fref" href="match.html?id=c078f791-e7a5-45f6-9ffa-cc040ac54a60">31 Aug · Vikendi</a> — revived twice in the same spot, in a VSS's sightline at 77m. S821 was knocked three times, then killed.</li>
         <li><a class="fref" href="match.html?id=69ec66e4-8f94-4c28-98f7-03011691bd55">31 Aug · Erangel</a> — revive in a Kar98k's line at 90m; the reviver was knocked 2 seconds later.</li>
@@ -465,7 +479,7 @@
     </div>
 
     <div class="exp">
-      <div class="tag">37 fights · 6 wins · 60% lost</div>
+      <div class="tag">39 fights · 7 wins · 59% lost</div>
       <h4>Fighting from the low ground</h4>
       <p class="why">When the enemy is 10m or more above us at first contact, we rarely win.
         The worst ones are long duels from below and leaving good high ground to rotate down.</p>
@@ -484,7 +498,7 @@
     </div>
 
     <div class="exp">
-      <div class="tag">seen over and over while reading · 5 times in the 25 latest fights</div>
+      <div class="tag">seen over and over while reading · 8 times since 6 October</div>
       <h4>Staying put after winning a fight</h4>
       <p class="why">After a kill we often heal or loot in the same spot, walk into the open still hurt,
         or push straight into the next team. Third teams heard the fight.</p>
@@ -507,6 +521,8 @@
           standing 1m apart: one frag did 94 and 58, an RPD finished both. Finished 3rd.</li>
         <li><a class="fref" href="match.html?id=ca2ada98-9c6f-4377-b221-7fea8c2b8754&amp;fight=2">28 Oct · Paramo</a> — two kills in a three-team fight, then two more minutes 25–30m from the
           team that had just revived its player. Both dead in 8 seconds.</li>
+        <li><a class="fref" href="match.html?id=30b77dd3-89ef-4836-8458-b5089ed21caf&amp;fight=3">5 Nov · Erangel</a> — two kills and a knock in a three-team fight, then drove on and pushed a car
+          team at 9–14m. A Groza killed both.</li>
       </ul>
       <p class="do"><b>Instead:</b> after a kill, first say how many are left. Then heal behind cover or
         move 50–100m before healing. Loot only what you need.</p>
@@ -521,7 +537,7 @@
         <li><a class="fref" href="match.html?id=6cd5fc69-8a19-49fd-8a59-48e342eb9a17">30 Aug · Erangel</a> — both killed by a red-zone bombing. <a class="fref" href="match.html?id=71c21364-5ed0-481b-ab31-8e58e831e94b">6 Jul · Karakin</a> — S821 killed by a black-zone blast.</li>
         <li><a class="fref" href="match.html?id=bd80ea7f-c903-4095-b31b-a448d573f250">9 Aug · Vikendi</a> — S821 ran through a molotov: 58 damage in 3 seconds, dead.</li>
         <li>One grenade hitting both of us: <a class="fref" href="match.html?id=d5593f5e-a5c8-4f5c-94d5-a7a6ad9bb76c">5 Jun · Vikendi</a>, <a class="fref" href="match.html?id=c716eb16-bc14-470c-bcf1-60f7b83965be">5 Jun · Miramar</a> (4 frags in 5 seconds).</li>
-        <li>24 fights left an enemy on 15 HP or less, not downed for 20+ seconds:
+        <li>28 fights left an enemy on 15 HP or less, not downed for 20+ seconds:
           <a class="fref" href="match.html?id=efdf9cc8-32cd-4308-b9c8-e1c2b4ed4665">22 Jun · Sanhok</a> (<b>top 3</b>, 1 HP), <a class="fref" href="match.html?id=56b73d6a-1169-4161-92dd-c9edb35a16dd">17 Jun · Erangel</a>, <a class="fref" href="match.html?id=d9c645b6-1f83-4ff4-81ec-3c14c3da6f36">20 Jun · Vikendi</a> (6 HP),
           <a class="fref" href="match.html?id=6a87cd2a-ea70-4527-9ca0-ba0067fc8546">11 Sep · Rondo</a> (1 HP).</li>
       </ul>
@@ -535,10 +551,10 @@
     <p class="lede">These fights are the template.</p>
 
     <div class="exp ok">
-      <div class="tag">111 fights · 60% win · 1% loss</div>
+      <div class="tag">118 fights · 60% win · 1% loss</div>
       <h4>Opening with a knock</h4>
       <p class="why">When our first hit knocks that player within 10 seconds, we almost never lose.
-        S821 landed 70 of these (1 loss), D282 41 (no losses). Long-range headshots do a lot of the work.</p>
+        S821 landed 74 of these (1 loss), D282 44 (no losses). Long-range headshots do a lot of the work.</p>
       <ul class="ex">
         <li><a class="fref" href="match.html?id=fad12ef9-c5a7-456c-8c6b-fd46738604e4">5 Sep · Deston</a> — S821 M24 headshots: knock at 157m, knock at 91m. D282 finished with the AK. 273–102.</li>
         <li><a class="fref" href="match.html?id=25d18945-3e40-4ad7-b22e-07ac8009b819">7 Jul · Erangel</a> — S821 M24 headshot knock at 173m, then M24 knock on the next player at 88m. 143–0.</li>
@@ -552,7 +568,7 @@
     </div>
 
     <div class="exp ok">
-      <div class="tag">74 fights · 55% win · 7% loss</div>
+      <div class="tag">80 fights · 56% win · 6% loss</div>
       <h4>Both shooting the same player</h4>
       <p class="why">Both of us hitting the same enemy within 5 seconds doubles the win rate and
         almost removes losses. It's rare: 1 fight in 6.</p>
@@ -585,13 +601,15 @@
           their car; both of them dead, plus a third kill earlier. 160–0.</li>
         <li><a class="fref" href="match.html?id=b94242fa-a613-4330-844d-66837e607407&amp;fight=0">29 Oct · Miramar</a> — a car team on a hill at 120–136m. D282 Mini14 and S821 FAL on the same player
           inside a second, knock at 135m, both dead in 10 seconds. 200–0.</li>
+        <li><a class="fref" href="match.html?id=ba4c7b1d-568c-480a-ac99-7932dda2c2cf&amp;fight=3">5 Nov · Rondo</a> — <b>3rd place.</b> D282 M249 knock at 48m and S821 QBZ kill at 52m in the same
+          second, then D282 finished the knocked one. 180–0.</li>
         <li><a class="fref" href="match.html?id=43d31890-12dc-42d8-a636-ab48e2343383&amp;fight=2">29 Oct · Erangel</a> — a motorbike pair: S821 Mini14 at 94m, D282 M249 at 49m, S821 M416 knock
           at 15m and both kills. 199–0.</li>
       </ul>
     </div>
 
     <div class="exp ok">
-      <div class="tag">41 fights · 20% loss (vs 42%)</div>
+      <div class="tag">48 fights · 23% loss (vs 43%)</div>
       <h4>Third-partying a fight in progress</h4>
       <ul class="ex">
         <li><a class="fref" href="match.html?id=711d265e-4a0e-4c9d-9860-de7a40d43a04">5 Jun · Erangel</a> — S821 Mini14 opened on a team busy with another team. Killed both, then
@@ -616,6 +634,10 @@
           pushed and killed both at 9m.</li>
         <li><a class="fref" href="match.html?id=07970374-fe29-4b5e-b3ce-dc06c9cf2792&amp;fight=2">26 Oct · Erangel</a> — S821 bandaged from 10 to 75 HP before the fight. AK knock at 32m, D282 frag
           for 54 and a Beryl headshot, then D282 killed the second player at 8m and revived S821. 229 dealt.</li>
+        <li><a class="fref" href="match.html?id=ba4c7b1d-568c-480a-ac99-7932dda2c2cf&amp;fight=4">5 Nov · Rondo</a> — 40m below a team: both on the Mini 14 at 173–185m, S821 knock at 185m, then
+          100 seconds of steady fire at 95–115m until D282 knocked and killed both. 230–0.</li>
+        <li><a class="fref" href="match.html?id=c972d815-aaa8-4bb5-bcce-80e6c94956b2&amp;fight=1">2 Nov · Miramar</a> — <b>2nd place.</b> S821 Mini 14 at 220m, D282 SCAR-L kill at 52m, S821 knock at 92m
+          and M249 kill at 38m. Three kills, 386–72.</li>
       </ul>
     </div>
 
@@ -650,15 +672,15 @@
         M249 up close. Wins a lot of fights alone after S821 is down.</p>
       <p><b>Watch:</b> walking ahead of S821 into close range (<a class="fref" href="match.html?id=84d2787a-e66f-4c45-8fe8-26e0660df98a">3 Jun · Vikendi</a>, <a class="fref" href="match.html?id=0149dff8-3cd9-40e2-b828-09ae0ab96ec9">22 Sep · Paramo</a>,
         <a class="fref" href="match.html?id=11e478b7-4b3a-465c-8387-9e9735fb6c3c">5 Sep · Erangel</a>, <a class="fref" href="match.html?id=a38ee71b-1fbb-488d-952a-5e054c9dd770">20 Jun · Sanhok</a>). Hopping in and out of vehicles in contact
-        (<a class="fref" href="match.html?id=bc90770c-1729-4c01-b85f-7ce1423b1ec4">7 Jul · Miramar</a>, <a class="fref" href="match.html?id=43cb13b1-bd20-49d9-8a77-bfae39426d8f">17 Jun · Erangel</a>). Knocked alone with S821 40m+ away in 34 fights.</p>
+        (<a class="fref" href="match.html?id=bc90770c-1729-4c01-b85f-7ce1423b1ec4">7 Jul · Miramar</a>, <a class="fref" href="match.html?id=43cb13b1-bd20-49d9-8a77-bfae39426d8f">17 Jun · Erangel</a>). Knocked alone with S821 40m+ away in 38 fights, 4 of them in the November games.</p>
     </div>
     <div class="panel">
       <h3 style="color:var(--s821)">S821</h3>
       <p><b>Best:</b> snap headshots with the FAL / M24 / Kar98k / Mini14, and SMG/ACE32 clutches.
-        When S821 opens with a knock we almost never lose (1 loss in 70).</p>
+        When S821 opens with a knock we almost never lose (1 loss in 74).</p>
       <p><b>Watch:</b> running in alone to finish a knock, including both lost final fights
         (<a class="fref" href="match.html?id=a64fec7e-4f9c-4908-a8cc-302cad205095">7 Aug · Erangel</a>, <a class="fref" href="match.html?id=581e0c54-d8cf-4c18-884f-5874f2d571bd">7 Jul · Karakin</a>), plus <a class="fref" href="match.html?id=592e92d7-be99-4749-97fc-0547abbf4c11">3 Jun · Miramar</a>, <a class="fref" href="match.html?id=01a72f4b-afd2-40e4-800f-d1f7f3ee3ff5">3 Jun · Erangel</a>, <a class="fref" href="match.html?id=378f04a6-1a93-4e61-a7ee-98217708c4b7">6 Jul · Karakin</a>,
-        <a class="fref" href="match.html?id=5e55edcf-2820-4a25-b35d-88cab2ef1ea3">6 Jul · Erangel</a>. Knocked alone with D282 40m+ away in 43 fights, the most of either of us, but only once in the 25 latest fights.</p>
+        <a class="fref" href="match.html?id=5e55edcf-2820-4a25-b35d-88cab2ef1ea3">6 Jul · Erangel</a>. Knocked alone with D282 40m+ away in 46 fights, the most of either of us, but only 4 times since 6 October.</p>
     </div>
   </section>
 
@@ -666,16 +688,16 @@
   <section class="chapter" id="focus">
     <div class="chapter-num">06</div>
     <h2>Next Session</h2>
-    <div class="exp hi"><h4>1. After a kill: count, move, then heal</h4>
-      <p class="do">Say how many are left. Move 50–100m behind cover before bandaging. Five fights went back to the enemy this way in the latest games.</p></div>
-    <div class="exp hi"><h4>2. One car, parked 150–300m short</h4>
-      <p class="do">Never drive at a team you can see, and never arrive in two cars. Shot in the car? Drive out of sight, don't bail.</p></div>
-    <div class="exp hi"><h4>3. Sniper hit = move</h4>
-      <p class="do">Both of you out of that line before anyone heals. Don't re-peek the same angle. A long shot that didn't knock gives you away too.</p></div>
-    <div class="exp"><h4>4. Stay within 40 metres</h4>
-      <p class="do">Don't finish a knock alone while his teammate is up. Push together or hold the angle. Much better in the latest games; keep it.</p></div>
+    <div class="exp hi"><h4>1. Stay within 40 metres, from the first fight on</h4>
+      <p class="do">Most of all when moving after loot and in the final circles. Since 6 October, 9 of the 10 fights where one of us went down alone were lost. Heal to full before crossing open ground.</p></div>
+    <div class="exp hi"><h4>2. Sniper hit = move</h4>
+      <p class="do">Both of you out of that line before anyone heals. Don't re-peek the same angle, and don't trade shots with the same team from the same spot for minutes. An M24 headshot on D282 decided three of the four top-5 runs in November.</p></div>
+    <div class="exp hi"><h4>3. After a kill: count, move, then heal</h4>
+      <p class="do">Say how many are left. Move 50–100m behind cover before bandaging. Better in November (3 times in 34 fights, after 5 in 25), not gone.</p></div>
+    <div class="exp"><h4>4. One car, parked 150–300m short</h4>
+      <p class="do">Never drive at a team you can see, and never arrive in two cars. Much better lately: 1 fight in 34 started from a vehicle.</p></div>
     <div class="exp"><h4>5. Revive behind hard cover only</h4>
-      <p class="do">Smoke is not cover. Deal with the shooter or move first. No re-knocks in the latest games; keep it.</p></div>
+      <p class="do">Smoke is not cover. Deal with the shooter or move first. 2 of 13 re-knocked since 6 October, down from 29%; keep it.</p></div>
     <div class="exp"><h4>6. Keep the high ground</h4>
       <p class="do">Don't duel from below. Don't leave good ground to rotate down past teams.</p></div>
     <div class="exp ok"><h4>7. Open together, on the same player</h4>
@@ -729,14 +751,14 @@
     <h2>How This Was Made</h2>
     <div class="panel">
       <ul class="method">
-        <li><b>Data:</b> raw PUBG telemetry for 329 duo matches (2 Jun – 29 Oct 2026). Solo, team
+        <li><b>Data:</b> raw PUBG telemetry for 344 duo matches (2 Jun – 5 Nov 2026). Solo, team
           deathmatch and arcade modes are excluded.</li>
         <li><b>A fight</b> = all combat involving either of us, split when 45 seconds pass without any.
-          652 decisive fights; 471 start after 5:00 and are the ones counted here (441 of them were read by hand).</li>
+          687 decisive fights; 505 start after 5:00 and are the ones counted here (475 of them were read by hand).</li>
         <li><b>Reading:</b> each fight was written out as a timeline (positions every ~10 s, distance
           between us, height, every shot burst, hit, knock, kill, revive, throwable, heal, boost and
           vehicle entry/exit, blue-zone ticks) and read one by one.</li>
-        <li><b>Counting:</b> the patterns were then tagged automatically across all 471 fights.
+        <li><b>Counting:</b> the patterns were then tagged automatically across all 505 fights.
           "Knocked alone" = one of us knocked with the other 40m+ away. "Sniper one-shot" = a single
           Kar98k/M24/AWM/Mosin/Win94/L6 hit of 60+ that downed us. "Low ground" = enemy 10m+ higher at
           first contact. "Opening knock" = our first hit's target downed within 10 s.
@@ -752,8 +774,8 @@
 </div>
 
 <footer>
-  <div class="sign">471 fights counted, 441 read one by one · companion to <a href="engagement-stats.html">Engagement Stats</a> and <a href="debrief.html">The Debrief</a></div>
-  Written from matches up to 29 Oct 2026. The fight table in Chapter 07 and the Engagement Stats page update themselves; this text doesn't.
+  <div class="sign">505 fights counted, 475 read one by one · companion to <a href="engagement-stats.html">Engagement Stats</a> and <a href="debrief.html">The Debrief</a></div>
+  Written from matches up to 5 Nov 2026. The fight table in Chapter 07 and the Engagement Stats page update themselves; this text doesn't.
 </footer>
 
 <script>
@@ -771,14 +793,14 @@ const TT={backgroundColor:SURF,borderColor:LINE,borderWidth:1,titleColor:'#e8e3d
   bodyColor:'#e8e3d8',padding:10,titleFont:{family:'Oswald',size:13},boxPadding:4};
 
 const PAT=[
-  ['Opening knock (111)',60.4,38.7,0.9],
-  ['Both on same player (74)',55.4,37.8,6.8],
+  ['Opening knock (118)',60.2,39.0,0.8],
+  ['Both on same player (80)',56.2,37.5,6.2],
   ['Hit them in their car (18)',55.6,38.9,5.6],
-  ['Third-party (41)',48.8,31.7,19.5],
-  ['All fights (471)',31.2,28.7,40.1],
-  ['Arrived by vehicle (67)',29.9,22.4,47.8],
-  ['Started 50m+ apart (117)',30.8,20.5,48.7],
-  ['Enemy 10m+ above (37)',16.2,24.3,59.5]];
+  ['Third-party (48)',47.9,29.2,22.9],
+  ['All fights (505)',31.3,27.9,40.8],
+  ['Arrived by vehicle (68)',30.9,22.1,47.1],
+  ['Started 50m+ apart (124)',30.6,20.2,49.2],
+  ['Enemy 10m+ above (39)',17.9,23.1,59.0]];
 new Chart(document.getElementById('patChart'),{
   type:'bar',
   data:{labels:PAT.map(r=>r[0]),datasets:[

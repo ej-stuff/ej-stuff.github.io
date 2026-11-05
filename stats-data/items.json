@@ -4,13 +4,13 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 248,
+        "total": 250,
         "per_match": 0.68
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 115,
+        "total": 118,
         "per_match": 0.32
       },
       {
@@ -22,27 +22,27 @@
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 222,
-        "per_match": 0.61
+        "total": 225,
+        "per_match": 0.62
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 187,
-        "per_match": 0.51
+        "total": 190,
+        "per_match": 0.52
       },
       {
         "item": "Med Kit",
         "category": "Heal",
         "total": 31,
-        "per_match": 0.09
+        "per_match": 0.08
       }
     ],
     "throwables": [
       {
         "item": "Grenade",
-        "total": 114,
-        "per_match": 0.31
+        "total": 116,
+        "per_match": 0.32
       },
       {
         "item": "Snowball",
@@ -51,7 +51,7 @@
       },
       {
         "item": "Smoke Grenade",
-        "total": 110,
+        "total": 111,
         "per_match": 0.3
       },
       {
@@ -76,13 +76,13 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 264,
+        "total": 267,
         "per_match": 0.77
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 213,
+        "total": 214,
         "per_match": 0.62
       },
       {
@@ -94,14 +94,14 @@
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 248,
+        "total": 250,
         "per_match": 0.72
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 182,
-        "per_match": 0.53
+        "total": 187,
+        "per_match": 0.54
       },
       {
         "item": "Med Kit",
@@ -119,7 +119,7 @@
       {
         "item": "Grenade",
         "total": 57,
-        "per_match": 0.17
+        "per_match": 0.16
       },
       {
         "item": "Sticky Grenade",

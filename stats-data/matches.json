@@ -1,5 +1,55 @@
 [
   {
+    "match_id": "c20854e1-6129-4630-8315-e2a9c394e14d",
+    "created_at": "2026-11-05T21:29:38Z",
+    "map": "Erangel",
+    "game_mode": "duo-fpp",
+    "duration_s": 1635,
+    "duo_survival_s": 1410,
+    "players": {
+      "D282": {
+        "present": true,
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 2,
+        "assists": 1,
+        "damage": 151.6,
+        "placement": 4,
+        "survival_s": 1410,
+        "revives": 1,
+        "heals": 6,
+        "boosts": 5,
+        "blue_chips": 0,
+        "damage_taken": 280.2,
+        "times_knocked": 0,
+        "shots_fired": 70,
+        "parachute_dist": 296.0,
+        "throwables": 3,
+        "revive_response_s": null
+      },
+      "S821": {
+        "present": true,
+        "kills": 2,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 597.4,
+        "placement": 4,
+        "survival_s": 1410,
+        "revives": 0,
+        "heals": 7,
+        "boosts": 4,
+        "blue_chips": 0,
+        "damage_taken": 327.4,
+        "times_knocked": 2,
+        "shots_fired": 170,
+        "parachute_dist": 303.0,
+        "throwables": 0,
+        "revive_response_s": 26.6
+      }
+    }
+  },
+  {
     "match_id": "ba4c7b1d-568c-480a-ac99-7932dda2c2cf",
     "created_at": "2026-11-05T21:01:57Z",
     "map": "Rondo",
