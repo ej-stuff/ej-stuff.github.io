@@ -1,5 +1,55 @@
 [
   {
+    "match_id": "2953cf5d-3de0-4cb5-aa3a-8ed9b89cd2f3",
+    "created_at": "2026-11-10T21:02:01Z",
+    "map": "Vikendi",
+    "game_mode": "duo-fpp",
+    "duration_s": 1587,
+    "duo_survival_s": 1318,
+    "players": {
+      "D282": {
+        "present": true,
+        "kills": 0,
+        "hs_kills": 0,
+        "knockdowns": 0,
+        "assists": 1,
+        "damage": 168.3,
+        "placement": 8,
+        "survival_s": 1313,
+        "revives": 0,
+        "heals": 3,
+        "boosts": 1,
+        "blue_chips": 0,
+        "damage_taken": 292.9,
+        "times_knocked": 2,
+        "shots_fired": 50,
+        "parachute_dist": 327.0,
+        "throwables": 2,
+        "revive_response_s": 25.2
+      },
+      "S821": {
+        "present": true,
+        "kills": 2,
+        "hs_kills": 0,
+        "knockdowns": 1,
+        "assists": 0,
+        "damage": 306.7,
+        "placement": 8,
+        "survival_s": 1318,
+        "revives": 1,
+        "heals": 1,
+        "boosts": 1,
+        "blue_chips": 0,
+        "damage_taken": 184.6,
+        "times_knocked": 0,
+        "shots_fired": 130,
+        "parachute_dist": 314.0,
+        "throwables": 6,
+        "revive_response_s": null
+      }
+    }
+  },
+  {
     "match_id": "558376d7-47ac-46bf-8ad4-6b10b1570ec8",
     "created_at": "2026-11-10T20:50:01Z",
     "map": "Vikendi",

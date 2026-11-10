@@ -99,6 +99,20 @@
   #siteNavMenu a:hover { background: rgba(244,163,0,.12); color: var(--accent); }
   #siteNavMenu a.nav-cur { color: var(--accent); pointer-events: none; }
   #siteNavMenu .nav-sep { height: 1px; background: var(--line); margin: 5px 8px; }
+
+  /* featured card: The Evolution */
+  .card.feature { position:relative; overflow:hidden; border:1px solid transparent; padding:26px 24px 22px;
+    background:linear-gradient(var(--panel),var(--panel)) padding-box,
+      linear-gradient(110deg,#e5484d,#f27a3a,#f4a300,#c6c84a,#7cc46a,#38c6d9) border-box; }
+  .card.feature::after { content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse 60% 120% at 100% 0%, rgba(56,198,217,.14), transparent 60%),
+      radial-gradient(ellipse 60% 120% at 0% 100%, rgba(229,72,77,.12), transparent 60%); }
+  .card.feature h2 { font-size:24px; background:linear-gradient(100deg,#e5484d,#f4a300 45%,#38c6d9);
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .card.feature p { color:#d6d0c3; }
+  .card.feature .new { position:absolute; top:16px; right:16px; z-index:1; font-family:Oswald,sans-serif; font-size:10px;
+    letter-spacing:1.5px; text-transform:uppercase; background:#38c6d9; color:#0b1214; padding:3px 8px; border-radius:5px; }
+  .card.feature:hover { border-color:transparent; transform:translateY(-2px); box-shadow:0 10px 30px rgba(56,198,217,.15); }
 </style>
 </head>
 
@@ -113,6 +127,7 @@
     <a href="match.html">Match Analysis</a>
     <a href="weapons.html">Weapon Stats</a>
     <a href="records.html">Personal Records</a>
+    <a href="evolution.html">The Evolution</a>
     <a href="debrief.html">The Debrief</a>
     <a href="engagements.html">Engagement Report</a>
     <a href="engagement-stats.html">Engagement Stats</a>
@@ -124,6 +139,14 @@
 
   <h1>EJ's Projects</h1>
   <p class="subtitle">Small tools and experiments, built while learning to code.</p>
+
+  <a class="card feature" href="evolution.html">
+    <span class="new">New</span>
+    <h2>The Evolution</h2>
+    <p>From hot-drop brawlers to patient marksmen. A scroll-through story of how D282 &amp; S821 have changed
+       the way they play, game by game: where you land, when you fight, how far you shoot, where you stand
+       in the zone, and whether it paid off. Charts update themselves.</p>
+  </a>
 
   <a class="card" href="pubg.html">
     <h2>PUBG Loadout Planner</h2>

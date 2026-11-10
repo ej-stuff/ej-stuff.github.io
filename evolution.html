@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Evolution — D282 &amp; S821</title>
+<meta name="description" content="How D282 and S821 have changed the way they play PUBG, game by game: where they land, when they fight, how far they shoot, where they stand in the zone, and whether it paid off.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:#0e0d0a; --bg2:#14130f; --panel:#1b1a15; --panel2:#221f19; --line:#36322a;
+    --text:#ece7dc; --muted:#9a9385; --accent:#f4a300; --s821:#4a9edd;
+    --win:#a3c76a; --danger:#e5484d; --cyan:#38c6d9;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; line-height:1.6; overflow-x:hidden; }
+  h1,h2,h3,h4 { font-family:Oswald,system-ui,sans-serif; font-weight:600; letter-spacing:.5px; margin:0; }
+  a { color:var(--accent); }
+  .muted { color:var(--muted); }
+  b.hot { color:var(--danger); } b.cool { color:var(--cyan); } b.good { color:var(--win); } b.amber { color:var(--accent); }
+
+  /* progress + nav */
+  #progress { position:fixed; top:0; left:0; height:3px; width:0; z-index:9500;
+    background:linear-gradient(90deg,#e5484d,#f27a3a,#f4a300,#c6c84a,#7cc46a,#38c6d9); box-shadow:0 0 10px rgba(244,163,0,.6); }
+  #siteNav { position:fixed; top:10px; left:10px; z-index:9000; }
+  #siteNavBtn { width:34px; height:34px; background:rgba(27,26,21,.9); border:1px solid var(--line); border-radius:8px; color:var(--accent);
+    font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(6px); }
+  #siteNavBtn:hover { border-color:var(--accent); }
+  #siteNavMenu { display:none; position:absolute; top:40px; left:0; background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:6px; min-width:210px; box-shadow:0 8px 24px rgba(0,0,0,.6); }
+  #siteNavMenu.open { display:block; }
+  #siteNavMenu a { display:block; padding:9px 14px; color:var(--text); text-decoration:none; border-radius:7px; font-size:13px;
+    font-family:Oswald,system-ui,sans-serif; text-transform:uppercase; letter-spacing:.5px; }
+  #siteNavMenu a:hover { background:rgba(244,163,0,.12); color:var(--accent); }
+  #siteNavMenu a.nav-cur { color:var(--accent); pointer-events:none; }
+  #siteNavMenu .nav-sep { height:1px; background:var(--line); margin:5px 8px; }
+
+  /* hero */
+  .hero { position:relative; height:100vh; height:100svh; min-height:560px; overflow:hidden; display:flex; align-items:center; justify-content:center; text-align:center; }
+  #heroCanvas { position:absolute; inset:0; width:100%; height:100%; }
+  .hero::after { content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(14,13,10,.15), rgba(14,13,10,.85) 75%), linear-gradient(180deg, rgba(14,13,10,.2), rgba(14,13,10,0) 30%, rgba(14,13,10,0) 70%, var(--bg)); }
+  .hero-inner { position:relative; z-index:2; padding:0 20px; max-width:860px; }
+  .kicker { font-family:Oswald,sans-serif; text-transform:uppercase; letter-spacing:5px; font-size:12px; color:var(--muted); }
+  .hero h1 { font-size:clamp(46px,11vw,128px); line-height:.95; text-transform:uppercase; letter-spacing:4px; margin:14px 0 16px;
+    background:linear-gradient(100deg,#e5484d 0%,#f27a3a 22%,#f4a300 42%,#c6c84a 60%,#7cc46a 78%,#38c6d9 100%); background-size:200% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent; animation:sheen 9s ease-in-out infinite alternate; filter:drop-shadow(0 4px 24px rgba(0,0,0,.6)); }
+  @keyframes sheen { from { background-position:0% 50%; } to { background-position:100% 50%; } }
+  .hero-sub { font-size:clamp(16px,2.2vw,20px); color:#d8d2c5; max-width:640px; margin:0 auto; text-shadow:0 2px 12px rgba(0,0,0,.8); }
+  .ticker { margin-top:26px; font-family:Oswald,sans-serif; letter-spacing:2px; text-transform:uppercase; font-size:13px; color:var(--muted); min-height:20px; }
+  .ticker b { color:var(--text); font-weight:500; }
+  .scroll-cue { position:absolute; bottom:22px; left:50%; transform:translateX(-50%); z-index:2; font-family:Oswald,sans-serif; font-size:11px;
+    letter-spacing:4px; color:var(--muted); text-transform:uppercase; animation:bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform:translate(-50%,0); } 50% { transform:translate(-50%,8px); } }
+
+  .wrap { max-width:1180px; margin:0 auto; padding:0 24px; }
+  .narrow { max-width:780px; margin:0 auto; padding:0 24px; }
+
+  /* then vs now */
+  .then-now { padding:80px 0 40px; }
+  .then-now h2 { font-size:clamp(26px,4vw,40px); text-transform:uppercase; text-align:center; margin-bottom:10px; }
+  .then-now .lede { text-align:center; color:var(--muted); max-width:640px; margin:0 auto 40px; font-size:16px; }
+  .tn-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+  .tn { background:linear-gradient(160deg,var(--panel),var(--bg2)); border:1px solid var(--line); border-radius:16px; padding:22px 22px 18px; position:relative; overflow:hidden; }
+  .tn::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(180deg,#e5484d,#38c6d9); }
+  .tn .lbl { font-family:Oswald,sans-serif; text-transform:uppercase; letter-spacing:1px; font-size:12px; color:var(--muted); }
+  .tn .vals { display:flex; align-items:baseline; gap:12px; margin:8px 0 4px; font-family:Oswald,sans-serif; }
+  .tn .from { font-size:26px; color:#e5484d; opacity:.85; }
+  .tn .arrow { color:var(--muted); font-size:18px; }
+  .tn .to { font-size:44px; color:var(--cyan); font-weight:700; line-height:1; }
+  .tn .unit { font-size:15px; color:var(--muted); }
+  .tn .note { font-size:13px; color:var(--muted); }
+
+  /* chapter headers */
+  .chap-head { padding:110px 0 30px; text-align:center; }
+  .chap-num { font-family:Oswald,sans-serif; font-size:13px; letter-spacing:6px; color:var(--accent); }
+  .chap-head h2 { font-size:clamp(32px,6vw,64px); text-transform:uppercase; letter-spacing:3px; line-height:1.05; margin-top:8px; }
+  .chap-head p { color:var(--muted); max-width:620px; margin:14px auto 0; font-size:16px; }
+
+  /* scrollytelling */
+  .scrolly { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:44px; position:relative; }
+  .graphic { position:sticky; top:9vh; height:82vh; display:flex; flex-direction:column; justify-content:center; }
+  .gfx-box { position:relative; background:radial-gradient(ellipse at 50% 0%, rgba(244,163,0,.06), transparent 60%), var(--panel); border:1px solid var(--line);
+    border-radius:18px; padding:16px; height:100%; max-height:640px; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,.45); }
+  .gfx-title { font-family:Oswald,sans-serif; text-transform:uppercase; letter-spacing:1px; font-size:13px; color:var(--muted); margin:2px 4px 10px; min-height:18px; transition:opacity .3s; }
+  .gfx-body { position:relative; flex:1; min-height:0; }
+  .gfx-body canvas { position:absolute; inset:0; width:100% !important; height:100% !important; }
+  .gfx-legend { display:flex; flex-wrap:wrap; gap:10px 14px; margin:10px 4px 0; font-size:12px; color:var(--muted); min-height:18px; }
+  .gfx-legend span { display:inline-flex; align-items:center; gap:6px; }
+  .gfx-legend i { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .steps { padding:4vh 0 24vh; }
+  .step { min-height:78vh; display:flex; align-items:center; }
+  .step .card { background:rgba(27,26,21,.82); border:1px solid var(--line); border-radius:16px; padding:22px 24px; font-size:16.5px;
+    transition:opacity .45s, transform .45s, border-color .45s; opacity:.32; transform:translateY(10px); backdrop-filter:blur(4px); }
+  .step.active .card { opacity:1; transform:none; border-color:rgba(244,163,0,.45); }
+  .step .card p { margin:0 0 12px; } .step .card p:last-child { margin-bottom:0; }
+  .step .card .big { font-family:Oswald,sans-serif; font-size:34px; line-height:1.1; display:block; margin:4px 0 8px; }
+  .mini-table { width:100%; border-collapse:collapse; font-size:14px; margin:6px 0 10px; }
+  .mini-table th { text-align:left; font-family:Oswald,sans-serif; font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); padding:4px 8px 6px 0; border-bottom:1px solid var(--line); }
+  .mini-table td { padding:6px 8px 6px 0; border-bottom:1px solid rgba(54,50,42,.6); }
+  .mini-table tr:last-child td { border-bottom:none; }
+  .bar-cell { position:relative; }
+  .bar-cell .b { position:absolute; left:0; top:50%; height:8px; transform:translateY(-50%); border-radius:4px; opacity:.85; }
+  .bar-cell span { position:relative; padding-left:4px; font-family:Oswald,sans-serif; }
+
+  /* DNA */
+  .dna { padding:40px 0 20px; }
+  .dna-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:36px; align-items:center; }
+  .dna-chart { position:relative; height:520px; background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:14px; }
+  .month-btns { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0; }
+  .month-btns button { font-family:Oswald,sans-serif; letter-spacing:1px; text-transform:uppercase; font-size:13px; padding:8px 14px; border-radius:999px;
+    border:1px solid var(--line); background:var(--panel2); color:var(--text); cursor:pointer; transition:all .2s; }
+  .month-btns button.on { color:#111; border-color:transparent; }
+  .month-btns button.play { border-color:var(--accent); color:var(--accent); }
+  .dna-name { font-family:Oswald,sans-serif; font-size:clamp(30px,5vw,48px); text-transform:uppercase; letter-spacing:2px; line-height:1; transition:color .4s; }
+  .dna-desc { color:var(--muted); font-size:15.5px; margin-top:10px; min-height:72px; }
+
+  /* dinners */
+  .dinners { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:30px; }
+  .dinner { background:linear-gradient(170deg,var(--panel),var(--bg2)); border:1px solid var(--line); border-radius:16px; padding:18px 18px 16px; position:relative; overflow:hidden; }
+  .dinner.latest { border-color:rgba(56,198,217,.6); box-shadow:0 0 0 1px rgba(56,198,217,.25), 0 10px 40px rgba(56,198,217,.12); }
+  .dinner .badge { position:absolute; top:14px; right:14px; font-family:Oswald,sans-serif; font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
+    background:var(--cyan); color:#0b1214; padding:3px 8px; border-radius:5px; }
+  .dinner h4 { font-size:20px; text-transform:uppercase; }
+  .dinner .dmeta { font-size:12.5px; color:var(--muted); margin:2px 0 12px; }
+  .dinner .facts { display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; margin:12px 0 4px; }
+  .dinner .facts div { font-size:12px; color:var(--muted); }
+  .dinner .facts b { display:block; font-family:Oswald,sans-serif; font-size:19px; color:var(--text); font-weight:500; }
+  .tl { position:relative; height:46px; margin:8px 0 4px; }
+  .tl .axis { position:absolute; left:0; right:0; top:22px; height:2px; background:var(--line); border-radius:2px; }
+  .tl .seg { position:absolute; top:13px; height:20px; border-radius:4px; min-width:6px; }
+  .tl .tick { position:absolute; top:38px; font-size:10px; color:var(--muted); transform:translateX(-50%); }
+  .tl .land { position:absolute; top:16px; width:2px; height:14px; background:var(--muted); }
+
+  /* costs */
+  .costs { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:16px; margin-top:26px; }
+  .cost { background:var(--panel); border:1px solid var(--line); border-top:3px solid var(--danger); border-radius:14px; padding:18px 20px; }
+  .cost.warn { border-top-color:var(--accent); } .cost.info { border-top-color:var(--s821); }
+  .cost h4 { font-size:17px; text-transform:uppercase; margin-bottom:6px; }
+  .cost .num { font-family:Oswald,sans-serif; font-size:36px; color:var(--danger); line-height:1.1; }
+  .cost.warn .num { color:var(--accent); } .cost.info .num { color:var(--s821); }
+  .cost p { font-size:14.5px; color:#d6d0c3; margin:6px 0 0; }
+
+  /* explorer */
+  .explorer { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:18px; margin-top:24px; }
+  .ex-ctrl { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px; }
+  .ex-ctrl label { font-family:Oswald,sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); }
+  .ex-ctrl select { background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:13.5px; font-family:inherit; }
+  .ex-chart { position:relative; height:420px; }
+  .ex-note { font-size:13px; color:var(--muted); margin-top:8px; }
+
+  /* reveal */
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity:1; transform:none; }
+
+  footer { text-align:center; padding:80px 24px 40px; color:var(--muted); font-size:13px; border-top:1px solid var(--line); margin-top:80px; }
+  footer .sign { font-family:Oswald,sans-serif; color:var(--accent); font-size:15px; letter-spacing:.5px; margin-bottom:8px; }
+  .method { text-align:left; max-width:780px; margin:24px auto 0; font-size:13px; }
+  .method li { margin-bottom:6px; }
+
+  @media (max-width:860px) {
+    .scrolly { grid-template-columns:minmax(0,1fr); gap:0; }
+    .graphic { top:52px; height:48vh; z-index:5; }
+    .gfx-box { padding:10px; border-radius:14px; }
+    .steps { padding-top:6vh; }
+    .step { min-height:70vh; }
+    .step .card { background:rgba(27,26,21,.95); font-size:15.5px; }
+    .dna-grid { grid-template-columns:minmax(0,1fr); }
+    .dna-chart { height:400px; }
+    .chap-head { padding-top:80px; }
+    .wrap, .narrow { padding:0 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero h1, .scroll-cue { animation:none; }
+    .reveal { opacity:1; transform:none; transition:none; }
+    .step .card { transition:none; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<div id="siteNav">
+  <button id="siteNavBtn" onclick="toggleSiteNav()" title="Navigate">&#9776;</button>
+  <div id="siteNavMenu">
+    <a href="index.html">Home</a>
+    <div class="nav-sep"></div>
+    <a href="stats.html">PUBG Stats</a>
+    <a href="mapanalysis.html">Map Analysis</a>
+    <a href="match.html">Match Analysis</a>
+    <a href="weapons.html">Weapon Stats</a>
+    <a href="records.html">Personal Records</a>
+    <a href="evolution.html" class="nav-cur">The Evolution</a>
+    <a href="debrief.html">The Debrief</a>
+    <a href="engagements.html">Engagement Report</a>
+    <a href="engagement-stats.html">Engagement Stats</a>
+    <a href="pubg.html">Loadout Planner</a>
+    <a href="armory.html">The Armory</a>
+  </div>
+</div>
+
+<!-- ============================== HERO ============================== -->
+<header class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-inner">
+    <div class="kicker" id="heroKicker">D282 &amp; S821 · Duo FPP</div>
+    <h1>The Evolution</h1>
+    <p class="hero-sub">From hot-drop brawlers to patient marksmen. Every game since June, read again from scratch,
+      to see if the changes you feel you've made show up in the data. They do.</p>
+    <div class="ticker" id="ticker">&nbsp;</div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</header>
+
+<!-- ============================== THEN VS NOW ============================== -->
+<section class="then-now wrap">
+  <h2 class="reveal">June vs November</h2>
+  <p class="lede reveal">Same two players, same game. Read the arrows.</p>
+  <div class="tn-grid" id="tnGrid"></div>
+</section>
+
+<!-- ============================== 01 THE DROP ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">01</div><h2>The Drop</h2>
+    <p>The biggest change in how you play happens in the first 60 seconds on the ground.</p></div>
+  <div class="scrolly" data-chapter="drop">
+    <div class="graphic"><div class="gfx-box">
+      <div class="gfx-title" id="dropTitle">Every Erangel landing</div>
+      <div class="gfx-body"><canvas id="dropMap"></canvas></div>
+      <div class="gfx-legend" id="dropLegend"></div>
+    </div></div>
+    <div class="steps">
+      <div class="step" data-step="0"><div class="card">
+        <p>Every dot is one of your landings on Erangel. The bigger the dot, the more enemies were within
+          250 metres of you during your first minute on the ground.</p>
+        <p class="muted">The map shows Erangel only, because it's where you play most. Every number in this chapter counts all maps.</p>
+      </div></div>
+      <div class="step" data-step="1"><div class="card">
+        <span class="big"><b class="hot">June</b>: into the crowd</span>
+        <p>On average <b class="hot">6.9 enemies</b> landed within 250 m of you. In <b class="hot">35%</b> of games it was
+          8 or more. Games that started like that averaged <b>31st place</b>.</p>
+      </div></div>
+      <div class="step" data-step="2"><div class="card">
+        <span class="big"><b class="amber">July – October</b>: drifting out</span>
+        <p>The dots slide away from the big towns. By September it was <b>2.4 enemies</b> per landing, and only 1 game in 50
+          dropped into a crowd of 8+. October slipped back a bit (3.6, and 11% crowded drops). Keep that month in mind: it shows up again in Chapter 07.</p>
+      </div></div>
+      <div class="step" data-step="3"><div class="card">
+        <span class="big"><b class="cool">November</b>: the quiet corners</span>
+        <p><b class="cool">2.0 enemies</b> per landing, and not a single crowded drop. A third of your landings had nobody
+          within 250 m at all. Tonight's chicken dinner started from one of them.</p>
+      </div></div>
+      <div class="step" data-step="4"><div class="card">
+        <p><b>Why it matters.</b> Average placement by how many enemies were near you after landing, all 353 games:</p>
+        <table class="mini-table" id="hotTable"></table>
+        <p>Few things in this data split your results as cleanly as this one does.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 02 THE QUIET MINUTES ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">02</div><h2>The Quiet Minutes</h2>
+    <p>A quiet landing buys you time. Here's what you did with it.</p></div>
+  <div class="scrolly" data-chapter="quiet">
+    <div class="graphic"><div class="gfx-box">
+      <div class="gfx-title" id="quietTitle">Time from landing to your first fight</div>
+      <div class="gfx-body"><canvas id="quietChart"></canvas></div>
+    </div></div>
+    <div class="steps">
+      <div class="step" data-step="0"><div class="card">
+        <span class="big"><b class="hot">1.6 minutes</b></span>
+        <p>In June, the first shot (yours or theirs) came a median 1.6 minutes after you touched down. In <b class="hot">41%</b>
+          of games you were fighting inside the first minute.</p>
+      </div></div>
+      <div class="step" data-step="1"><div class="card">
+        <span class="big"><b class="cool">5.3 minutes</b></span>
+        <p>In November, only <b class="cool">12%</b> of games had a fight in the first minute, and in <b class="cool">46%</b> nobody shot at
+          you for six minutes or more. You loot, you get kitted, then you go looking.</p>
+      </div></div>
+      <div class="step" data-step="2"><div class="card">
+        <p><b>The payoff.</b> Games where the first fight came 6+ minutes after landing averaged <b class="good">11th place</b> and a
+          51% top-10 rate. Fights in the first minute: <b class="hot">30th place</b>, 16%.</p>
+        <p class="muted">Part of that runs the other way: a fight in the first minute is often the one you die in. But
+          that's the point of landing quietly.</p>
+      </div></div>
+      <div class="step" data-step="3"><div class="card">
+        <p><b>Tonight's win, 10 November:</b> nobody within 250 m at landing, and the first shot came
+          <b class="cool">13 minutes</b> after you touched down. Three of your four chicken dinners started like this.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 03 THE REACH ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">03</div><h2>The Reach</h2>
+    <p>The fights moved further away, and the guns followed.</p></div>
+  <div class="scrolly" data-chapter="reach">
+    <div class="graphic"><div class="gfx-box">
+      <div class="gfx-title" id="reachTitle"></div>
+      <div class="gfx-body"><canvas id="reachChart"></canvas></div>
+    </div></div>
+    <div class="steps">
+      <div class="step" data-step="0"><div class="card">
+        <span class="big"><b class="hot">27 m</b> &rarr; <b class="cool">61 m</b></span>
+        <p>The median distance of your hits more than doubled. The share of hits from beyond 100 m went from
+          <b>14%</b> to <b>29%</b>.</p>
+      </div></div>
+      <div class="step" data-step="1"><div class="card">
+        <p><b>What you carry changed with it.</b> SMGs did 12% of your damage in June and 4% in November. The LMG phase peaked in
+          August (26% of your damage) and has all but gone (4%).</p>
+        <p>DMRs went from <b class="hot">32%</b> to <b class="cool">49%</b>: half your damage now comes from a marksman rifle, mostly the Mini 14.</p>
+      </div></div>
+      <div class="step" data-step="2"><div class="card">
+        <p><b>And you shoot first.</b> You landed the first hit in <b class="hot">46%</b> of fights in June and <b class="cool">62%</b> in
+          November. At 60+ metres you usually see them before they see you.</p>
+        <p class="muted">Who does the damage is shifting too: S821's share went from 54% in June to 61–64% since October.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 04 LIVING ON THE EDGE ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">04</div><h2>Living On The Edge</h2>
+    <p>You stopped running to the middle of the circle.</p></div>
+  <div class="scrolly" data-chapter="edge">
+    <div class="graphic"><div class="gfx-box">
+      <div class="gfx-title" id="edgeTitle">Where you stood relative to the next zone</div>
+      <div class="gfx-body"><canvas id="edgeCanvas"></canvas></div>
+      <div class="gfx-legend" id="edgeLegend"></div>
+    </div></div>
+    <div class="steps">
+      <div class="step" data-step="0"><div class="card">
+        <p>Each dot is a game, placed by where you were relative to the next safe zone (the white circle) during
+          phases 2–4. The bright ring is the edge of the white circle. Inside it you're already safe; outside it you still have to rotate.</p>
+      </div></div>
+      <div class="step" data-step="1"><div class="card">
+        <span class="big"><b class="hot">June</b>: inside</span>
+        <p>Mostly inside or close to the next circle. You spent <b>6%</b> of your time alive in the blue.</p>
+      </div></div>
+      <div class="step" data-step="2"><div class="card">
+        <span class="big"><b class="cool">November</b>: on the rim</span>
+        <p><b class="cool">59%</b> of the time outside the next circle and <b class="cool">14%</b> in the blue. On Erangel this month it was 27%.
+          You rotate late and along the zone, not through the middle.</p>
+      </div></div>
+      <div class="step" data-step="3"><div class="card">
+        <p><b>Does it hurt?</b> No. In games that lasted 15+ minutes, spending 5–15% of the time in the blue had the best
+          top-5 rate of all (<b class="good">50%</b>), better than never touching it (34%). Above 15% it drops back to 45%.</p>
+        <p>The edge is a style now, not a mistake. Just don't live in the blue.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 05 THE LEASH ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">05</div><h2>The Leash</h2>
+    <p>One thing went the wrong way.</p></div>
+  <div class="scrolly" data-chapter="leash">
+    <div class="graphic"><div class="gfx-box">
+      <div class="gfx-title" id="leashTitle"></div>
+      <div class="gfx-body"><canvas id="leashChart"></canvas></div>
+    </div></div>
+    <div class="steps">
+      <div class="step" data-step="0"><div class="card">
+        <span class="big"><b class="amber">31 m</b> &rarr; <b class="hot">38 m</b></span>
+        <p>On foot you were a median 31 m apart in June, and more than 50 m apart a third of the time. In November it was
+          38 m, and <b class="hot">46%</b> of the time.</p>
+      </div></div>
+      <div class="step" data-step="1"><div class="card">
+        <p><b>It costs you late.</b> In games that lasted 15+ minutes and where you were 50 m+ apart for less than half the time,
+          you finished top-5 in <b class="good">43–44%</b>. Apart for more than half the time: <b class="hot">7%</b> (1 game in 14).</p>
+        <p>Tonight's chicken dinner: a median of <b class="cool">17 m</b> apart.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 06 THE TOOLBELT ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">06</div><h2>The Toolbelt</h2>
+    <p>Smokes, frags and heals: the quiet upgrade.</p></div>
+  <div class="scrolly" data-chapter="tools">
+    <div class="graphic"><div class="gfx-box">
+      <div class="gfx-title" id="toolsTitle"></div>
+      <div class="gfx-body"><canvas id="toolsChart"></canvas></div>
+    </div></div>
+    <div class="steps">
+      <div class="step" data-step="0"><div class="card">
+        <p>Per game, June to November: smokes <b class="hot">0.9</b> &rarr; <b class="cool">1.5</b>, frags 0.7 &rarr; 1.1, heals 2.1 &rarr; 3.5.</p>
+        <p class="muted">You live longer now, so some of that is just more time to use them. But smokes per 10 minutes alive rose too,
+          from 0.8 to 1.0.</p>
+      </div></div>
+      <div class="step" data-step="1"><div class="card">
+        <p><b>Smoke is a winning habit.</b> In games that lasted 15+ minutes, throwing 3+ smokes went with a
+          <b class="good">60%</b> top-5 rate and an 88% top-10 rate. No smokes: <b class="hot">24%</b> and 47%.</p>
+        <p>All four chicken dinners had smokes in them: 3, 6, 1 and 4.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 07 DID IT PAY OFF ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">07</div><h2>Did It Pay Off?</h2>
+    <p>Yes. And the months where you slipped back prove it.</p></div>
+  <div class="scrolly" data-chapter="pay">
+    <div class="graphic"><div class="gfx-box">
+      <div class="gfx-title" id="payTitle"></div>
+      <div class="gfx-body"><canvas id="payChart"></canvas></div>
+    </div></div>
+    <div class="steps">
+      <div class="step" data-step="0"><div class="card">
+        <p>The line is your 20-game rolling average placement. Up is better. Stars are chicken dinners. The background bands are months.</p>
+      </div></div>
+      <div class="step" data-step="1"><div class="card">
+        <p><b>June to November:</b> top-10 rate <b class="hot">27%</b> &rarr; <b class="cool">42%</b>, top-5 13% &rarr; 25%,
+          average survival 11.2 &rarr; 15.3 minutes, damage per game 240 &rarr; 320.</p>
+      </div></div>
+      <div class="step" data-step="2"><div class="card">
+        <span class="big">The proof</span>
+        <p>Each dot is a month. Further left means quieter landings; higher up means more top-10s.</p>
+        <p>Your three quietest months (<b class="cool">November, September, July</b>) are your three best. Your three
+          hottest (<b class="hot">June, August, October</b>) are your three worst. When October's drops got hotter again, the
+          results went straight back to June levels.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 08 DNA ============================== -->
+<section class="wrap dna">
+  <div class="chap-head reveal"><div class="chap-num">08</div><h2>Playstyle DNA</h2>
+    <p>Eight traits per month, each scaled 0–100. Watch the shape change.</p></div>
+  <div class="dna-grid">
+    <div class="dna-chart reveal"><canvas id="dnaChart"></canvas></div>
+    <div class="reveal">
+      <div class="dna-name" id="dnaName">—</div>
+      <div class="dna-desc" id="dnaDesc"></div>
+      <div class="month-btns" id="monthBtns"></div>
+      <p class="muted" style="font-size:13.5px">The faint shape is June, for comparison. <b>Quiet drop</b> = few enemies near the landing.
+        <b>Patience</b> = minutes until the first fight. <b>Reach</b> = median hit distance. <b>Edge play</b> = time in the blue.
+        <b>Utility</b> = smokes and frags per 10 minutes alive. <b>Wheels</b> = time in vehicles. <b>Together</b> = time within 50 m of each other.
+        <b>Initiative</b> = fights where you hit first.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 09 FOUR DINNERS ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">09</div><h2>Four Dinners</h2>
+    <p>Three of the four wins look exactly like the new style. Tonight's is the purest version yet.</p></div>
+  <div class="narrow reveal">
+    <p>Three wins started with nobody within 250 m of the landing and a first fight 11–13 minutes later. The odd one out is
+      September's Taego win: six enemies at the landing and a fight in the first second. You just won five of the six fights after that.</p>
+    <p><b>Tonight, 10 November:</b> five fights, five wins. Four of them were Mini 14 fights at 66–160 m (three for S821, one for D282),
+      then S821's M416 did 508 damage in the final fight against five players. S821's <b class="cool">934 damage</b> is the most either of you
+      has ever done in a game, and <b class="cool">1,412 together</b> is your highest combined total.</p>
+  </div>
+  <div class="dinners" id="dinners"></div>
+</section>
+
+<!-- ============================== 10 WHAT STILL COSTS ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">10</div><h2>What Still Costs You</h2>
+    <p>Fresh from the per-game data, not repeated from the other pages.</p></div>
+  <div class="costs">
+    <div class="cost reveal"><h4>Spreading out</h4><div class="num">46%</div>
+      <p>The share of time you were 50 m+ apart in November, the highest of any month. Late in the game that's the
+        difference between a 43% and a 7% top-5 rate (Chapter 05).</p></div>
+    <div class="cost warn reveal"><h4>The October relapse</h4><div class="num">27%</div>
+      <p>October's top-10 rate, back at June's level, in the month the drops got hot again (3.6 enemies at landing, 11% crowded).
+        The style only works when you stick to it.</p></div>
+    <div class="cost reveal"><h4>Fights end harder now</h4><div class="num">46%</div>
+      <p>The share of November's fights you lost outright, up from 41% in June, even though you also win more of them (36% vs 31%).
+        There are far fewer trades: fights now go one way or the other. The <a href="engagements.html">Engagement Report</a> shows which ones you lose.</p></div>
+    <div class="cost info reveal"><h4>The damage is moving to S821</h4><div class="num">61%</div>
+      <p>S821's share of your damage in November (54% in June, 64% in October). D282 opens more fights at long range but finishes fewer.
+        That's fine as a role split, as long as it's a choice.</p></div>
+  </div>
+</section>
+
+<!-- ============================== 11 EXPLORER ============================== -->
+<section class="wrap">
+  <div class="chap-head reveal"><div class="chap-num">11</div><h2>Your Turn</h2>
+    <p>Pick any trait and watch it move over all your games. This chart updates itself every time the pipeline runs.</p></div>
+  <div class="explorer reveal">
+    <div class="ex-ctrl">
+      <label for="exMetric">Trait</label><select id="exMetric"></select>
+      <label for="exMap">Map</label><select id="exMap"></select>
+      <label for="exWin">Smoothing</label>
+      <select id="exWin"><option value="10">10 games</option><option value="20" selected>20 games</option><option value="40">40 games</option></select>
+    </div>
+    <div class="ex-chart"><canvas id="exChart"></canvas></div>
+    <div class="ex-note" id="exNote"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="sign">Written from all duo games, 2 Jun – 10 Nov 2026 · charts update themselves</div>
+  The text was written on 10 November. The charts and the explorer are drawn from <code>stats-data/evolution.json</code>, which the
+  pipeline rebuilds after every refresh.
+  <ul class="method">
+    <li><b>Games:</b> Duo FPP only. Every metric is computed per game from the position, event and circle data behind
+      <a href="match.html">Match Analysis</a>, then averaged by month.</li>
+    <li><b>Enemies near the landing:</b> distinct enemy players within 250 m of where you landed during your first 60 s on foot.</li>
+    <li><b>First fight:</b> the first time either of you hit, or was hit by, an enemy player with a weapon or throwable, counted from landing.</li>
+    <li><b>Hit range:</b> distance from the shooter to the target for every hit you landed (under 800 m).</li>
+    <li><b>Zone:</b> position relative to the white circle (the next safe zone) every ~10 s while alive. "In the blue" uses the game's own flag.</li>
+    <li><b>Apart:</b> distance between you two when both are alive and on foot.</li>
+    <li>Late-game comparisons only use games that lasted 15+ minutes, so they don't just measure who died early. These are patterns from
+      your own games, not experiments.</li>
+  </ul>
+</footer>
+
+<script>
+function toggleSiteNav(){document.getElementById('siteNavMenu').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!document.getElementById('siteNav').contains(e.target))document.getElementById('siteNavMenu').classList.remove('open');});
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const MONTH_COLORS = ['#e5484d','#f27a3a','#f4a300','#c6c84a','#7cc46a','#38c6d9','#6d8cff','#a57bff','#e06fd0'];
+const MONTH_NAMES = {'01':'January','02':'February','03':'March','04':'April','05':'May','06':'June','07':'July','08':'August','09':'September','10':'October','11':'November','12':'December'};
+const INK='#9a9385', GRID='rgba(54,50,42,.55)', SURF='#1b1a15', LINE='#36322a';
+Chart.defaults.color = INK;
+Chart.defaults.font.family = "system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
+Chart.defaults.animation.duration = REDUCED ? 0 : 900;
+const TT = {backgroundColor:SURF,borderColor:LINE,borderWidth:1,titleColor:'#ece7dc',bodyColor:'#ece7dc',padding:10,titleFont:{family:'Oswald',size:13},boxPadding:4};
+
+let R = [], MONTHS = [], MCOL = {}, BY = {};
+const $ = id => document.getElementById(id);
+const avg = xs => xs.length ? xs.reduce((a,b)=>a+b,0)/xs.length : null;
+const medi = xs => { if(!xs.length) return null; const s=[...xs].sort((a,b)=>a-b), m=s.length>>1; return s.length%2 ? s[m] : (s[m-1]+s[m])/2; };
+const vals = (rs, f) => rs.map(f).filter(v => v!=null && !Number.isNaN(v));
+const short = m => MONTH_NAMES[m.slice(5)].slice(0,3);
+const alpha = (hex, a) => { const n=parseInt(hex.slice(1),16); return `rgba(${n>>16},${(n>>8)&255},${n&255},${a})`; };
+const fmt = (v, nd=0) => v==null ? '—' : v.toFixed(nd);
+
+/* ---------------- monthly aggregates ---------------- */
+function monthly(f, agg='mean') {
+  return MONTHS.map(m => { const xs = vals(BY[m], f); return agg==='median' ? medi(xs) : avg(xs); });
+}
+const share = (rs, f) => rs.length ? rs.filter(f).length/rs.length : null;
+
+/* ---------------- reveal + progress ---------------- */
+// things that should happen once an element scrolls into view (checked on scroll, see initScrolly)
+const VIS = [];
+function onVisible(el, fn, frac=.9) { VIS.push({el, fn, frac, done:false}); }
+const revealAll = root => root.querySelectorAll('.reveal').forEach(el => onVisible(el, () => el.classList.add('in'), .92));
+revealAll(document);
+window.addEventListener('scroll', () => {
+  const h = document.documentElement; const p = h.scrollTop/(h.scrollHeight-h.clientHeight);
+  $('progress').style.width = (p*100)+'%';
+}, {passive:true});
+
+/* ---------------- scrollytelling engine ---------------- */
+const CHAPTERS = {};
+function initScrolly() {
+  // the step that crosses the middle of the screen drives its chapter's graphic
+  const groups = [...document.querySelectorAll('.scrolly')].map(sc => ({name:sc.dataset.chapter, steps:[...sc.querySelectorAll('.step')]}));
+  let tmr = null;
+  function check() {
+    tmr = null;
+    const mid = window.innerHeight * 0.5;
+    VIS.forEach(v => { if (!v.done && v.el.getBoundingClientRect().top < window.innerHeight * v.frac) { v.done = true; v.fn(); } });
+    groups.forEach(({name, steps}) => {
+      const hit = steps.find(s => { const r = s.getBoundingClientRect(); return r.top <= mid && r.bottom >= mid; });
+      if (!hit) return;
+      steps.forEach(s => s.classList.toggle('active', s===hit));
+      const i = +hit.dataset.step;
+      if (CHAPTERS[name] && CHAPTERS[name].cur !== i) { CHAPTERS[name].cur = i; CHAPTERS[name].go(i); }
+    });
+  }
+  const queue = () => { if (!tmr) tmr = setTimeout(check, 40); };
+  window.addEventListener('scroll', queue, {passive:true});
+  window.addEventListener('resize', queue);
+  check();
+}
+
+/* ---------------- canvas helpers ---------------- */
+function fitCanvas(cv) {
+  const r = cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio||1, 2);
+  cv.width = Math.max(1, Math.round(r.width*dpr)); cv.height = Math.max(1, Math.round(r.height*dpr));
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return {ctx, w:r.width, h:r.height};
+}
+const mapImg = new Image();
+mapImg.src = 'map-images/thumb/Erangel_1024.jpg';
+
+/* ---------------- HERO ---------------- */
+function hero() {
+  const cv = $('heroCanvas');
+  const pts = R.filter(r => r.map==='Erangel' && r.land_xy).map(r => ({x:r.land_xy[0], y:r.land_xy[1], c:MCOL[r.month], r, born:0}));
+  $('heroKicker').innerHTML = `D282 &amp; S821 · Duo FPP · ${R.length} games · ${fmtDate(R[0].date)} – ${fmtDate(R[R.length-1].date)}`;
+  let start = null, k = 0; const DUR = REDUCED ? 0 : 7000;
+  function frame(ts) {
+    if (start===null) start = ts;
+    const {ctx,w,h} = fitCanvas(cv);
+    const size = Math.max(w,h)*1.05, ox = (w-size)/2, oy = (h-size)/2;
+    ctx.fillStyle = '#0e0d0a'; ctx.fillRect(0,0,w,h);
+    if (mapImg.complete && mapImg.naturalWidth) { ctx.globalAlpha = .45; ctx.drawImage(mapImg, ox, oy, size, size); ctx.globalAlpha = 1; }
+    const t = ts - start; const n = DUR ? Math.min(pts.length, Math.floor(pts.length * t / DUR)) : pts.length;
+    for (let i = 0; i < n; i++) {
+      const p = pts[i]; if (!p.born) p.born = ts;
+      const age = (ts - p.born)/1000, x = ox + p.x*size, y = oy + p.y*size;
+      const pulse = Math.max(0, 1 - age/1.6);
+      if (pulse > 0) { ctx.beginPath(); ctx.arc(x,y, 4 + 26*(1-pulse), 0, 7); ctx.strokeStyle = alpha(p.c, .55*pulse); ctx.lineWidth = 2; ctx.stroke(); }
+      const g = ctx.createRadialGradient(x,y,0,x,y,9); g.addColorStop(0, alpha(p.c,.95)); g.addColorStop(1, alpha(p.c,0));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x,y,9,0,7); ctx.fill();
+      ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(x,y,2.2,0,7); ctx.fill();
+    }
+    if (n > k) { k = n; const r = pts[n-1].r; $('ticker').innerHTML = `Erangel drop <b>${n}</b> of ${pts.length} · <b style="color:${MCOL[r.month]}">${fmtDate(r.date)}</b> · finished <b>#${r.place}</b>`; }
+    if (n < pts.length) requestAnimationFrame(frame);
+    else { $('ticker').innerHTML = `${pts.length} drops on Erangel · colour = month · <span style="color:${MCOL[MONTHS[0]]}">${short(MONTHS[0])}</span> &rarr; <span style="color:${MCOL[MONTHS[MONTHS.length-1]]}">${short(MONTHS[MONTHS.length-1])}</span>`; }
+  }
+  const go = () => requestAnimationFrame(frame);
+  if (mapImg.complete) go(); else { mapImg.onload = go; mapImg.onerror = go; }
+  window.addEventListener('resize', () => { if (k >= pts.length) { start = null; k = 0; pts.forEach(p=>p.born=0); requestAnimationFrame(frame); } });
+}
+function fmtDate(d) { const [y,m,dd] = d.split('-'); return `${+dd} ${MONTH_NAMES[m].slice(0,3)}`; }
+
+/* ---------------- THEN vs NOW ---------------- */
+function thenNow() {
+  const a = BY[MONTHS[0]], b = BY[MONTHS[MONTHS.length-1]];
+  const items = [
+    ['Enemies near your landing', avg(vals(a,r=>r.hot_enemies)), avg(vals(b,r=>r.hot_enemies)), '', 1, 'within 250 m, first minute on the ground'],
+    ['Minutes until the first fight', medi(vals(a,r=>r.first_fight))/60, medi(vals(b,r=>r.first_fight))/60, 'min', 1, 'median, counted from landing'],
+    ['Distance of your hits', medi(vals(a,r=>r.hit_rng)), medi(vals(b,r=>r.hit_rng)), 'm', 0, 'median of every hit you landed'],
+    ['Top-10 finishes', 100*share(a,r=>r.place<=10), 100*share(b,r=>r.place<=10), '%', 0, `${short(MONTHS[0])} vs ${short(MONTHS[MONTHS.length-1])}, share of games`],
+  ];
+  $('tnGrid').innerHTML = items.map(([l,f,t,u,nd,note]) => `<div class="tn reveal"><div class="lbl">${l}</div>
+    <div class="vals"><span class="from">${fmt(f,nd)}${u==='%'?'%':''}</span><span class="arrow">&rarr;</span>
+    <span class="to" data-to="${t}" data-nd="${nd}" data-u="${u==='%'?'%':''}">0</span><span class="unit">${u==='%'?'':u}</span></div>
+    <div class="note">${note}</div></div>`).join('');
+  revealAll($('tnGrid'));
+  document.querySelectorAll('#tnGrid .to').forEach(el => onVisible(el, () => {
+    const to = +el.dataset.to, nd = +el.dataset.nd, u = el.dataset.u, end = to.toFixed(nd)+u;
+    if (REDUCED) { el.textContent = end; return; }
+    const t0 = performance.now();
+    (function tick(now){ const p = Math.max(0, Math.min(1,(now-t0)/1400)), v = to*(1-Math.pow(1-p,3)); el.textContent = v.toFixed(nd)+u; if(p<1) requestAnimationFrame(tick); })(t0);
+    setTimeout(() => { el.textContent = end; }, 1600);
+  }, .8));
+}
+
+/* ---------------- 01 DROP MAP ---------------- */
+function dropChapter() {
+  const cv = $('dropMap');
+  const pts = R.filter(r => r.map==='Erangel' && r.land_xy && r.hot_enemies!=null);
+  let state = 0, anim = 1, from = null, to = null;
+  const first = MONTHS[0], last = MONTHS[MONTHS.length-1];
+  const visible = s => r => s===0||s===4 ? true : s===1 ? r.month===first : s===2 ? (r.month!==first && r.month!==last) : r.month===last;
+  function draw() {
+    const {ctx,w,h} = fitCanvas(cv);
+    const size = Math.min(w,h), ox = (w-size)/2, oy = (h-size)/2;
+    ctx.clearRect(0,0,w,h);
+    ctx.save(); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(ox,oy,size,size,10) : ctx.rect(ox,oy,size,size); ctx.clip();
+    if (mapImg.complete && mapImg.naturalWidth) { ctx.globalAlpha = .55; ctx.drawImage(mapImg,ox,oy,size,size); ctx.globalAlpha = 1; }
+    ctx.fillStyle = 'rgba(14,13,10,.35)'; ctx.fillRect(ox,oy,size,size);
+    const vis = visible(state);
+    const sorted = [...pts].sort((a,b) => (vis(a)?1:0) - (vis(b)?1:0));
+    for (const r of sorted) {
+      const on = vis(r);
+      const x = ox + r.land_xy[0]*size, y = oy + r.land_xy[1]*size;
+      const rad = 2.5 + Math.sqrt(r.hot_enemies)*2.4;
+      let col = MCOL[r.month];
+      if (state===4) col = r.place<=10 ? '#a3c76a' : '#e5484d';
+      if (!on) { ctx.fillStyle = 'rgba(160,150,130,.18)'; ctx.beginPath(); ctx.arc(x,y,2,0,7); ctx.fill(); continue; }
+      ctx.globalAlpha = Math.min(1, anim);
+      ctx.fillStyle = alpha(col, .28); ctx.beginPath(); ctx.arc(x,y,rad+3,0,7); ctx.fill();
+      ctx.fillStyle = alpha(col, .9); ctx.beginPath(); ctx.arc(x,y,rad,0,7); ctx.fill();
+      if (r.hot_enemies >= 8 && state!==4) { ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x,y,rad+5,0,7); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+  }
+  function legend() {
+    const L = $('dropLegend');
+    if (state===4) { L.innerHTML = '<span><i style="background:#a3c76a"></i>top-10 finish</span><span><i style="background:#e5484d"></i>outside top-10</span><span class="muted">size = enemies near the landing</span>'; return; }
+    L.innerHTML = MONTHS.map(m => `<span><i style="background:${MCOL[m]}"></i>${short(m)}</span>`).join('') + '<span class="muted">size = enemies near · ring = 8+</span>';
+  }
+  const titles = ['Every Erangel landing','June landings','July – October landings','November landings','Landings by result'];
+  function go(s) {
+    state = s; $('dropTitle').textContent = titles[s] + ` · Erangel avg ${fmt(avg(vals(pts.filter(visible(s)), r=>r.hot_enemies)),1)} enemies near`;
+    legend();
+    if (REDUCED) { anim = 1; draw(); return; }
+    const t0 = performance.now(); (function step(now){ anim = Math.max(0, Math.min(1,(now-t0)/500)); draw(); if (anim<1) requestAnimationFrame(step); })(t0);
+  }
+  CHAPTERS.drop = {cur:-1, go};
+  if (mapImg.complete) go(0); else mapImg.addEventListener('load', () => go(state));
+  window.addEventListener('resize', draw);
+  // payoff table (all maps)
+  const B = [['0',r=>r.hot_enemies===0],['1–3',r=>r.hot_enemies>=1&&r.hot_enemies<=3],['4–7',r=>r.hot_enemies>=4&&r.hot_enemies<=7],['8+',r=>r.hot_enemies>=8]];
+  const rows = B.map(([l,f]) => { const rs = R.filter(r=>r.hot_enemies!=null && f(r)); return [l, rs.length, avg(rs.map(r=>r.place)), 100*share(rs,r=>r.place<=10)]; });
+  const maxT = Math.max(...rows.map(r=>r[3]));
+  $('hotTable').innerHTML = '<tr><th>Enemies near</th><th>Games</th><th>Avg place</th><th>Top-10</th></tr>' + rows.map(([l,n,p,t]) =>
+    `<tr><td>${l}</td><td>${n}</td><td>${fmt(p,1)}</td><td class="bar-cell"><div class="b" style="width:${t/maxT*100}%;background:${t>=40?'#a3c76a':t>=25?'#f4a300':'#e5484d'}"></div><span>${fmt(t,0)}%</span></td></tr>`).join('');
+}
+
+/* one chart per canvas, rebuilt on every step (Chart.js can't switch types in place) */
+function slot(id) { let ch = null; return cfg => { if (ch) ch.destroy(); ch = new Chart($(id), cfg); return ch; }; }
+const AX_X = {grid:{display:false},ticks:{font:{family:'Oswald',size:12}}};
+const LEG = {labels:{boxWidth:12,font:{family:'Oswald',size:12}}};
+
+/* ---------------- 02 QUIET ---------------- */
+function quietChapter() {
+  const make = slot('quietChart');
+  const BK = [['Fight in first minute', r=>r.first_fight!=null&&r.first_fight<60, '#e5484d'],
+              ['1–3 min', r=>r.first_fight!=null&&r.first_fight>=60&&r.first_fight<180, '#f27a3a'],
+              ['3–6 min', r=>r.first_fight!=null&&r.first_fight>=180&&r.first_fight<360, '#c6c84a'],
+              ['6+ min or none', r=>r.first_fight==null||r.first_fight>=360, '#38c6d9']];
+  const payoff = BK.map(([l,f,c]) => { const rs = R.filter(f); return [l, 100*share(rs,r=>r.place<=10), c, avg(rs.map(r=>r.place)), rs.length]; });
+  function go(s) {
+    if (s===2) {
+      make({type:'bar', data:{labels:payoff.map(r=>r[0]), datasets:[{label:'Top-10 rate', data:payoff.map(r=>r[1]),
+          backgroundColor:payoff.map(r=>alpha(r[2],.9)), borderRadius:6}]},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},
+            tooltip:{...TT, callbacks:{label:c=>` top-10 in ${c.raw.toFixed(0)}% · average place #${payoff[c.dataIndex][3].toFixed(1)} (${payoff[c.dataIndex][4]} games)`}}},
+          scales:{x:AX_X, y:{min:0, max:60, grid:{color:GRID}, ticks:{callback:v=>v+'%'}, title:{display:true,text:'top-10 rate',color:INK}}}}});
+      $('quietTitle').textContent = 'Top-10 rate by time to first fight, all games';
+      return;
+    }
+    const hl = s===0 ? [MONTHS[0]] : s===1 ? [MONTHS[MONTHS.length-1]] : null;
+    make({type:'bar', data:{labels:MONTHS.map(short), datasets:BK.map(([l,f,c]) => ({label:l, data:MONTHS.map(m=>100*share(BY[m],f)),
+        backgroundColor:MONTHS.map(m => alpha(c, hl==null||hl.includes(m) ? .95 : .2)), borderColor:SURF, borderWidth:2, borderRadius:3}))},
+      options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',...LEG}, tooltip:{...TT, callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(0)}%`}}},
+        scales:{x:{...AX_X, stacked:true}, y:{stacked:true, max:100, grid:{color:GRID}, ticks:{callback:v=>v+'%'}}}}});
+    $('quietTitle').textContent = 'When your first fight came, share of games per month';
+  }
+  CHAPTERS.quiet = {cur:0, go}; go(0);
+}
+
+/* ---------------- 03 REACH ---------------- */
+function reachChapter() {
+  const make = slot('reachChart');
+  const CLS = [['DMR','#38c6d9'],['AR','#f4a300'],['LMG','#e5484d'],['SMG','#c58cff'],['SR','#7cc46a']];
+  const firstHit = MONTHS.map(m=>{const f=BY[m].reduce((a,r)=>a+(r.fights||0),0); return f?100*BY[m].reduce((a,r)=>a+(r.f_first||0),0)/f:null;});
+  function go(s) {
+    if (s===0) {
+      make({type:'line', data:{labels:MONTHS.map(short), datasets:[
+          {label:'Median hit distance (m)', data:monthly(r=>r.hit_rng,'median'), borderColor:'#f4a300', backgroundColor:alpha('#f4a300',.15), fill:true, tension:.35, borderWidth:3,
+            pointRadius:7, pointBackgroundColor:MONTHS.map(m=>MCOL[m]), pointBorderColor:SURF, pointBorderWidth:2, yAxisID:'y'},
+          {label:'Hits from 100 m+ (%)', data:monthly(r=>r.hit_100==null?null:100*r.hit_100), borderColor:'#38c6d9', borderDash:[6,4], tension:.35, borderWidth:2, pointRadius:3, yAxisID:'y1'}]},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:LEG, tooltip:TT},
+          scales:{x:AX_X, y:{grid:{color:GRID}, beginAtZero:true, title:{display:true,text:'metres',color:INK}}, y1:{position:'right', grid:{display:false}, beginAtZero:true, ticks:{callback:v=>v+'%'}}}}});
+      $('reachTitle').textContent = 'How far away your hits land';
+      return;
+    }
+    const ds = CLS.map(([c,col]) => ({type:'bar', label:c, data:monthly(r=>r.cls?100*(r.cls[c]||0):null),
+      backgroundColor:alpha(col, c==='DMR'||c==='SMG'||c==='LMG' ? .95 : .5), borderColor:SURF, borderWidth:2, borderRadius:3, stack:'dmg', yAxisID:'y'}));
+    if (s===2) ds.unshift({type:'line', label:'Fights you hit first (%)', data:firstHit, borderColor:'#ffffff', backgroundColor:'#ffffff', borderWidth:3, pointRadius:5, tension:.3, yAxisID:'y1'});
+    make({type:'bar', data:{labels:MONTHS.map(short), datasets:ds},
+      options:{responsive:true, maintainAspectRatio:false, plugins:{legend:LEG, tooltip:{...TT, callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(0)}%`}}},
+        scales:{x:{...AX_X, stacked:true}, y:{stacked:true, max:100, grid:{color:GRID}, ticks:{callback:v=>v+'%'}},
+          y1:{display:s===2, position:'right', min:0, max:100, grid:{display:false}, ticks:{callback:v=>v+'%'}}}}});
+    $('reachTitle').textContent = s===2 ? 'Damage share by weapon class + fights where you hit first' : 'Share of your gun damage by weapon class';
+  }
+  CHAPTERS.reach = {cur:0, go}; go(0);
+}
+
+/* ---------------- 04 EDGE ---------------- */
+function edgeChapter() {
+  const cv = $('edgeCanvas');
+  const pts = R.map(r => {
+    const pr = r.phase_r || {}; const xs = ['2','3','4'].filter(k=>pr[k]!=null).map(k=>pr[k]);
+    if (xs.length < 2) return null;
+    let h = 0; for (const ch of r.id) h = (h*31 + ch.charCodeAt(0)) >>> 0;
+    return {r, v: Math.min(1.75, xs.reduce((a,b)=>a+b,0)/xs.length), ang:(h % 6283)/1000};
+  }).filter(Boolean);
+  let state = 0, anim = 1;
+  const first = MONTHS[0], last = MONTHS[MONTHS.length-1];
+  function vis(p) { return state===0||state===3 ? true : state===1 ? p.r.month===first : p.r.month===last; }
+  function draw() {
+    const {ctx,w,h} = fitCanvas(cv);
+    ctx.clearRect(0,0,w,h);
+    const cx = w/2, cy = h/2, R0 = Math.min(w,h)/2 * 0.52;
+    // blue zone beyond
+    const g = ctx.createRadialGradient(cx,cy,R0,cx,cy,R0*1.8);
+    g.addColorStop(0,'rgba(74,120,221,0.0)'); g.addColorStop(.3,'rgba(74,120,221,.10)'); g.addColorStop(1,'rgba(74,120,221,.22)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx,cy,R0*1.8,0,7); ctx.fill();
+    // safe circle
+    ctx.fillStyle = 'rgba(236,231,220,.04)'; ctx.beginPath(); ctx.arc(cx,cy,R0,0,7); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx,cy,R0,0,7); ctx.stroke();
+    ctx.setLineDash([4,6]); ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx,cy,R0*.5,0,7); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(236,231,220,.55)'; ctx.font = '11px Oswald, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('NEXT SAFE ZONE', cx, cy - R0 - 8); ctx.fillText('CENTRE', cx, cy + 4);
+    ctx.fillStyle = 'rgba(120,160,240,.8)'; ctx.fillText('OUTSIDE · STILL ROTATING', cx, cy + R0*1.62);
+    for (const p of pts) {
+      const on = vis(p);
+      const rr = p.v * R0, x = cx + Math.cos(p.ang)*rr, y = cy + Math.sin(p.ang)*rr;
+      let col = MCOL[p.r.month];
+      if (state===3) col = p.r.place<=5 ? '#a3c76a' : p.r.place<=10 ? '#f4a300' : '#6f685c';
+      if (!on) { ctx.fillStyle = 'rgba(160,150,130,.14)'; ctx.beginPath(); ctx.arc(x,y,2,0,7); ctx.fill(); continue; }
+      ctx.globalAlpha = anim;
+      ctx.fillStyle = alpha(col,.25); ctx.beginPath(); ctx.arc(x,y,7,0,7); ctx.fill();
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x,y,3.6,0,7); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+  const titles = ['Where you stood in phases 2–4 (each dot = one game)','June','November','By result: green = top-5, amber = top-10'];
+  function legend() {
+    $('edgeLegend').innerHTML = state===3
+      ? '<span><i style="background:#a3c76a"></i>top-5</span><span><i style="background:#f4a300"></i>6–10</span><span><i style="background:#6f685c"></i>11+</span>'
+      : MONTHS.map(m => `<span><i style="background:${MCOL[m]}"></i>${short(m)}</span>`).join('');
+  }
+  function go(s) {
+    state = s;
+    const sub = pts.filter(vis);
+    const inBlue = avg(vals(R.filter(r => s===1 ? r.month===first : s===2 ? r.month===last : true), r=>r.blue_share));
+    $('edgeTitle').textContent = `${titles[s]} · ${fmt(100*share(sub,p=>p.v>1),0)}% of games mostly outside the next zone · ${fmt(100*inBlue,0)}% of time in the blue`;
+    legend();
+    if (REDUCED) { anim=1; draw(); return; }
+    const t0 = performance.now(); (function st(now){ anim = Math.max(0, Math.min(1,(now-t0)/450)); draw(); if(anim<1) requestAnimationFrame(st); })(t0);
+  }
+  CHAPTERS.edge = {cur:-1, go};
+  go(0); window.addEventListener('resize', draw);
+}
+
+/* ---------------- 05 LEASH ---------------- */
+function leashChapter() {
+  const make = slot('leashChart');
+  function go(s) {
+    if (s===0) {
+      make({type:'bar', data:{labels:MONTHS.map(short), datasets:[
+          {type:'line', label:'Median distance apart (m)', data:monthly(r=>r.gap_med,'median'), borderColor:'#ffffff', backgroundColor:'#ffffff', borderWidth:3, pointRadius:5, tension:.3, yAxisID:'y1'},
+          {type:'bar', label:'Time 50 m+ apart (%)', data:monthly(r=>r.gap_50==null?null:100*r.gap_50),
+            backgroundColor:MONTHS.map((m,i)=>alpha(MCOL[m], i===MONTHS.length-1?.95:.5)), borderRadius:6, yAxisID:'y'}]},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:LEG, tooltip:TT},
+          scales:{x:AX_X, y:{grid:{color:GRID}, beginAtZero:true, max:60, ticks:{callback:v=>v+'%'}}, y1:{position:'right', grid:{display:false}, beginAtZero:true, max:60, ticks:{callback:v=>v+' m'}}}}});
+      $('leashTitle').textContent = 'How far apart you play (on foot, both alive)';
+      return;
+    }
+    const L = R.filter(r => r.surv>=900 && r.gap_50!=null);
+    const B = [['Apart < 25% of the time',r=>r.gap_50<.25],['25–50%',r=>r.gap_50>=.25&&r.gap_50<.5],['Apart > 50%',r=>r.gap_50>=.5]];
+    make({type:'bar', data:{labels:B.map(b=>b[0]), datasets:[{label:'Top-5 rate (%)', data:B.map(([l,f])=>100*share(L.filter(f),r=>r.place<=5)),
+        backgroundColor:['#7cc46a','#7cc46a','#e5484d'], borderRadius:8}]},
+      options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{...TT, callbacks:{label:c=>` top-5 in ${c.raw.toFixed(0)}% (${L.filter(B[c.dataIndex][1]).length} games)`}}},
+        scales:{x:AX_X, y:{grid:{color:GRID}, beginAtZero:true, max:60, ticks:{callback:v=>v+'%'}}}}});
+    $('leashTitle').textContent = `Top-5 rate by time spent 50 m+ apart (${L.length} games that lasted 15+ min)`;
+  }
+  CHAPTERS.leash = {cur:0, go}; go(0);
+}
+
+/* ---------------- 06 TOOLS ---------------- */
+function toolsChapter() {
+  const make = slot('toolsChart');
+  function go(s) {
+    if (s===0) {
+      make({type:'bar', data:{labels:MONTHS.map(short), datasets:[
+          {type:'line', label:'Heals / game', data:monthly(r=>r.heals), borderColor:'#7cc46a', backgroundColor:'#7cc46a', borderWidth:3, pointRadius:5, tension:.3},
+          {label:'Smokes / game', data:monthly(r=>r.thr.smoke||0), backgroundColor:'#d8d2c5', borderRadius:4},
+          {label:'Frags / game', data:monthly(r=>r.thr.frag||0), backgroundColor:'#f27a3a', borderRadius:4}]},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:LEG, tooltip:{...TT, callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(2)}`}}},
+          scales:{x:AX_X, y:{grid:{color:GRID}, beginAtZero:true}}}});
+      $('toolsTitle').textContent = 'Utility per game';
+      return;
+    }
+    const L = R.filter(r => r.surv>=900);
+    const B = [['No smokes',r=>!(r.thr.smoke)],['1–2 smokes',r=>r.thr.smoke>=1&&r.thr.smoke<=2],['3+ smokes',r=>r.thr.smoke>=3]];
+    make({type:'bar', data:{labels:B.map(b=>b[0]), datasets:[
+        {label:'Top-5 (%)', data:B.map(([l,f])=>100*share(L.filter(f),r=>r.place<=5)), backgroundColor:'#7cc46a', borderRadius:6},
+        {label:'Top-10 (%)', data:B.map(([l,f])=>100*share(L.filter(f),r=>r.place<=10)), backgroundColor:alpha('#7cc46a',.4), borderRadius:6}]},
+      options:{responsive:true, maintainAspectRatio:false, plugins:{legend:LEG, tooltip:{...TT, callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(0)}% (${L.filter(B[c.dataIndex][1]).length} games)`}}},
+        scales:{x:AX_X, y:{grid:{color:GRID}, beginAtZero:true, max:100, ticks:{callback:v=>v+'%'}}}}});
+    $('toolsTitle').textContent = `Results by smokes thrown (${L.length} games that lasted 15+ min)`;
+  }
+  CHAPTERS.tools = {cur:0, go}; go(0);
+}
+
+/* ---------------- month bands plugin ---------------- */
+const monthBands = {
+  id:'monthBands',
+  beforeDatasetsDraw(chart, args, opts) {
+    if (!opts || !opts.on) return;
+    const {ctx, chartArea:a, scales:{x}} = chart;
+    ctx.save();
+    MONTHS.forEach((m,i) => {
+      const rs = BY[m]; const n0 = rs[0].n - .5, n1 = rs[rs.length-1].n + .5;
+      const x0 = Math.max(a.left, x.getPixelForValue(n0)), x1 = Math.min(a.right, x.getPixelForValue(n1));
+      if (x1 <= x0) return;
+      ctx.fillStyle = alpha(MCOL[m], i%2 ? .07 : .12); ctx.fillRect(x0, a.top, x1-x0, a.bottom-a.top);
+      ctx.fillStyle = alpha(MCOL[m], .9); ctx.font = '11px Oswald, sans-serif'; ctx.textAlign = 'center';
+      if (x1-x0 > 26) ctx.fillText(short(m).toUpperCase(), (x0+x1)/2, a.top + 12);
+    });
+    ctx.restore();
+  }
+};
+Chart.register(monthBands);
+function rolling(rs, f, wnd) {
+  const out = []; const q = [];
+  rs.forEach(r => { const v = f(r); q.push(v); if (q.length > wnd) q.shift(); const xs = q.filter(v=>v!=null); out.push(xs.length >= Math.min(wnd, 5) ? {x:r.n, y:avg(xs)} : null); });
+  return out.filter(Boolean);
+}
+function starPoints(rs, f) { return rs.filter(r=>r.place===1).map(r=>({x:r.n, y:f(r)})); }
+
+/* ---------------- 07 PAY ---------------- */
+function payChapter() {
+  const make = slot('payChart');
+  const roll = rolling(R, r=>r.place, 20);
+  function go(s) {
+    if (s===0) {
+      make({type:'line', data:{datasets:[
+          {label:'20-game rolling avg. placement', data:roll, borderColor:'#f4a300', backgroundColor:alpha('#f4a300',.12), fill:'end', borderWidth:3, pointRadius:0, tension:.3},
+          {type:'scatter', label:'Chicken dinner', data:R.filter(r=>r.place===1).map(r=>{const p=roll.filter(q=>q.x<=r.n).slice(-1)[0]; return {x:r.n, y:p?p.y:10};}),
+            pointStyle:'star', pointRadius:14, pointBorderWidth:2, borderColor:'#ffe08a', backgroundColor:'#ffe08a'}]},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:LEG, monthBands:{on:true},
+            tooltip:{...TT, callbacks:{title:c=>`Game ${c[0].raw.x}`, label:c=>c.dataset.type==='scatter'?' chicken dinner':` rolling avg #${c.raw.y.toFixed(1)}`}}},
+          scales:{x:{type:'linear', min:1, max:R.length, grid:{display:false}, title:{display:true,text:'game number',color:INK}},
+            y:{reverse:true, grid:{color:GRID}, title:{display:true,text:'placement (up = better)',color:INK}}}}});
+      $('payTitle').textContent = 'Rolling placement over every game';
+    } else if (s===1) {
+      make({type:'bar', data:{labels:MONTHS.map(short), datasets:[
+          {label:'Top-10 (%)', data:MONTHS.map(m=>100*share(BY[m],r=>r.place<=10)), backgroundColor:MONTHS.map(m=>MCOL[m]), borderRadius:6},
+          {label:'Top-5 (%)', data:MONTHS.map(m=>100*share(BY[m],r=>r.place<=5)), backgroundColor:MONTHS.map(m=>alpha(MCOL[m],.4)), borderRadius:6}]},
+        options:{responsive:true, maintainAspectRatio:false, plugins:{legend:LEG, tooltip:{...TT, callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(0)}%`}}},
+          scales:{x:AX_X, y:{grid:{color:GRID}, beginAtZero:true, max:60, ticks:{callback:v=>v+'%'}}}}});
+      $('payTitle').textContent = 'Top-10 and top-5 rate per month';
+    } else {
+      make({type:'scatter', data:{datasets:[{label:'Months', data:MONTHS.map(m=>({x:avg(vals(BY[m],r=>r.hot_enemies)), y:100*share(BY[m],r=>r.place<=10), m})),
+          pointRadius:MONTHS.map(m=>Math.max(7, Math.sqrt(BY[m].length)*2.2)), pointHoverRadius:16,
+          backgroundColor:MONTHS.map(m=>alpha(MCOL[m],.85)), borderColor:'#ffffff', borderWidth:1.5}]},
+        options:{responsive:true, maintainAspectRatio:false, layout:{padding:{right:40}}, plugins:{legend:{display:false},
+            tooltip:{...TT, callbacks:{label:c=>` ${MONTH_NAMES[c.raw.m.slice(5)]}: ${c.raw.x.toFixed(1)} enemies near, ${c.raw.y.toFixed(0)}% top-10 (${BY[c.raw.m].length} games)`}}},
+          scales:{x:{type:'linear', grid:{color:GRID}, title:{display:true,text:'enemies near your landing (avg)  →  hotter drops',color:INK}},
+            y:{grid:{color:GRID}, title:{display:true,text:'top-10 rate',color:INK}, ticks:{callback:v=>v+'%'}}}}});
+      $('payTitle').textContent = 'Quieter months, better months (dot size = games played)';
+    }
+  }
+  CHAPTERS.pay = {cur:0, go}; go(0);
+  // month labels on the scatter
+  Chart.register({id:'monthLabels', afterDatasetsDraw(chart){ if(chart.config.type!=='scatter' || chart.canvas.id!=='payChart') return;
+    const ctx=chart.ctx; const meta=chart.getDatasetMeta(0); ctx.save(); ctx.font='12px Oswald, sans-serif'; ctx.textAlign='left';
+    meta.data.forEach((pt,i)=>{ const m=MONTHS[i]; const r=Math.max(7, Math.sqrt(BY[m].length)*2.2); ctx.fillStyle=MCOL[m]; ctx.fillText(short(m).toUpperCase(), pt.x+r+4, pt.y + (i%2 ? r+10 : -r-2)); }); ctx.restore(); }});
+}
+
+/* ---------------- 08 DNA ---------------- */
+const AXES = [
+  ['Quiet drop', rs=>avg(vals(rs,r=>r.hot_enemies)), v=>100*(1-Math.min(v,8)/8)],
+  ['Patience', rs=>medi(vals(rs,r=>r.first_fight))/60, v=>100*Math.min(v,8)/8],
+  ['Reach', rs=>medi(vals(rs,r=>r.hit_rng)), v=>100*Math.max(0,Math.min(v,80)-15)/65],
+  ['Edge play', rs=>avg(vals(rs,r=>r.blue_share)), v=>100*Math.min(v,.2)/.2],
+  ['Utility', rs=>{const s=rs.reduce((a,r)=>a+(r.thr.smoke||0)+(r.thr.frag||0),0), t=rs.reduce((a,r)=>a+r.surv,0); return t? s/t*600 : null;}, v=>100*Math.min(v,2.5)/2.5],
+  ['Wheels', rs=>avg(vals(rs,r=>r.veh_share)), v=>100*Math.min(v,.25)/.25],
+  ['Together', rs=>avg(vals(rs,r=>r.gap_50==null?null:1-r.gap_50)), v=>100*Math.max(0,Math.min(v,.8)-.4)/.4],
+  ['Initiative', rs=>{const f=rs.reduce((a,r)=>a+(r.fights||0),0); return f? rs.reduce((a,r)=>a+(r.f_first||0),0)/f : null;}, v=>100*Math.max(0,Math.min(v,.7)-.35)/.35],
+];
+function dnaOf(m) { return AXES.map(([,f,sc]) => { const v=f(BY[m]); return v==null?0:Math.round(sc(v)); }); }
+function dnaPersona(d) {
+  const [quiet,pat,reach,edge,util,wheels,tog,init] = d;
+  if (quiet>=65 && reach>=55 && pat>=50) return ['The Marksmen','Quiet drops, long fuse, long range. You pick the fight and you pick the distance.'];
+  if (quiet>=60 && pat>=50) return ['The Patient','You land away from people and let the game come to you. The range hasn\'t caught up yet.'];
+  if (quiet<35) return ['The Brawlers','Crowded drops, fights in the first minute, short range. High risk, high noise.'];
+  if (quiet<55 && pat<40) return ['The Restless','Halfway between styles: the drops are quieter than the brawling days, but the fights still come early.'];
+  return ['The Transition','The shape is moving: some old habits, some new.'];
+}
+function dnaSection() {
+  const first = dnaOf(MONTHS[0]);
+  const ch = new Chart($('dnaChart'), {type:'radar', data:{labels:AXES.map(a=>a[0]), datasets:[
+      {label:short(MONTHS[0])+' (start)', data:first, borderColor:alpha(MCOL[MONTHS[0]],.6), backgroundColor:alpha(MCOL[MONTHS[0]],.08), borderDash:[5,5], borderWidth:1.5, pointRadius:0},
+      {label:'', data:first, borderColor:MCOL[MONTHS[0]], backgroundColor:alpha(MCOL[MONTHS[0]],.28), borderWidth:3, pointRadius:4, pointBackgroundColor:MCOL[MONTHS[0]]}]},
+    options:{responsive:true, maintainAspectRatio:false, animation:{duration:REDUCED?0:1100, easing:'easeInOutCubic'},
+      plugins:{legend:{display:false}, tooltip:{...TT, callbacks:{label:c=>` ${c.dataset.label||'selected'}: ${c.raw}`}}},
+      scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'rgba(154,147,133,.22)'},angleLines:{color:'rgba(154,147,133,.22)'},
+        pointLabels:{color:'#ece7dc',font:{family:'Oswald',size:13}}}}}});
+  let timer = null;
+  function show(m) {
+    const d = dnaOf(m), col = MCOL[m];
+    ch.data.datasets[1].data = d; ch.data.datasets[1].label = MONTH_NAMES[m.slice(5)];
+    ch.data.datasets[1].borderColor = col; ch.data.datasets[1].backgroundColor = alpha(col,.28); ch.data.datasets[1].pointBackgroundColor = col;
+    ch.update();
+    const [name, desc] = dnaPersona(d);
+    $('dnaName').textContent = `${MONTH_NAMES[m.slice(5)]}: ${name}`; $('dnaName').style.color = col;
+    $('dnaDesc').textContent = desc + ` (${BY[m].length} games)`;
+    document.querySelectorAll('#monthBtns button[data-m]').forEach(b => { const on = b.dataset.m===m; b.classList.toggle('on', on); b.style.background = on ? col : ''; });
+  }
+  $('monthBtns').innerHTML = MONTHS.map(m=>`<button data-m="${m}">${short(m)}</button>`).join('') + '<button class="play" id="dnaPlay">&#9654; Play</button>';
+  document.querySelectorAll('#monthBtns button[data-m]').forEach(b => b.addEventListener('click', () => { clearInterval(timer); show(b.dataset.m); }));
+  $('dnaPlay').addEventListener('click', () => { clearInterval(timer); let i = 0; show(MONTHS[0]); timer = setInterval(() => { i++; if (i>=MONTHS.length) { clearInterval(timer); return; } show(MONTHS[i]); }, 1500); });
+  show(MONTHS[MONTHS.length-1]);
+  // auto-play once when it scrolls into view
+  onVisible($('dnaChart'), () => { if (!REDUCED) $('dnaPlay').click(); }, .6);
+}
+
+/* ---------------- 09 DINNERS ---------------- */
+function dinners(ENG) {
+  const wins = R.filter(r => r.place===1);
+  const latest = wins[wins.length-1];
+  $('dinners').innerHTML = wins.map((r,i) => {
+    const fs = ENG.filter(f => f.match_id===r.id).sort((a,b)=>(a.t0g??a.stage_s)-(b.t0g??b.stage_s));
+    const T = Math.max(1800, r.surv+60);
+    const segs = fs.map(f => { const t0 = f.t0g ?? f.stage_s, t1 = f.t1g ?? (t0 + (f.dur_s||10));
+      const col = f.outcome==='win' ? '#a3c76a' : f.outcome==='loss' ? '#e5484d' : '#9a9385';
+      return `<a class="seg" href="match.html?id=${r.id}&fight=${f.idx}" title="${f.outcome} · ${Math.round(f.dealt)}–${Math.round(f.taken)} · ${f.primary_weapon||''} ${f.range_med?Math.round(f.range_med)+' m':''}" style="left:${t0/T*100}%;width:${Math.max(1.2,(t1-t0)/T*100)}%;background:${col}"></a>`; }).join('');
+    const ticks = [0,600,1200,1800].filter(t=>t<=T).map(t=>`<span class="tick" style="left:${t/T*100}%">${t/60}′</span>`).join('');
+    const land = r.land_t ? `<span class="land" style="left:${r.land_t/T*100}%" title="landing"></span>` : '';
+    const firstMin = r.first_fight!=null ? (r.first_fight/60).toFixed(1)+' min' : '—';
+    const wonF = fs.filter(f=>f.outcome==='win').length;
+    return `<div class="dinner reveal ${r===latest?'latest':''}">${r===latest?'<span class="badge">Latest</span>':''}
+      <h4>#${i+1} · ${r.map}</h4><div class="dmeta">${fmtDate(r.date)} · D282 ${r.k_D282} kills / ${r.d_D282} dmg · S821 ${r.k_S821} kills / ${r.d_S821} dmg</div>
+      <div class="tl"><div class="axis"></div>${land}${segs}${ticks}</div>
+      <div class="facts"><div><b>${r.hot_enemies ?? '—'}</b>enemies near landing</div><div><b>${firstMin}</b>to first fight</div>
+        <div><b>${wonF} / ${fs.length}</b>fights won</div><div><b>${r.hit_rng!=null?Math.round(r.hit_rng)+' m':'—'}</b>median hit distance</div></div>
+      <div style="margin-top:10px"><a href="match.html?id=${r.id}" style="font-family:Oswald;font-size:13px;letter-spacing:.5px">&#9654; Replay the game</a></div></div>`;
+  }).join('');
+  revealAll($('dinners'));
+  const st = document.createElement('style');
+  st.textContent = '.tl a.seg{display:block;transition:transform .2s}.tl a.seg:hover{transform:scaleY(1.35)}';
+  document.head.appendChild(st);
+}
+
+/* ---------------- 11 EXPLORER ---------------- */
+const METRICS = [
+  ['place','Placement (lower = better)', r=>r.place, true],
+  ['surv','Minutes survived', r=>r.surv/60],
+  ['dmg','Damage per game (both)', r=>r.dmg],
+  ['kills','Kills per game (both)', r=>r.kills],
+  ['hot','Enemies near your landing', r=>r.hot_enemies],
+  ['first','Minutes until the first fight', r=>r.first_fight==null?null:r.first_fight/60],
+  ['rng','Median hit distance (m)', r=>r.hit_rng],
+  ['lr','Hits from 100 m+ (%)', r=>r.hit_100==null?null:100*r.hit_100],
+  ['dmr','DMR share of gun damage (%)', r=>r.cls?100*(r.cls.DMR||0):null],
+  ['ar','AR share of gun damage (%)', r=>r.cls?100*(r.cls.AR||0):null],
+  ['blue','Time in the blue (%)', r=>r.blue_share==null?null:100*r.blue_share],
+  ['out','Time outside the next circle (%)', r=>r.zone_out==null?null:100*r.zone_out],
+  ['apart','Time 50 m+ apart (%)', r=>r.gap_50==null?null:100*r.gap_50],
+  ['gap','Median distance apart (m)', r=>r.gap_med],
+  ['veh','Time in vehicles (%)', r=>r.veh_share==null?null:100*r.veh_share],
+  ['smoke','Smokes per game', r=>r.thr.smoke||0],
+  ['frag','Frags per game', r=>r.thr.frag||0],
+  ['heals','Heals per game', r=>r.heals],
+  ['fights','Fights per game', r=>r.fights],
+  ['firsthit','Fights where you hit first (%)', r=>r.fights?100*(r.f_first||0)/r.fights:null],
+];
+function explorer() {
+  $('exMetric').innerHTML = METRICS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('');
+  const maps = [...new Set(R.map(r=>r.map))].sort((a,b)=>R.filter(r=>r.map===b).length-R.filter(r=>r.map===a).length);
+  $('exMap').innerHTML = '<option value="">All maps</option>' + maps.map(m=>`<option>${m}</option>`).join('');
+  const ch = new Chart($('exChart'), {type:'scatter', data:{datasets:[]}, options:{responsive:true, maintainAspectRatio:false, animation:{duration:REDUCED?0:600},
+    plugins:{legend:{labels:{boxWidth:12,font:{family:'Oswald',size:12}}}, monthBands:{on:true},
+      tooltip:{...TT, callbacks:{title:c=>{const r=R.find(x=>x.n===c[0].raw.x); return r?`Game ${r.n} · ${fmtDate(r.date)} · ${r.map} · #${r.place}`:'';}, label:c=>` ${c.dataset.label}: ${c.raw.y.toFixed(1)}`}}},
+    scales:{x:{type:'linear',min:1,max:R.length,grid:{display:false},title:{display:true,text:'game number',color:INK}}, y:{grid:{color:GRID}}}}});
+  function draw() {
+    const [k,label,f,rev] = METRICS.find(m=>m[0]===$('exMetric').value);
+    const mp = $('exMap').value, wnd = +$('exWin').value;
+    const rs = R.filter(r => !mp || r.map===mp);
+    const dots = rs.map(r=>({x:r.n, y:f(r), m:r.month})).filter(p=>p.y!=null);
+    ch.data.datasets = [
+      {label:'each game', data:dots, pointRadius:2.6, pointHoverRadius:5, backgroundColor:dots.map(p=>alpha(MCOL[p.m],.45)), borderWidth:0},
+      {type:'line', label:`${wnd}-game average`, data:rolling(rs, f, wnd), borderColor:'#ffffff', borderWidth:3, pointRadius:0, tension:.3},
+      {label:'chicken dinner', data:starPoints(rs, f), pointStyle:'star', pointRadius:12, borderColor:'#ffe08a', backgroundColor:'#ffe08a', borderWidth:2}];
+    ch.options.scales.y.reverse = !!rev;
+    ch.options.scales.y.title = {display:true, text:label, color:INK};
+    ch.update();
+    const fm = BY[MONTHS[0]].filter(r=>!mp||r.map===mp), lm = BY[MONTHS[MONTHS.length-1]].filter(r=>!mp||r.map===mp);
+    const a = avg(vals(fm,f)), b = avg(vals(lm,f));
+    $('exNote').innerHTML = `${label}: <b style="color:${MCOL[MONTHS[0]]}">${fmt(a,1)}</b> in ${MONTH_NAMES[MONTHS[0].slice(5)]} (${fm.length} games) &rarr; <b style="color:${MCOL[MONTHS[MONTHS.length-1]]}">${fmt(b,1)}</b> in ${MONTH_NAMES[MONTHS[MONTHS.length-1].slice(5)]} (${lm.length} games)${mp?' on '+mp:''}.`;
+  }
+  ['exMetric','exMap','exWin'].forEach(id => $(id).addEventListener('change', draw));
+  draw();
+}
+
+/* ---------------- boot ---------------- */
+Promise.all([
+  fetch('stats-data/evolution.json').then(r=>r.json()),
+  fetch('stats-data/engagements.json').then(r=>r.json()).catch(()=>[]),
+]).then(([E, ENG]) => {
+  R = E.matches.filter(r => r.place != null);
+  MONTHS = [...new Set(R.map(r=>r.month))].sort();
+  MONTHS.forEach((m,i) => { MCOL[m] = MONTH_COLORS[i % MONTH_COLORS.length]; BY[m] = R.filter(r=>r.month===m); });
+  hero(); thenNow(); dropChapter(); quietChapter(); reachChapter(); edgeChapter(); leashChapter(); toolsChapter(); payChapter();
+  dnaSection(); dinners(ENG); explorer(); initScrolly();
+}).catch(err => { $('ticker').textContent = 'Could not load the data: ' + err; initScrolly(); });
+</script>
+</body>
+</html>

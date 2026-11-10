@@ -46,9 +46,9 @@
       "kills": 14,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.214,
-      "hits": 207,
-      "total_damage": 4424.8,
-      "avg_damage_per_hit": 21.4
+      "hits": 210,
+      "total_damage": 4527.0,
+      "avg_damage_per_hit": 21.6
     },
     {
       "weapon": "MP5K",
@@ -76,9 +76,9 @@
       "kills": 6,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.167,
-      "hits": 51,
+      "hits": 52,
       "total_damage": 1031.1,
-      "avg_damage_per_hit": 20.2
+      "avg_damage_per_hit": 19.8
     },
     {
       "weapon": "RPD",
@@ -335,12 +335,12 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 33,
+      "kills": 35,
       "headshot_kills": 3,
-      "headshot_kill_pct": 0.091,
-      "hits": 305,
-      "total_damage": 4441.2,
-      "avg_damage_per_hit": 14.6
+      "headshot_kill_pct": 0.086,
+      "hits": 319,
+      "total_damage": 4728.8,
+      "avg_damage_per_hit": 14.8
     },
     {
       "weapon": "RPD",
@@ -358,8 +358,8 @@
       "kills": 19,
       "headshot_kills": 7,
       "headshot_kill_pct": 0.368,
-      "hits": 264,
-      "total_damage": 5281.9,
+      "hits": 265,
+      "total_damage": 5301.0,
       "avg_damage_per_hit": 20.0
     },
     {
