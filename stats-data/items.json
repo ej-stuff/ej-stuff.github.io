@@ -4,14 +4,14 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 255,
-        "per_match": 0.68
+        "total": 261,
+        "per_match": 0.69
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 120,
-        "per_match": 0.32
+        "total": 127,
+        "per_match": 0.33
       },
       {
         "item": "Adrenaline Syringe",
@@ -22,13 +22,13 @@
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 228,
-        "per_match": 0.61
+        "total": 238,
+        "per_match": 0.62
       },
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 193,
+        "total": 198,
         "per_match": 0.52
       },
       {
@@ -41,12 +41,12 @@
     "throwables": [
       {
         "item": "Grenade",
-        "total": 127,
+        "total": 129,
         "per_match": 0.34
       },
       {
         "item": "Smoke Grenade",
-        "total": 116,
+        "total": 120,
         "per_match": 0.31
       },
       {
@@ -76,13 +76,13 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 276,
-        "per_match": 0.78
+        "total": 285,
+        "per_match": 0.79
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
-        "total": 217,
+        "total": 222,
         "per_match": 0.61
       },
       {
@@ -94,32 +94,32 @@
       {
         "item": "First Aid Kit",
         "category": "Heal",
-        "total": 253,
-        "per_match": 0.71
+        "total": 264,
+        "per_match": 0.73
       },
       {
         "item": "Bandage",
         "category": "Heal",
-        "total": 189,
+        "total": 191,
         "per_match": 0.53
       },
       {
         "item": "Med Kit",
         "category": "Heal",
-        "total": 30,
-        "per_match": 0.08
+        "total": 31,
+        "per_match": 0.09
       }
     ],
     "throwables": [
       {
         "item": "Smoke Grenade",
-        "total": 180,
+        "total": 184,
         "per_match": 0.51
       },
       {
         "item": "Grenade",
-        "total": 58,
-        "per_match": 0.16
+        "total": 61,
+        "per_match": 0.17
       },
       {
         "item": "Sticky Grenade",
@@ -129,7 +129,7 @@
       {
         "item": "Flare Gun",
         "total": 9,
-        "per_match": 0.03
+        "per_match": 0.02
       },
       {
         "item": "Rock",
