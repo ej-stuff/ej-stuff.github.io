@@ -3,21 +3,21 @@
     {
       "weapon": "Mini 14",
       "category": "DMR",
-      "kills": 34,
+      "kills": 35,
       "headshot_kills": 10,
-      "headshot_kill_pct": 0.294,
-      "hits": 364,
-      "total_damage": 7325.4,
-      "avg_damage_per_hit": 20.1
+      "headshot_kill_pct": 0.286,
+      "hits": 379,
+      "total_damage": 7690.5,
+      "avg_damage_per_hit": 20.3
     },
     {
       "weapon": "M249",
       "category": "LMG",
-      "kills": 27,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.037,
-      "hits": 315,
-      "total_damage": 5686.5,
+      "kills": 30,
+      "headshot_kills": 3,
+      "headshot_kill_pct": 0.1,
+      "hits": 324,
+      "total_damage": 5854.0,
       "avg_damage_per_hit": 18.1
     },
     {
@@ -46,9 +46,9 @@
       "kills": 14,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.214,
-      "hits": 214,
-      "total_damage": 4689.2,
-      "avg_damage_per_hit": 21.9
+      "hits": 222,
+      "total_damage": 4921.3,
+      "avg_damage_per_hit": 22.2
     },
     {
       "weapon": "MP5K",
@@ -96,8 +96,8 @@
       "kills": 5,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.2,
-      "hits": 32,
-      "total_damage": 596.3,
+      "hits": 33,
+      "total_damage": 615.2,
       "avg_damage_per_hit": 18.6
     },
     {
@@ -166,8 +166,8 @@
       "kills": 3,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.667,
-      "hits": 24,
-      "total_damage": 623.9,
+      "hits": 25,
+      "total_damage": 649.5,
       "avg_damage_per_hit": 26.0
     },
     {
@@ -355,12 +355,22 @@
     {
       "weapon": "HK416",
       "category": "AR",
-      "kills": 38,
+      "kills": 40,
       "headshot_kills": 4,
-      "headshot_kill_pct": 0.105,
-      "hits": 355,
-      "total_damage": 5439.3,
-      "avg_damage_per_hit": 15.3
+      "headshot_kill_pct": 0.1,
+      "hits": 369,
+      "total_damage": 5797.4,
+      "avg_damage_per_hit": 15.7
+    },
+    {
+      "weapon": "Mini 14",
+      "category": "DMR",
+      "kills": 23,
+      "headshot_kills": 8,
+      "headshot_kill_pct": 0.348,
+      "hits": 343,
+      "total_damage": 7152.4,
+      "avg_damage_per_hit": 20.9
     },
     {
       "weapon": "RPD",
@@ -371,16 +381,6 @@
       "hits": 222,
       "total_damage": 3184.1,
       "avg_damage_per_hit": 14.3
-    },
-    {
-      "weapon": "Mini 14",
-      "category": "DMR",
-      "kills": 22,
-      "headshot_kills": 7,
-      "headshot_kill_pct": 0.318,
-      "hits": 309,
-      "total_damage": 6239.3,
-      "avg_damage_per_hit": 20.2
     },
     {
       "weapon": "M249",
@@ -438,8 +438,8 @@
       "kills": 9,
       "headshot_kills": 2,
       "headshot_kill_pct": 0.222,
-      "hits": 67,
-      "total_damage": 1294.6,
+      "hits": 69,
+      "total_damage": 1332.9,
       "avg_damage_per_hit": 19.3
     },
     {
@@ -475,12 +475,32 @@
     {
       "weapon": "AUG A3",
       "category": "AR",
+      "kills": 5,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 51,
+      "total_damage": 1003.0,
+      "avg_damage_per_hit": 19.7
+    },
+    {
+      "weapon": "Grenade",
+      "category": "Throwable",
       "kills": 4,
       "headshot_kills": 0,
       "headshot_kill_pct": 0.0,
-      "hits": 44,
-      "total_damage": 833.6,
-      "avg_damage_per_hit": 18.9
+      "hits": 22,
+      "total_damage": 722.1,
+      "avg_damage_per_hit": 32.8
+    },
+    {
+      "weapon": "SKS",
+      "category": "DMR",
+      "kills": 4,
+      "headshot_kills": 1,
+      "headshot_kill_pct": 0.25,
+      "hits": 36,
+      "total_damage": 711.1,
+      "avg_damage_per_hit": 19.8
     },
     {
       "weapon": "Panzerfaust",
@@ -491,16 +511,6 @@
       "hits": 14,
       "total_damage": 652.2,
       "avg_damage_per_hit": 46.6
-    },
-    {
-      "weapon": "SKS",
-      "category": "DMR",
-      "kills": 3,
-      "headshot_kills": 1,
-      "headshot_kill_pct": 0.333,
-      "hits": 33,
-      "total_damage": 628.1,
-      "avg_damage_per_hit": 19.0
     },
     {
       "weapon": "G36C",
@@ -591,16 +601,6 @@
       "hits": 18,
       "total_damage": 269.7,
       "avg_damage_per_hit": 15.0
-    },
-    {
-      "weapon": "Grenade",
-      "category": "Throwable",
-      "kills": 1,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 19,
-      "total_damage": 585.8,
-      "avg_damage_per_hit": 30.8
     },
     {
       "weapon": "Tommy Gun",
