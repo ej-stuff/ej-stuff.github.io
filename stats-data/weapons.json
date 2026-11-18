@@ -36,9 +36,9 @@
       "kills": 21,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.143,
-      "hits": 243,
-      "total_damage": 4373.9,
-      "avg_damage_per_hit": 18.0
+      "hits": 246,
+      "total_damage": 4453.1,
+      "avg_damage_per_hit": 18.1
     },
     {
       "weapon": "Mk12 SPR",
@@ -46,9 +46,9 @@
       "kills": 14,
       "headshot_kills": 3,
       "headshot_kill_pct": 0.214,
-      "hits": 222,
-      "total_damage": 4921.3,
-      "avg_damage_per_hit": 22.2
+      "hits": 225,
+      "total_damage": 5022.9,
+      "avg_damage_per_hit": 22.3
     },
     {
       "weapon": "MP5K",
@@ -483,24 +483,24 @@
       "avg_damage_per_hit": 19.7
     },
     {
-      "weapon": "Grenade",
-      "category": "Throwable",
-      "kills": 4,
-      "headshot_kills": 0,
-      "headshot_kill_pct": 0.0,
-      "hits": 22,
-      "total_damage": 722.1,
-      "avg_damage_per_hit": 32.8
-    },
-    {
       "weapon": "SKS",
       "category": "DMR",
       "kills": 4,
       "headshot_kills": 1,
       "headshot_kill_pct": 0.25,
-      "hits": 36,
-      "total_damage": 711.1,
-      "avg_damage_per_hit": 19.8
+      "hits": 38,
+      "total_damage": 773.3,
+      "avg_damage_per_hit": 20.3
+    },
+    {
+      "weapon": "Grenade",
+      "category": "Throwable",
+      "kills": 4,
+      "headshot_kills": 0,
+      "headshot_kill_pct": 0.0,
+      "hits": 24,
+      "total_damage": 762.3,
+      "avg_damage_per_hit": 31.8
     },
     {
       "weapon": "Panzerfaust",

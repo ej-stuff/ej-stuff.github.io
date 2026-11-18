@@ -11,7 +11,7 @@
         "item": "Energy Drink",
         "category": "Boost",
         "total": 133,
-        "per_match": 0.34
+        "per_match": 0.33
       },
       {
         "item": "Adrenaline Syringe",
@@ -41,7 +41,7 @@
     "throwables": [
       {
         "item": "Grenade",
-        "total": 139,
+        "total": 140,
         "per_match": 0.35
       },
       {
@@ -76,14 +76,14 @@
       {
         "item": "Painkiller",
         "category": "Boost",
-        "total": 310,
+        "total": 311,
         "per_match": 0.82
       },
       {
         "item": "Energy Drink",
         "category": "Boost",
         "total": 233,
-        "per_match": 0.62
+        "per_match": 0.61
       },
       {
         "item": "Adrenaline Syringe",
@@ -118,7 +118,7 @@
       },
       {
         "item": "Grenade",
-        "total": 69,
+        "total": 70,
         "per_match": 0.18
       },
       {
